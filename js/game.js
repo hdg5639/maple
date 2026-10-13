@@ -1,4 +1,4 @@
-// js/game.js - Main Game Loop, Camera, Input, Spawning, and Rendering
+// js/game.js - Main Game Loop, Camera, Input, Spawning, Projectiles, and Rendering
 
 class Game {
   constructor() {
@@ -9,6 +9,7 @@ class Game {
     this.player = new Player(200, 820);
     this.monsters = [];
     this.drops = [];
+    this.projectiles = [];
     this.floatingTexts = [];
     this.skillEffects = [];
 
@@ -17,11 +18,9 @@ class Game {
     this.lastTime = performance.now();
     this.boss = null;
 
-    // Subsystems
     this.autoHunt = new AutoHuntManager(this);
     this.ui = new UIManager(this);
 
-    // Monster Spawning Config
     this.maxMonsters = 24;
     this.spawnTimer = 0;
 
@@ -30,10 +29,7 @@ class Game {
     this.initMonsters();
     this.loadProgress();
 
-    // Start Loop
     requestAnimationFrame((t) => this.loop(t));
-
-    // Auto-save progress every 15s
     setInterval(() => this.saveProgress(), 15000);
   }
 
@@ -41,13 +37,14 @@ class Game {
     const resize = () => {
       const container = document.getElementById('canvas-container');
       if (container) {
-        this.canvas.width = container.clientWidth;
-        this.canvas.height = container.clientHeight;
+        this.canvas.width = Math.max(300, container.clientWidth || window.innerWidth);
+        this.canvas.height = Math.max(300, container.clientHeight || window.innerHeight - 64);
         this.camera.width = this.canvas.width;
         this.camera.height = this.canvas.height;
       }
     };
     window.addEventListener('resize', resize);
+    window.addEventListener('load', resize);
     resize();
   }
 
@@ -56,11 +53,6 @@ class Game {
       this.keys[e.code] = true;
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'AltLeft', 'ControlLeft'].includes(e.code)) {
         e.preventDefault();
-      }
-
-      // If Auto Hunt is active and user presses manual control key, warn or let user override
-      if (this.autoHunt.enabled && ['ArrowLeft', 'ArrowRight', 'ControlLeft', 'KeyZ'].includes(e.code)) {
-        // Can coexist
       }
 
       // Jump
@@ -77,24 +69,28 @@ class Game {
         this.player.normalAttack(this);
       }
 
-      // Skill 1: Power Strike [Shift or KeyQ]
+      // Class Skill 1 [Shift or KeyQ]
       if (e.code === 'ShiftLeft' || e.code === 'KeyQ') {
-        this.player.useSkill('power_strike', this);
+        const skillId = this.getClassSkillId(0);
+        if (skillId) this.player.useSkill(skillId, this);
       }
 
-      // Skill 2: Slash Blast [KeyW]
+      // Class Skill 2 [KeyW]
       if (e.code === 'KeyW') {
-        this.player.useSkill('slash_blast', this);
+        const skillId = this.getClassSkillId(1);
+        if (skillId) this.player.useSkill(skillId, this);
       }
 
-      // Skill 3: Magic Claw [KeyE]
+      // Class Skill 3 [KeyE]
       if (e.code === 'KeyE') {
-        this.player.useSkill('magic_claw', this);
+        const skillId = this.getClassSkillId(2);
+        if (skillId) this.player.useSkill(skillId, this);
       }
 
-      // Skill 4: Flash Jump [KeyF]
+      // Class Skill 4 / Flash Jump [KeyF]
       if (e.code === 'KeyF') {
-        this.player.useSkill('flash_jump', this);
+        const skillId = this.getClassSkillId(3) || 'flash_jump';
+        this.player.useSkill(skillId, this);
       }
 
       // Item Pick Up [KeyZ]
@@ -118,10 +114,21 @@ class Game {
     });
   }
 
+  getClassSkillId(index) {
+    const keys = Object.keys(this.player.skills);
+    return keys[index] || null;
+  }
+
+  changePlayerJob(jobName) {
+    this.player.setJob(jobName);
+    this.ui.updateQuickslotsForJob(jobName);
+    this.ui.updateStatsWindow();
+    this.ui.updateSkillsWindow();
+    this.spawnItemText(this.player.x, this.player.y - 45, `★ ${jobName} 전직 완료! ★`);
+  }
+
   initMonsters() {
-    // Populate map with classic monsters
     const spawnList = [
-      // Ground level: Snails, Slimes, Ribbon Pigs
       { type: 'snail', x: 400, y: 820 },
       { type: 'snail', x: 700, y: 820 },
       { type: 'blue_snail', x: 950, y: 820 },
@@ -131,19 +138,16 @@ class Game {
       { type: 'slime', x: 2000, y: 820 },
       { type: 'ribbon_pig', x: 2200, y: 820 },
 
-      // Tier 1 platforms
       { type: 'snail', x: 250, y: 700 },
       { type: 'blue_snail', x: 750, y: 680 },
       { type: 'slime', x: 1250, y: 700 },
       { type: 'red_snail', x: 1800, y: 680 },
 
-      // Tier 2 platforms
       { type: 'slime', x: 400, y: 550 },
       { type: 'orange_mushroom', x: 900, y: 530 },
       { type: 'orange_mushroom', x: 1450, y: 540 },
       { type: 'ribbon_pig', x: 1950, y: 520 },
 
-      // Tier 3 platforms
       { type: 'orange_mushroom', x: 600, y: 400 },
       { type: 'green_mushroom', x: 1100, y: 380 },
       { type: 'green_mushroom', x: 1600, y: 390 }
@@ -157,14 +161,12 @@ class Game {
   spawnMonster() {
     if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
 
-    // Pick a random platform
     const plat = this.map.platforms[Math.floor(Math.random() * this.map.platforms.length)];
     const x = plat.x + 30 + Math.random() * (plat.width - 60);
     const y = plat.y;
 
     let type = 'snail';
     if (y === 820) {
-      // Ground
       const r = Math.random();
       type = r < 0.3 ? 'snail' : (r < 0.6 ? 'blue_snail' : (r < 0.85 ? 'slime' : 'ribbon_pig'));
     } else if (y >= 680) {
@@ -182,7 +184,6 @@ class Game {
   }
 
   spawnBoss() {
-    // If boss already alive, notify
     if (this.boss && this.boss.isAlive()) {
       this.spawnItemText(this.player.x, this.player.y - 45, '이미 머쉬맘이 소환되어 있습니다!');
       return;
@@ -193,7 +194,6 @@ class Game {
     this.monsters.push(this.boss);
     this.spawnItemText(this.player.x, this.player.y - 45, '★ [BOSS] 거대 보스 머쉬맘 출현! ★');
 
-    // Show boss bar
     const bBar = document.getElementById('boss-bar-container');
     if (bBar) bBar.style.display = 'block';
   }
@@ -241,7 +241,6 @@ class Game {
 
   // --- Main Update Loop ---
   update(dt) {
-    // 1. Manual Keyboard Controls (if auto-hunt is NOT controlling or overriding)
     if (!this.autoHunt.enabled) {
       if (this.keys['ArrowLeft']) {
         this.player.moveLeft();
@@ -256,19 +255,21 @@ class Game {
       }
     }
 
-    // 2. Auto-Hunt Update
     this.autoHunt.update(dt);
-
-    // 3. Map update (clouds)
     this.map.update(dt);
-
-    // 4. Player update
     this.player.update(dt, this.map);
-
-    // Auto-loot on walkover
     this.pickUpNearbyDrops();
 
-    // 5. Monster updates & respawn
+    // Update Projectiles
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      const p = this.projectiles[i];
+      p.update(dt, this);
+      if (p.life <= 0 || p.hit) {
+        this.projectiles.splice(i, 1);
+      }
+    }
+
+    // Monster spawns & updates
     this.spawnTimer += dt;
     if (this.spawnTimer >= 1.6) {
       this.spawnTimer = 0;
@@ -289,7 +290,7 @@ class Game {
       }
     }
 
-    // 6. Drops update
+    // Drops update
     for (let i = this.drops.length - 1; i >= 0; i--) {
       const d = this.drops[i];
       d.update(dt, this.map);
@@ -298,7 +299,7 @@ class Game {
       }
     }
 
-    // 7. Floating Texts update
+    // Floating text update
     for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
       const ft = this.floatingTexts[i];
       ft.update(dt);
@@ -307,7 +308,7 @@ class Game {
       }
     }
 
-    // 8. Skill Effects update
+    // Skill effects update
     for (let i = this.skillEffects.length - 1; i >= 0; i--) {
       const fx = this.skillEffects[i];
       fx.progress += dt / fx.duration;
@@ -316,10 +317,7 @@ class Game {
       }
     }
 
-    // 9. Camera Tracking
     this.updateCamera();
-
-    // 10. Update HUD & UI
     this.ui.updateHUD();
     this.updateBossBar();
   }
@@ -328,11 +326,9 @@ class Game {
     const targetX = this.player.x - this.camera.width / 2;
     const targetY = this.player.y - this.camera.height * 0.65;
 
-    // Smooth lerp
     this.camera.x += (targetX - this.camera.x) * 0.12;
     this.camera.y += (targetY - this.camera.y) * 0.12;
 
-    // Clamp camera within map bounds
     this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, this.camera.x));
     this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, this.camera.y));
   }
@@ -358,33 +354,35 @@ class Game {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     ctx.save();
-    // Apply Camera Translation
     ctx.translate(-Math.round(this.camera.x), -Math.round(this.camera.y));
 
-    // 1. Draw Map & Scenery
+    // 1. Map & Scenery
     this.map.draw(ctx, this.camera);
 
-    // 2. Draw Drops
+    // 2. Drops
     this.drops.forEach(d => window.sprites.drawDrop(ctx, d));
 
-    // 3. Draw Monsters
+    // 3. Monsters
     this.monsters.forEach(m => window.sprites.drawMonster(ctx, m));
 
-    // 4. Draw Player
+    // 4. Projectiles (Arrows, Shurikens, Energy Bolts)
+    this.projectiles.forEach(p => window.sprites.drawProjectile(ctx, p));
+
+    // 5. Player
     window.sprites.drawPlayer(ctx, this.player);
 
-    // 5. Draw Skill Effects
+    // 6. Skill Effects
     this.skillEffects.forEach(fx => window.sprites.drawSkillEffects(ctx, fx));
 
-    // 6. Draw Auto-Hunt Target Crosshair
+    // 7. Auto-Hunt Crosshair
     this.autoHunt.drawTargetIndicator(ctx);
 
-    // 7. Draw Floating Damage Numbers & Loot notifications
+    // 8. Floating Damage Numbers
     this.floatingTexts.forEach(ft => window.sprites.drawFloatingText(ctx, ft));
 
     ctx.restore();
 
-    // 8. Draw Minimap overlay
+    // 9. Minimap
     this.drawMinimap(ctx);
   }
 
@@ -395,7 +393,6 @@ class Game {
     const mmY = 15;
 
     ctx.save();
-    // Minimap window frame
     ctx.fillStyle = 'rgba(20, 25, 35, 0.75)';
     ctx.beginPath();
     ctx.roundRect(mmX, mmY, mmW, mmH, 6);
@@ -404,7 +401,6 @@ class Game {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Minimap title
     ctx.font = 'bold 9px "Malgun Gothic", sans-serif';
     ctx.fillStyle = '#fef08a';
     ctx.textAlign = 'left';
@@ -413,7 +409,6 @@ class Game {
     const scaleX = mmW / this.map.width;
     const scaleY = (mmH - 16) / this.map.height;
 
-    // Draw platform lines
     ctx.strokeStyle = 'rgba(110, 231, 183, 0.7)';
     ctx.lineWidth = 1.5;
     this.map.platforms.forEach(p => {
@@ -426,7 +421,6 @@ class Game {
       ctx.stroke();
     });
 
-    // Draw monsters (red dots)
     ctx.fillStyle = '#ef4444';
     this.monsters.forEach(m => {
       if (m.isAlive()) {
@@ -436,7 +430,6 @@ class Game {
       }
     });
 
-    // Draw player (yellow blinking dot)
     ctx.fillStyle = '#facc15';
     const plx = mmX + this.player.x * scaleX;
     const ply = mmY + 16 + this.player.y * scaleY;
@@ -504,6 +497,7 @@ class Game {
         this.player.calcDerivedStats();
         this.player.hp = Math.min(this.player.maxHp, data.hp || this.player.maxHp);
         this.player.mp = Math.min(this.player.maxMp, data.mp || this.player.maxMp);
+        this.ui.updateQuickslotsForJob(this.player.job);
       }
     } catch (e) {
       console.warn('Load failed:', e);
@@ -516,7 +510,6 @@ class Game {
   }
 }
 
-// Start Game on window load
 window.addEventListener('DOMContentLoaded', () => {
   window.game = new Game();
 });

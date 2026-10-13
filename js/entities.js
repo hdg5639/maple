@@ -1,4 +1,41 @@
-// js/entities.js - Player, Monster, Drops, and Combat Entities
+// js/entities.js - Player, Monster, Drops, Projectiles, and Combat Entities
+
+class Projectile {
+  constructor(x, y, vx, vy, type, damage, isCrit, owner) {
+    this.id = Math.random();
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.type = type; // 'arrow', 'shuriken', 'energy_bolt'
+    this.damage = damage;
+    this.isCrit = isCrit;
+    this.owner = owner;
+    this.life = 1.6; // seconds
+    this.hit = false;
+  }
+
+  update(dt, game) {
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.life -= dt;
+
+    if (this.hit) return;
+
+    // Check collision with monsters
+    for (const m of game.monsters) {
+      if (m.isAlive()) {
+        const d = Math.hypot(m.x - this.x, (m.y - m.height / 2) - this.y);
+        if (d < Math.max(22, m.width * 0.6)) {
+          this.hit = true;
+          m.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left');
+          game.spawnDamageText(m.x, m.y - m.height * 0.7, this.damage, this.isCrit);
+          break;
+        }
+      }
+    }
+  }
+}
 
 class Player {
   constructor(x = 200, y = 820) {
@@ -8,7 +45,7 @@ class Player {
     this.vy = 0;
     this.width = 24;
     this.height = 36;
-    this.facing = 'right'; // 'left' or 'right'
+    this.facing = 'right';
 
     this.onGround = false;
     this.onLadder = false;
@@ -17,13 +54,12 @@ class Player {
 
     // Combat & Timers
     this.attackTimer = 0;
-    this.attackDuration = 0.28; // seconds
+    this.attackDuration = 0.26;
     this.invincibleTimer = 0;
-    this.canAttack = true;
 
-    // Character Profile & Level
+    // Profile & Level
     this.name = '단풍모험가';
-    this.job = '초보자';
+    this.job = '초보자'; // '초보자', '전사', '마법사', '궁수', '도적'
     this.level = 1;
     this.exp = 0;
     this.maxExp = 15;
@@ -33,20 +69,17 @@ class Player {
     this.dex = 8;
     this.int = 4;
     this.luk = 4;
-    this.ap = 5; // Ability points
-    this.sp = 3; // Skill points
+    this.ap = 5;
+    this.sp = 3;
 
     this.calcDerivedStats();
     this.hp = this.maxHp;
     this.mp = this.maxMp;
 
-    // Movement speeds
     this.walkSpeed = 3.6;
     this.jumpForce = -9.6;
     this.ladderSpeed = 2.4;
-
-    // Weapon / Cosmetics
-    this.weaponType = 'sword'; // 'sword', 'dagger', 'staff'
+    this.weaponType = 'sword'; // 'sword', 'staff', 'bow', 'claw'
 
     // Inventory
     this.meso = 100;
@@ -66,55 +99,134 @@ class Player {
       ]
     };
 
-    // Skill Levels
-    this.skills = {
-      power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, range: 60, icon: '⚔️' },
-      slash_blast: { name: '슬래시 블러스트', level: 0, maxLevel: 20, mpCost: 10, hpCost: 8, dmgMult: 1.4, radius: 100, icon: '🌀' },
-      magic_claw: { name: '매직 클로', level: 0, maxLevel: 20, mpCost: 12, dmgMult: 1.3, hits: 2, range: 110, icon: '✨' },
-      flash_jump: { name: '플래시 점프', level: 0, maxLevel: 5, mpCost: 5, icon: '⚡' },
-      recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️' }
-    };
+    // Class-specific Skill Trees
+    this.skills = {};
+    this.initSkillsForJob('초보자');
 
-    // Passive regeneration timer
     this.regenTimer = 0;
   }
 
+  initSkillsForJob(job) {
+    if (job === '전사') {
+      this.skills = {
+        power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️', desc: '강력한 세로 베기로 단일 적에게 치명타' },
+        slash_blast: { name: '슬래시 블러스트', level: 1, maxLevel: 20, mpCost: 10, hpCost: 8, dmgMult: 1.4, icon: '🌀', desc: '360도 회전하며 주변 모든 적 타격' },
+        iron_body: { name: '아이언 바디', level: 1, maxLevel: 10, mpCost: 8, icon: '🛡️', desc: '물리 방어력과 체력을 증가시킴' },
+        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: '주기적으로 HP 자동 회복' }
+      };
+      this.weaponType = 'sword';
+      this.walkSpeed = 3.6;
+    } else if (job === '마법사') {
+      this.skills = {
+        energy_bolt: { name: '에너지 볼트', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.3, icon: '🔮', desc: '비전 마법 탄환을 전방으로 발사' },
+        magic_claw: { name: '매직 클로', level: 1, maxLevel: 20, mpCost: 12, dmgMult: 1.3, hits: 2, icon: '✨', desc: '적의 위치에 2연속 비전 손톱 할퀴기' },
+        teleport: { name: '텔레포트', level: 1, maxLevel: 5, mpCost: 8, icon: '🌌', desc: '바라보는 방향으로 즉시 순간이동' },
+        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: 'MP 자동 회복량 증가' }
+      };
+      this.weaponType = 'staff';
+      this.walkSpeed = 3.6;
+    } else if (job === '궁수') {
+      this.skills = {
+        arrow_blow: { name: '애로우 블로우', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.6, icon: '🏹', desc: '관통하는 강력한 화살 1발 발사' },
+        double_shot: { name: '더블 샷', level: 1, maxLevel: 20, mpCost: 10, dmgMult: 1.2, icon: '🎯', desc: '화살 2발을 고속 연속 발사' },
+        focus: { name: '포커스', level: 1, maxLevel: 10, mpCost: 8, icon: '👁️', desc: '명중률과 이동속도 증가' },
+        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: 'HP/MP 주기적 회복' }
+      };
+      this.weaponType = 'bow';
+      this.walkSpeed = 3.8;
+    } else if (job === '도적') {
+      this.skills = {
+        lucky_seven: { name: '럭키 세븐', level: 1, maxLevel: 20, mpCost: 8, dmgMult: 1.5, icon: '⭐', desc: '수리검 2개를 날려 크리티컬 폭발' },
+        double_stab: { name: '더블 스탭', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.3, icon: '🗡️', desc: '단검으로 급소를 2연속 찌르기' },
+        flash_jump: { name: '플래시 점프', level: 1, maxLevel: 5, mpCost: 6, icon: '⚡', desc: '공중에서 2단 대쉬 점프' },
+        haste: { name: '헤이스트', level: 1, maxLevel: 10, mpCost: 10, icon: '💨', desc: '이동속도와 점프력을 대폭 증가' }
+      };
+      this.weaponType = 'claw';
+      this.walkSpeed = 4.2;
+    } else {
+      // 초보자
+      this.skills = {
+        power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️' },
+        slash_blast: { name: '슬래시 블러스트', level: 0, maxLevel: 20, mpCost: 10, hpCost: 8, dmgMult: 1.4, icon: '🌀' },
+        magic_claw: { name: '매직 클로', level: 0, maxLevel: 20, mpCost: 12, dmgMult: 1.3, icon: '✨' },
+        flash_jump: { name: '플래시 점프', level: 0, maxLevel: 5, mpCost: 5, icon: '⚡' },
+        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️' }
+      };
+      this.weaponType = 'sword';
+    }
+  }
+
   calcDerivedStats() {
-    this.maxHp = 60 + this.level * 18 + this.str * 4;
-    this.maxMp = 25 + this.level * 10 + this.int * 3;
-    this.minAtk = Math.max(3, Math.floor(this.str * 0.9 + this.dex * 0.4 + this.level * 2));
-    this.maxAtk = Math.max(5, Math.floor(this.str * 1.5 + this.dex * 0.6 + this.level * 3));
+    if (this.job === '전사') {
+      this.maxHp = 120 + this.level * 28 + this.str * 6;
+      this.maxMp = 30 + this.level * 8 + this.int * 2;
+      this.minAtk = Math.max(6, Math.floor(this.str * 1.2 + this.dex * 0.4 + this.level * 3));
+      this.maxAtk = Math.max(10, Math.floor(this.str * 1.8 + this.dex * 0.6 + this.level * 4));
+    } else if (this.job === '마법사') {
+      this.maxHp = 60 + this.level * 14 + this.str * 2;
+      this.maxMp = 140 + this.level * 30 + this.int * 7;
+      this.minAtk = Math.max(8, Math.floor(this.int * 1.4 + this.luk * 0.4 + this.level * 3));
+      this.maxAtk = Math.max(12, Math.floor(this.int * 2.0 + this.luk * 0.6 + this.level * 4));
+    } else if (this.job === '궁수') {
+      this.maxHp = 80 + this.level * 18 + this.str * 3;
+      this.maxMp = 50 + this.level * 12 + this.int * 3;
+      this.minAtk = Math.max(7, Math.floor(this.dex * 1.3 + this.str * 0.5 + this.level * 3));
+      this.maxAtk = Math.max(11, Math.floor(this.dex * 1.9 + this.str * 0.7 + this.level * 4));
+    } else if (this.job === '도적') {
+      this.maxHp = 85 + this.level * 20 + this.str * 3;
+      this.maxMp = 60 + this.level * 14 + this.int * 3;
+      this.minAtk = Math.max(8, Math.floor(this.luk * 1.4 + this.dex * 0.5 + this.level * 3));
+      this.maxAtk = Math.max(12, Math.floor(this.luk * 2.1 + this.dex * 0.7 + this.level * 5));
+    } else {
+      this.maxHp = 70 + this.level * 18 + this.str * 4;
+      this.maxMp = 35 + this.level * 10 + this.int * 3;
+      this.minAtk = Math.max(4, Math.floor(this.str * 0.9 + this.dex * 0.4 + this.level * 2));
+      this.maxAtk = Math.max(8, Math.floor(this.str * 1.5 + this.dex * 0.6 + this.level * 3));
+    }
+  }
+
+  setJob(jobName) {
+    this.job = jobName;
+    if (jobName === '전사') {
+      this.str = Math.max(25, this.str);
+    } else if (jobName === '마법사') {
+      this.int = Math.max(25, this.int);
+    } else if (jobName === '궁수') {
+      this.dex = Math.max(25, this.dex);
+    } else if (jobName === '도적') {
+      this.luk = Math.max(25, this.luk);
+    }
+    this.initSkillsForJob(jobName);
+    this.calcDerivedStats();
+    this.hp = this.maxHp;
+    this.mp = this.maxMp;
   }
 
   getDamage() {
     const range = this.maxAtk - this.minAtk;
     const base = this.minAtk + Math.floor(Math.random() * (range + 1));
-    const isCrit = Math.random() < 0.22; // 22% crit rate
-    const dmg = isCrit ? Math.floor(base * 1.5) : base;
+    const critRate = this.job === '도적' ? 0.45 : (this.job === '궁수' ? 0.35 : 0.22);
+    const isCrit = Math.random() < critRate;
+    const dmg = isCrit ? Math.floor(base * 1.6) : base;
     return { damage: dmg, isCrit };
   }
 
   update(dt, map) {
-    // Attack timer
     if (this.attackTimer > 0) {
       this.attackTimer -= dt;
     }
-
-    // Invincible blink
     if (this.invincibleTimer > 0) {
       this.invincibleTimer -= dt;
     }
 
-    // Passive regeneration (every 6s)
     this.regenTimer += dt;
-    if (this.regenTimer >= 6) {
+    if (this.regenTimer >= 5) {
       this.regenTimer = 0;
-      const recBonus = this.skills.recovery.level * 3;
-      this.healHp(5 + recBonus);
-      this.healMp(4 + recBonus);
+      const rec = (this.skills.recovery?.level || 1) * 4;
+      this.healHp(5 + rec);
+      this.healMp(5 + rec);
     }
 
-    // Physics update
     Physics.updateEntity(this, map, dt);
   }
 
@@ -150,15 +262,11 @@ class Player {
   }
 
   flashJump() {
-    if (this.skills.flash_jump.level > 0 && this.mp >= this.skills.flash_jump.mpCost) {
-      this.mp -= this.skills.flash_jump.mpCost;
-      const boost = 7.5 + this.skills.flash_jump.level * 0.6;
-      this.vx = (this.facing === 'right' ? 1 : -1) * boost;
-      this.vy = -3.5;
-      window.audio.playFlashJump();
-      return true;
-    }
-    return false;
+    const boost = 8.5;
+    this.vx = (this.facing === 'right' ? 1 : -1) * boost;
+    this.vy = -3.8;
+    window.audio.playFlashJump();
+    return true;
   }
 
   dropThrough() {
@@ -219,14 +327,31 @@ class Player {
     }
   }
 
-  // --- Combat Methods ---
-
+  // --- Combat Actions ---
   normalAttack(game) {
     if (this.attackTimer > 0) return false;
     this.attackTimer = this.attackDuration;
     window.audio.playAttack();
 
-    const range = 52;
+    const dirSign = this.facing === 'right' ? 1 : -1;
+
+    // Ranged attacks for Bowman, Thief, Magician
+    if (this.job === '궁수') {
+      const { damage, isCrit } = this.getDamage();
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 480, 0, 'arrow', damage, isCrit, this));
+      return true;
+    } else if (this.job === '도적') {
+      const { damage, isCrit } = this.getDamage();
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 520, 0, 'shuriken', damage, isCrit, this));
+      return true;
+    } else if (this.job === '마법사') {
+      const { damage, isCrit } = this.getDamage();
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 420, 0, 'energy_bolt', damage, isCrit, this));
+      return true;
+    }
+
+    // Melee attack for Warrior & Beginner
+    const range = 56;
     const hitBox = {
       x: this.facing === 'right' ? this.x : this.x - range,
       y: this.y - 36,
@@ -251,13 +376,15 @@ class Player {
     const skill = this.skills[skillId];
     if (!skill || skill.level <= 0) return false;
 
+    const dirSign = this.facing === 'right' ? 1 : -1;
+
+    // --- WARRIOR SKILLS ---
     if (skillId === 'power_strike') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
       this.attackTimer = this.attackDuration * 1.1;
       window.audio.playPowerStrike();
 
-      // Golden aura animation
       game.skillEffects.push({
         type: 'power_strike',
         x: this.facing === 'right' ? this.x + 30 : this.x - 30,
@@ -267,19 +394,19 @@ class Player {
       });
 
       const hitBox = {
-        x: this.facing === 'right' ? this.x : this.x - 65,
+        x: this.facing === 'right' ? this.x : this.x - 70,
         y: this.y - 45,
-        width: 65,
+        width: 70,
         height: 48
       };
 
       for (const m of game.monsters) {
         if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
-          const { damage, isCrit } = this.getDamage();
+          const { damage } = this.getDamage();
           const strikeDmg = Math.floor(damage * (skill.dmgMult + skill.level * 0.08));
           m.takeDamage(strikeDmg, true, this.facing);
           game.spawnDamageText(m.x, m.y - m.height * 0.8, strikeDmg, true);
-          break; // Single target heavy burst
+          break;
         }
       }
       return true;
@@ -290,7 +417,6 @@ class Player {
       this.attackTimer = this.attackDuration * 1.2;
       window.audio.playSlashBlast();
 
-      // Whirlwind animation
       game.skillEffects.push({
         type: 'slash_blast',
         x: this.x,
@@ -299,7 +425,7 @@ class Player {
         duration: 0.4
       });
 
-      const radius = 95;
+      const radius = 100;
       for (const m of game.monsters) {
         if (m.isAlive()) {
           const dist = Math.hypot(m.x - this.x, (m.y - m.height / 2) - (this.y - 18));
@@ -312,13 +438,24 @@ class Player {
         }
       }
       return true;
+    }
+
+    // --- MAGICIAN SKILLS ---
+    else if (skillId === 'energy_bolt') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.attackTimer = this.attackDuration;
+      window.audio.playAttack();
+      const { damage, isCrit } = this.getDamage();
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 440, 0, 'energy_bolt', Math.floor(damage * 1.4), isCrit, this));
+      return true;
     } else if (skillId === 'magic_claw') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
       this.attackTimer = this.attackDuration * 1.1;
       window.audio.playMagicClaw();
 
-      const range = 110;
+      const range = 120;
       const hitBox = {
         x: this.facing === 'right' ? this.x : this.x - range,
         y: this.y - 45,
@@ -336,7 +473,6 @@ class Player {
             duration: 0.35
           });
 
-          // 2 hits!
           for (let hit = 0; hit < 2; hit++) {
             setTimeout(() => {
               if (m.isAlive()) {
@@ -351,6 +487,90 @@ class Player {
         }
       }
       return true;
+    } else if (skillId === 'teleport') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.x += dirSign * 120;
+      window.audio.playFlashJump();
+      return true;
+    }
+
+    // --- BOWMAN SKILLS ---
+    else if (skillId === 'arrow_blow') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.attackTimer = this.attackDuration;
+      window.audio.playAttack();
+      const { damage } = this.getDamage();
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 520, 0, 'arrow', Math.floor(damage * 1.8), true, this));
+      return true;
+    } else if (skillId === 'double_shot') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.attackTimer = this.attackDuration * 1.2;
+      window.audio.playAttack();
+
+      for (let s = 0; s < 2; s++) {
+        setTimeout(() => {
+          const { damage, isCrit } = this.getDamage();
+          game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 500, 0, 'arrow', Math.floor(damage * 1.25), isCrit, this));
+        }, s * 140);
+      }
+      return true;
+    }
+
+    // --- THIEF SKILLS ---
+    else if (skillId === 'lucky_seven') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.attackTimer = this.attackDuration * 1.1;
+      window.audio.playAttack();
+
+      game.skillEffects.push({
+        type: 'lucky_seven',
+        x: this.x + dirSign * 20,
+        y: this.y - 16,
+        progress: 0,
+        duration: 0.3
+      });
+
+      for (let s = 0; s < 2; s++) {
+        setTimeout(() => {
+          const { damage } = this.getDamage();
+          const starDmg = Math.floor(damage * 1.7);
+          game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16 + (s * 8 - 4), dirSign * 560, (s * 40 - 20), 'shuriken', starDmg, true, this));
+        }, s * 100);
+      }
+      return true;
+    } else if (skillId === 'double_stab') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.attackTimer = this.attackDuration * 0.9;
+      window.audio.playAttack();
+
+      const range = 50;
+      const hitBox = {
+        x: this.facing === 'right' ? this.x : this.x - range,
+        y: this.y - 36,
+        width: range,
+        height: 38
+      };
+
+      for (const m of game.monsters) {
+        if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
+          for (let s = 0; s < 2; s++) {
+            setTimeout(() => {
+              if (m.isAlive()) {
+                const { damage, isCrit } = this.getDamage();
+                m.takeDamage(damage, isCrit, this.facing);
+                game.spawnDamageText(m.x + (s * 10 - 5), m.y - m.height * 0.7 - s * 12, damage, isCrit);
+              }
+            }, s * 100);
+          }
+          break;
+        }
+      }
+      return true;
     } else if (skillId === 'flash_jump') {
       return this.flashJump();
     }
@@ -360,12 +580,11 @@ class Player {
   takeDamage(amount) {
     if (this.invincibleTimer > 0 || this.hp <= 0) return;
     this.hp -= amount;
-    this.invincibleTimer = 1.0; // 1s invincibility
+    this.invincibleTimer = 1.0;
     window.audio.playHit();
 
     if (this.hp <= 0) {
       this.hp = 0;
-      // Resurrect after 3s
       setTimeout(() => {
         this.resurrect();
       }, 3000);
@@ -432,32 +651,13 @@ class Player {
       duration: 1.6
     });
 
-    // Check Job advancement eligibility at Lv.10
     if (this.level >= 10 && this.job === '초보자') {
       game.ui.showJobAdvancementModal();
     }
   }
 
   advanceJob(newJob) {
-    this.job = newJob;
-    if (newJob === '전사') {
-      this.skills.power_strike.level = Math.max(1, this.skills.power_strike.level);
-      this.skills.slash_blast.level = Math.max(1, this.skills.slash_blast.level);
-      this.str += 10;
-    } else if (newJob === '마법사') {
-      this.skills.magic_claw.level = Math.max(1, this.skills.magic_claw.level);
-      this.int += 10;
-      this.weaponType = 'staff';
-    } else if (newJob === '도적') {
-      this.skills.flash_jump.level = Math.max(1, this.skills.flash_jump.level);
-      this.luk += 10;
-      this.weaponType = 'dagger';
-    } else if (newJob === '궁수') {
-      this.dex += 10;
-    }
-    this.calcDerivedStats();
-    this.hp = this.maxHp;
-    this.mp = this.maxMp;
+    this.setJob(newJob);
   }
 
   addMeso(amount, game) {
@@ -470,19 +670,16 @@ class Player {
     window.audio.playPickItem();
     game.spawnItemText(this.x, this.y - 35, name);
 
-    // Look in use
     const useItem = this.inventory.use.find(i => i.id === itemId);
     if (useItem) {
       useItem.count += count;
       return;
     }
-    // Look in etc
     const etcItem = this.inventory.etc.find(i => i.id === itemId);
     if (etcItem) {
       etcItem.count += count;
       return;
     }
-    // New etc item
     this.inventory.etc.push({ id: itemId, name, count });
   }
 
@@ -497,7 +694,6 @@ class Player {
 }
 
 // === Monster Class ===
-
 class Monster {
   constructor(type, x, y) {
     this.id = Math.random();
@@ -513,9 +709,8 @@ class Monster {
     this.initMonsterType(type);
     this.hp = this.maxHp;
 
-    // AI wandering timers
     this.moveTimer = Math.random() * 2;
-    this.moveDir = 0; // -1, 0, 1
+    this.moveDir = 0;
   }
 
   initMonsterType(type) {
@@ -667,7 +862,6 @@ class Monster {
       this.hitTimer -= dt;
     }
 
-    // AI wandering logic
     this.moveTimer -= dt;
     if (this.moveTimer <= 0) {
       this.moveTimer = 1.5 + Math.random() * 2.5;
@@ -679,10 +873,9 @@ class Monster {
         this.moveDir = 1;
         this.facing = 'right';
       } else {
-        this.moveDir = 0; // idle pause
+        this.moveDir = 0;
       }
 
-      // If slime or mushroom, occasional hop
       if ((this.type === 'slime' || this.type === 'orange_mushroom' || this.type === 'mushmom') && this.onGround && Math.random() < 0.6) {
         this.vy = -6.5;
         this.onGround = false;
@@ -691,7 +884,6 @@ class Monster {
 
     this.vx = this.moveDir * this.speed;
 
-    // Platform edge check so monsters don't walk blindly off ledges unless jumping
     if (this.currentPlatform && this.onGround) {
       if (this.x - 10 <= this.currentPlatform.x) {
         this.moveDir = 1;
@@ -702,10 +894,8 @@ class Monster {
       }
     }
 
-    // Physics
     Physics.updateEntity(this, map, dt);
 
-    // Monster attacks player on touch
     if (player.hp > 0 && player.invincibleTimer <= 0) {
       const pBox = {
         x: player.x - player.width / 2,
@@ -725,7 +915,6 @@ class Monster {
     this.hitTimer = 0.2;
     window.audio.playHit();
 
-    // Knockback
     this.vx = (fromDir === 'right' ? 1 : -1) * 3.5;
     this.vy = -2.5;
     this.onGround = false;
@@ -739,7 +928,6 @@ class Monster {
     window.audio.playMonsterDie();
     player.gainExp(this.exp, game);
 
-    // Roll drops
     this.dropTable.forEach(drop => {
       if (Math.random() <= drop.chance) {
         if (drop.type === 'meso') {
@@ -758,7 +946,6 @@ class Monster {
 }
 
 // === Drop Item Class ===
-
 class DropItem {
   constructor(type, amount, x, y, name = '') {
     this.id = Math.random();
@@ -772,7 +959,7 @@ class DropItem {
     this.width = 16;
     this.height = 14;
     this.onGround = false;
-    this.life = 60.0; // seconds before despawn
+    this.life = 60.0;
   }
 
   update(dt, map) {
@@ -792,13 +979,12 @@ class DropItem {
 }
 
 // === Floating Text Class ===
-
 class FloatingText {
   constructor(x, y, text, type = 'damage', isCrit = false) {
     this.x = x;
     this.y = y;
     this.text = text;
-    this.type = type; // 'damage', 'crit', 'miss', 'meso', 'exp', 'item'
+    this.type = type;
     this.isCrit = isCrit;
     this.life = 1.0;
     this.vy = -1.2;
@@ -810,6 +996,7 @@ class FloatingText {
   }
 }
 
+window.Projectile = Projectile;
 window.Player = Player;
 window.Monster = Monster;
 window.DropItem = DropItem;

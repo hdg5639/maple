@@ -162,11 +162,11 @@ body, html {
 #boss-bar-container {
   display: none;
   position: absolute;
-  top: 14px;
+  top: 54px;
   left: 50%;
   transform: translateX(-50%);
-  width: 440px;
-  background: rgba(20, 10, 10, 0.85);
+  width: 420px;
+  background: rgba(20, 10, 10, 0.9);
   border: 3px solid #b91c1c;
   border-radius: 8px;
   padding: 6px 10px;

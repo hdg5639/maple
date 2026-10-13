@@ -1,31 +1,26 @@
-// js/autohunt.js - Advanced Auto-Hunt (자동사냥) AI Engine & Analytics
+// js/autohunt.js - Advanced Auto-Hunt AI with Class-Aware Range and Combat Tactics
 
 class AutoHuntManager {
   constructor(game) {
     this.game = game;
     this.enabled = false;
 
-    // Configuration / Options
     this.config = {
-      hpPotionThreshold: 0.55,  // Auto-drink HP pot when HP < 55%
-      mpPotionThreshold: 0.40,  // Auto-drink MP pot when MP < 40%
-      autoLoot: true,           // Prioritize picking up items & mesos
-      useSkills: true,          // Use Power Strike / Slash Blast / Magic Claw
-      huntMode: 'balanced',     // 'aggressive', 'balanced', 'safe'
-      searchRadius: 900         // Range to search for monsters
+      hpPotionThreshold: 0.55,
+      mpPotionThreshold: 0.40,
+      autoLoot: true,
+      useSkills: true,
+      huntMode: 'balanced',
+      searchRadius: 1000
     };
 
-    // AI Internal State
     this.currentTarget = null;
-    this.targetType = null;     // 'monster' | 'drop'
-    this.state = 'idle';        // 'idle', 'navigate', 'attack', 'loot', 'climb'
+    this.targetType = null;
     this.stuckTimer = 0;
     this.lastX = 0;
     this.lastY = 0;
-    this.actionCooldown = 0;
     this.decisionTimer = 0;
 
-    // Analytics / Statistics
     this.stats = {
       startTime: null,
       duration: 0,
@@ -76,31 +71,23 @@ class AutoHuntManager {
     const player = this.game.player;
     const map = this.game.map;
 
-    // 1. Auto-Potion / Survival Check (Highest Priority)
     this.checkSurvival(player);
-
-    // 2. Anti-Stuck Check
     this.checkStuck(dt, player);
 
-    // 3. Periodic Decision Making
     this.decisionTimer -= dt;
     if (this.decisionTimer <= 0) {
-      this.decisionTimer = 0.12; // 8-10 decisions per second
+      this.decisionTimer = 0.12;
       this.selectTarget(player);
     }
 
-    // 4. Execute AI Actions
     this.executeAI(dt, player, map);
   }
 
   checkSurvival(player) {
-    // HP Check
     if (player.hp / player.maxHp < this.config.hpPotionThreshold) {
       const used = player.usePotion('red_potion');
       if (used) this.stats.potionsUsed++;
     }
-
-    // MP Check
     if (player.mp / player.maxMp < this.config.mpPotionThreshold) {
       const used = player.usePotion('blue_potion');
       if (used) this.stats.potionsUsed++;
@@ -112,7 +99,6 @@ class AutoHuntManager {
     if (distMoved < 3 && player.vx !== 0) {
       this.stuckTimer += dt;
       if (this.stuckTimer > 0.8) {
-        // Try jumping or reversing
         player.jump();
         if (Math.random() < 0.4) {
           player.dropThrough();
@@ -127,10 +113,9 @@ class AutoHuntManager {
   }
 
   selectTarget(player) {
-    // A. Priority: Nearby Drops (if autoLoot enabled)
     if (this.config.autoLoot && this.game.drops.length > 0) {
       let closestDrop = null;
-      let minDropDist = 260; // Loot search radius
+      let minDropDist = 280;
 
       for (const drop of this.game.drops) {
         const dist = Math.hypot(drop.x - player.x, drop.y - player.y);
@@ -147,7 +132,6 @@ class AutoHuntManager {
       }
     }
 
-    // B. Priority: Alive Monsters
     let bestMonster = null;
     let minScore = Infinity;
 
@@ -160,13 +144,11 @@ class AutoHuntManager {
 
       if (dist > this.config.searchRadius) continue;
 
-      // Penalize monsters on distant vertical layers
       const verticalPenalty = Math.abs(dy) * 2.2;
       let score = dist + verticalPenalty;
 
-      // Boss prioritization
       if (m.type === 'mushmom') {
-        score -= 200;
+        score -= 250;
       }
 
       if (score < minScore) {
@@ -181,7 +163,6 @@ class AutoHuntManager {
 
   executeAI(dt, player, map) {
     if (!this.currentTarget) {
-      // Idle wander
       player.stopHorizontal();
       return;
     }
@@ -191,21 +172,18 @@ class AutoHuntManager {
     const dx = tx - player.x;
     const dy = ty - player.y;
 
-    // --- State: Climbing Ladder ---
     if (player.onLadder) {
       if (dy < -15) {
         player.climbUp(map);
       } else if (dy > 15) {
         player.climbDown(map);
       } else {
-        // Reached target height, jump off ladder towards target
         player.facing = dx > 0 ? 'right' : 'left';
         player.jump();
       }
       return;
     }
 
-    // --- State: Target is Dropped Item ---
     if (this.targetType === 'drop') {
       if (Math.abs(dx) > 12) {
         if (dx > 0) player.moveRight();
@@ -213,31 +191,58 @@ class AutoHuntManager {
       } else {
         player.stopHorizontal();
       }
-
-      // If drop is on lower platform, drop down
       if (dy > 35 && Math.abs(dx) < 80) {
         player.dropThrough();
       }
       return;
     }
 
-    // --- State: Target is Monster ---
-    const attackRange = 54;
-    const inAttackRange = Math.abs(dx) <= attackRange && Math.abs(dy) <= 30;
+    // Class-specific attack ranges!
+    let attackRange = 54;
+    if (player.job === '궁수') attackRange = 240;
+    else if (player.job === '도적') attackRange = 210;
+    else if (player.job === '마법사') attackRange = 160;
+
+    const inAttackRange = Math.abs(dx) <= attackRange && Math.abs(dy) <= 35;
 
     if (inAttackRange) {
-      // Stand & Attack
       player.stopHorizontal();
       player.facing = dx >= 0 ? 'right' : 'left';
 
-      // Decide skill vs normal attack
+      // Perform class skills or attack
       if (this.config.useSkills) {
-        if (player.skills.slash_blast.level > 0 && player.mp >= player.skills.slash_blast.mpCost && player.hp > 20) {
-          player.useSkill('slash_blast', this.game);
-        } else if (player.skills.power_strike.level > 0 && player.mp >= player.skills.power_strike.mpCost) {
-          player.useSkill('power_strike', this.game);
-        } else if (player.skills.magic_claw.level > 0 && player.mp >= player.skills.magic_claw.mpCost) {
-          player.useSkill('magic_claw', this.game);
+        if (player.job === '전사') {
+          if (player.skills.slash_blast?.level > 0 && player.mp >= 10 && player.hp > 25) {
+            player.useSkill('slash_blast', this.game);
+          } else if (player.skills.power_strike?.level > 0 && player.mp >= 6) {
+            player.useSkill('power_strike', this.game);
+          } else {
+            player.normalAttack(this.game);
+          }
+        } else if (player.job === '마법사') {
+          if (player.skills.magic_claw?.level > 0 && player.mp >= 12) {
+            player.useSkill('magic_claw', this.game);
+          } else if (player.skills.energy_bolt?.level > 0 && player.mp >= 6) {
+            player.useSkill('energy_bolt', this.game);
+          } else {
+            player.normalAttack(this.game);
+          }
+        } else if (player.job === '궁수') {
+          if (player.skills.double_shot?.level > 0 && player.mp >= 10) {
+            player.useSkill('double_shot', this.game);
+          } else if (player.skills.arrow_blow?.level > 0 && player.mp >= 6) {
+            player.useSkill('arrow_blow', this.game);
+          } else {
+            player.normalAttack(this.game);
+          }
+        } else if (player.job === '도적') {
+          if (player.skills.lucky_seven?.level > 0 && player.mp >= 8) {
+            player.useSkill('lucky_seven', this.game);
+          } else if (player.skills.double_stab?.level > 0 && player.mp >= 6) {
+            player.useSkill('double_stab', this.game);
+          } else {
+            player.normalAttack(this.game);
+          }
         } else {
           player.normalAttack(this.game);
         }
@@ -247,14 +252,12 @@ class AutoHuntManager {
       return;
     }
 
-    // Monster is on a higher tier: look for ladders!
     if (dy < -60) {
       const ladder = Physics.checkLadderGrab(player, map, 'up');
       if (ladder) {
         player.climbUp(map);
         return;
       } else {
-        // Move towards the nearest ladder going up towards the monster
         const bestLadder = this.findNearestUpLadder(player, map, ty);
         if (bestLadder) {
           const ldx = bestLadder.x - player.x;
@@ -269,15 +272,12 @@ class AutoHuntManager {
       }
     }
 
-    // Monster is on a lower tier: drop through platform!
     if (dy > 50 && Math.abs(dx) < 180) {
       player.dropThrough();
     }
 
-    // Horizontal movement toward monster
     if (dx > 25) {
       player.moveRight();
-      // Jump across gap or obstacles
       if (Math.random() < 0.05 && player.onGround) {
         player.jump();
       }
@@ -296,7 +296,6 @@ class AutoHuntManager {
     let best = null;
     let minD = Infinity;
     for (const lad of map.ladders) {
-      // Ladder must reach higher than player
       if (lad.top < player.y && lad.bottom >= player.y - 20) {
         const d = Math.abs(lad.x - player.x);
         if (d < minD) {
@@ -313,19 +312,14 @@ class AutoHuntManager {
 
     ctx.save();
     const t = this.currentTarget;
-
-    // Glowing Crosshair Reticle
-    const angle = (Date.now() / 300) % (Math.PI * 2);
     ctx.translate(t.x, t.y - (t.height ? t.height / 2 : 10));
     ctx.strokeStyle = '#ef4444';
     ctx.lineWidth = 2.5;
 
-    // Rotating targeting circle
     ctx.beginPath();
     ctx.arc(0, 0, 22, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Crosshair ticks
     for (let i = 0; i < 4; i++) {
       ctx.rotate(Math.PI / 2);
       ctx.beginPath();
@@ -334,7 +328,6 @@ class AutoHuntManager {
       ctx.stroke();
     }
 
-    // Target Label
     ctx.font = 'bold 9px Arial';
     ctx.fillStyle = '#f87171';
     ctx.textAlign = 'center';
