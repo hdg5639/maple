@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>클래식 메이플스토리 웹 (OpenMaple Classic) - 자동사냥 에디션</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍁</text></svg>">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Top Bar Controls -->
+    <div id="top-bar-overlay">
+      <button id="btn-auto-hunt" class="maple-badge-btn btn-auto-hunt">⚔️ 자동사냥 시작 (R)</button>
+      <div id="auto-hunt-badge">⚡ AUTO HUNTING...</div>
+      <button id="btn-boss-spawn" class="maple-badge-btn">👑 머쉬맘 소환 (B)</button>
+      <button id="btn-sound-toggle" class="maple-badge-btn">🎵 BGM 토글</button>
+    </div>
+
+    <!-- Auto-Hunt Analytics Dashboard -->
+    <div id="auto-stats-panel">
+      <h4>⚡ 자동사냥 실시간 통계</h4>
+      <div class="stat-row">
+        <span class="stat-label">사냥 시간</span>
+        <span id="stat-hunt-time" class="stat-val">0분 0초</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">처치한 몬스터</span>
+        <span id="stat-hunt-kills" class="stat-val">0 마리</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">분당 경험치</span>
+        <span id="stat-hunt-exp-min" class="stat-val">0 EXP/분</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">분당 메소</span>
+        <span id="stat-hunt-meso-min" class="stat-val">0 메소/분</span>
+      </div>
+    </div>
+
+    <!-- Boss HP Bar -->
+    <div id="boss-bar-container">
+      <div id="boss-hp-track">
+        <div id="boss-hp-fill"></div>
+        <div id="boss-hp-text">★ 머쉬맘 (BOSS) ★</div>
+      </div>
+    </div>
+
+    <!-- Main Game Canvas Container -->
+    <div id="canvas-container">
+      <canvas id="game-canvas"></canvas>
+    </div>
+
+    <!-- Classic Maple Bottom HUD Status Bar -->
+    <div id="maple-hud">
+      <div class="hud-left">
+        <div class="hud-char-box">
+          <div id="hud-player-level">Lv.1</div>
+          <div id="hud-player-name">단풍모험가 (초보자)</div>
+        </div>
+        <div class="hud-bars">
+          <!-- HP Bar -->
+          <div class="bar-wrapper">
+            <div id="hud-hp-fill" class="bar-fill hp-fill" style="width: 100%;"></div>
+            <div id="hud-hp-text" class="bar-text">100 / 100</div>
+          </div>
+          <!-- MP Bar -->
+          <div class="bar-wrapper">
+            <div id="hud-mp-fill" class="bar-fill mp-fill" style="width: 100%;"></div>
+            <div id="hud-mp-text" class="bar-text">50 / 50</div>
+          </div>
+          <!-- EXP Bar -->
+          <div class="bar-wrapper">
+            <div id="hud-exp-fill" class="bar-fill exp-fill" style="width: 0%;"></div>
+            <div id="hud-exp-text" class="bar-text">0 [0.0%]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quickslots -->
+      <div class="hud-quickslots">
+        <div class="quickslot" title="일반 공격 [Ctrl]">
+          <span class="slot-key">Ctrl</span>
+          <span class="slot-icon">🗡️</span>
+        </div>
+        <div class="quickslot" title="파워 스트라이크 [Shift]">
+          <span class="slot-key">Shift</span>
+          <span class="slot-icon">⚔️</span>
+        </div>
+        <div class="quickslot" title="슬래시 블러스트 [W]">
+          <span class="slot-key">W</span>
+          <span class="slot-icon">🌀</span>
+        </div>
+        <div class="quickslot" title="매직 클로 [E]">
+          <span class="slot-key">E</span>
+          <span class="slot-icon">✨</span>
+        </div>
+        <div class="quickslot" title="플래시 점프 [F]">
+          <span class="slot-key">F</span>
+          <span class="slot-icon">⚡</span>
+        </div>
+        <div class="quickslot" title="점프 [Alt]">
+          <span class="slot-key">Alt</span>
+          <span class="slot-icon">🦘</span>
+        </div>
+        <div class="quickslot" title="아이템 줍기 [Z]">
+          <span class="slot-key">Z</span>
+          <span class="slot-icon">🤲</span>
+        </div>
+        <div class="quickslot" title="빨간 포션 [1]">
+          <span class="slot-key">1</span>
+          <span class="slot-icon">🧪</span>
+          <span id="quick-red-count" class="slot-badge">15</span>
+        </div>
+        <div class="quickslot" title="파란 포션 [2]">
+          <span class="slot-key">2</span>
+          <span class="slot-icon">💙</span>
+          <span id="quick-blue-count" class="slot-badge">10</span>
+        </div>
+        <div class="quickslot" title="자동사냥 토글 [R]">
+          <span class="slot-key">R</span>
+          <span class="slot-icon">🤖</span>
+        </div>
+      </div>
+
+      <!-- Menu Windows Toggle Buttons -->
+      <div class="hud-right">
+        <button id="btn-stat-toggle" class="hud-menu-btn">스탯 (S)</button>
+        <button id="btn-inven-toggle" class="hud-menu-btn">인벤 (I)</button>
+        <button id="btn-skill-toggle" class="hud-menu-btn">스킬 (K)</button>
+        <button id="btn-auto-toggle" class="hud-menu-btn">자동설정 (O)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS WINDOW (S) -->
+  <div id="win-stats" class="maple-window" style="top: 70px; left: 20px;">
+    <div class="maple-window-header">
+      <span class="window-title">캐릭터 능력치 (Stats)</span>
+      <button class="btn-window-close">×</button>
+    </div>
+    <div class="maple-window-body">
+      <div class="stat-item"><span>이름:</span> <strong id="stat-win-name">단풍모험가</strong></div>
+      <div class="stat-item"><span>직업:</span> <strong id="stat-win-job">초보자</strong></div>
+      <div class="stat-item"><span>레벨:</span> <strong id="stat-win-level">1</strong></div>
+      <div class="stat-item"><span>HP:</span> <strong id="stat-win-hp">100/100</strong></div>
+      <div class="stat-item"><span>MP:</span> <strong id="stat-win-mp">50/50</strong></div>
+      <div class="stat-item"><span>공격력:</span> <strong id="stat-win-atk">5 ~ 12</strong></div>
+      <hr style="border: none; border-top: 1px dashed #d1c4a9; margin: 8px 0;">
+      <div class="stat-item">
+        <span>STR (힘):</span>
+        <div><strong id="stat-win-str">12</strong> <button id="btn-add-str" class="btn-maple btn-add-stat">+</button></div>
+      </div>
+      <div class="stat-item">
+        <span>DEX (민첩):</span>
+        <div><strong id="stat-win-dex">8</strong> <button id="btn-add-dex" class="btn-maple btn-add-stat">+</button></div>
+      </div>
+      <div class="stat-item">
+        <span>INT (지력):</span>
+        <div><strong id="stat-win-int">4</strong> <button id="btn-add-int" class="btn-maple btn-add-stat">+</button></div>
+      </div>
+      <div class="stat-item">
+        <span>LUK (행운):</span>
+        <div><strong id="stat-win-luk">4</strong> <button id="btn-add-luk" class="btn-maple btn-add-stat">+</button></div>
+      </div>
+      <div class="stat-item" style="margin-top: 6px; color: #b45309;">
+        <span>남은 AP (스탯포인트):</span>
+        <strong id="stat-win-ap">5</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVENTORY WINDOW (I) -->
+  <div id="win-inventory" class="maple-window" style="top: 70px; right: 20px;">
+    <div class="maple-window-header">
+      <span class="window-title">아이템 인벤토리 (Inventory)</span>
+      <button class="btn-window-close">×</button>
+    </div>
+    <div class="maple-window-body">
+      <div class="inven-tabs">
+        <button class="inven-tab active" data-tab="use">소비</button>
+        <button class="inven-tab" data-tab="equip">장비</button>
+        <button class="inven-tab" data-tab="etc">기타</button>
+      </div>
+      <div id="inven-grid" class="inven-grid">
+        <!-- Generated Dynamically -->
+      </div>
+      <div class="inven-footer">
+        <span>보유 메소:</span>
+        <span id="inven-meso-amount">100</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS WINDOW (K) -->
+  <div id="win-skills" class="maple-window" style="top: 150px; left: 320px;">
+    <div class="maple-window-header">
+      <span class="window-title">스킬 트리 (Skill Tree)</span>
+      <button class="btn-window-close">×</button>
+    </div>
+    <div class="maple-window-body">
+      <div style="font-size: 11px; margin-bottom: 8px; color: #b45309; font-weight: 700;">
+        남은 SP: <span id="skill-sp-count">3</span>
+      </div>
+      <div id="skill-list-container">
+        <!-- Generated Dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTO-HUNT CONFIG WINDOW (O) -->
+  <div id="win-auto-config" class="maple-window" style="top: 100px; left: 160px;">
+    <div class="maple-window-header">
+      <span class="window-title">🤖 자동사냥 AI 세부 설정 (Config)</span>
+      <button class="btn-window-close">×</button>
+    </div>
+    <div class="maple-window-body" style="width: 280px;">
+      <div class="config-group">
+        <label>자동 HP 물약 사용 기준 <span id="val-auto-hp" class="range-val">55%</span></label>
+        <input type="range" id="slider-auto-hp" min="20" max="85" value="55">
+      </div>
+      <div class="config-group">
+        <label>자동 MP 물약 사용 기준 <span id="val-auto-mp" class="range-val">40%</span></label>
+        <input type="range" id="slider-auto-mp" min="15" max="80" value="40">
+      </div>
+      <label class="config-checkbox">
+        <input type="checkbox" id="check-auto-loot" checked>
+        <span>메소 및 아이템 우선 자동 줍기 (Loot)</span>
+      </label>
+      <label class="config-checkbox">
+        <input type="checkbox" id="check-auto-skills" checked>
+        <span>스킬 자동 연계 사용 (Power Strike / Slash Blast)</span>
+      </label>
+      <div style="margin-top: 10px; font-size: 11px; color: #64748b;">
+        * 단축키 [R] 키로 언제든 즉시 켜고 끌 수 있습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- JOB ADVANCEMENT MODAL (Lv.10+) -->
+  <div id="modal-job-advance">
+    <div class="job-modal-box">
+      <h2>🎉 1차 전직을 환영합니다!</h2>
+      <p>Lv.10을 달성하여 진정한 모험가로 거듭날 때가 되었습니다. 원하는 직업을 선택하세요!</p>
+      <div class="job-grid">
+        <div class="btn-job-choice" data-job="전사">
+          <div class="job-icon">⚔️</div>
+          <div class="job-name">전사 (Warrior)</div>
+          <div class="job-desc">높은 체력과 강력한 근접 베기 공격</div>
+        </div>
+        <div class="btn-job-choice" data-job="마법사">
+          <div class="job-icon">🔮</div>
+          <div class="job-name">마법사 (Magician)</div>
+          <div class="job-desc">화려한 연속 마법과 매직 클로 공격</div>
+        </div>
+        <div class="btn-job-choice" data-job="궁수">
+          <div class="job-icon">🏹</div>
+          <div class="job-name">궁수 (Bowman)</div>
+          <div class="job-desc">원거리 정확도와 크리티컬 특화</div>
+        </div>
+        <div class="btn-job-choice" data-job="도적">
+          <div class="job-icon">🗡️</div>
+          <div class="job-name">도적 (Thief)</div>
+          <div class="job-desc">기동성과 플래시 점프의 날렵한 암살자</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/sprites.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/autohunt.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

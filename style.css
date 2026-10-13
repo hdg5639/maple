@@ -1,0 +1,694 @@
+/* style.css - Authentic Classic MapleStory UI Styling */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #1a1e24;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Dotum', sans-serif;
+  color: #2c251e;
+}
+
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+#canvas-container {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* === TOP BAR OVERLAYS === */
+#top-bar-overlay {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 50;
+}
+
+.maple-badge-btn {
+  background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+  border: 2px solid #78350f;
+  border-radius: 6px;
+  color: #451a03;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.maple-badge-btn:hover {
+  filter: brightness(1.1);
+}
+
+.maple-badge-btn:active {
+  transform: translateY(1px);
+}
+
+.maple-badge-btn.btn-auto-hunt {
+  background: linear-gradient(180deg, #6ee7b7 0%, #10b981 50%, #047857 100%);
+  border-color: #064e3b;
+  color: #ffffff;
+  font-size: 14px;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+.maple-badge-btn.btn-auto-hunt.active {
+  background: linear-gradient(180deg, #f87171 0%, #ef4444 50%, #b91c1c 100%);
+  border-color: #7f1d1d;
+  color: #ffffff;
+  animation: pulse-auto 1.2s infinite alternate;
+}
+
+@keyframes pulse-auto {
+  0% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+  100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.95); }
+}
+
+/* Pulsing Auto-Hunt Badge */
+#auto-hunt-badge {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid #22c55e;
+  border-radius: 20px;
+  padding: 4px 12px;
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+  animation: badge-pulse 1s infinite alternate;
+}
+
+@keyframes badge-pulse {
+  from { opacity: 0.85; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1.02); }
+}
+
+/* Real-time Auto Hunt Dashboard Panel */
+#auto-stats-panel {
+  position: absolute;
+  top: 54px;
+  left: 14px;
+  display: none;
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #f1f5f9;
+  font-size: 12px;
+  z-index: 50;
+  min-width: 190px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+
+#auto-stats-panel h4 {
+  color: #4ade80;
+  font-size: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 4px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: #94a3b8;
+}
+
+.stat-val {
+  color: #facc15;
+  font-weight: 700;
+}
+
+/* BOSS HP BAR */
+#boss-bar-container {
+  display: none;
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 440px;
+  background: rgba(20, 10, 10, 0.85);
+  border: 3px solid #b91c1c;
+  border-radius: 8px;
+  padding: 6px 10px;
+  box-shadow: 0 0 20px rgba(185, 28, 28, 0.7);
+  z-index: 60;
+  text-align: center;
+}
+
+#boss-hp-track {
+  width: 100%;
+  height: 16px;
+  background: #3f1010;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #7f1d1d;
+  position: relative;
+}
+
+#boss-hp-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f87171, #dc2626);
+  transition: width 0.2s ease-out;
+}
+
+#boss-hp-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* === CLASSIC MAPLE BOTTOM HUD STATUS BAR === */
+#maple-hud {
+  position: relative;
+  width: 100%;
+  height: 64px;
+  background: linear-gradient(180deg, #e4d7be 0%, #c4b595 50%, #ab9875 100%);
+  border-top: 3px solid #735d41;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.4);
+  z-index: 100;
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hud-char-box {
+  background: #fdfbf7;
+  border: 2px solid #735d41;
+  border-radius: 6px;
+  padding: 4px 10px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+#hud-player-level {
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#hud-player-name {
+  color: #27272a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hud-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 240px;
+}
+
+.bar-wrapper {
+  position: relative;
+  height: 14px;
+  background: #3f3f46;
+  border-radius: 3px;
+  border: 1px solid #18181b;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  transition: width 0.15s ease-out;
+}
+
+.bar-fill.hp-fill {
+  background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+}
+
+.bar-fill.mp-fill {
+  background: linear-gradient(90deg, #38bdf8 0%, #0284c7 100%);
+}
+
+.bar-fill.exp-fill {
+  background: linear-gradient(90deg, #a3e635 0%, #65a30d 100%);
+}
+
+.bar-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  text-shadow: 1px 1px 1px #000;
+}
+
+/* Quickslots */
+.hud-quickslots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.quickslot {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background: #27272a;
+  border: 2px solid #71717a;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.quickslot:active {
+  transform: scale(0.95);
+}
+
+.quickslot .slot-key {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  color: #fef08a;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.quickslot .slot-icon {
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.quickslot .slot-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Right Menu Buttons */
+.hud-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.hud-menu-btn {
+  background: linear-gradient(180deg, #f5f5f4 0%, #e7e5e4 50%, #d6d3d1 100%);
+  border: 2px solid #78716c;
+  border-radius: 6px;
+  color: #292524;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  transition: all 0.1s;
+}
+
+.hud-menu-btn:hover {
+  filter: brightness(1.05);
+}
+
+.hud-menu-btn:active {
+  transform: translateY(1px);
+}
+
+/* === RETRO MAPLE WINDOWS === */
+.maple-window {
+  display: none;
+  position: absolute;
+  background: #fbf7ee;
+  border: 3px solid #735d41;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.8);
+  z-index: 100;
+  min-width: 260px;
+}
+
+.maple-window-header {
+  height: 28px;
+  background: linear-gradient(180deg, #c4a77d 0%, #9e7d56 100%);
+  border-bottom: 2px solid #5c3a21;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  cursor: grab;
+}
+
+.maple-window-header:active {
+  cursor: grabbing;
+}
+
+.window-title {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #3c2415;
+}
+
+.btn-window-close {
+  width: 18px;
+  height: 18px;
+  background: #ef4444;
+  border: 1px solid #7f1d1d;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-window-close:hover {
+  background: #dc2626;
+}
+
+.maple-window-body {
+  padding: 12px;
+}
+
+/* Common Maple Buttons */
+.btn-maple {
+  background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+  border: 1px solid #78350f;
+  border-radius: 4px;
+  color: #451a03;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.btn-maple:hover {
+  filter: brightness(1.1);
+}
+
+.btn-maple:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Stat Window Content */
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #3f3f46;
+}
+
+.stat-item strong {
+  color: #18181b;
+}
+
+.btn-add-stat {
+  padding: 1px 6px;
+  font-weight: 900;
+  margin-left: 6px;
+}
+
+/* Inventory Window Content */
+.inven-tabs {
+  display: flex;
+  border-bottom: 2px solid #735d41;
+  margin-bottom: 8px;
+}
+
+.inven-tab {
+  flex: 1;
+  text-align: center;
+  padding: 4px 0;
+  font-size: 11px;
+  font-weight: 700;
+  background: #e4d7be;
+  border: 1px solid #735d41;
+  border-bottom: none;
+  cursor: pointer;
+}
+
+.inven-tab.active {
+  background: #fbf7ee;
+  border-bottom: 2px solid #fbf7ee;
+  margin-bottom: -2px;
+  color: #b45309;
+}
+
+.inven-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background: #d1c4a9;
+  border: 2px solid #735d41;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.inven-slot {
+  width: 42px;
+  height: 42px;
+  background: #fefefe;
+  border: 1px solid #9ca3af;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.inven-slot:hover {
+  background: #fef08a;
+  border-color: #f59e0b;
+}
+
+.inven-slot .slot-icon {
+  font-size: 16px;
+}
+
+.inven-slot .slot-count {
+  position: absolute;
+  bottom: 1px;
+  right: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.inven-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #92400e;
+  background: #fef9c3;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #fde047;
+}
+
+/* Skills Window Content */
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #d1c4a9;
+}
+
+.skill-icon {
+  font-size: 20px;
+  width: 28px;
+  text-align: center;
+}
+
+.skill-info {
+  flex: 1;
+}
+
+.skill-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.skill-level {
+  font-size: 10px;
+  color: #6b7280;
+}
+
+/* Auto-Hunt Config Window Content */
+.config-group {
+  margin-bottom: 12px;
+}
+
+.config-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #374151;
+}
+
+.config-group input[type="range"] {
+  width: 100%;
+}
+
+.config-group .range-val {
+  font-size: 11px;
+  color: #b45309;
+  font-weight: 700;
+  float: right;
+}
+
+.config-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+/* Job Advancement Modal */
+#modal-job-advance {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.job-modal-box {
+  background: #fffdfa;
+  border: 4px solid #b45309;
+  border-radius: 10px;
+  padding: 24px;
+  width: 480px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+.job-modal-box h2 {
+  color: #b45309;
+  margin-bottom: 8px;
+  font-size: 22px;
+}
+
+.job-modal-box p {
+  color: #4b5563;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.job-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.btn-job-choice {
+  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #d97706;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.btn-job-choice:hover {
+  transform: translateY(-2px);
+  border-color: #b45309;
+  background: linear-gradient(180deg, #fef08a 0%, #fcd34d 100%);
+}
+
+.btn-job-choice .job-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.btn-job-choice .job-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #78350f;
+}
+
+.btn-job-choice .job-desc {
+  font-size: 11px;
+  color: #92400e;
+  margin-top: 4px;
+}
