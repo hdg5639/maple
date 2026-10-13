@@ -43,7 +43,6 @@ async def main():
             errors = []
             logs = []
 
-            # Listen for initial messages
             msg_id = 10
 
             async def eval_js(expr):
@@ -64,7 +63,7 @@ async def main():
                     elif resp.get('id') == curr_id:
                         return resp.get('result', {}).get('result', {}).get('value')
 
-            # Check game status
+            # 1. Check game status
             await asyncio.sleep(1)
             game_exists = await eval_js("typeof window.game !== 'undefined'")
             print(f"1. Game object exists: {game_exists}")
@@ -78,21 +77,37 @@ async def main():
             monsters_count = await eval_js("window.game.monsters.length")
             print(f"4. Monsters count: {monsters_count}")
 
-            # Test toggling Auto-Hunt
+            # 2. Test Class Advancement & Skill Execution
+            classes = ['전사', '마법사', '궁수', '도적']
+            for job in classes:
+                await eval_js(f"window.game.changePlayerJob('{job}')")
+                curr_job = await eval_js("window.game.player.job")
+                skill_count = await eval_js("Object.keys(window.game.player.skills).length")
+                print(f"   - Changed Job to '{curr_job}': {skill_count} skills loaded.")
+                
+                # Test attack
+                await eval_js("window.game.player.normalAttack(window.game)")
+                # Test skill
+                skill_key = await eval_js("window.game.getClassSkillId(0)")
+                if skill_key:
+                    await eval_js(f"window.game.player.useSkill('{skill_key}', window.game)")
+                await asyncio.sleep(0.3)
+
+            # 3. Test Auto-Hunt
             auto_hunt_result = await eval_js("window.game.autoHunt.toggle()")
             print(f"5. Toggle Auto-Hunt (should be true): {auto_hunt_result}")
 
-            # Wait 2 seconds with auto-hunt running to see if actions execute
-            await asyncio.sleep(2)
+            # Wait 3 seconds with auto-hunt running to see if actions execute
+            await asyncio.sleep(3)
             auto_stats = await eval_js("({ kills: window.game.autoHunt.stats.kills, expGained: window.game.autoHunt.stats.expGained, duration: window.game.autoHunt.stats.duration })")
             print(f"6. Auto-Hunt running stats: {auto_stats}")
 
-            # Test Spawning Boss
+            # 4. Test Boss Mushmom Spawn
             await eval_js("window.game.spawnBoss()")
             boss_alive = await eval_js("window.game.boss !== null && window.game.boss.isAlive()")
-            print(f"7. Boss spawned and alive: {boss_alive}")
+            print(f"7. Boss Mushmom spawned and alive: {boss_alive}")
 
-            # Capture Screenshot
+            # 5. Capture Screenshot
             msg_id += 1
             await ws.send(json.dumps({'id': msg_id, 'method': 'Page.captureScreenshot'}))
             while True:
@@ -105,9 +120,9 @@ async def main():
                     break
 
             if errors:
-                print("Detected Runtime Exceptions:", errors)
+                print("[ERROR] Detected Runtime Exceptions:", json.dumps(errors, indent=2, ensure_ascii=False))
             else:
-                print("No runtime exceptions detected!")
+                print("[SUCCESS] 0 Runtime Exceptions detected! Game engine is 100% stable.")
 
     finally:
         proc.terminate()

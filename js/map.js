@@ -1,4 +1,4 @@
-// js/map.js - Henesys Hunting Ground 1 (헤네시스 사냥터 1) Map Engine
+// js/map.js - Henesys Hunting Ground 1 with Line Segment Footholds & 3-Layer Parallax
 
 class GameMap {
   constructor() {
@@ -6,65 +6,68 @@ class GameMap {
     this.width = 2400;
     this.height = 950;
 
-    // Platform definitions: { x, y, width, height, canDropThrough }
-    this.platforms = [
-      // Ground floor (Cannot drop through)
-      { x: 0, y: 820, width: 2400, height: 130, canDropThrough: false, type: 'ground' },
+    // Line Segment Footholds: Foothold(id, x1, y1, x2, y2, canDropThrough, type)
+    this.footholds = [
+      // Main Ground Floor (with subtle organic slope segments)
+      new Foothold(1, 0, 820, 800, 820, false, 'ground'),
+      new Foothold(2, 800, 820, 1100, 814, false, 'ground'),   // Gentle uphill slope
+      new Foothold(3, 1100, 814, 1500, 820, false, 'ground'),  // Gentle downhill slope
+      new Foothold(4, 1500, 820, 2400, 820, false, 'ground'),
 
-      // Lower Level Tiers (Tiers 1)
-      { x: 120, y: 700, width: 380, height: 18, canDropThrough: true, type: 'grass' },
-      { x: 580, y: 680, width: 440, height: 18, canDropThrough: true, type: 'grass' },
-      { x: 1100, y: 700, width: 400, height: 18, canDropThrough: true, type: 'grass' },
-      { x: 1600, y: 680, width: 450, height: 18, canDropThrough: true, type: 'grass' },
+      // Tier 1 Platforms (Can drop through)
+      new Foothold(10, 120, 700, 500, 700, true, 'grass'),
+      new Foothold(11, 580, 680, 1020, 680, true, 'grass'),
+      new Foothold(12, 1100, 700, 1500, 700, true, 'grass'),
+      new Foothold(13, 1600, 680, 2050, 680, true, 'grass'),
 
-      // Mid Level Tiers (Tiers 2)
-      { x: 260, y: 550, width: 320, height: 18, canDropThrough: true, type: 'grass' },
-      { x: 740, y: 530, width: 420, height: 18, canDropThrough: true, type: 'grass' },
-      { x: 1300, y: 540, width: 360, height: 18, canDropThrough: true, type: 'grass' },
-      { x: 1780, y: 520, width: 380, height: 18, canDropThrough: true, type: 'grass' },
+      // Tier 2 Platforms (Sloped platforms supported!)
+      new Foothold(20, 260, 550, 580, 550, true, 'grass'),
+      new Foothold(21, 740, 530, 1160, 530, true, 'grass'),
+      new Foothold(22, 1300, 540, 1660, 540, true, 'grass'),
+      new Foothold(23, 1780, 520, 2160, 520, true, 'grass'),
 
-      // High Level Tiers (Tiers 3)
-      { x: 450, y: 400, width: 340, height: 18, canDropThrough: true, type: 'wood' },
-      { x: 950, y: 380, width: 400, height: 18, canDropThrough: true, type: 'wood' },
-      { x: 1480, y: 390, width: 340, height: 18, canDropThrough: true, type: 'wood' },
+      // Tier 3 Platforms (Wood & Grassy branches)
+      new Foothold(30, 450, 400, 790, 400, true, 'wood'),
+      new Foothold(31, 950, 380, 1350, 380, true, 'wood'),
+      new Foothold(32, 1480, 390, 1820, 390, true, 'wood'),
 
-      // Top Peak / Boss Shrine Area (Tier 4)
-      { x: 780, y: 250, width: 480, height: 20, canDropThrough: true, type: 'shrine' }
+      // Tier 4 Peak Shrine Platform
+      new Foothold(40, 780, 250, 1260, 250, true, 'shrine')
     ];
 
-    // Ladders and Ropes: { x, top, bottom, type: 'ladder'|'rope' }
+    // Reference to base ground
+    this.groundFoothold = this.footholds[0];
+
+    // Ladders and Ropes
     this.ladders = [
-      { x: 300, top: 700, bottom: 820, type: 'ladder' },
-      { x: 780, top: 680, bottom: 820, type: 'rope' },
-      { x: 1320, top: 700, bottom: 820, type: 'ladder' },
-      { x: 1800, top: 680, bottom: 820, type: 'rope' },
+      { id: 1, x: 300, top: 700, bottom: 820, type: 'ladder', fromFh: 1, toFh: 10 },
+      { id: 2, x: 780, top: 680, bottom: 820, type: 'rope', fromFh: 1, toFh: 11 },
+      { id: 3, x: 1320, top: 700, bottom: 820, type: 'ladder', fromFh: 3, toFh: 12 },
+      { id: 4, x: 1800, top: 680, bottom: 820, type: 'rope', fromFh: 4, toFh: 13 },
 
-      { x: 420, top: 550, bottom: 700, type: 'rope' },
-      { x: 920, top: 530, bottom: 680, type: 'ladder' },
-      { x: 1460, top: 540, bottom: 700, type: 'rope' },
-      { x: 1940, top: 520, bottom: 680, type: 'ladder' },
+      { id: 5, x: 420, top: 550, bottom: 700, type: 'rope', fromFh: 10, toFh: 20 },
+      { id: 6, x: 920, top: 530, bottom: 680, type: 'ladder', fromFh: 11, toFh: 21 },
+      { id: 7, x: 1460, top: 540, bottom: 700, type: 'rope', fromFh: 12, toFh: 22 },
+      { id: 8, x: 1940, top: 520, bottom: 680, type: 'ladder', fromFh: 13, toFh: 23 },
 
-      { x: 620, top: 400, bottom: 550, type: 'ladder' },
-      { x: 1140, top: 380, bottom: 530, type: 'rope' },
-      { x: 1650, top: 390, bottom: 540, type: 'ladder' },
+      { id: 9, x: 620, top: 400, bottom: 550, type: 'ladder', fromFh: 20, toFh: 30 },
+      { id: 10, x: 1140, top: 380, bottom: 530, type: 'rope', fromFh: 21, toFh: 31 },
+      { id: 11, x: 1650, top: 390, bottom: 540, type: 'ladder', fromFh: 22, toFh: 32 },
 
-      { x: 1020, top: 250, bottom: 380, type: 'ladder' }
+      { id: 12, x: 1020, top: 250, bottom: 380, type: 'ladder', fromFh: 31, toFh: 40 }
     ];
 
-    // Portals: { x, y, targetX, targetY, label }
     this.portals = [
       { x: 80, y: 820, targetX: 2300, targetY: 820, label: '마을 (Town)' },
       { x: 2320, y: 820, targetX: 100, targetY: 820, label: '깊은 숲 (Deep Forest)' }
     ];
 
-    // Wooden Signs
     this.signs = [
       { x: 180, y: 820, text: '헤네시스 사냥터 1' },
       { x: 1020, y: 250, text: '★ 버섯동산 정상 ★' },
       { x: 1700, y: 820, text: '위험! 주황버섯 출현' }
     ];
 
-    // Clouds
     this.clouds = [
       { x: 200, y: 90, speed: 0.15, size: 70 },
       { x: 800, y: 60, speed: 0.25, size: 90 },
@@ -72,44 +75,64 @@ class GameMap {
       { x: 2000, y: 75, speed: 0.22, size: 85 }
     ];
 
-    // Scenery Background Trees & Houses
     this.scenery = [
       { x: 240, y: 820, type: 'tree' },
       { x: 650, y: 820, type: 'mushroom_house' },
-      { x: 1200, y: 820, type: 'tree' },
+      { x: 1200, y: 816, type: 'tree' },
       { x: 1550, y: 820, type: 'windmill' },
       { x: 2100, y: 820, type: 'tree' }
     ];
   }
 
+  // Find continuous slope segment
+  findConnectingFoothold(currentFh, x) {
+    for (const fh of this.footholds) {
+      if (fh.id === currentFh.id) continue;
+      if (x >= fh.x1 && x <= fh.x2) {
+        // Vertical closeness check (within 6px)
+        const currentY = currentFh.getYAtX(x);
+        const targetY = fh.getYAtX(x);
+        if (Math.abs(currentY - targetY) <= 8) {
+          return fh;
+        }
+      }
+    }
+    return null;
+  }
+
+  get platforms() {
+    return this.footholds.map(fh => ({
+      x: fh.x1,
+      y: fh.y1,
+      width: fh.x2 - fh.x1,
+      height: 10
+    }));
+  }
+
   update(dt) {
-    // Animate clouds
     this.clouds.forEach(c => {
       c.x += c.speed;
       if (c.x > this.width + 100) c.x = -150;
     });
   }
 
+  // 3-Layer Parallax Drawing
   draw(ctx, camera) {
-    // 1. Sky & Backdrop (Parallax)
-    this.drawSkyAndBackdrop(ctx, camera);
+    // 1. Far Layer (Sky, Sun, Clouds - Scroll Rate 0.1)
+    this.drawSkyAndFarBackdrop(ctx, camera);
 
-    // 2. Scenery behind platforms
-    this.drawScenery(ctx, camera);
+    // 2. Mid Layer (Distant Hills, Windmills, Trees - Scroll Rate 0.4)
+    this.drawMidground(ctx, camera);
 
-    // 3. Ladders & Ropes
+    // 3. Near Layer (Footholds, Ladders, Portals - Scroll Rate 1.0)
     this.drawLadders(ctx);
-
-    // 4. Platforms & Ground
-    this.drawPlatforms(ctx);
-
-    // 5. Portals & Signs
+    this.drawFootholds(ctx);
     this.drawPortals(ctx);
     this.drawSigns(ctx);
   }
 
-  drawSkyAndBackdrop(ctx, camera) {
-    // Beautiful vibrant blue sky gradient
+  drawSkyAndFarBackdrop(ctx, camera) {
+    // Vibrant Blue Sky Gradient
     const skyGrad = ctx.createLinearGradient(0, 0, 0, this.height);
     skyGrad.addColorStop(0, '#56b8f5');
     skyGrad.addColorStop(0.5, '#99d9ea');
@@ -117,18 +140,19 @@ class GameMap {
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, this.width, this.height);
 
-    // Sun with gentle rays
-    ctx.fillStyle = 'rgba(255, 245, 180, 0.4)';
+    // Sun (Scroll rate 0.05)
+    const sunX = 400 + camera.x * 0.05;
+    ctx.fillStyle = 'rgba(255, 245, 180, 0.45)';
     ctx.beginPath();
-    ctx.arc(400, 160, 90, 0, Math.PI * 2);
+    ctx.arc(sunX, 150, 85, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#fffae0';
     ctx.beginPath();
-    ctx.arc(400, 160, 45, 0, Math.PI * 2);
+    ctx.arc(sunX, 150, 42, 0, Math.PI * 2);
     ctx.fill();
 
     // Drifting Fluffy Clouds
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
     this.clouds.forEach(c => {
       ctx.beginPath();
       ctx.arc(c.x, c.y, c.size * 0.4, 0, Math.PI * 2);
@@ -138,27 +162,14 @@ class GameMap {
       ctx.fill();
     });
 
-    // Distant Green Mountains (Parallax 0.3)
-    const pxOffset = camera.x * 0.3;
+    // Far Mountain Ridge (Parallax 0.15)
+    const pxFar = camera.x * 0.15;
     ctx.fillStyle = '#9bd084';
     ctx.beginPath();
     ctx.moveTo(0, 750);
-    for (let x = 0; x <= this.width; x += 300) {
-      const peakY = 480 + Math.sin(x * 0.005 + pxOffset * 0.002) * 90;
-      ctx.quadraticCurveTo(x + 150, peakY, x + 300, 750);
-    }
-    ctx.lineTo(this.width, this.height);
-    ctx.lineTo(0, this.height);
-    ctx.closePath();
-    ctx.fill();
-
-    // Midground Rolling Hills
-    ctx.fillStyle = '#7ac067';
-    ctx.beginPath();
-    ctx.moveTo(0, 800);
-    for (let x = 0; x <= this.width; x += 220) {
-      const peakY = 600 + Math.sin(x * 0.008) * 70;
-      ctx.quadraticCurveTo(x + 110, peakY, x + 220, 800);
+    for (let x = 0; x <= this.width; x += 280) {
+      const peakY = 470 + Math.sin(x * 0.005 + pxFar * 0.003) * 80;
+      ctx.quadraticCurveTo(x + 140, peakY, x + 280, 750);
     }
     ctx.lineTo(this.width, this.height);
     ctx.lineTo(0, this.height);
@@ -166,98 +177,101 @@ class GameMap {
     ctx.fill();
   }
 
-  drawScenery(ctx) {
+  drawMidground(ctx, camera) {
+    // Midground Rolling Hills (Parallax 0.4)
+    ctx.fillStyle = '#7ac067';
+    ctx.beginPath();
+    ctx.moveTo(0, 800);
+    for (let x = 0; x <= this.width; x += 220) {
+      const peakY = 620 + Math.sin(x * 0.008) * 60;
+      ctx.quadraticCurveTo(x + 110, peakY, x + 220, 800);
+    }
+    ctx.lineTo(this.width, this.height);
+    ctx.lineTo(0, this.height);
+    ctx.closePath();
+    ctx.fill();
+
+    // Scenery behind platforms
     this.scenery.forEach(item => {
       ctx.save();
       ctx.translate(item.x, item.y);
 
       if (item.type === 'tree') {
-        // Maple Tree (Thick trunk, lush multi-layered leaves)
         ctx.fillStyle = '#6b4226';
         ctx.fillRect(-12, -130, 24, 130);
-        // Tree roots
-        ctx.beginPath();
-        ctx.moveTo(-12, 0);
-        ctx.lineTo(-24, 0);
-        ctx.lineTo(-12, -20);
-        ctx.moveTo(12, 0);
-        ctx.lineTo(24, 0);
-        ctx.lineTo(12, -20);
-        ctx.fill();
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(-12, -130, 24, 130);
 
-        // Lush Green Canopy
-        ctx.fillStyle = '#489b37';
+        // Cel-shaded canopy
+        ctx.fillStyle = '#3f822e'; // Dark shade
         ctx.beginPath();
-        ctx.arc(0, -150, 55, 0, Math.PI * 2);
-        ctx.arc(-35, -130, 42, 0, Math.PI * 2);
-        ctx.arc(35, -130, 42, 0, Math.PI * 2);
+        ctx.arc(0, -150, 56, 0, Math.PI * 2);
         ctx.fill();
-
-        ctx.fillStyle = '#5fb34c';
+        ctx.fillStyle = '#52aa3c'; // Mid base
         ctx.beginPath();
-        ctx.arc(-10, -160, 36, 0, Math.PI * 2);
-        ctx.arc(20, -145, 30, 0, Math.PI * 2);
+        ctx.arc(-5, -155, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#6bc752'; // Top highlight
+        ctx.beginPath();
+        ctx.arc(-10, -162, 38, 0, Math.PI * 2);
         ctx.fill();
       } else if (item.type === 'mushroom_house') {
-        // Classic Henesys Mushroom House
-        // House wall
+        // Cel-shaded Henesys Mushroom House
         ctx.fillStyle = '#fce4c8';
         ctx.beginPath();
         ctx.roundRect(-45, -70, 90, 70, 8);
         ctx.fill();
-        // Wooden door
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
         ctx.fillStyle = '#8b5a2b';
         ctx.beginPath();
         ctx.roundRect(-14, -45, 28, 45, [14, 14, 0, 0]);
         ctx.fill();
-        // Doorknob
-        ctx.fillStyle = '#f1c40f';
-        ctx.beginPath();
-        ctx.arc(8, -20, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-        // Windows
+
         ctx.fillStyle = '#60a5fa';
         ctx.beginPath();
         ctx.arc(-26, -35, 10, 0, Math.PI * 2);
         ctx.arc(26, -35, 10, 0, Math.PI * 2);
         ctx.fill();
 
-        // Orange Mushroom Roof
-        ctx.fillStyle = '#ea580c';
+        // Cel-Shaded Orange Mushroom Roof
+        ctx.fillStyle = '#c2410c'; // Base shadow
         ctx.beginPath();
-        ctx.ellipse(0, -75, 60, 40, 0, Math.PI, 0, false);
+        ctx.ellipse(0, -75, 62, 42, 0, Math.PI, 0, false);
         ctx.fill();
-        // Roof dots
+        ctx.fillStyle = '#ea580c'; // Mid orange
+        ctx.beginPath();
+        ctx.ellipse(0, -78, 58, 38, 0, Math.PI, 0, false);
+        ctx.fill();
+
         ctx.fillStyle = '#ffffff';
         [-35, 0, 35].forEach((x, i) => {
           ctx.beginPath();
-          ctx.arc(x, -85 - (i === 1 ? 15 : 0), 8, 0, Math.PI * 2);
+          ctx.arc(x, -88 - (i === 1 ? 14 : 0), 8, 0, Math.PI * 2);
           ctx.fill();
+          ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
         });
-        // Chimney
-        ctx.fillStyle = '#78350f';
-        ctx.fillRect(25, -115, 14, 25);
       } else if (item.type === 'windmill') {
-        // Henesys Windmill
         ctx.fillStyle = '#f5f5f4';
         ctx.beginPath();
-        ctx.moveTo(-30, 0);
-        ctx.lineTo(-18, -140);
-        ctx.lineTo(18, -140);
-        ctx.lineTo(30, 0);
+        ctx.moveTo(-30, 0); ctx.lineTo(-18, -140); ctx.lineTo(18, -140); ctx.lineTo(30, 0);
         ctx.closePath();
         ctx.fill();
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
 
-        // Cone roof
         ctx.fillStyle = '#dc2626';
         ctx.beginPath();
-        ctx.moveTo(-24, -140);
-        ctx.lineTo(0, -180);
-        ctx.lineTo(24, -140);
+        ctx.moveTo(-24, -140); ctx.lineTo(0, -180); ctx.lineTo(24, -140);
         ctx.closePath();
         ctx.fill();
 
-        // Rotating blades
         const rot = (Date.now() / 1200) % (Math.PI * 2);
         ctx.save();
         ctx.translate(0, -140);
@@ -281,19 +295,21 @@ class GameMap {
     this.ladders.forEach(lad => {
       const height = lad.bottom - lad.top;
       if (lad.type === 'ladder') {
-        // Classic Wooden Ladder
         ctx.fillStyle = '#8b5a2b';
-        // Side rails
         ctx.fillRect(lad.x - 12, lad.top, 5, height);
         ctx.fillRect(lad.x + 7, lad.top, 5, height);
-        // Steps
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(lad.x - 12, lad.top, 5, height);
+        ctx.strokeRect(lad.x + 7, lad.top, 5, height);
+
         const stepDist = 18;
         ctx.fillStyle = '#d4a373';
         for (let y = lad.top + 10; y < lad.bottom; y += stepDist) {
           ctx.fillRect(lad.x - 10, y, 20, 4);
+          ctx.strokeRect(lad.x - 10, y, 20, 4);
         }
       } else {
-        // Hanging Vine / Rope
         ctx.strokeStyle = '#2d6a4f';
         ctx.lineWidth = 6;
         ctx.lineCap = 'round';
@@ -305,7 +321,6 @@ class GameMap {
         }
         ctx.stroke();
 
-        // Little leaves on rope
         ctx.fillStyle = '#52b788';
         for (let y = lad.top + 20; y < lad.bottom; y += 36) {
           ctx.beginPath();
@@ -316,74 +331,76 @@ class GameMap {
     });
   }
 
-  drawPlatforms(ctx) {
-    this.platforms.forEach(p => {
-      if (p.type === 'ground') {
-        // Main Ground: Lush grass top, rich brown soil underneath
-        // Grass layer
-        ctx.fillStyle = '#489b37';
-        ctx.fillRect(p.x, p.y, p.width, 24);
+  // Draw Line Segment Footholds with Cel-Shaded Grass & Outlines
+  drawFootholds(ctx) {
+    this.footholds.forEach(fh => {
+      const length = fh.x2 - fh.x1;
+      const angle = Math.atan2(fh.y2 - fh.y1, fh.x2 - fh.x1);
 
-        // Grass blades detail
-        ctx.fillStyle = '#5eb84a';
-        for (let x = p.x; x < p.x + p.width; x += 12) {
-          ctx.beginPath();
-          ctx.moveTo(x, p.y);
-          ctx.lineTo(x + 5, p.y - 6);
-          ctx.lineTo(x + 10, p.y);
-          ctx.fill();
-        }
+      ctx.save();
+      ctx.translate(fh.x1, fh.y1);
+      ctx.rotate(angle);
 
-        // Earth / Soil
-        ctx.fillStyle = '#654321';
-        ctx.fillRect(p.x, p.y + 24, p.width, p.height - 24);
+      if (fh.type === 'ground') {
+        // Ground Foothold: 2-tone grass + dark earth
+        ctx.fillStyle = '#39782c'; // Grass shadow
+        ctx.fillRect(0, 0, length, 24);
+        ctx.fillStyle = '#52aa3c'; // Grass base
+        ctx.fillRect(0, 0, length, 12);
+        ctx.fillStyle = '#6bc752'; // Grass highlight
+        ctx.fillRect(0, 0, length, 4);
 
-        // Stones in dirt
-        ctx.fillStyle = '#8b5a2b';
-        for (let x = p.x + 20; x < p.x + p.width; x += 80) {
-          ctx.beginPath();
-          ctx.ellipse(x, p.y + 50, 14, 8, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      } else if (p.type === 'shrine') {
-        // Stone / Ancient Boss Platform
-        ctx.fillStyle = '#475569';
+        // 2px Outline on Foothold surface
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(p.x, p.y, p.width, p.height, 6);
-        ctx.fill();
-        ctx.fillStyle = '#94a3b8';
-        ctx.fillRect(p.x + 4, p.y + 2, p.width - 8, 4);
+        ctx.moveTo(0, 0); ctx.lineTo(length, 0);
+        ctx.stroke();
 
-        // Golden Shrine Runes
+        // Earth
+        ctx.fillStyle = '#5a3821';
+        ctx.fillRect(0, 24, length, 110);
+      } else if (fh.type === 'shrine') {
+        // Ancient Stone Shrine
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(0, 0, length, 22);
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(0, 0, length, 6);
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(0, 0, length, 22);
+
         ctx.fillStyle = '#f59e0b';
         ctx.font = 'bold 10px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('❖  M U S H M O M   S H R I N E  ❖', p.x + p.width / 2, p.y + 14);
+        ctx.fillText('❖  M U S H M O M   S H R I N E  ❖', length / 2, 15);
       } else {
-        // Floating Wooden & Grass Platforms
-        // Platform body
+        // Floating Platforms: Wooden base with cel-shaded grass topper
         ctx.fillStyle = '#78350f';
         ctx.beginPath();
-        ctx.roundRect(p.x, p.y, p.width, p.height, 4);
+        ctx.roundRect(0, 0, length, 18, 4);
         ctx.fill();
 
-        // Grass topper
-        ctx.fillStyle = '#4ade80';
-        ctx.fillRect(p.x, p.y, p.width, 6);
+        // Cel-shaded grass
+        ctx.fillStyle = '#39782c';
+        ctx.fillRect(0, 0, length, 7);
+        ctx.fillStyle = '#52aa3c';
+        ctx.fillRect(0, 0, length, 4);
+        ctx.fillStyle = '#86efac';
+        ctx.fillRect(0, 0, length, 1.5);
 
-        // Hanging vines / wood posts
+        // 1.5px Outline
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 1.8;
+        ctx.strokeRect(0, 0, length, 18);
+
+        // Wood post drops
         ctx.fillStyle = '#92400e';
-        ctx.fillRect(p.x + 15, p.y + p.height, 6, 12);
-        ctx.fillRect(p.x + p.width - 21, p.y + p.height, 6, 12);
-
-        // Grass edge frills
-        ctx.fillStyle = '#22c55e';
-        for (let x = p.x + 4; x < p.x + p.width - 8; x += 16) {
-          ctx.beginPath();
-          ctx.arc(x + 8, p.y + 6, 4, 0, Math.PI);
-          ctx.fill();
-        }
+        ctx.fillRect(16, 18, 6, 12);
+        ctx.fillRect(length - 22, 18, 6, 12);
       }
+
+      ctx.restore();
     });
   }
 
@@ -393,8 +410,7 @@ class GameMap {
       ctx.save();
       ctx.translate(port.x, port.y - 35);
 
-      // Glowing Blue Oval Portal Rings
-      const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 26 + pulse);
+      const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 24 + pulse);
       grad.addColorStop(0, 'rgba(186, 230, 253, 0.95)');
       grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.75)');
       grad.addColorStop(0.9, 'rgba(14, 165, 233, 0.3)');
@@ -405,18 +421,6 @@ class GameMap {
       ctx.ellipse(0, 0, 22 + pulse, 38 + pulse, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Portal sparkles
-      for (let i = 0; i < 4; i++) {
-        const angle = (Date.now() / 400 + i * Math.PI / 2) % (Math.PI * 2);
-        const sx = Math.cos(angle) * (14 + pulse);
-        const sy = Math.sin(angle) * (24 + pulse);
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(sx, sy, 2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Portal Label
       ctx.font = 'bold 11px "Malgun Gothic", sans-serif';
       ctx.textAlign = 'center';
       ctx.fillStyle = '#ffffff';
@@ -434,20 +438,18 @@ class GameMap {
       ctx.save();
       ctx.translate(s.x, s.y);
 
-      // Wooden post
       ctx.fillStyle = '#5c3826';
       ctx.fillRect(-3, -30, 6, 30);
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(-3, -30, 6, 30);
 
-      // Signboard
       ctx.fillStyle = '#b4814a';
       ctx.beginPath();
       ctx.roundRect(-50, -52, 100, 24, 4);
       ctx.fill();
-      ctx.strokeStyle = '#5c3826';
-      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Sign text
       ctx.font = 'bold 10px "Malgun Gothic", sans-serif';
       ctx.textAlign = 'center';
       ctx.fillStyle = '#2e190b';

@@ -1,26 +1,190 @@
-// js/autohunt.js - Advanced Auto-Hunt AI with Class-Aware Range and Combat Tactics
+// js/autohunt.js - Foothold Topological Graph, A* Pathfinding, and Waypoint Queue Engine
+
+class FootholdGraph {
+  constructor(map) {
+    this.map = map;
+    this.nodes = new Map(); // footholdId -> Foothold
+    this.edges = new Map(); // footholdId -> [ { targetId, type: 'walk'|'ladder'|'drop', cost, ladder, dropX } ]
+    this.buildGraph();
+  }
+
+  buildGraph() {
+    this.map.footholds.forEach(fh => {
+      this.nodes.set(fh.id, fh);
+      this.edges.set(fh.id, []);
+    });
+
+    // 1. Add Adjacent Walk Edges
+    this.map.footholds.forEach(fhA => {
+      this.map.footholds.forEach(fhB => {
+        if (fhA.id !== fhB.id) {
+          // Check horizontal adjacency
+          if (Math.abs(fhA.x2 - fhB.x1) <= 12 && Math.abs(fhA.y2 - fhB.y1) <= 12) {
+            this.edges.get(fhA.id).push({ targetId: fhB.id, type: 'walk', cost: 1 });
+            this.edges.get(fhB.id).push({ targetId: fhA.id, type: 'walk', cost: 1 });
+          }
+        }
+      });
+    });
+
+    // 2. Add Ladder Edges
+    this.map.ladders.forEach(lad => {
+      let bottomFh = null;
+      let topFh = null;
+
+      this.map.footholds.forEach(fh => {
+        if (lad.x >= fh.x1 && lad.x <= fh.x2) {
+          const sy = fh.getYAtX(lad.x);
+          if (Math.abs(sy - lad.bottom) <= 14) bottomFh = fh;
+          if (Math.abs(sy - lad.top) <= 14) topFh = fh;
+        }
+      });
+
+      if (bottomFh && topFh && bottomFh.id !== topFh.id) {
+        const cost = Math.abs(lad.bottom - lad.top) * 0.1;
+        this.edges.get(bottomFh.id).push({
+          targetId: topFh.id,
+          type: 'ladder',
+          ladder: lad,
+          climbDir: 'up',
+          cost: cost
+        });
+        this.edges.get(topFh.id).push({
+          targetId: bottomFh.id,
+          type: 'ladder',
+          ladder: lad,
+          climbDir: 'down',
+          cost: cost * 0.7
+        });
+      }
+    });
+
+    // 3. Add Drop-Through Edges
+    this.map.footholds.forEach(upperFh => {
+      if (!upperFh.canDropThrough) return;
+      this.map.footholds.forEach(lowerFh => {
+        if (upperFh.id === lowerFh.id) return;
+        const overlapX1 = Math.max(upperFh.x1, lowerFh.x1);
+        const overlapX2 = Math.min(upperFh.x2, lowerFh.x2);
+
+        if (overlapX1 < overlapX2) {
+          const midX = (overlapX1 + overlapX2) / 2;
+          const upperY = upperFh.getYAtX(midX);
+          const lowerY = lowerFh.getYAtX(midX);
+
+          // If lower is below upper within fall distance (30~240px)
+          if (lowerY > upperY + 25 && lowerY < upperY + 240) {
+            this.edges.get(upperFh.id).push({
+              targetId: lowerFh.id,
+              type: 'drop',
+              dropX: midX,
+              cost: 1.5
+            });
+          }
+        }
+      });
+    });
+  }
+
+  // A* Shortest Path between two footholds
+  findPath(startFhId, targetFhId) {
+    if (startFhId === targetFhId) return [];
+
+    const openSet = [startFhId];
+    const cameFrom = new Map(); // node -> { prevNode, edge }
+    const gScore = new Map();
+    const fScore = new Map();
+
+    this.nodes.forEach((_, id) => {
+      gScore.set(id, Infinity);
+      fScore.set(id, Infinity);
+    });
+
+    gScore.set(startFhId, 0);
+    const startFh = this.nodes.get(startFhId);
+    const targetFh = this.nodes.get(targetFhId);
+    if (!startFh || !targetFh) return [];
+
+    fScore.set(startFhId, Math.hypot(targetFh.x1 - startFh.x1, targetFh.y1 - startFh.y1));
+
+    while (openSet.length > 0) {
+      // Find lowest fScore
+      let current = openSet[0];
+      let lowestF = fScore.get(current);
+      let currIdx = 0;
+
+      for (let i = 1; i < openSet.length; i++) {
+        const f = fScore.get(openSet[i]);
+        if (f < lowestF) {
+          lowestF = f;
+          current = openSet[i];
+          currIdx = i;
+        }
+      }
+
+      if (current === targetFhId) {
+        // Reconstruct path of edges
+        const path = [];
+        let currNode = targetFhId;
+        while (cameFrom.has(currNode)) {
+          const { prevNode, edge } = cameFrom.get(currNode);
+          path.unshift(edge);
+          currNode = prevNode;
+        }
+        return path;
+      }
+
+      openSet.splice(currIdx, 1);
+      const neighborEdges = this.edges.get(current) || [];
+
+      for (const edge of neighborEdges) {
+        const neighbor = edge.targetId;
+        const tentativeG = gScore.get(current) + edge.cost;
+
+        if (tentativeG < gScore.get(neighbor)) {
+          cameFrom.set(neighbor, { prevNode: current, edge });
+          gScore.set(neighbor, tentativeG);
+
+          const neighborFh = this.nodes.get(neighbor);
+          const h = Math.hypot(targetFh.x1 - neighborFh.x1, targetFh.y1 - neighborFh.y1);
+          fScore.set(neighbor, tentativeG + h);
+
+          if (!openSet.includes(neighbor)) {
+            openSet.push(neighbor);
+          }
+        }
+      }
+    }
+
+    return []; // No path found
+  }
+}
 
 class AutoHuntManager {
   constructor(game) {
     this.game = game;
     this.enabled = false;
+    this.graph = new FootholdGraph(game.map);
 
     this.config = {
       hpPotionThreshold: 0.55,
       mpPotionThreshold: 0.40,
       autoLoot: true,
       useSkills: true,
-      huntMode: 'balanced',
-      searchRadius: 1000
+      searchRadius: 1200
     };
 
     this.currentTarget = null;
     this.targetType = null;
-    this.stuckTimer = 0;
-    this.lastX = 0;
-    this.lastY = 0;
-    this.decisionTimer = 0;
+    this.commandQueue = []; // Array of actionable waypoint commands
 
+    // Anti-Stuck Tracking (0.5s with displacement < 10px)
+    this.stuckTimer = 0;
+    this.lastRecordedX = 0;
+    this.lastRecordedY = 0;
+    this.pathRecalcCooldown = 0;
+
+    // Analytics
     this.stats = {
       startTime: null,
       duration: 0,
@@ -37,11 +201,13 @@ class AutoHuntManager {
     this.enabled = !this.enabled;
     if (this.enabled) {
       this.stats.startTime = Date.now();
-      this.game.spawnItemText(this.game.player.x, this.game.player.y - 50, '★ 자동사냥 시작! ★');
+      this.commandQueue = [];
+      this.game.spawnItemText(this.game.player.x, this.game.player.y - 50, '★ 지능형 자동사냥 ON ★');
     } else {
       this.game.player.stopHorizontal();
       this.game.player.stopVerticalClimb();
       this.currentTarget = null;
+      this.commandQueue = [];
       this.game.spawnItemText(this.game.player.x, this.game.player.y - 50, '자동사냥 정지');
     }
     this.updateUI();
@@ -71,16 +237,20 @@ class AutoHuntManager {
     const player = this.game.player;
     const map = this.game.map;
 
+    // 1. Auto Potion Survival
     this.checkSurvival(player);
-    this.checkStuck(dt, player);
 
-    this.decisionTimer -= dt;
-    if (this.decisionTimer <= 0) {
-      this.decisionTimer = 0.12;
+    // 2. Anti-Stuck Detection (Displacement < 10px over 0.5s)
+    this.checkAntiStuck(dt, player);
+
+    // 3. Target Evaluation
+    if (!this.currentTarget || !this.isTargetValid(this.currentTarget)) {
       this.selectTarget(player);
+      this.buildWaypointPath(player);
     }
 
-    this.executeAI(dt, player, map);
+    // 4. Execute Waypoint Navigation Queue
+    this.executeWaypoints(dt, player, map);
   }
 
   checkSurvival(player) {
@@ -94,37 +264,47 @@ class AutoHuntManager {
     }
   }
 
-  checkStuck(dt, player) {
-    const distMoved = Math.hypot(player.x - this.lastX, player.y - this.lastY);
-    if (distMoved < 3 && player.vx !== 0) {
+  checkAntiStuck(dt, player) {
+    const dist = Math.hypot(player.x - this.lastRecordedX, player.y - this.lastRecordedY);
+    if (dist < 10) {
       this.stuckTimer += dt;
-      if (this.stuckTimer > 0.8) {
-        player.jump();
-        if (Math.random() < 0.4) {
-          player.dropThrough();
-        }
+      if (this.stuckTimer >= 0.5) {
+        // Unstuck routine: flush commands, random leap & recalculate!
+        this.commandQueue = [];
         this.stuckTimer = 0;
+        if (Math.random() < 0.5) player.jump();
+        else player.dropThrough();
+        this.selectTarget(player);
+        this.buildWaypointPath(player);
       }
     } else {
       this.stuckTimer = 0;
+      this.lastRecordedX = player.x;
+      this.lastRecordedY = player.y;
     }
-    this.lastX = player.x;
-    this.lastY = player.y;
+  }
+
+  isTargetValid(target) {
+    if (this.targetType === 'monster') {
+      return target && target.isAlive();
+    } else if (this.targetType === 'drop') {
+      return this.game.drops.includes(target) && target.life > 0;
+    }
+    return false;
   }
 
   selectTarget(player) {
+    // A. Priority: Nearby Drops
     if (this.config.autoLoot && this.game.drops.length > 0) {
       let closestDrop = null;
-      let minDropDist = 280;
-
-      for (const drop of this.game.drops) {
-        const dist = Math.hypot(drop.x - player.x, drop.y - player.y);
-        if (dist < minDropDist) {
-          minDropDist = dist;
-          closestDrop = drop;
+      let minDist = 300;
+      for (const d of this.game.drops) {
+        const dist = Math.hypot(d.x - player.x, d.y - player.y);
+        if (dist < minDist) {
+          minDist = dist;
+          closestDrop = d;
         }
       }
-
       if (closestDrop) {
         this.currentTarget = closestDrop;
         this.targetType = 'drop';
@@ -132,24 +312,19 @@ class AutoHuntManager {
       }
     }
 
+    // B. Alive Monster with distance scoring
     let bestMonster = null;
     let minScore = Infinity;
 
     for (const m of this.game.monsters) {
       if (!m.isAlive()) continue;
-
       const dx = m.x - player.x;
       const dy = m.y - player.y;
       const dist = Math.hypot(dx, dy);
 
       if (dist > this.config.searchRadius) continue;
-
-      const verticalPenalty = Math.abs(dy) * 2.2;
-      let score = dist + verticalPenalty;
-
-      if (m.type === 'mushmom') {
-        score -= 250;
-      }
+      let score = dist + Math.abs(dy) * 2.0;
+      if (m.type === 'mushmom') score -= 300;
 
       if (score < minScore) {
         minScore = score;
@@ -161,7 +336,60 @@ class AutoHuntManager {
     this.targetType = bestMonster ? 'monster' : null;
   }
 
-  executeAI(dt, player, map) {
+  findCurrentFoothold(entity) {
+    if (entity.currentFoothold) return entity.currentFoothold;
+    for (const fh of this.game.map.footholds) {
+      if (entity.x >= fh.x1 && entity.x <= fh.x2) {
+        const sy = fh.getYAtX(entity.x);
+        if (Math.abs(sy - entity.y) <= 18) {
+          return fh;
+        }
+      }
+    }
+    return this.game.map.groundFoothold;
+  }
+
+  buildWaypointPath(player) {
+    this.commandQueue = [];
+    if (!this.currentTarget) return;
+
+    const startFh = this.findCurrentFoothold(player);
+    const targetFh = this.findCurrentFoothold(this.currentTarget);
+
+    if (!startFh || !targetFh) return;
+
+    if (startFh.id === targetFh.id) {
+      // Same foothold -> directly navigate to target X
+      this.commandQueue.push({ action: 'NAVIGATE_TO_TARGET' });
+      return;
+    }
+
+    // A* Pathfinding between footholds
+    const edges = this.graph.findPath(startFh.id, targetFh.id);
+
+    if (edges.length === 0) {
+      this.commandQueue.push({ action: 'NAVIGATE_TO_TARGET' });
+      return;
+    }
+
+    // Convert edges into concrete commands
+    for (const edge of edges) {
+      if (edge.type === 'ladder') {
+        this.commandQueue.push({ action: 'MOVE_TO_X', x: edge.ladder.x });
+        this.commandQueue.push({ action: 'CLIMB_LADDER', ladder: edge.ladder, dir: edge.climbDir });
+      } else if (edge.type === 'drop') {
+        this.commandQueue.push({ action: 'MOVE_TO_X', x: edge.dropX });
+        this.commandQueue.push({ action: 'DROP_THROUGH' });
+      } else if (edge.type === 'walk') {
+        const nextFh = this.graph.nodes.get(edge.targetId);
+        this.commandQueue.push({ action: 'MOVE_TO_X', x: (nextFh.x1 + nextFh.x2) / 2 });
+      }
+    }
+
+    this.commandQueue.push({ action: 'NAVIGATE_TO_TARGET' });
+  }
+
+  executeWaypoints(dt, player, map) {
     if (!this.currentTarget) {
       player.stopHorizontal();
       return;
@@ -169,142 +397,130 @@ class AutoHuntManager {
 
     const tx = this.currentTarget.x;
     const ty = this.currentTarget.y;
-    const dx = tx - player.x;
-    const dy = ty - player.y;
 
-    if (player.onLadder) {
-      if (dy < -15) {
-        player.climbUp(map);
-      } else if (dy > 15) {
-        player.climbDown(map);
-      } else {
-        player.facing = dx > 0 ? 'right' : 'left';
-        player.jump();
-      }
+    // Execute current command in queue
+    const cmd = this.commandQueue[0];
+    if (!cmd) {
+      this.buildWaypointPath(player);
       return;
     }
 
-    if (this.targetType === 'drop') {
-      if (Math.abs(dx) > 12) {
+    if (cmd.action === 'MOVE_TO_X') {
+      const dx = cmd.x - player.x;
+      if (Math.abs(dx) <= 10) {
+        player.stopHorizontal();
+        this.commandQueue.shift(); // Finished command
+      } else {
         if (dx > 0) player.moveRight();
         else player.moveLeft();
-      } else {
-        player.stopHorizontal();
-      }
-      if (dy > 35 && Math.abs(dx) < 80) {
-        player.dropThrough();
       }
       return;
     }
 
-    // Class-specific attack ranges!
-    let attackRange = 54;
-    if (player.job === '궁수') attackRange = 240;
-    else if (player.job === '도적') attackRange = 210;
-    else if (player.job === '마법사') attackRange = 160;
+    if (cmd.action === 'CLIMB_LADDER') {
+      if (!player.onLadder) {
+        if (Math.abs(player.x - cmd.ladder.x) > 10) {
+          player.x = cmd.ladder.x;
+        }
+        if (cmd.dir === 'up') player.climbUp(map);
+        else player.climbDown(map);
+      } else {
+        if (cmd.dir === 'up') {
+          player.climbUp(map);
+          if (player.y <= cmd.ladder.top + 5) {
+            player.jump();
+            this.commandQueue.shift();
+          }
+        } else {
+          player.climbDown(map);
+          if (player.y >= cmd.ladder.bottom - 5) {
+            this.commandQueue.shift();
+          }
+        }
+      }
+      return;
+    }
 
-    const inAttackRange = Math.abs(dx) <= attackRange && Math.abs(dy) <= 35;
+    if (cmd.action === 'DROP_THROUGH') {
+      player.dropThrough();
+      this.commandQueue.shift();
+      return;
+    }
 
-    if (inAttackRange) {
-      player.stopHorizontal();
-      player.facing = dx >= 0 ? 'right' : 'left';
+    if (cmd.action === 'NAVIGATE_TO_TARGET') {
+      const dx = tx - player.x;
+      const dy = ty - player.y;
 
-      // Perform class skills or attack
-      if (this.config.useSkills) {
-        if (player.job === '전사') {
-          if (player.skills.slash_blast?.level > 0 && player.mp >= 10 && player.hp > 25) {
-            player.useSkill('slash_blast', this.game);
-          } else if (player.skills.power_strike?.level > 0 && player.mp >= 6) {
-            player.useSkill('power_strike', this.game);
-          } else {
-            player.normalAttack(this.game);
-          }
-        } else if (player.job === '마법사') {
-          if (player.skills.magic_claw?.level > 0 && player.mp >= 12) {
-            player.useSkill('magic_claw', this.game);
-          } else if (player.skills.energy_bolt?.level > 0 && player.mp >= 6) {
-            player.useSkill('energy_bolt', this.game);
-          } else {
-            player.normalAttack(this.game);
-          }
-        } else if (player.job === '궁수') {
-          if (player.skills.double_shot?.level > 0 && player.mp >= 10) {
-            player.useSkill('double_shot', this.game);
-          } else if (player.skills.arrow_blow?.level > 0 && player.mp >= 6) {
-            player.useSkill('arrow_blow', this.game);
-          } else {
-            player.normalAttack(this.game);
-          }
-        } else if (player.job === '도적') {
-          if (player.skills.lucky_seven?.level > 0 && player.mp >= 8) {
-            player.useSkill('lucky_seven', this.game);
-          } else if (player.skills.double_stab?.level > 0 && player.mp >= 6) {
-            player.useSkill('double_stab', this.game);
-          } else {
-            player.normalAttack(this.game);
-          }
+      let attackRange = 56;
+      if (player.job === '궁수') attackRange = 240;
+      else if (player.job === '도적') attackRange = 210;
+      else if (player.job === '마법사') attackRange = 160;
+
+      const inRange = Math.abs(dx) <= attackRange && Math.abs(dy) <= 35;
+
+      if (inRange && this.targetType === 'monster') {
+        player.stopHorizontal();
+        player.facing = dx >= 0 ? 'right' : 'left';
+        this.triggerAttack(player);
+        return;
+      }
+
+      if (this.targetType === 'drop' && Math.abs(dx) <= 14) {
+        player.stopHorizontal();
+        return;
+      }
+
+      if (dx > 20) {
+        player.moveRight();
+      } else if (dx < -20) {
+        player.moveLeft();
+      } else {
+        player.stopHorizontal();
+        player.facing = dx >= 0 ? 'right' : 'left';
+      }
+    }
+  }
+
+  triggerAttack(player) {
+    if (this.config.useSkills) {
+      if (player.job === '전사') {
+        if (player.skills.slash_blast?.level > 0 && player.mp >= 10 && player.hp > 25) {
+          player.useSkill('slash_blast', this.game);
+        } else if (player.skills.power_strike?.level > 0 && player.mp >= 6) {
+          player.useSkill('power_strike', this.game);
+        } else {
+          player.normalAttack(this.game);
+        }
+      } else if (player.job === '마법사') {
+        if (player.skills.magic_claw?.level > 0 && player.mp >= 12) {
+          player.useSkill('magic_claw', this.game);
+        } else if (player.skills.energy_bolt?.level > 0 && player.mp >= 6) {
+          player.useSkill('energy_bolt', this.game);
+        } else {
+          player.normalAttack(this.game);
+        }
+      } else if (player.job === '궁수') {
+        if (player.skills.double_shot?.level > 0 && player.mp >= 10) {
+          player.useSkill('double_shot', this.game);
+        } else if (player.skills.arrow_blow?.level > 0 && player.mp >= 6) {
+          player.useSkill('arrow_blow', this.game);
+        } else {
+          player.normalAttack(this.game);
+        }
+      } else if (player.job === '도적') {
+        if (player.skills.lucky_seven?.level > 0 && player.mp >= 8) {
+          player.useSkill('lucky_seven', this.game);
+        } else if (player.skills.double_stab?.level > 0 && player.mp >= 6) {
+          player.useSkill('double_stab', this.game);
         } else {
           player.normalAttack(this.game);
         }
       } else {
         player.normalAttack(this.game);
       }
-      return;
-    }
-
-    if (dy < -60) {
-      const ladder = Physics.checkLadderGrab(player, map, 'up');
-      if (ladder) {
-        player.climbUp(map);
-        return;
-      } else {
-        const bestLadder = this.findNearestUpLadder(player, map, ty);
-        if (bestLadder) {
-          const ldx = bestLadder.x - player.x;
-          if (Math.abs(ldx) > 6) {
-            if (ldx > 0) player.moveRight();
-            else player.moveLeft();
-          } else {
-            player.climbUp(map);
-          }
-          return;
-        }
-      }
-    }
-
-    if (dy > 50 && Math.abs(dx) < 180) {
-      player.dropThrough();
-    }
-
-    if (dx > 25) {
-      player.moveRight();
-      if (Math.random() < 0.05 && player.onGround) {
-        player.jump();
-      }
-    } else if (dx < -25) {
-      player.moveLeft();
-      if (Math.random() < 0.05 && player.onGround) {
-        player.jump();
-      }
     } else {
-      player.stopHorizontal();
-      player.facing = dx >= 0 ? 'right' : 'left';
+      player.normalAttack(this.game);
     }
-  }
-
-  findNearestUpLadder(player, map, targetY) {
-    let best = null;
-    let minD = Infinity;
-    for (const lad of map.ladders) {
-      if (lad.top < player.y && lad.bottom >= player.y - 20) {
-        const d = Math.abs(lad.x - player.x);
-        if (d < minD) {
-          minD = d;
-          best = lad;
-        }
-      }
-    }
-    return best;
   }
 
   drawTargetIndicator(ctx) {
@@ -354,4 +570,5 @@ class AutoHuntManager {
   }
 }
 
+window.FootholdGraph = FootholdGraph;
 window.AutoHuntManager = AutoHuntManager;

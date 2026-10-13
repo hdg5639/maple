@@ -11,6 +11,7 @@ class Game {
     this.drops = [];
     this.projectiles = [];
     this.floatingTexts = [];
+    this.damageDigits = [];
     this.skillEffects = [];
 
     this.camera = { x: 0, y: 0, width: 800, height: 600 };
@@ -161,18 +162,18 @@ class Game {
   spawnMonster() {
     if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
 
-    const plat = this.map.platforms[Math.floor(Math.random() * this.map.platforms.length)];
-    const x = plat.x + 30 + Math.random() * (plat.width - 60);
-    const y = plat.y;
+    const fh = this.map.footholds[Math.floor(Math.random() * this.map.footholds.length)];
+    const x = fh.x1 + 25 + Math.random() * Math.max(10, (fh.x2 - fh.x1) - 50);
+    const y = fh.getYAtX(x);
 
     let type = 'snail';
-    if (y === 820) {
+    if (y >= 810) {
       const r = Math.random();
       type = r < 0.3 ? 'snail' : (r < 0.6 ? 'blue_snail' : (r < 0.85 ? 'slime' : 'ribbon_pig'));
-    } else if (y >= 680) {
+    } else if (y >= 670) {
       const r = Math.random();
       type = r < 0.4 ? 'blue_snail' : (r < 0.7 ? 'red_snail' : 'slime');
-    } else if (y >= 520) {
+    } else if (y >= 510) {
       const r = Math.random();
       type = r < 0.45 ? 'slime' : (r < 0.8 ? 'orange_mushroom' : 'ribbon_pig');
     } else {
@@ -221,6 +222,24 @@ class Game {
 
   spawnDamageText(x, y, damage, isCrit = false, target = 'monster') {
     this.floatingTexts.push(new FloatingText(x, y, `${damage}`, target === 'monster' ? 'damage' : 'miss', isCrit));
+  }
+
+  spawnStaggeredDamage(x, y, damage, isCrit = false) {
+    const str = `${damage}`;
+    const digitSpacing = isCrit ? 15 : 12;
+    const totalW = str.length * digitSpacing;
+    const startX = x - totalW / 2 + digitSpacing / 2;
+
+    if (isCrit) {
+      this.damageDigits.push(new DamageDigit('CRITICAL', x, y - 22, 0, true));
+    }
+
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+      const digitX = startX + i * digitSpacing;
+      const delay = i * 0.04;
+      this.damageDigits.push(new DamageDigit(char, digitX, y, delay, isCrit));
+    }
   }
 
   spawnMesoText(x, y, amount) {
@@ -298,6 +317,18 @@ class Game {
         this.drops.splice(i, 1);
       }
     }
+
+    // Damage digits update
+    for (let i = this.damageDigits.length - 1; i >= 0; i--) {
+      const dd = this.damageDigits[i];
+      dd.update(dt);
+      if (dd.life <= 0) {
+        this.damageDigits.splice(i, 1);
+      }
+    }
+
+    // Particles update
+    window.sprites.updateParticles(dt);
 
     // Floating text update
     for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
@@ -377,7 +408,9 @@ class Game {
     // 7. Auto-Hunt Crosshair
     this.autoHunt.drawTargetIndicator(ctx);
 
-    // 8. Floating Damage Numbers
+    // 8. Particles & Staggered Damage Numbers
+    window.sprites.drawDustParticles(ctx);
+    this.damageDigits.forEach(dd => window.sprites.drawDamageDigit(ctx, dd));
     this.floatingTexts.forEach(ft => window.sprites.drawFloatingText(ctx, ft));
 
     ctx.restore();
@@ -411,13 +444,14 @@ class Game {
 
     ctx.strokeStyle = 'rgba(110, 231, 183, 0.7)';
     ctx.lineWidth = 1.5;
-    this.map.platforms.forEach(p => {
-      const px = mmX + p.x * scaleX;
-      const py = mmY + 16 + p.y * scaleY;
-      const pw = p.width * scaleX;
+    this.map.footholds.forEach(fh => {
+      const px1 = mmX + fh.x1 * scaleX;
+      const py1 = mmY + 16 + fh.y1 * scaleY;
+      const px2 = mmX + fh.x2 * scaleX;
+      const py2 = mmY + 16 + fh.y2 * scaleY;
       ctx.beginPath();
-      ctx.moveTo(px, py);
-      ctx.lineTo(px + pw, py);
+      ctx.moveTo(px1, py1);
+      ctx.lineTo(px2, py2);
       ctx.stroke();
     });
 

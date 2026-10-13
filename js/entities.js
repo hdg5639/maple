@@ -1,4 +1,29 @@
-// js/entities.js - Player, Monster, Drops, Projectiles, and Combat Entities
+// js/entities.js - Player, Monster, Drops, Projectiles, and Staggered Bouncing Damage Digits
+
+class DamageDigit {
+  constructor(char, x, y, delay, isCrit) {
+    this.char = char;
+    this.x = x;
+    this.y = y;
+    this.delay = delay;
+    this.isCrit = isCrit;
+    this.vy = -5.0;
+    this.gravity = 0.4;
+    this.life = 0.85;
+    this.started = false;
+  }
+
+  update(dt) {
+    if (this.delay > 0) {
+      this.delay -= dt;
+      return;
+    }
+    this.started = true;
+    this.y += this.vy;
+    this.vy += this.gravity;
+    this.life -= dt;
+  }
+}
 
 class Projectile {
   constructor(x, y, vx, vy, type, damage, isCrit, owner) {
@@ -7,11 +32,11 @@ class Projectile {
     this.y = y;
     this.vx = vx;
     this.vy = vy;
-    this.type = type; // 'arrow', 'shuriken', 'energy_bolt'
+    this.type = type;
     this.damage = damage;
     this.isCrit = isCrit;
     this.owner = owner;
-    this.life = 1.6; // seconds
+    this.life = 1.6;
     this.hit = false;
   }
 
@@ -22,14 +47,13 @@ class Projectile {
 
     if (this.hit) return;
 
-    // Check collision with monsters
     for (const m of game.monsters) {
       if (m.isAlive()) {
         const d = Math.hypot(m.x - this.x, (m.y - m.height / 2) - this.y);
-        if (d < Math.max(22, m.width * 0.6)) {
+        if (d < Math.max(24, m.width * 0.6)) {
           this.hit = true;
-          m.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left');
-          game.spawnDamageText(m.x, m.y - m.height * 0.7, this.damage, this.isCrit);
+          m.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
+          game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, this.damage, this.isCrit);
           break;
         }
       }
@@ -48,23 +72,21 @@ class Player {
     this.facing = 'right';
 
     this.onGround = false;
+    this.currentFoothold = null;
     this.onLadder = false;
     this.currentLadder = null;
     this.dropThroughTimer = 0;
 
-    // Combat & Timers
     this.attackTimer = 0;
     this.attackDuration = 0.26;
     this.invincibleTimer = 0;
 
-    // Profile & Level
     this.name = '단풍모험가';
-    this.job = '초보자'; // '초보자', '전사', '마법사', '궁수', '도적'
+    this.job = '초보자';
     this.level = 1;
     this.exp = 0;
     this.maxExp = 15;
 
-    // Core Stats
     this.str = 12;
     this.dex = 8;
     this.int = 4;
@@ -77,11 +99,10 @@ class Player {
     this.mp = this.maxMp;
 
     this.walkSpeed = 3.6;
-    this.jumpForce = -9.6;
+    this.jumpForce = Physics.JUMP_VELOCITY;
     this.ladderSpeed = 2.4;
-    this.weaponType = 'sword'; // 'sword', 'staff', 'bow', 'claw'
+    this.weaponType = 'sword';
 
-    // Inventory
     this.meso = 100;
     this.inventory = {
       equip: [
@@ -99,11 +120,14 @@ class Player {
       ]
     };
 
-    // Class-specific Skill Trees
     this.skills = {};
     this.initSkillsForJob('초보자');
 
     this.regenTimer = 0;
+  }
+
+  onLand() {
+    window.sprites.spawnLandingDust(this.x, this.y);
   }
 
   initSkillsForJob(job) {
@@ -144,7 +168,6 @@ class Player {
       this.weaponType = 'claw';
       this.walkSpeed = 4.2;
     } else {
-      // 초보자
       this.skills = {
         power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️' },
         slash_blast: { name: '슬래시 블러스트', level: 0, maxLevel: 20, mpCost: 10, hpCost: 8, dmgMult: 1.4, icon: '🌀' },
@@ -187,15 +210,11 @@ class Player {
 
   setJob(jobName) {
     this.job = jobName;
-    if (jobName === '전사') {
-      this.str = Math.max(25, this.str);
-    } else if (jobName === '마법사') {
-      this.int = Math.max(25, this.int);
-    } else if (jobName === '궁수') {
-      this.dex = Math.max(25, this.dex);
-    } else if (jobName === '도적') {
-      this.luk = Math.max(25, this.luk);
-    }
+    if (jobName === '전사') this.str = Math.max(25, this.str);
+    else if (jobName === '마법사') this.int = Math.max(25, this.int);
+    else if (jobName === '궁수') this.dex = Math.max(25, this.dex);
+    else if (jobName === '도적') this.luk = Math.max(25, this.luk);
+
     this.initSkillsForJob(jobName);
     this.calcDerivedStats();
     this.hp = this.maxHp;
@@ -212,12 +231,8 @@ class Player {
   }
 
   update(dt, map) {
-    if (this.attackTimer > 0) {
-      this.attackTimer -= dt;
-    }
-    if (this.invincibleTimer > 0) {
-      this.invincibleTimer -= dt;
-    }
+    if (this.attackTimer > 0) this.attackTimer -= dt;
+    if (this.invincibleTimer > 0) this.invincibleTimer -= dt;
 
     this.regenTimer += dt;
     if (this.regenTimer >= 5) {
@@ -227,7 +242,7 @@ class Player {
       this.healMp(5 + rec);
     }
 
-    Physics.updateEntity(this, map, dt);
+    Physics.updateEntityFixed(this, map, dt);
   }
 
   moveLeft() {
@@ -257,6 +272,7 @@ class Player {
     if (this.onGround) {
       this.vy = this.jumpForce;
       this.onGround = false;
+      this.currentFoothold = null;
       window.audio.playJump();
     }
   }
@@ -265,16 +281,19 @@ class Player {
     const boost = 8.5;
     this.vx = (this.facing === 'right' ? 1 : -1) * boost;
     this.vy = -3.8;
+    this.onGround = false;
+    this.currentFoothold = null;
     window.audio.playFlashJump();
     return true;
   }
 
   dropThrough() {
-    if (this.onGround && this.currentPlatform && this.currentPlatform.canDropThrough) {
+    if (this.onGround && this.currentFoothold && this.currentFoothold.canDropThrough) {
       this.dropThroughTimer = 18;
-      this.y += 4;
-      this.vy = 2;
+      this.y += 6;
+      this.vy = 2.5;
       this.onGround = false;
+      this.currentFoothold = null;
     }
   }
 
@@ -284,7 +303,7 @@ class Player {
       if (lad) {
         this.onLadder = true;
         this.currentLadder = lad;
-        this.x = lad.x;
+        this.x = lad.x; // Snap precisely to ladder X!
         this.vx = 0;
       }
     }
@@ -305,7 +324,7 @@ class Player {
       if (lad) {
         this.onLadder = true;
         this.currentLadder = lad;
-        this.x = lad.x;
+        this.x = lad.x; // Snap precisely to ladder X!
         this.y += 10;
         this.vx = 0;
       }
@@ -327,7 +346,6 @@ class Player {
     }
   }
 
-  // --- Combat Actions ---
   normalAttack(game) {
     if (this.attackTimer > 0) return false;
     this.attackTimer = this.attackDuration;
@@ -335,14 +353,13 @@ class Player {
 
     const dirSign = this.facing === 'right' ? 1 : -1;
 
-    // Ranged attacks for Bowman, Thief, Magician
     if (this.job === '궁수') {
       const { damage, isCrit } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 480, 0, 'arrow', damage, isCrit, this));
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 500, 0, 'arrow', damage, isCrit, this));
       return true;
     } else if (this.job === '도적') {
       const { damage, isCrit } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 520, 0, 'shuriken', damage, isCrit, this));
+      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 540, 0, 'shuriken', damage, isCrit, this));
       return true;
     } else if (this.job === '마법사') {
       const { damage, isCrit } = this.getDamage();
@@ -350,8 +367,7 @@ class Player {
       return true;
     }
 
-    // Melee attack for Warrior & Beginner
-    const range = 56;
+    const range = 58;
     const hitBox = {
       x: this.facing === 'right' ? this.x : this.x - range,
       y: this.y - 36,
@@ -363,8 +379,8 @@ class Player {
     for (const m of game.monsters) {
       if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
         const { damage, isCrit } = this.getDamage();
-        m.takeDamage(damage, isCrit, this.facing);
-        game.spawnDamageText(m.x, m.y - m.height * 0.7, damage, isCrit);
+        m.takeDamage(damage, isCrit, this.facing, game);
+        game.spawnStaggeredDamage(m.x, m.y - m.height * 0.7, damage, isCrit);
         hit = true;
       }
     }
@@ -378,7 +394,6 @@ class Player {
 
     const dirSign = this.facing === 'right' ? 1 : -1;
 
-    // --- WARRIOR SKILLS ---
     if (skillId === 'power_strike') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
@@ -404,8 +419,8 @@ class Player {
         if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
           const { damage } = this.getDamage();
           const strikeDmg = Math.floor(damage * (skill.dmgMult + skill.level * 0.08));
-          m.takeDamage(strikeDmg, true, this.facing);
-          game.spawnDamageText(m.x, m.y - m.height * 0.8, strikeDmg, true);
+          m.takeDamage(strikeDmg, true, this.facing, game);
+          game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, strikeDmg, true);
           break;
         }
       }
@@ -432,16 +447,13 @@ class Player {
           if (dist <= radius) {
             const { damage, isCrit } = this.getDamage();
             const slashDmg = Math.floor(damage * (skill.dmgMult + skill.level * 0.05));
-            m.takeDamage(slashDmg, isCrit, m.x > this.x ? 'right' : 'left');
-            game.spawnDamageText(m.x, m.y - m.height * 0.7, slashDmg, isCrit);
+            m.takeDamage(slashDmg, isCrit, m.x > this.x ? 'right' : 'left', game);
+            game.spawnStaggeredDamage(m.x, m.y - m.height * 0.7, slashDmg, isCrit);
           }
         }
       }
       return true;
-    }
-
-    // --- MAGICIAN SKILLS ---
-    else if (skillId === 'energy_bolt') {
+    } else if (skillId === 'energy_bolt') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
       this.attackTimer = this.attackDuration;
@@ -478,8 +490,8 @@ class Player {
               if (m.isAlive()) {
                 const { damage, isCrit } = this.getDamage();
                 const clawDmg = Math.floor(damage * (1.1 + skill.level * 0.06));
-                m.takeDamage(clawDmg, isCrit, this.facing);
-                game.spawnDamageText(m.x + (hit * 12 - 6), m.y - m.height * 0.8 - hit * 15, clawDmg, isCrit);
+                m.takeDamage(clawDmg, isCrit, this.facing, game);
+                game.spawnStaggeredDamage(m.x + (hit * 12 - 6), m.y - m.height * 0.8 - hit * 15, clawDmg, isCrit);
               }
             }, hit * 120);
           }
@@ -490,13 +502,10 @@ class Player {
     } else if (skillId === 'teleport') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
-      this.x += dirSign * 120;
+      this.x += dirSign * 130;
       window.audio.playFlashJump();
       return true;
-    }
-
-    // --- BOWMAN SKILLS ---
-    else if (skillId === 'arrow_blow') {
+    } else if (skillId === 'arrow_blow') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
       this.attackTimer = this.attackDuration;
@@ -517,22 +526,11 @@ class Player {
         }, s * 140);
       }
       return true;
-    }
-
-    // --- THIEF SKILLS ---
-    else if (skillId === 'lucky_seven') {
+    } else if (skillId === 'lucky_seven') {
       if (this.mp < skill.mpCost) return false;
       this.mp -= skill.mpCost;
       this.attackTimer = this.attackDuration * 1.1;
       window.audio.playAttack();
-
-      game.skillEffects.push({
-        type: 'lucky_seven',
-        x: this.x + dirSign * 20,
-        y: this.y - 16,
-        progress: 0,
-        duration: 0.3
-      });
 
       for (let s = 0; s < 2; s++) {
         setTimeout(() => {
@@ -548,7 +546,7 @@ class Player {
       this.attackTimer = this.attackDuration * 0.9;
       window.audio.playAttack();
 
-      const range = 50;
+      const range = 52;
       const hitBox = {
         x: this.facing === 'right' ? this.x : this.x - range,
         y: this.y - 36,
@@ -562,8 +560,8 @@ class Player {
             setTimeout(() => {
               if (m.isAlive()) {
                 const { damage, isCrit } = this.getDamage();
-                m.takeDamage(damage, isCrit, this.facing);
-                game.spawnDamageText(m.x + (s * 10 - 5), m.y - m.height * 0.7 - s * 12, damage, isCrit);
+                m.takeDamage(damage, isCrit, this.facing, game);
+                game.spawnStaggeredDamage(m.x + (s * 10 - 5), m.y - m.height * 0.7 - s * 12, damage, isCrit);
               }
             }, s * 100);
           }
@@ -580,8 +578,14 @@ class Player {
   takeDamage(amount) {
     if (this.invincibleTimer > 0 || this.hp <= 0) return;
     this.hp -= amount;
-    this.invincibleTimer = 1.0;
+    this.invincibleTimer = 1.2;
     window.audio.playHit();
+
+    // Knockback
+    this.vx = (this.facing === 'right' ? -1 : 1) * 3.5;
+    this.vy = -2.8;
+    this.onGround = false;
+    this.currentFoothold = null;
 
     if (this.hp <= 0) {
       this.hp = 0;
@@ -704,7 +708,9 @@ class Monster {
     this.vy = 0;
     this.facing = Math.random() < 0.5 ? 'left' : 'right';
     this.onGround = false;
+    this.currentFoothold = null;
     this.hitTimer = 0;
+    this.hitstopTimer = 0;
 
     this.initMonsterType(type);
     this.hp = this.maxHp;
@@ -858,6 +864,12 @@ class Monster {
   update(dt, player, map, game) {
     if (!this.isAlive()) return;
 
+    // Hitstop Freeze
+    if (this.hitstopTimer > 0) {
+      this.hitstopTimer -= dt;
+      return;
+    }
+
     if (this.hitTimer > 0) {
       this.hitTimer -= dt;
     }
@@ -879,22 +891,26 @@ class Monster {
       if ((this.type === 'slime' || this.type === 'orange_mushroom' || this.type === 'mushmom') && this.onGround && Math.random() < 0.6) {
         this.vy = -6.5;
         this.onGround = false;
+        this.currentFoothold = null;
       }
     }
 
-    this.vx = this.moveDir * this.speed;
+    if (this.onGround && this.hitTimer <= 0) {
+      this.vx = this.moveDir * this.speed;
+    }
 
-    if (this.currentPlatform && this.onGround) {
-      if (this.x - 10 <= this.currentPlatform.x) {
+    // Foothold Edge Boundary Check
+    if (this.currentFoothold && this.onGround) {
+      if (this.x - 8 <= this.currentFoothold.x1) {
         this.moveDir = 1;
         this.facing = 'right';
-      } else if (this.x + 10 >= this.currentPlatform.x + this.currentPlatform.width) {
+      } else if (this.x + 8 >= this.currentFoothold.x2) {
         this.moveDir = -1;
         this.facing = 'left';
       }
     }
 
-    Physics.updateEntity(this, map, dt);
+    Physics.updateEntityFixed(this, map, dt);
 
     if (player.hp > 0 && player.invincibleTimer <= 0) {
       const pBox = {
@@ -910,14 +926,18 @@ class Monster {
     }
   }
 
-  takeDamage(amount, isCrit, fromDir) {
+  takeDamage(amount, isCrit, fromDir, game) {
     this.hp -= amount;
-    this.hitTimer = 0.2;
+    this.hitTimer = 0.15;
+    this.hitstopTimer = 0.08; // 0.08s hitstop!
     window.audio.playHit();
 
-    this.vx = (fromDir === 'right' ? 1 : -1) * 3.5;
-    this.vy = -2.5;
+    // Parabolic knockback
+    const hitDir = (fromDir === 'right' ? 1 : -1);
+    this.vx = hitDir * 3.2;
+    this.vy = -2.0;
     this.onGround = false;
+    this.currentFoothold = null;
 
     if (this.hp <= 0) {
       this.hp = 0;
@@ -959,6 +979,7 @@ class DropItem {
     this.width = 16;
     this.height = 14;
     this.onGround = false;
+    this.currentFoothold = null;
     this.life = 60.0;
   }
 
@@ -969,7 +990,7 @@ class DropItem {
     } else {
       this.vx = 0;
     }
-    Physics.updateEntity(this, map, dt);
+    Physics.updateEntityFixed(this, map, dt);
   }
 
   canPickUp(player) {
@@ -996,6 +1017,7 @@ class FloatingText {
   }
 }
 
+window.DamageDigit = DamageDigit;
 window.Projectile = Projectile;
 window.Player = Player;
 window.Monster = Monster;
