@@ -288,13 +288,23 @@ class UIManager {
     document.getElementById('stat-win-name').innerText = p.name;
     document.getElementById('stat-win-job').innerText = p.job;
     document.getElementById('stat-win-level').innerText = p.level;
+
+    const fameEl = document.getElementById('stat-win-fame');
+    if (fameEl) fameEl.innerText = p.fame || 0;
+
     document.getElementById('stat-win-hp').innerText = `${p.hp}/${p.maxHp}`;
     document.getElementById('stat-win-mp').innerText = `${p.mp}/${p.maxMp}`;
     document.getElementById('stat-win-atk').innerText = `${p.minAtk} ~ ${p.maxAtk}`;
-    document.getElementById('stat-win-str').innerText = p.str;
-    document.getElementById('stat-win-dex').innerText = p.dex;
-    document.getElementById('stat-win-int').innerText = p.int;
-    document.getElementById('stat-win-luk').innerText = p.luk;
+
+    const accEl = document.getElementById('stat-win-acc');
+    if (accEl) accEl.innerText = p.accuracy || 10;
+    const defEl = document.getElementById('stat-win-def');
+    if (defEl) defEl.innerText = p.defense || 3;
+
+    document.getElementById('stat-win-str').innerText = `${p.str}${p.totalStr > p.str ? ' (+' + (p.totalStr - p.str) + ')' : ''}`;
+    document.getElementById('stat-win-dex').innerText = `${p.dex}${p.totalDex > p.dex ? ' (+' + (p.totalDex - p.dex) + ')' : ''}`;
+    document.getElementById('stat-win-int').innerText = `${p.int}${p.totalInt > p.int ? ' (+' + (p.totalInt - p.int) + ')' : ''}`;
+    document.getElementById('stat-win-luk').innerText = `${p.luk}${p.totalLuk > p.luk ? ' (+' + (p.totalLuk - p.luk) + ')' : ''}`;
     document.getElementById('stat-win-ap').innerText = p.ap;
 
     const apButtons = document.querySelectorAll('.btn-add-stat');
@@ -320,13 +330,24 @@ class UIManager {
 
       if (items[i]) {
         const item = items[i];
-        slot.title = `${item.name}${item.count ? ' x' + item.count : ''}`;
-        
+
+        if (tabName === 'equip') {
+          if (item.equipped) slot.classList.add('equipped');
+          slot.title = `${item.name} [${item.equipped ? '장착 중' : '미장착'}]\n공격력: +${item.atk || 0} / 방어력: +${item.def || 0}\n남은 업그레이드 가능 횟수: ${item.upgradeSlots || 0}회\n(클릭하여 장착/해제)`;
+        } else if (tabName === 'use' && item.type === 'scroll') {
+          slot.title = `${item.name} x${item.count}\n성공률: ${(item.rate * 100)}%\n성공 시 공격력 +${item.bonusAtk}\n(클릭하여 장착 무기에 주문서 사용)`;
+        } else {
+          slot.title = `${item.name}${item.count ? ' x' + item.count : ''}`;
+        }
+
         let icon = '📦';
-        if (item.id === 'red_potion') icon = '🧪(빨강)';
-        else if (item.id === 'blue_potion') icon = '🧪(파랑)';
+        if (item.id === 'red_potion') icon = '🧪';
+        else if (item.id === 'blue_potion') icon = '💙';
+        else if (item.type === 'scroll') icon = '📜';
         else if (item.type === 'weapon') icon = '🗡️';
         else if (item.type === 'hat') icon = '🧢';
+        else if (item.id === 'pan_lid') icon = '🍳';
+        else if (item.id === 'zakum_helm') icon = '👑';
         else if (item.id === 'snail_shell') icon = '🐚';
         else if (item.id === 'slime_liquid') icon = '💧';
         else if (item.id === 'mushroom_cap') icon = '🍄';
@@ -334,9 +355,22 @@ class UIManager {
         slot.innerHTML = `<span class="slot-icon">${icon}</span><span class="slot-count">${item.count || ''}</span>`;
 
         slot.addEventListener('click', () => {
-          if (tabName === 'use' && item.count > 0) {
-            p.usePotion(item.id);
-            this.renderInventoryTab('use');
+          if (tabName === 'equip') {
+            p.toggleEquip(item);
+            window.audio.playButtonClick();
+            this.renderInventoryTab('equip');
+            this.updateStatsWindow();
+            this.updateHUD();
+          } else if (tabName === 'use') {
+            if (item.type === 'scroll') {
+              p.scrollWeapon(item, this.game);
+              this.renderInventoryTab('use');
+              this.updateStatsWindow();
+              this.updateHUD();
+            } else if (item.count > 0) {
+              p.usePotion(item.id);
+              this.renderInventoryTab('use');
+            }
           }
         });
       }
@@ -456,15 +490,55 @@ class UIManager {
         choicesEl.appendChild(btn);
       });
     } else if (npc.type === 'chief_stan') {
-      textEl.innerText = '반갑네, 젊은 모험가여! 헤네시스 사냥터에서 주황버섯과 슬라임을 사냥하며 수련을 쌓게나.';
-      const btn = document.createElement('button');
-      btn.className = 'npc-choice-btn';
-      btn.innerText = '▶ 헤네시스 사냥터 1로 바로 가기';
-      btn.addEventListener('click', () => {
-        modal.style.display = 'none';
-        this.game.changeMap('henesys_hhg', 1050, 1320);
+      textEl.innerText = '반갑네, 젊은 모험가여! 헤네시스 사냥터의 몬스터를 물리치고 마을을 수호해주어 고맙네. 자네의 명예를 치하하여 인기도를 올려주겠네!';
+      const choices = [
+        {
+          text: '🏅 장로스탄의 칭찬 받기 (인기도 +5 획득)',
+          action: () => {
+            this.game.player.fame = (this.game.player.fame || 0) + 5;
+            window.audio.playLevelUp();
+            this.game.spawnItemText(this.game.player.x, this.game.player.y - 45, '★ 인기도 +5 획득! ★');
+            this.addChat('system', '🌟 [장로스탄의 보상] 인기도가 +5 상승했습니다!');
+            this.updateStatsWindow();
+          }
+        },
+        { text: '헤네시스 사냥터 1로 바로 가기', action: () => this.game.changeMap('henesys_hhg', 1050, 1320) }
+      ];
+      choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'npc-choice-btn';
+        btn.innerText = `▶ ${ch.text}`;
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          ch.action();
+        });
+        choicesEl.appendChild(btn);
       });
-      choicesEl.appendChild(btn);
+    } else if (npc.type === 'maya') {
+      textEl.innerText = '콜록콜록... 몸이 허약해서 약이 필요해요. 모험가님, 힘이 되어주셔서 정말 감사해요!';
+      const choices = [
+        {
+          text: '💊 마야에게 보약 선물하기 (인기도 +10 획득)',
+          action: () => {
+            this.game.player.fame = (this.game.player.fame || 0) + 10;
+            window.audio.playLevelUp();
+            this.game.spawnItemText(this.game.player.x, this.game.player.y - 45, '★ 인기도 +10 획득! ★');
+            this.addChat('system', '🌟 [마야와 이상한 약] 마야가 기운을 차렸습니다! 인기도 +10 획득!');
+            this.updateStatsWindow();
+          }
+        },
+        { text: '마야의 집 둘러보기', action: () => {} }
+      ];
+      choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'npc-choice-btn';
+        btn.innerText = `▶ ${ch.text}`;
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          ch.action();
+        });
+        choicesEl.appendChild(btn);
+      });
     } else {
       textEl.innerText = '반갑습니다! 메이플 월드를 여행하는 중이신가요? 오늘도 즐거운 모험 되세요!';
       const btn = document.createElement('button');
@@ -488,6 +562,14 @@ class UIManager {
   }
 
   // --- CHAT SYSTEM ---
+  addChat(sender, text = null, type = 'system') {
+    if (text === null) {
+      this.addChatMessage('시스템', sender, 'system');
+    } else {
+      this.addChatMessage(sender, text, type);
+    }
+  }
+
   addChatMessage(sender, text, type = 'player') {
     const container = document.getElementById('chat-messages-container');
     if (!container) return;

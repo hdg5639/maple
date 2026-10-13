@@ -18,6 +18,8 @@ class Game {
     this.keys = {};
     this.lastTime = performance.now();
     this.boss = null;
+    this.shakeTimer = 0;
+    this.shakeMagnitude = 0;
 
     this.autoHunt = new AutoHuntManager(this);
     this.ui = new UIManager(this);
@@ -401,6 +403,16 @@ class Game {
     return picked;
   }
 
+  triggerScreenShake(duration = 0.5, magnitude = 6) {
+    this.shakeTimer = duration;
+    this.shakeMagnitude = magnitude;
+  }
+
+  spawnMissText(x, y) {
+    this.floatingTexts.push(new FloatingText(x, y, 'MISS', 'miss', false));
+    if (window.audio && window.audio.playMiss) window.audio.playMiss();
+  }
+
   spawnDamageText(x, y, damage, isCrit = false, target = 'monster') {
     this.floatingTexts.push(new FloatingText(x, y, `${damage}`, target === 'monster' ? 'damage' : 'miss', isCrit));
   }
@@ -546,17 +558,26 @@ class Game {
       }
     }
 
-    this.updateCamera();
+    this.updateCamera(dt);
     this.updateBossBar();
     this.ui.updateHud();
   }
 
-  updateCamera() {
+  updateCamera(dt = 0.016) {
+    if (this.shakeTimer > 0) {
+      this.shakeTimer -= dt;
+    }
+
     const targetX = this.player.x - this.camera.width / 2;
     const targetY = this.player.y - this.camera.height * 0.65;
 
     this.camera.x += (targetX - this.camera.x) * 0.12;
     this.camera.y += (targetY - this.camera.y) * 0.12;
+
+    if (this.shakeTimer > 0) {
+      this.camera.x += (Math.random() - 0.5) * this.shakeMagnitude * 2;
+      this.camera.y += (Math.random() - 0.5) * this.shakeMagnitude * 2;
+    }
 
     this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, this.camera.x));
     this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, this.camera.y));

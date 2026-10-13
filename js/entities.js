@@ -54,8 +54,13 @@ class Projectile {
         for (const hb of hitBoxes) {
           if (this.x >= hb.x && this.x <= hb.x + hb.width && this.y >= hb.y && this.y <= hb.y + hb.height) {
             this.hit = true;
-            game.boss.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left', game, hb);
-            game.spawnStaggeredDamage(this.x, this.y - 20, this.damage, this.isCrit);
+            if (this.owner && !this.owner.checkHit(game.boss)) {
+              game.spawnMissText(this.x, this.y - 20);
+              return;
+            }
+            const finalDmg = Math.max(1, Math.floor(this.damage - 20));
+            game.boss.takeDamage(finalDmg, this.isCrit, this.vx > 0 ? 'right' : 'left', game, hb);
+            game.spawnStaggeredDamage(this.x, this.y - 20, finalDmg, this.isCrit);
             return;
           }
         }
@@ -63,8 +68,13 @@ class Projectile {
         const d = Math.hypot(game.boss.x - this.x, (game.boss.y - game.boss.height / 2) - this.y);
         if (d < Math.max(32, game.boss.width * 0.5)) {
           this.hit = true;
-          game.boss.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
-          game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.8, this.damage, this.isCrit);
+          if (this.owner && !this.owner.checkHit(game.boss)) {
+            game.spawnMissText(game.boss.x, game.boss.y - game.boss.height * 0.8);
+            return;
+          }
+          const finalDmg = Math.max(1, Math.floor(this.damage - (game.boss.def || 0) * 0.5));
+          game.boss.takeDamage(finalDmg, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
+          game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.8, finalDmg, this.isCrit);
           return;
         }
       }
@@ -76,8 +86,13 @@ class Projectile {
         const d = Math.hypot(m.x - this.x, (m.y - m.height / 2) - this.y);
         if (d < Math.max(24, m.width * 0.6)) {
           this.hit = true;
-          m.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
-          game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, this.damage, this.isCrit);
+          if (this.owner && !this.owner.checkHit(m)) {
+            game.spawnMissText(m.x, m.y - m.height * 0.8);
+            break;
+          }
+          const finalDmg = Math.max(1, Math.floor(this.damage - (m.def || 0) * 0.5));
+          m.takeDamage(finalDmg, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
+          game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, finalDmg, this.isCrit);
           break;
         }
       }
@@ -115,14 +130,12 @@ class Player {
     this.dex = 8;
     this.int = 4;
     this.luk = 4;
+    this.fame = 0;
     this.ap = 5;
     this.sp = 3;
     this.speechText = null;
     this.speechTimer = 0;
-
-    this.calcDerivedStats();
-    this.hp = this.maxHp;
-    this.mp = this.maxMp;
+    this.weakenedTimer = 0;
 
     this.walkSpeed = 3.6;
     this.jumpForce = Physics.JUMP_VELOCITY;
@@ -132,12 +145,14 @@ class Player {
     this.meso = 100;
     this.inventory = {
       equip: [
-        { id: 'eq_wood_sword', name: '초보자 목검', type: 'weapon', atk: 7, equipped: true },
-        { id: 'eq_bandana', name: '빨간 띠', type: 'hat', def: 3, equipped: true }
+        { id: 'eq_wood_sword', name: '초보자 목검', type: 'weapon', atk: 7, upgradeSlots: 7, equipped: true },
+        { id: 'eq_bandana', name: '빨간 띠', type: 'hat', def: 3, upgradeSlots: 7, equipped: true }
       ],
       use: [
         { id: 'red_potion', name: '빨간 포션', count: 15, healHp: 50 },
-        { id: 'blue_potion', name: '파란 포션', count: 10, healMp: 50 }
+        { id: 'blue_potion', name: '파란 포션', count: 10, healMp: 50 },
+        { id: 'scroll_atk_60', name: '무기 공격력 주문서 60%', type: 'scroll', count: 2, rate: 0.6, bonusAtk: 2 },
+        { id: 'scroll_atk_10', name: '무기 공격력 주문서 10%', type: 'scroll', count: 1, rate: 0.1, bonusAtk: 5 }
       ],
       etc: [
         { id: 'snail_shell', name: '달팽이의 껍질', count: 0 },
@@ -145,6 +160,10 @@ class Player {
         { id: 'mushroom_cap', name: '주황버섯의 갓', count: 0 }
       ]
     };
+
+    this.calcDerivedStats();
+    this.hp = this.maxHp;
+    this.mp = this.maxMp;
 
     this.skills = {};
     this.initSkillsForJob('초보자');
@@ -206,32 +225,117 @@ class Player {
   }
 
   calcDerivedStats() {
-    if (this.job === '전사') {
-      this.maxHp = 120 + this.level * 28 + this.str * 6;
-      this.maxMp = 30 + this.level * 8 + this.int * 2;
-      this.minAtk = Math.max(6, Math.floor(this.str * 1.2 + this.dex * 0.4 + this.level * 3));
-      this.maxAtk = Math.max(10, Math.floor(this.str * 1.8 + this.dex * 0.6 + this.level * 4));
-    } else if (this.job === '마법사') {
-      this.maxHp = 60 + this.level * 14 + this.str * 2;
-      this.maxMp = 140 + this.level * 30 + this.int * 7;
-      this.minAtk = Math.max(8, Math.floor(this.int * 1.4 + this.luk * 0.4 + this.level * 3));
-      this.maxAtk = Math.max(12, Math.floor(this.int * 2.0 + this.luk * 0.6 + this.level * 4));
-    } else if (this.job === '궁수') {
-      this.maxHp = 80 + this.level * 18 + this.str * 3;
-      this.maxMp = 50 + this.level * 12 + this.int * 3;
-      this.minAtk = Math.max(7, Math.floor(this.dex * 1.3 + this.str * 0.5 + this.level * 3));
-      this.maxAtk = Math.max(11, Math.floor(this.dex * 1.9 + this.str * 0.7 + this.level * 4));
-    } else if (this.job === '도적') {
-      this.maxHp = 85 + this.level * 20 + this.str * 3;
-      this.maxMp = 60 + this.level * 14 + this.int * 3;
-      this.minAtk = Math.max(8, Math.floor(this.luk * 1.4 + this.dex * 0.5 + this.level * 3));
-      this.maxAtk = Math.max(12, Math.floor(this.luk * 2.1 + this.dex * 0.7 + this.level * 5));
-    } else {
-      this.maxHp = 70 + this.level * 18 + this.str * 4;
-      this.maxMp = 35 + this.level * 10 + this.int * 3;
-      this.minAtk = Math.max(4, Math.floor(this.str * 0.9 + this.dex * 0.4 + this.level * 2));
-      this.maxAtk = Math.max(8, Math.floor(this.str * 1.5 + this.dex * 0.6 + this.level * 3));
+    let equipAtk = 0;
+    let equipDef = 0;
+    let equipStr = 0;
+    let equipDex = 0;
+    let equipInt = 0;
+    let equipLuk = 0;
+
+    if (this.inventory && this.inventory.equip) {
+      this.inventory.equip.forEach(eq => {
+        if (eq.equipped) {
+          equipAtk += eq.atk || 0;
+          equipDef += eq.def || 0;
+          equipStr += eq.str || 0;
+          equipDex += eq.dex || 0;
+          equipInt += eq.int || 0;
+          equipLuk += eq.luk || 0;
+        }
+      });
     }
+
+    this.totalStr = this.str + equipStr;
+    this.totalDex = this.dex + equipDex;
+    this.totalInt = this.int + equipInt;
+    this.totalLuk = this.luk + equipLuk;
+
+    // Classic Maple Accuracy & Defense formulas
+    this.accuracy = Math.floor(this.totalDex * 0.8 + this.totalLuk * 0.5);
+    if (this.job === '마법사') {
+      this.accuracy = Math.floor(this.totalInt * 0.1 + this.totalLuk * 0.4 + this.totalDex * 0.3);
+    }
+    this.defense = Math.floor(this.totalStr * 0.2 + this.totalDex * 0.1) + equipDef;
+
+    if (this.job === '전사') {
+      this.maxHp = 120 + this.level * 28 + this.totalStr * 6;
+      this.maxMp = 30 + this.level * 8 + this.totalInt * 2;
+      this.minAtk = Math.max(6, Math.floor(this.totalStr * 1.2 + this.totalDex * 0.4 + this.level * 3) + equipAtk);
+      this.maxAtk = Math.max(10, Math.floor(this.totalStr * 1.8 + this.totalDex * 0.6 + this.level * 4) + equipAtk);
+    } else if (this.job === '마법사') {
+      this.maxHp = 60 + this.level * 14 + this.totalStr * 2;
+      this.maxMp = 140 + this.level * 30 + this.totalInt * 7;
+      this.minAtk = Math.max(8, Math.floor(this.totalInt * 1.4 + this.totalLuk * 0.4 + this.level * 3) + equipAtk);
+      this.maxAtk = Math.max(12, Math.floor(this.totalInt * 2.0 + this.totalLuk * 0.6 + this.level * 4) + equipAtk);
+    } else if (this.job === '궁수') {
+      this.maxHp = 80 + this.level * 18 + this.totalStr * 3;
+      this.maxMp = 50 + this.level * 12 + this.totalInt * 3;
+      this.minAtk = Math.max(7, Math.floor(this.totalDex * 1.3 + this.totalStr * 0.5 + this.level * 3) + equipAtk);
+      this.maxAtk = Math.max(11, Math.floor(this.totalDex * 1.9 + this.totalStr * 0.7 + this.level * 4) + equipAtk);
+    } else if (this.job === '도적') {
+      this.maxHp = 85 + this.level * 20 + this.totalStr * 3;
+      this.maxMp = 60 + this.level * 14 + this.totalInt * 3;
+      this.minAtk = Math.max(8, Math.floor(this.totalLuk * 1.4 + this.totalDex * 0.5 + this.level * 3) + equipAtk);
+      this.maxAtk = Math.max(12, Math.floor(this.totalLuk * 2.1 + this.totalDex * 0.7 + this.level * 5) + equipAtk);
+    } else {
+      this.maxHp = 70 + this.level * 18 + this.totalStr * 4;
+      this.maxMp = 35 + this.level * 10 + this.totalInt * 3;
+      this.minAtk = Math.max(4, Math.floor(this.totalStr * 0.9 + this.totalDex * 0.4 + this.level * 2) + equipAtk);
+      this.maxAtk = Math.max(8, Math.floor(this.totalStr * 1.5 + this.totalDex * 0.6 + this.level * 3) + equipAtk);
+    }
+  }
+
+  checkHit(target) {
+    if (!target) return true;
+    const avoid = target.avoid || 5;
+    const levelDiff = Math.max(0, (target.level || 1) - this.level);
+    const needAcc = Math.floor(avoid * (1.84 + 0.07 * levelDiff));
+    if (this.accuracy >= needAcc) return true;
+    const hitRate = Math.max(0.05, this.accuracy / needAcc);
+    return Math.random() < hitRate;
+  }
+
+  toggleEquip(item) {
+    if (!item) return;
+    if (item.equipped) {
+      item.equipped = false;
+    } else {
+      this.inventory.equip.forEach(eq => {
+        if (eq.type === item.type) eq.equipped = false;
+      });
+      item.equipped = true;
+    }
+    this.calcDerivedStats();
+  }
+
+  scrollWeapon(scrollItem, game) {
+    const weapon = this.inventory.equip.find(eq => eq.type === 'weapon' && eq.equipped);
+    if (!weapon) {
+      this.say('장착된 무기가 없습니다!');
+      return false;
+    }
+    if ((weapon.upgradeSlots || 0) <= 0) {
+      this.say('더 이상 업그레이드할 수 없는 무기입니다!');
+      return false;
+    }
+    if (scrollItem.count <= 0) return false;
+    scrollItem.count--;
+
+    const success = Math.random() < (scrollItem.rate || 0.6);
+    weapon.upgradeSlots--;
+
+    if (success) {
+      weapon.atk = (weapon.atk || 0) + (scrollItem.bonusAtk || 2);
+      window.audio.playScrollSuccess();
+      game.spawnItemText(this.x, this.y - 45, '✨ 주문서 강화 성공! (+공격력)');
+      game.ui.addChat('system', `🎉 [강화 성공] ${weapon.name}의 공격력이 +${scrollItem.bonusAtk} 증가했습니다! (남은 업횟: ${weapon.upgradeSlots})`);
+      this.calcDerivedStats();
+    } else {
+      window.audio.playScrollFail();
+      game.spawnItemText(this.x, this.y - 45, '💨 주문서 강화 실패...');
+      game.ui.addChat('system', `❌ [강화 실패] 주문서의 마력이 사라졌습니다. (남은 업횟: ${weapon.upgradeSlots})`);
+    }
+    return true;
   }
 
   setJob(jobName) {
@@ -416,9 +520,15 @@ class Player {
 
     for (const m of game.monsters) {
       if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
+        if (!this.checkHit(m)) {
+          game.spawnMissText(m.x, m.y - m.height * 0.7);
+          hit = true;
+          continue;
+        }
         const { damage, isCrit } = this.getDamage();
-        m.takeDamage(damage, isCrit, this.facing, game);
-        game.spawnStaggeredDamage(m.x, m.y - m.height * 0.7, damage, isCrit);
+        const finalDmg = Math.max(1, Math.floor(damage - (m.def || 0) * 0.5));
+        m.takeDamage(finalDmg, isCrit, this.facing, game);
+        game.spawnStaggeredDamage(m.x, m.y - m.height * 0.7, finalDmg, isCrit);
         hit = true;
       }
     }
@@ -431,8 +541,12 @@ class Player {
       const hitBoxes = game.boss.getHitBoxes();
       for (const hb of hitBoxes) {
         if (this.checkCollision(hitBox, hb)) {
+          if (!this.checkHit(game.boss)) {
+            game.spawnMissText(hb.x + hb.width / 2, hb.y);
+            return true;
+          }
           const { damage, isCrit } = this.getDamage();
-          const finalDmg = Math.floor(damage * multiplier);
+          const finalDmg = Math.max(1, Math.floor(damage * multiplier - 20));
           game.boss.takeDamage(finalDmg, isCrit, this.facing, game, hb);
           game.spawnStaggeredDamage(hb.x + hb.width / 2, hb.y, finalDmg, isCrit);
           return true;
@@ -440,8 +554,12 @@ class Player {
       }
     } else {
       if (this.checkCollision(hitBox, game.boss.getHitBox())) {
+        if (!this.checkHit(game.boss)) {
+          game.spawnMissText(game.boss.x, game.boss.y - game.boss.height * 0.7);
+          return true;
+        }
         const { damage, isCrit } = this.getDamage();
-        const finalDmg = Math.floor(damage * multiplier);
+        const finalDmg = Math.max(1, Math.floor(damage * multiplier - (game.boss.def || 0) * 0.5));
         game.boss.takeDamage(finalDmg, isCrit, this.facing, game);
         game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.7, finalDmg, isCrit);
         return true;
@@ -482,8 +600,12 @@ class Player {
 
       for (const m of game.monsters) {
         if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
+          if (!this.checkHit(m)) {
+            game.spawnMissText(m.x, m.y - m.height * 0.8);
+            break;
+          }
           const { damage } = this.getDamage();
-          const strikeDmg = Math.floor(damage * (skill.dmgMult + skill.level * 0.08));
+          const strikeDmg = Math.max(1, Math.floor(damage * (skill.dmgMult + skill.level * 0.08) - (m.def || 0) * 0.5));
           m.takeDamage(strikeDmg, true, this.facing, game);
           game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, strikeDmg, true);
           break;
@@ -644,9 +766,11 @@ class Player {
     return false;
   }
 
-  takeDamage(amount) {
+  takeDamage(amount, game = null) {
     if (this.invincibleTimer > 0 || this.hp <= 0) return;
-    this.hp -= amount;
+    const defReduction = Math.floor((this.defense || 0) * 0.4);
+    const finalAmount = Math.max(1, amount - defReduction);
+    this.hp -= finalAmount;
     this.invincibleTimer = 1.2;
     window.audio.playHit();
 
@@ -658,6 +782,15 @@ class Player {
 
     if (this.hp <= 0) {
       this.hp = 0;
+      const lostExp = Math.floor(this.maxExp * 0.10);
+      this.exp = Math.max(0, this.exp - lostExp);
+      window.audio.playTombstone();
+      if (game) {
+        if (game.triggerScreenShake) game.triggerScreenShake(0.6, 6);
+        if (game.ui && game.ui.addChat) {
+          game.ui.addChat('system', `💀 [사망 페널티] 비석이 떨어졌습니다! 경험치 10%를 잃었습니다 (-${lostExp} EXP)`);
+        }
+      }
       setTimeout(() => {
         this.resurrect();
       }, 3000);
@@ -796,6 +929,8 @@ class Monster {
         this.maxHp = 15;
         this.exp = 3;
         this.atk = 2;
+        this.def = 2;
+        this.avoid = 1;
         this.speed = 0.6;
         this.width = 24;
         this.height = 18;
@@ -810,6 +945,8 @@ class Monster {
         this.maxHp = 30;
         this.exp = 5;
         this.atk = 5;
+        this.def = 4;
+        this.avoid = 2;
         this.speed = 0.8;
         this.width = 24;
         this.height = 18;
@@ -825,6 +962,8 @@ class Monster {
         this.maxHp = 50;
         this.exp = 8;
         this.atk = 9;
+        this.def = 8;
+        this.avoid = 4;
         this.speed = 1.0;
         this.width = 24;
         this.height = 18;
@@ -840,6 +979,8 @@ class Monster {
         this.maxHp = 90;
         this.exp = 14;
         this.atk = 14;
+        this.def = 10;
+        this.avoid = 5;
         this.speed = 1.2;
         this.width = 30;
         this.height = 24;
@@ -855,6 +996,8 @@ class Monster {
         this.maxHp = 150;
         this.exp = 22;
         this.atk = 20;
+        this.def = 15;
+        this.avoid = 8;
         this.speed = 1.3;
         this.width = 32;
         this.height = 28;
@@ -871,6 +1014,8 @@ class Monster {
         this.maxHp = 220;
         this.exp = 32;
         this.atk = 28;
+        this.def = 22;
+        this.avoid = 12;
         this.speed = 2.0;
         this.width = 36;
         this.height = 26;
@@ -886,6 +1031,8 @@ class Monster {
         this.maxHp = 300;
         this.exp = 42;
         this.atk = 36;
+        this.def = 30;
+        this.avoid = 15;
         this.speed = 1.4;
         this.width = 34;
         this.height = 30;
@@ -901,13 +1048,16 @@ class Monster {
         this.maxHp = 420;
         this.exp = 60;
         this.atk = 48;
+        this.def = 45;
+        this.avoid = 22;
         this.speed = 1.4;
         this.width = 36;
         this.height = 32;
         this.dropTable = [
           { type: 'meso', chance: 0.95, min: 65, max: 160 },
           { type: 'etc', name: '죽은자의 부적', chance: 0.8 },
-          { type: 'blue_potion', name: '파란 포션', chance: 0.45 }
+          { type: 'blue_potion', name: '파란 포션', chance: 0.45 },
+          { type: 'scroll_atk_60', name: '무기 공격력 주문서 60%', chance: 0.15 }
         ];
         break;
       case 'mushmom':
@@ -916,6 +1066,8 @@ class Monster {
         this.maxHp = 4500;
         this.exp = 950;
         this.atk = 75;
+        this.def = 80;
+        this.avoid = 35;
         this.speed = 1.6;
         this.width = 80;
         this.height = 70;
@@ -924,7 +1076,8 @@ class Monster {
           { type: 'red_potion', name: '빨간 포션', chance: 1.0, count: 5 },
           { type: 'blue_potion', name: '파란 포션', chance: 1.0, count: 5 },
           { type: 'etc', name: '머쉬맘의 포자', chance: 1.0 },
-          { type: 'equip', name: '냄비 뚜껑', chance: 0.65 }
+          { type: 'equip', name: '냄비 뚜껑', chance: 0.65 },
+          { type: 'scroll_atk_10', name: '무기 공격력 주문서 10%', chance: 0.4 }
         ];
         break;
       default:
@@ -1205,9 +1358,22 @@ class ZakumBoss {
       const sp = this.activeSpells[i];
       sp.timer += dt;
       if (sp.timer >= sp.duration) {
-        if (Math.abs(player.x - sp.x) < 45 && player.invincibleTimer <= 0) {
-          player.takeDamage(sp.damage);
-          game.spawnDamageText(player.x, player.y - 25, sp.damage, false, 'player');
+        if (Math.abs(player.x - sp.x) < 55 && player.invincibleTimer <= 0) {
+          if (sp.isOneToOne) {
+            player.hp = 1;
+            player.mp = 1;
+            player.weakenedTimer = 4.0;
+            player.invincibleTimer = 1.5;
+            window.audio.playHit();
+            if (game.triggerScreenShake) game.triggerScreenShake(0.8, 8);
+            game.spawnItemText(player.x, player.y - 30, '💀 1/1 저주! HP 1 / MP 1');
+            if (game.ui && game.ui.addChat) {
+              game.ui.addChat('system', '⚠️ [자쿰 기믹] 체력과 마나가 1로 떨어지고 허약(점프 불가) 상태가 되었습니다! 즉시 물약을 드세요!');
+            }
+          } else {
+            player.takeDamage(sp.damage, game);
+            game.spawnDamageText(player.x, player.y - 25, sp.damage, false, 'player');
+          }
         }
         this.activeSpells.splice(i, 1);
       }
@@ -1222,9 +1388,23 @@ class ZakumBoss {
   }
 
   castSpell(player, game) {
-    const spellType = Math.random() < 0.5 ? 'fire_pillar' : 'lightning';
+    const roll = Math.random();
     window.audio.playBossRoar();
-    if (spellType === 'fire_pillar') {
+
+    if (roll < 0.25) {
+      // Authentic Maple 1/1 skill
+      this.activeSpells.push({
+        type: 'one_to_one',
+        x: player.x,
+        y: player.y,
+        timer: 0,
+        duration: 1.2,
+        damage: 0,
+        isOneToOne: true
+      });
+      game.spawnItemText(player.x, player.y - 65, '⚠️ ★ 자쿰의 1/1 마법진 전개! ★');
+      if (game.triggerScreenShake) game.triggerScreenShake(0.6, 6);
+    } else if (roll < 0.65) {
       this.activeSpells.push({
         type: 'fire_pillar',
         x: player.x,

@@ -71,8 +71,15 @@ async def main():
             canvas_dim = await eval_js("({ w: window.game.canvas.width, h: window.game.canvas.height })")
             print(f"2. Canvas dimensions: {canvas_dim}")
 
-            player_info = await eval_js("({ name: window.game.player.name, hp: window.game.player.hp, maxHp: window.game.player.maxHp, level: window.game.player.level, job: window.game.player.job })")
-            print(f"3. Player info: {player_info}")
+            player_info = await eval_js("({ name: window.game.player.name, hp: window.game.player.hp, maxHp: window.game.player.maxHp, level: window.game.player.level, job: window.game.player.job, fame: window.game.player.fame, acc: window.game.player.accuracy, def: window.game.player.defense })")
+            print(f"3. Player info (with Fame & Acc): {player_info}")
+
+            # Test Equipment Toggle & Scrolling
+            equip_toggle = await eval_js("(() => { const p = window.game.player; const eq = p.inventory.equip[0]; p.toggleEquip(eq); const unequipped = !eq.equipped; p.toggleEquip(eq); return unequipped && eq.equipped; })()")
+            print(f"   - Equipment Toggle Tested: {equip_toggle}")
+
+            scroll_test = await eval_js("(() => { const p = window.game.player; const sc = p.inventory.use.find(i => i.type === 'scroll'); if (!sc) return false; return p.scrollWeapon(sc, window.game); })()")
+            print(f"   - Weapon Scrolling Tested: {scroll_test}")
 
             monsters_count = await eval_js("window.game.monsters.length")
             print(f"4. Monsters count: {monsters_count}")

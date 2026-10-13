@@ -294,6 +294,100 @@ class AudioManager {
     osc.stop(now + 0.65);
   }
 
+  playMiss() {
+    this.init(); this.resume();
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    // Classic maple whoosh miss sound
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(180, now + 0.16);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.005, now + 0.16);
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.17);
+  }
+
+  playTombstone() {
+    this.init(); this.resume();
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    // Heavy crashing thud
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.exponentialRampToValueAtTime(30, now + 0.5);
+    gain.gain.setValueAtTime(0.8, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.52);
+
+    // Somber low bell chime
+    setTimeout(() => {
+      if (!this.ctx || this.isMuted) return;
+      const t = this.ctx.currentTime;
+      [220, 164.81].forEach((f, idx) => {
+        const o = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f, t + idx * 0.15);
+        g.gain.setValueAtTime(0.3, t + idx * 0.15);
+        g.gain.exponentialRampToValueAtTime(0.005, t + idx * 0.15 + 0.7);
+        o.connect(g);
+        g.connect(this.sfxGain);
+        o.start(t + idx * 0.15);
+        o.stop(t + idx * 0.15 + 0.72);
+      });
+    }, 150);
+  }
+
+  playScrollSuccess() {
+    this.init(); this.resume();
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    // Brilliant ascending maple enchant success chime: E5, G5, B5, E6!
+    [659.25, 783.99, 987.77, 1318.51].forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      const t = now + idx * 0.09;
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.35, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.45);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(t);
+      osc.stop(t + 0.48);
+    });
+  }
+
+  playScrollFail() {
+    this.init(); this.resume();
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    // Dull shattered failure buzz: D#3, D3
+    [155.56, 146.83].forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      const t = now + idx * 0.12;
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.4, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(t);
+      osc.stop(t + 0.32);
+    });
+  }
+
   // --- Procedural Henesys-style BGM Engine ---
   startBGM() {
     if (this.bgmPlaying) return;

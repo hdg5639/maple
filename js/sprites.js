@@ -289,15 +289,96 @@ class SpriteRenderer {
   }
 
   drawTombstone(ctx, player) {
+    const now = performance.now();
+
+    // 1. Arched Stone Monument (Tombstone)
+    ctx.save();
+    // Shadow on ground
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.beginPath();
+    ctx.ellipse(0, 2, 16, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Stone Base Outline
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = 'rgba(20, 20, 20, 0.9)';
     ctx.fillStyle = '#78716c';
-    ctx.fillRect(-10, -32, 20, 32);
-    ctx.strokeStyle = '#292524';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(-10, -32, 20, 32);
+
+    ctx.beginPath();
+    ctx.moveTo(-12, 0);
+    ctx.lineTo(-12, -26);
+    ctx.arcTo(-12, -38, 0, -38, 12);
+    ctx.arcTo(12, -38, 12, -26, 12);
+    ctx.lineTo(12, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cel-Shading Highlight & Shadow
+    ctx.fillStyle = '#a8a29e';
+    ctx.beginPath();
+    ctx.arc(0, -28, 8, Math.PI, Math.PI * 1.5);
+    ctx.lineTo(0, -20);
+    ctx.closePath();
+    ctx.fill();
+
+    // Engraved Stone Cross & Text
+    ctx.fillStyle = '#292524';
+    ctx.fillRect(-2, -32, 4, 12);
+    ctx.fillRect(-6, -28, 12, 4);
+
     ctx.fillStyle = '#f5f5f4';
-    ctx.font = 'bold 10px sans-serif';
+    ctx.font = 'bold 9px "Arial Black", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('R.I.P', 0, -18);
+    ctx.fillText('R.I.P', 0, -10);
+    ctx.restore();
+
+    // 2. Translucent Floating Angel/Ghost
+    const ghostFloat = Math.sin(now / 220) * 4;
+    const ghostY = -52 + ghostFloat;
+    ctx.save();
+    ctx.translate(0, ghostY);
+    ctx.globalAlpha = 0.85;
+
+    // Golden Halo
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(0, -18, 9, 3.5, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Cute Angel Wings
+    const wingFlap = Math.sin(now / 150) * 3;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.beginPath();
+    ctx.ellipse(-10, -4 + wingFlap, 6, 3, -0.4, 0, Math.PI * 2);
+    ctx.ellipse(10, -4 + wingFlap, 6, 3, 0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ghost Head & Body
+    ctx.fillStyle = 'rgba(240, 248, 255, 0.95)';
+    ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(0, -6, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Eyes
+    ctx.fillStyle = '#1e293b';
+    ctx.beginPath();
+    ctx.arc(-2.5, -6, 1.2, 0, Math.PI * 2);
+    ctx.arc(2.5, -6, 1.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Blushing cheeks
+    ctx.fillStyle = 'rgba(244, 114, 182, 0.6)';
+    ctx.beginPath();
+    ctx.arc(-4, -4, 1.5, 0, Math.PI * 2);
+    ctx.arc(4, -4, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
   }
 
   // --- DRAW MONSTER (GENUINE MAPLESTORY PIXEL SPRITE) ---
