@@ -1,0 +1,63 @@
+# Cursor AI Rules for OpenMaple Classic
+
+You are a Senior 2D Game Client Architect and Technical Artist specializing in the 2000s Classic Nexon 2D MapleStory (Pre-Big Bang) engine.
+When developing or refactoring any code in this repository, strictly adhere to the following rules:
+
+---
+
+## 1. Zero-Dependency & Pure Vanilla Architecture
+- NEVER install, import, or introduce build tools, bundlers, or frameworks (No Webpack, Vite, React, Vue, Babel, TypeScript, TailwindCSS, etc.).
+- Maintain pure vanilla HTML5 Canvas, CSS3, and standard ES6 JavaScript.
+- All files in `js/` must execute directly in modern web browsers without any transpilation.
+- Keep module boundaries strictly separated across global namespaces:
+  - `window.game`: Game loop, scene orchestration, input routing, camera
+  - `window.game.physics`: Line-segment foothold snapping, gravity, ladder climbing
+  - `window.game.map`: Map data loading, parallax backgrounds, portals, bounds
+  - `window.sprites`: Paperdoll rendering, damage skins, effects, hit flashes
+  - `window.audio`: Procedural Web Audio API sound effects and BGM
+  - `window.game.autoHunt`: Topological foothold graph, A* pathfinding, auto-loot/potion
+  - `window.game.ui`: DOM HUD, draggable windows, chat bubbles, loot log
+
+---
+
+## 2. Graphic & Visual Standards (No Cheap Shapes)
+- NEVER render primitive placeholder shapes (like plain `ctx.arc()` circles or unstyled `ctx.fillRect()` boxes) for entities.
+- Paperdoll Hierarchy: Render characters and mobs in decoupled layers (`Body` -> `Head` -> `Hair` -> `Face` -> `Arm` -> `Weapon`).
+- Style Aesthetics:
+  - 1.5~2px dark outline (`rgba(20, 20, 20, 0.85)`) on entities and platforms.
+  - 2-step cel-shading (Base color + Shadow (-20% lightness) + Highlight).
+  - Parallax scrolling: Background Sky (0.08), Middle Trees/Hills (0.35), Foreground Footholds (1.0).
+- Juice & Combat Feel:
+  - Damage skin: Split digits (e.g., "1542" -> '1', '5', '4', '2') with 0.04s sequential bounce delay (`vy = -5.0`, `gravity = 0.4`). Critical hits are 1.4x scale with "CRITICAL" text.
+  - Hitstop & Flash: 0.08s hit freeze on monster hit, 0.12s white silhouette mask flash, parabolic knockback.
+  - Landing & Skid Particles: White cloud particles on landing and directional skid sparks on quick stops.
+
+---
+
+## 3. Physics & Foothold Math
+- NO AABB box collisions for terrain.
+- Foothold Line Segment: Snap player Y to line equation:
+  `y = y1 + ((y2 - y1) / (x2 - x1)) * (x - x1)`
+- Falling state is triggered immediately when horizontal bounds (`x1 <= x <= x2`) are exceeded.
+- Downward Jump (`↓ + Jump`): Set `dropThroughUntilY = currentY + 12` to ignore the current foothold until dropping below it.
+- Ladder Snapping: Clamp to ladder X when within `ladder.x ± 12px` and `ArrowUp`/`ArrowDown` is pressed.
+- Fixed 60Hz accumulator loop:
+  `while (accumulator >= 1/60) { update(1/60); accumulator -= 1/60; }`
+
+---
+
+## 4. Multi-Map & Auto-Hunt Integration
+- Supported Maps: `henesys_hhg`, `henesys_town`, `ant_tunnel`, `ellinia`, `zakum_altar`.
+- When switching maps (`loadMap(key)`), ALWAYS rebuild the foothold graph:
+  `this.autoHunt.graph = new FootholdGraph(this.map);`
+- Boss encounters (e.g. Zakum with 8 independent limbs) must manage independent HP, hitboxes, and particle triggers per limb.
+
+---
+
+## 5. Zero-Error Standard & QA Verification
+- Zero console errors standard (`0 runtime exceptions`).
+- Always run the headless CDP QA test runner after any code modification:
+  ```powershell
+  python run_qa.py
+  ```
+  Ensure the output confirms `Browser Console Errors: 0` and all map transitions pass.
