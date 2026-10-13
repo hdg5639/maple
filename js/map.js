@@ -1,33 +1,72 @@
-// js/map.js - Authentic Henesys Hunting Ground 1 with Genuine Terrain & WZ Footholds
-
-const HENESYS_FOOTHOLDS_RAW = [{"id": 171, "x1": 450, "y1": 600, "x2": 528, "y2": 600, "canDropThrough": true}, {"id": 139, "x1": 399, "y1": 1320, "x2": 489, "y2": 1320, "canDropThrough": true}, {"id": 29, "x1": 517, "y1": 956, "x2": 525, "y2": 957, "canDropThrough": true}, {"id": 56, "x1": 560, "y1": 718, "x2": 568, "y2": 717, "canDropThrough": true}, {"id": 120, "x1": 1389, "y1": 1320, "x2": 1479, "y2": 1320, "canDropThrough": true}, {"id": 25, "x1": 465, "y1": 955, "x2": 479, "y2": 954, "canDropThrough": true}, {"id": 163, "x1": 391, "y1": 1254, "x2": 405, "y2": 1253, "canDropThrough": true}, {"id": 89, "x1": 702, "y1": 471, "x2": 710, "y2": 478, "canDropThrough": true}, {"id": 112, "x1": 1479, "y1": 1320, "x2": 1569, "y2": 1320, "canDropThrough": true}, {"id": 43, "x1": 1209, "y1": 780, "x2": 1299, "y2": 780, "canDropThrough": true}, {"id": 85, "x1": 648, "y1": 474, "x2": 673, "y2": 474, "canDropThrough": true}, {"id": 155, "x1": 1602, "y1": 1142, "x2": 1609, "y2": 1143, "canDropThrough": true}, {"id": 169, "x1": 458, "y1": 1253, "x2": 472, "y2": 1252, "canDropThrough": true}, {"id": 12, "x1": 939, "y1": 1020, "x2": 1029, "y2": 1020, "canDropThrough": true}, {"id": 150, "x1": 1739, "y1": 1200, "x2": 1850, "y2": 1200, "canDropThrough": true}, {"id": 118, "x1": 78, "y1": 1320, "x2": 129, "y2": 1320, "canDropThrough": true}, {"id": 27, "x1": 484, "y1": 957, "x2": 492, "y2": 956, "canDropThrough": true}, {"id": 127, "x1": 849, "y1": 1320, "x2": 939, "y2": 1320, "canDropThrough": true}, {"id": 30, "x1": 525, "y1": 957, "x2": 532, "y2": 954, "canDropThrough": true}, {"id": 68, "x1": 849, "y1": 540, "x2": 939, "y2": 540, "canDropThrough": true}, {"id": 4, "x1": 1479, "y1": 1020, "x2": 1569, "y2": 1020, "canDropThrough": true}, {"id": 45, "x1": 669, "y1": 780, "x2": 759, "y2": 780, "canDropThrough": true}, {"id": 87, "x1": 681, "y1": 475, "x2": 688, "y2": 472, "canDropThrough": true}, {"id": 14, "x1": 1749, "y1": 1020, "x2": 1800, "y2": 1020, "canDropThrough": true}, {"id": 114, "x1": 219, "y1": 1320, "x2": 309, "y2": 1320, "canDropThrough": true}, {"id": 157, "x1": 1646, "y1": 1142, "x2": 1652, "y2": 1140, "canDropThrough": true}, {"id": 32, "x1": 546, "y1": 953, "x2": 554, "y2": 960, "canDropThrough": true}, {"id": 106, "x1": 360, "y1": 840, "x2": 399, "y2": 840, "canDropThrough": true}, {"id": 66, "x1": 1299, "y1": 540, "x2": 1389, "y2": 540, "canDropThrough": true}, {"id": 101, "x1": 270, "y1": 900, "x2": 348, "y2": 900, "canDropThrough": true}, {"id": 16, "x1": 579, "y1": 1020, "x2": 669, "y2": 1020, "canDropThrough": true}, {"id": 144, "x1": 2160, "y1": 1320, "x2": 2199, "y2": 1320, "canDropThrough": true}, {"id": 178, "x1": 1350, "y1": 0, "x2": 1428, "y2": 0, "canDropThrough": true}, {"id": 99, "x1": 528, "y1": 420, "x2": 540, "y2": 420, "canDropThrough": true}, {"id": 53, "x1": 530, "y1": 718, "x2": 541, "y2": 716, "canDropThrough": true}, {"id": 136, "x1": 489, "y1": 1320, "x2": 579, "y2": 1320, "canDropThrough": true}, {"id": 71, "x1": 1479, "y1": 540, "x2": 1569, "y2": 540, "canDropThrough": true}, {"id": 131, "x1": 669, "y1": 1320, "x2": 759, "y2": 1320, "canDropThrough": true}, {"id": 21, "x1": 489, "y1": 1020, "x2": 579, "y2": 1020, "canDropThrough": true}, {"id": 40, "x1": 939, "y1": 780, "x2": 1029, "y2": 780, "canDropThrough": true}, {"id": 59, "x1": 601, "y1": 718, "x2": 608, "y2": 715, "canDropThrough": true}, {"id": 123, "x1": 1929, "y1": 1320, "x2": 2019, "y2": 1320, "canDropThrough": true}, {"id": 36, "x1": 1569, "y1": 780, "x2": 1659, "y2": 780, "canDropThrough": true}, {"id": 55, "x1": 555, "y1": 715, "x2": 560, "y2": 718, "canDropThrough": true}, {"id": 166, "x1": 418, "y1": 1255, "x2": 443, "y2": 1255, "canDropThrough": true}, {"id": 73, "x1": 1659, "y1": 540, "x2": 1698, "y2": 540, "canDropThrough": true}, {"id": 161, "x1": 1711, "y1": 1149, "x2": 1730, "y2": 1151, "canDropThrough": true}, {"id": 129, "x1": 759, "y1": 1320, "x2": 849, "y2": 1320, "canDropThrough": true}, {"id": 88, "x1": 688, "y1": 472, "x2": 702, "y2": 471, "canDropThrough": true}, {"id": 23, "x1": 1680, "y1": 901, "x2": 1791, "y2": 901, "canDropThrough": true}, {"id": 110, "x1": 270, "y1": 840, "x2": 309, "y2": 840, "canDropThrough": true}, {"id": 42, "x1": 1119, "y1": 780, "x2": 1209, "y2": 780, "canDropThrough": true}, {"id": 153, "x1": 1548, "y1": 1142, "x2": 1598, "y2": 1142, "canDropThrough": true}, {"id": 57, "x1": 568, "y1": 717, "x2": 593, "y2": 717, "canDropThrough": true}, {"id": 60, "x1": 608, "y1": 715, "x2": 622, "y2": 714, "canDropThrough": true}, {"id": 102, "x1": 360, "y1": 900, "x2": 438, "y2": 900, "canDropThrough": true}, {"id": 10, "x1": 1209, "y1": 1020, "x2": 1299, "y2": 1020, "canDropThrough": true}, {"id": 48, "x1": 450, "y1": 780, "x2": 528, "y2": 780, "canDropThrough": true}, {"id": 145, "x1": 2199, "y1": 1320, "x2": 2238, "y2": 1320, "canDropThrough": true}, {"id": 159, "x1": 1657, "y1": 1142, "x2": 1706, "y2": 1143, "canDropThrough": true}, {"id": 7, "x1": 849, "y1": 1020, "x2": 939, "y2": 1020, "canDropThrough": true}, {"id": 44, "x1": 1299, "y1": 780, "x2": 1389, "y2": 780, "canDropThrough": true}, {"id": 117, "x1": 2109, "y1": 1320, "x2": 2160, "y2": 1320, "canDropThrough": true}, {"id": 62, "x1": 759, "y1": 540, "x2": 849, "y2": 540, "canDropThrough": true}, {"id": 132, "x1": 1299, "y1": 1320, "x2": 1389, "y2": 1320, "canDropThrough": true}, {"id": 8, "x1": 1029, "y1": 1020, "x2": 1119, "y2": 1020, "canDropThrough": true}, {"id": 31, "x1": 532, "y1": 954, "x2": 546, "y2": 953, "canDropThrough": true}, {"id": 175, "x1": 360, "y1": 600, "x2": 399, "y2": 600, "canDropThrough": true}, {"id": 77, "x1": 618, "y1": 540, "x2": 669, "y2": 540, "canDropThrough": true}, {"id": 104, "x1": 348, "y1": 900, "x2": 360, "y2": 900, "canDropThrough": true}, {"id": 170, "x1": 472, "y1": 1252, "x2": 480, "y2": 1259, "canDropThrough": true}, {"id": 19, "x1": 360, "y1": 1020, "x2": 399, "y2": 1020, "canDropThrough": true}, {"id": 46, "x1": 759, "y1": 780, "x2": 849, "y2": 780, "canDropThrough": true}, {"id": 64, "x1": 1029, "y1": 540, "x2": 1119, "y2": 540, "canDropThrough": true}, {"id": 162, "x1": 380, "y1": 1256, "x2": 391, "y2": 1254, "canDropThrough": true}, {"id": 33, "x1": 1710, "y1": 780, "x2": 1788, "y2": 780, "canDropThrough": true}, {"id": 134, "x1": 1029, "y1": 1320, "x2": 1119, "y2": 1320, "canDropThrough": true}, {"id": 168, "x1": 451, "y1": 1256, "x2": 458, "y2": 1253, "canDropThrough": true}, {"id": 51, "x1": 1545, "y1": 714, "x2": 1744, "y2": 714, "canDropThrough": true}, {"id": 70, "x1": 1389, "y1": 540, "x2": 1479, "y2": 540, "canDropThrough": true}, {"id": 93, "x1": 360, "y1": 660, "x2": 438, "y2": 660, "canDropThrough": true}, {"id": 20, "x1": 438, "y1": 1020, "x2": 489, "y2": 1020, "canDropThrough": true}, {"id": 126, "x1": 1569, "y1": 1320, "x2": 1659, "y2": 1320, "canDropThrough": true}, {"id": 39, "x1": 849, "y1": 780, "x2": 939, "y2": 780, "canDropThrough": true}, {"id": 58, "x1": 593, "y1": 717, "x2": 601, "y2": 718, "canDropThrough": true}, {"id": 121, "x1": 1749, "y1": 1320, "x2": 1839, "y2": 1320, "canDropThrough": true}, {"id": 35, "x1": 1659, "y1": 780, "x2": 1710, "y2": 780, "canDropThrough": true}, {"id": 3, "x1": 1659, "y1": 1020, "x2": 1749, "y2": 1020, "canDropThrough": true}, {"id": 164, "x1": 405, "y1": 1253, "x2": 410, "y2": 1256, "canDropThrough": true}, {"id": 80, "x1": 1498, "y1": 418, "x2": 1609, "y2": 418, "canDropThrough": true}, {"id": 113, "x1": 129, "y1": 1320, "x2": 219, "y2": 1320, "canDropThrough": true}, {"id": 72, "x1": 1620, "y1": 540, "x2": 1659, "y2": 540, "canDropThrough": true}, {"id": 95, "x1": 540, "y1": 420, "x2": 618, "y2": 420, "canDropThrough": true}, {"id": 9, "x1": 1119, "y1": 1020, "x2": 1209, "y2": 1020, "canDropThrough": true}, {"id": 156, "x1": 1609, "y1": 1143, "x2": 1646, "y2": 1142, "canDropThrough": true}, {"id": 22, "x1": 1627, "y1": 956, "x2": 1826, "y2": 956, "canDropThrough": true}, {"id": 105, "x1": 309, "y1": 840, "x2": 348, "y2": 840, "canDropThrough": true}, {"id": 151, "x1": 1527, "y1": 1149, "x2": 1542, "y2": 1149, "canDropThrough": true}, {"id": 119, "x1": 2019, "y1": 1320, "x2": 2109, "y2": 1320, "canDropThrough": true}, {"id": 37, "x1": 1389, "y1": 780, "x2": 1479, "y2": 780, "canDropThrough": true}, {"id": 78, "x1": 669, "y1": 540, "x2": 759, "y2": 540, "canDropThrough": true}, {"id": 82, "x1": 621, "y1": 473, "x2": 635, "y2": 472, "canDropThrough": true}, {"id": 28, "x1": 492, "y1": 956, "x2": 517, "y2": 956, "canDropThrough": true}, {"id": 5, "x1": 1569, "y1": 1020, "x2": 1659, "y2": 1020, "canDropThrough": true}, {"id": 24, "x1": 454, "y1": 957, "x2": 465, "y2": 955, "canDropThrough": true}, {"id": 181, "x1": 1428, "y1": 0, "x2": 1440, "y2": 0, "canDropThrough": true}, {"id": 135, "x1": 579, "y1": 1320, "x2": 669, "y2": 1320, "canDropThrough": true}, {"id": 149, "x1": 1686, "y1": 1255, "x2": 1885, "y2": 1255, "canDropThrough": true}, {"id": 61, "x1": 622, "y1": 714, "x2": 630, "y2": 721, "canDropThrough": true}, {"id": 130, "x1": 1119, "y1": 1320, "x2": 1209, "y2": 1320, "canDropThrough": true}, {"id": 84, "x1": 640, "y1": 475, "x2": 648, "y2": 474, "canDropThrough": true}, {"id": 107, "x1": 399, "y1": 840, "x2": 438, "y2": 840, "canDropThrough": true}, {"id": 11, "x1": 1299, "y1": 1020, "x2": 1389, "y2": 1020, "canDropThrough": true}, {"id": 173, "x1": 399, "y1": 600, "x2": 438, "y2": 600, "canDropThrough": true}, {"id": 49, "x1": 528, "y1": 780, "x2": 579, "y2": 780, "canDropThrough": true}, {"id": 76, "x1": 540, "y1": 540, "x2": 618, "y2": 540, "canDropThrough": true}, {"id": 122, "x1": 1659, "y1": 1320, "x2": 1749, "y2": 1320, "canDropThrough": true}, {"id": 26, "x1": 479, "y1": 954, "x2": 484, "y2": 957, "canDropThrough": true}, {"id": 165, "x1": 410, "y1": 1256, "x2": 418, "y2": 1255, "canDropThrough": true}, {"id": 179, "x1": 1440, "y1": 0, "x2": 1518, "y2": 0, "canDropThrough": true}, {"id": 90, "x1": 450, "y1": 660, "x2": 528, "y2": 660, "canDropThrough": true}, {"id": 160, "x1": 1706, "y1": 1143, "x2": 1711, "y2": 1149, "canDropThrough": true}, {"id": 63, "x1": 939, "y1": 540, "x2": 1029, "y2": 540, "canDropThrough": true}, {"id": 128, "x1": 939, "y1": 1320, "x2": 1029, "y2": 1320, "canDropThrough": true}, {"id": 86, "x1": 673, "y1": 474, "x2": 681, "y2": 475, "canDropThrough": true}, {"id": 137, "x1": 309, "y1": 1320, "x2": 399, "y2": 1320, "canDropThrough": true}, {"id": 13, "x1": 1389, "y1": 1020, "x2": 1479, "y2": 1020, "canDropThrough": true}, {"id": 152, "x1": 1542, "y1": 1149, "x2": 1548, "y2": 1142, "canDropThrough": true}, {"id": 50, "x1": 579, "y1": 780, "x2": 669, "y2": 780, "canDropThrough": true}, {"id": 69, "x1": 1569, "y1": 540, "x2": 1620, "y2": 540, "canDropThrough": true}, {"id": 124, "x1": 1839, "y1": 1320, "x2": 1929, "y2": 1320, "canDropThrough": true}, {"id": 38, "x1": 1479, "y1": 780, "x2": 1569, "y2": 780, "canDropThrough": true}, {"id": 158, "x1": 1652, "y1": 1140, "x2": 1657, "y2": 1142, "canDropThrough": true}, {"id": 65, "x1": 1119, "y1": 540, "x2": 1209, "y2": 540, "canDropThrough": true}, {"id": 6, "x1": 759, "y1": 1020, "x2": 849, "y2": 1020, "canDropThrough": true}, {"id": 167, "x1": 443, "y1": 1255, "x2": 451, "y2": 1256, "canDropThrough": true}, {"id": 1, "x1": 1800, "y1": 1020, "x2": 1878, "y2": 1020, "canDropThrough": true}, {"id": 15, "x1": 669, "y1": 1020, "x2": 759, "y2": 1020, "canDropThrough": true}, {"id": 116, "x1": 0, "y1": 1320, "x2": 78, "y2": 1320, "canDropThrough": true}, {"id": 98, "x1": 450, "y1": 420, "x2": 528, "y2": 420, "canDropThrough": true}, {"id": 111, "x1": 348, "y1": 840, "x2": 360, "y2": 840, "canDropThrough": true}, {"id": 52, "x1": 1598, "y1": 659, "x2": 1709, "y2": 659, "canDropThrough": true}, {"id": 94, "x1": 438, "y1": 660, "x2": 450, "y2": 660, "canDropThrough": true}, {"id": 154, "x1": 1598, "y1": 1142, "x2": 1602, "y2": 1142, "canDropThrough": true}, {"id": 67, "x1": 1209, "y1": 540, "x2": 1299, "y2": 540, "canDropThrough": true}, {"id": 17, "x1": 399, "y1": 1020, "x2": 438, "y2": 1020, "canDropThrough": true}, {"id": 81, "x1": 610, "y1": 475, "x2": 621, "y2": 473, "canDropThrough": true}, {"id": 54, "x1": 541, "y1": 716, "x2": 555, "y2": 715, "canDropThrough": true}, {"id": 133, "x1": 1209, "y1": 1320, "x2": 1299, "y2": 1320, "canDropThrough": true}, {"id": 41, "x1": 1029, "y1": 780, "x2": 1119, "y2": 780, "canDropThrough": true}, {"id": 176, "x1": 438, "y1": 600, "x2": 450, "y2": 600, "canDropThrough": true}, {"id": 79, "x1": 1445, "y1": 473, "x2": 1644, "y2": 473, "canDropThrough": true}, {"id": 83, "x1": 635, "y1": 472, "x2": 640, "y2": 475, "canDropThrough": true}];
-const HENESYS_LADDERS_RAW = [{"id": 1, "x": 419, "top": 1022, "bottom": 1210, "isLadder": true}, {"id": 2, "x": 1769, "top": 1022, "bottom": 1162, "isLadder": true}, {"id": 3, "x": 825, "top": 782, "bottom": 978, "isLadder": false}, {"id": 4, "x": 1164, "top": 1022, "bottom": 1248, "isLadder": false}, {"id": 5, "x": 1726, "top": 782, "bottom": 867, "isLadder": true}, {"id": 6, "x": 1647, "top": 542, "bottom": 625, "isLadder": true}, {"id": 7, "x": 1197, "top": 542, "bottom": 738, "isLadder": false}, {"id": 8, "x": 1447, "top": 2, "bottom": 437, "isLadder": false}];
+// js/map.js - Multi-Map Engine with Official Nexon WZ Footholds & Parallax Environments
 
 class GameMap {
-  constructor() {
-    this.name = '헤네시스 사냥터 1 (Henesys Hunting Ground 1)';
-    this.width = 2242;
-    this.height = 1634;
-    this.groundY = 1585;
-
-    // Terrain Image
+  constructor(initialKey = 'henesys_hhg') {
+    this.currentKey = initialKey;
     this.terrainImg = new Image();
-    this.terrainImg.src = 'assets/map/henesys_terrain.png';
     this.terrainLoaded = false;
+    this.clouds = [
+      { x: 150, y: 120, speed: 0.15, size: 90 },
+      { x: 600, y: 80, speed: 0.22, size: 110 },
+      { x: 1150, y: 140, speed: 0.18, size: 85 },
+      { x: 1700, y: 90, speed: 0.25, size: 120 },
+      { x: 2100, y: 160, speed: 0.20, size: 95 }
+    ];
+
+    this.loadMap(initialKey);
+  }
+
+  loadMap(key) {
+    let data = null;
+    if (typeof MAP_DATABASE !== 'undefined' && MAP_DATABASE[key]) {
+      data = MAP_DATABASE[key];
+    } else {
+      // Fallback to default henesys
+      data = (typeof MAP_DATABASE !== 'undefined' && MAP_DATABASE['henesys_hhg']) || {
+        name: '헤네시스 사냥터 1',
+        category: '사냥터',
+        width: 2242,
+        height: 1634,
+        img: 'assets/map/henesys_terrain.png',
+        minimap: 'assets/map/henesys_minimap.png',
+        defaultSpawn: { x: 1050, y: 1320 },
+        footholds: [],
+        ladders: [],
+        npcs: [],
+        portals: []
+      };
+    }
+
+    this.currentKey = key;
+    this.name = data.name;
+    this.category = data.category || '사냥터';
+    this.width = data.width;
+    this.height = data.height;
+    this.defaultSpawn = data.defaultSpawn || { x: 400, y: 1300 };
+    this.isBossMap = data.isBossMap || false;
+    this.boss = data.boss || null;
+
+    // Load Terrain Image
+    this.terrainLoaded = false;
+    this.terrainImg = new Image();
+    this.terrainImg.src = data.img;
     this.terrainImg.onload = () => {
       this.terrainLoaded = true;
     };
 
+    // Load Minimap Image
+    if (window.sprites) {
+      window.sprites.minimapImg = new Image();
+      window.sprites.minimapImg.src = data.minimap;
+    }
+
     // Convert raw footholds into Foothold instances
-    this.footholds = HENESYS_FOOTHOLDS_RAW.map(f => 
-      new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, f.canDropThrough, f.y1 >= 1300 ? 'ground' : 'platform')
+    this.footholds = (data.footholds || []).map(f => 
+      new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, f.canDropThrough, f.canDropThrough ? 'platform' : 'ground')
     );
 
-    // Reference to base ground foothold
-    this.groundFoothold = this.footholds.find(f => f.y1 >= 1300) || this.footholds[0];
-
     // Ladders and Ropes
-    this.ladders = HENESYS_LADDERS_RAW.map(l => ({
+    this.ladders = (data.ladders || []).map(l => ({
       id: l.id,
       x: l.x,
       top: l.top,
@@ -36,14 +75,28 @@ class GameMap {
       type: l.isLadder ? 'ladder' : 'rope'
     }));
 
-    // Parallax Clouds
-    this.clouds = [
-      { x: 150, y: 120, speed: 0.15, size: 90 },
-      { x: 600, y: 80, speed: 0.22, size: 110 },
-      { x: 1150, y: 140, speed: 0.18, size: 85 },
-      { x: 1700, y: 90, speed: 0.25, size: 120 },
-      { x: 2100, y: 160, speed: 0.20, size: 95 }
-    ];
+    // NPCs
+    this.npcs = (data.npcs || []).map(npcData => ({
+      name: npcData.name,
+      type: npcData.type,
+      x: npcData.x,
+      y: npcData.y,
+      dialog: npcData.dialog,
+      width: npcData.type.includes('cab') ? 120 : 50,
+      height: 70
+    }));
+
+    // Portals
+    this.portals = (data.portals || []).map(pData => ({
+      x: pData.x,
+      y: pData.y,
+      targetMap: pData.targetMap,
+      targetX: pData.targetX,
+      targetY: pData.targetY,
+      name: pData.name
+    }));
+
+    return this;
   }
 
   get platforms() {
@@ -81,53 +134,120 @@ class GameMap {
     // 1. Far Sky & Parallax Backdrops
     this.drawSkyAndFarBackdrop(ctx, camera);
 
-    // 2. Authentic Henesys Terrain
+    // 2. Authentic Map Terrain Blit
     if (this.terrainLoaded && this.terrainImg.complete) {
       ctx.drawImage(this.terrainImg, 0, 0);
     }
 
     // 3. Render Pixel-Art Ladders & Ropes connecting platforms
     this.drawLaddersAndRopes(ctx);
+
+    // 4. Render Portals
+    if (window.sprites) {
+      this.portals.forEach(portal => {
+        window.sprites.drawPortal(ctx, portal);
+      });
+    }
   }
 
   drawSkyAndFarBackdrop(ctx, camera) {
-    // Sky Gradient
-    const skyGrad = ctx.createLinearGradient(0, camera.y, 0, camera.y + camera.height);
-    skyGrad.addColorStop(0, '#53a8ea');
-    skyGrad.addColorStop(0.5, '#87c6f5');
-    skyGrad.addColorStop(1, '#d2effd');
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+    if (this.currentKey === 'ant_tunnel') {
+      // Dark Underground Cavern
+      const caveGrad = ctx.createLinearGradient(0, camera.y, 0, camera.y + camera.height);
+      caveGrad.addColorStop(0, '#0a090e');
+      caveGrad.addColorStop(0.5, '#16131c');
+      caveGrad.addColorStop(1, '#211d2b');
+      ctx.fillStyle = caveGrad;
+      ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
 
-    // Distant Rolling Henesys Hills (Parallax 0.25)
-    ctx.save();
-    const hillParallax = camera.x * 0.25;
-    ctx.translate(-hillParallax, 0);
+      // Distant stalactites (Parallax 0.2)
+      ctx.save();
+      const pOffset = camera.x * 0.15;
+      ctx.translate(-pOffset, 0);
+      ctx.fillStyle = 'rgba(28, 24, 36, 0.6)';
+      for (let sx = 0; sx <= this.width + 1000; sx += 180) {
+        ctx.beginPath();
+        ctx.moveTo(sx, 0);
+        ctx.lineTo(sx + 30, 220 + Math.sin(sx) * 60);
+        ctx.lineTo(sx + 60, 0);
+        ctx.fill();
+      }
+      ctx.restore();
+    } else if (this.currentKey === 'zakum_altar') {
+      // Scorching Molten Lava Cavern
+      const lavaGrad = ctx.createLinearGradient(0, camera.y, 0, camera.y + camera.height);
+      lavaGrad.addColorStop(0, '#1c0402');
+      lavaGrad.addColorStop(0.5, '#3b0a07');
+      lavaGrad.addColorStop(1, '#66140b');
+      ctx.fillStyle = lavaGrad;
+      ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
 
-    ctx.fillStyle = 'rgba(125, 195, 75, 0.45)';
-    ctx.beginPath();
-    ctx.moveTo(0, 1200);
-    for (let x = 0; x <= this.width + 1000; x += 300) {
-      ctx.quadraticCurveTo(x + 150, 850 + Math.sin(x * 0.01) * 80, x + 300, 1200);
-    }
-    ctx.lineTo(this.width + 1000, 1634);
-    ctx.lineTo(0, 1634);
-    ctx.closePath();
-    ctx.fill();
+      // Fiery ember glow on the bottom (Parallax 0.3)
+      ctx.save();
+      const glowGrad = ctx.createLinearGradient(0, this.height - 250, 0, this.height);
+      glowGrad.addColorStop(0, 'rgba(239, 68, 68, 0)');
+      glowGrad.addColorStop(0.8, 'rgba(249, 115, 22, 0.4)');
+      glowGrad.addColorStop(1, 'rgba(254, 240, 138, 0.6)');
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(camera.x, this.height - 250, camera.width, 250);
+      ctx.restore();
+    } else if (this.currentKey === 'ellinia') {
+      // Mystical Emerald Forest
+      const treeGrad = ctx.createLinearGradient(0, camera.y, 0, camera.y + camera.height);
+      treeGrad.addColorStop(0, '#021812');
+      treeGrad.addColorStop(0.5, '#062d22');
+      treeGrad.addColorStop(1, '#0e4a39');
+      ctx.fillStyle = treeGrad;
+      ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
 
-    // Floating Clouds
-    this.clouds.forEach(c => {
-      const cx = c.x - camera.x * 0.12;
-      const cy = c.y + camera.y * 0.05;
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      // Ancient Giant Trunks in background (Parallax 0.25)
+      ctx.save();
+      const treeParallax = camera.x * 0.2;
+      ctx.translate(-treeParallax, 0);
+      ctx.fillStyle = 'rgba(7, 43, 33, 0.55)';
+      for (let tx = 100; tx <= this.width + 1000; tx += 450) {
+        ctx.fillRect(tx, 0, 140, this.height);
+      }
+      ctx.restore();
+    } else {
+      // Henesys Daylight Blue Sky Gradient
+      const skyGrad = ctx.createLinearGradient(0, camera.y, 0, camera.y + camera.height);
+      skyGrad.addColorStop(0, '#53a8ea');
+      skyGrad.addColorStop(0.5, '#87c6f5');
+      skyGrad.addColorStop(1, '#d2effd');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+
+      // Distant Rolling Henesys Hills (Parallax 0.25)
+      ctx.save();
+      const hillParallax = camera.x * 0.25;
+      ctx.translate(-hillParallax, 0);
+
+      ctx.fillStyle = 'rgba(125, 195, 75, 0.45)';
       ctx.beginPath();
-      ctx.arc(cx, cy, c.size * 0.45, 0, Math.PI * 2);
-      ctx.arc(cx + c.size * 0.35, cy - c.size * 0.12, c.size * 0.4, 0, Math.PI * 2);
-      ctx.arc(cx + c.size * 0.7, cy, c.size * 0.42, 0, Math.PI * 2);
+      ctx.moveTo(0, 1200);
+      for (let x = 0; x <= this.width + 1000; x += 300) {
+        ctx.quadraticCurveTo(x + 150, 850 + Math.sin(x * 0.01) * 80, x + 300, 1200);
+      }
+      ctx.lineTo(this.width + 1000, this.height);
+      ctx.lineTo(0, this.height);
+      ctx.closePath();
       ctx.fill();
-    });
 
-    ctx.restore();
+      // Floating Clouds
+      this.clouds.forEach(c => {
+        const cx = c.x - camera.x * 0.12;
+        const cy = c.y + camera.y * 0.05;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.beginPath();
+        ctx.arc(cx, cy, c.size * 0.45, 0, Math.PI * 2);
+        ctx.arc(cx + c.size * 0.35, cy - c.size * 0.12, c.size * 0.4, 0, Math.PI * 2);
+        ctx.arc(cx + c.size * 0.7, cy, c.size * 0.42, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.restore();
+    }
   }
 
   drawLaddersAndRopes(ctx) {

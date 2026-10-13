@@ -47,6 +47,30 @@ class Projectile {
 
     if (this.hit) return;
 
+    // 1. Check Boss (Zakum or Mushmom)
+    if (game.boss && game.boss.isAlive()) {
+      if (typeof ZakumBoss !== 'undefined' && game.boss instanceof ZakumBoss) {
+        const hitBoxes = game.boss.getHitBoxes();
+        for (const hb of hitBoxes) {
+          if (this.x >= hb.x && this.x <= hb.x + hb.width && this.y >= hb.y && this.y <= hb.y + hb.height) {
+            this.hit = true;
+            game.boss.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left', game, hb);
+            game.spawnStaggeredDamage(this.x, this.y - 20, this.damage, this.isCrit);
+            return;
+          }
+        }
+      } else {
+        const d = Math.hypot(game.boss.x - this.x, (game.boss.y - game.boss.height / 2) - this.y);
+        if (d < Math.max(32, game.boss.width * 0.5)) {
+          this.hit = true;
+          game.boss.takeDamage(this.damage, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
+          game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.8, this.damage, this.isCrit);
+          return;
+        }
+      }
+    }
+
+    // 2. Check Standard Field Monsters
     for (const m of game.monsters) {
       if (m.isAlive()) {
         const d = Math.hypot(m.x - this.x, (m.y - m.height / 2) - this.y);
@@ -93,6 +117,8 @@ class Player {
     this.luk = 4;
     this.ap = 5;
     this.sp = 3;
+    this.speechText = null;
+    this.speechTimer = 0;
 
     this.calcDerivedStats();
     this.hp = this.maxHp;
@@ -230,9 +256,19 @@ class Player {
     return { damage: dmg, isCrit };
   }
 
+  say(text) {
+    this.speechText = text;
+    this.speechTimer = 4.0;
+  }
+
   update(dt, map) {
     if (this.attackTimer > 0) this.attackTimer -= dt;
     if (this.invincibleTimer > 0) this.invincibleTimer -= dt;
+
+    if (this.speechTimer > 0) {
+      this.speechTimer -= dt;
+      if (this.speechTimer <= 0) this.speechText = null;
+    }
 
     this.regenTimer += dt;
     if (this.regenTimer >= 5) {
@@ -376,6 +412,8 @@ class Player {
     };
 
     let hit = false;
+    if (this.checkAndHitBoss(hitBox, 1.0, game)) hit = true;
+
     for (const m of game.monsters) {
       if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
         const { damage, isCrit } = this.getDamage();
@@ -385,6 +423,31 @@ class Player {
       }
     }
     return hit;
+  }
+
+  checkAndHitBoss(hitBox, multiplier = 1.0, game) {
+    if (!game.boss || !game.boss.isAlive()) return false;
+    if (typeof ZakumBoss !== 'undefined' && game.boss instanceof ZakumBoss) {
+      const hitBoxes = game.boss.getHitBoxes();
+      for (const hb of hitBoxes) {
+        if (this.checkCollision(hitBox, hb)) {
+          const { damage, isCrit } = this.getDamage();
+          const finalDmg = Math.floor(damage * multiplier);
+          game.boss.takeDamage(finalDmg, isCrit, this.facing, game, hb);
+          game.spawnStaggeredDamage(hb.x + hb.width / 2, hb.y, finalDmg, isCrit);
+          return true;
+        }
+      }
+    } else {
+      if (this.checkCollision(hitBox, game.boss.getHitBox())) {
+        const { damage, isCrit } = this.getDamage();
+        const finalDmg = Math.floor(damage * multiplier);
+        game.boss.takeDamage(finalDmg, isCrit, this.facing, game);
+        game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.7, finalDmg, isCrit);
+        return true;
+      }
+    }
+    return false;
   }
 
   useSkill(skillId, game) {
@@ -414,6 +477,8 @@ class Player {
         width: 70,
         height: 48
       };
+
+      this.checkAndHitBoss(hitBox, (skill.dmgMult + skill.level * 0.08), game);
 
       for (const m of game.monsters) {
         if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
@@ -474,6 +539,8 @@ class Player {
         width: range,
         height: 50
       };
+
+      this.checkAndHitBoss(hitBox, (1.1 + skill.level * 0.06), game);
 
       for (const m of game.monsters) {
         if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
@@ -553,6 +620,8 @@ class Player {
         width: range,
         height: 38
       };
+
+      this.checkAndHitBoss(hitBox, 1.4, game);
 
       for (const m of game.monsters) {
         if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
@@ -1032,9 +1101,195 @@ class FloatingText {
   }
 }
 
+// === Zakum Boss Class (Body + 8 Independent Floating Arms) ===
+class ZakumBoss {
+  constructor(x = 600, y = 350) {
+    this.id = 'zakum';
+    this.name = '★ 자쿰 (ZAKUM BOSS) ★';
+    this.x = x;
+    this.y = y;
+    this.level = 50;
+    this.maxHp = 100000;
+    this.hp = this.maxHp;
+    this.width = 385;
+    this.height = 398;
+    this.hitTimer = 0;
+    this.hitstopTimer = 0;
+    this.atk = 85;
+
+    // 8 Independent Arms with their relative offsets from body center
+    this.arms = [
+      { id: 1, name: '자쿰의 1번째 팔', offsetX: -160, offsetY: -160, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 2, name: '자쿰의 2번째 팔', offsetX: -170, offsetY: -80, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 3, name: '자쿰의 3번째 팔', offsetX: -160, offsetY: 10, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 4, name: '자쿰의 4번째 팔', offsetX: -140, offsetY: 90, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 5, name: '자쿰의 5번째 팔', offsetX: 160, offsetY: -160, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 6, name: '자쿰의 6번째 팔', offsetX: 170, offsetY: -80, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 7, name: '자쿰의 7번째 팔', offsetX: 160, offsetY: 10, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
+      { id: 8, name: '자쿰의 8번째 팔', offsetX: 140, offsetY: 90, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 }
+    ];
+
+    this.activeSpells = [];
+    this.spellCooldown = 3.5;
+  }
+
+  isAlive() {
+    return this.hp > 0;
+  }
+
+  getHitBoxes() {
+    const boxes = [];
+    // Prioritize alive arms
+    this.arms.forEach(arm => {
+      if (arm.isAlive) {
+        boxes.push({
+          type: 'arm',
+          target: arm,
+          x: this.x + arm.offsetX - 50,
+          y: this.y + arm.offsetY - 50,
+          width: 100,
+          height: 100
+        });
+      }
+    });
+    // Main stone body
+    boxes.push({
+      type: 'body',
+      target: this,
+      x: this.x - 120,
+      y: this.y - 140,
+      width: 240,
+      height: 280
+    });
+    return boxes;
+  }
+
+  takeDamage(amount, isCrit, fromDir, game, hitTarget = null) {
+    if (hitTarget && hitTarget.type === 'arm') {
+      const arm = hitTarget.target;
+      arm.hp -= amount;
+      arm.hitTimer = 0.15;
+      if (arm.hp <= 0) {
+        arm.hp = 0;
+        arm.isAlive = false;
+        game.spawnItemText(this.x + arm.offsetX, this.y + arm.offsetY - 20, '💥 팔 파괴!');
+        window.audio.playMonsterDie();
+      }
+    } else {
+      this.hp -= amount;
+      this.hitTimer = 0.15;
+    }
+
+    this.hitstopTimer = 0.08;
+    window.audio.playHit();
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.die(game.player, game);
+    }
+  }
+
+  update(dt, player, map, game) {
+    if (!this.isAlive()) return;
+
+    if (this.hitstopTimer > 0) {
+      this.hitstopTimer -= dt;
+      return;
+    }
+    if (this.hitTimer > 0) this.hitTimer -= dt;
+    this.arms.forEach(a => {
+      if (a.hitTimer > 0) a.hitTimer -= dt;
+    });
+
+    // Spell update
+    for (let i = this.activeSpells.length - 1; i >= 0; i--) {
+      const sp = this.activeSpells[i];
+      sp.timer += dt;
+      if (sp.timer >= sp.duration) {
+        if (Math.abs(player.x - sp.x) < 45 && player.invincibleTimer <= 0) {
+          player.takeDamage(sp.damage);
+          game.spawnDamageText(player.x, player.y - 25, sp.damage, false, 'player');
+        }
+        this.activeSpells.splice(i, 1);
+      }
+    }
+
+    // Cast spells
+    this.spellCooldown -= dt;
+    if (this.spellCooldown <= 0) {
+      this.spellCooldown = 3.2 + Math.random() * 2.8;
+      this.castSpell(player, game);
+    }
+  }
+
+  castSpell(player, game) {
+    const spellType = Math.random() < 0.5 ? 'fire_pillar' : 'lightning';
+    window.audio.playBossRoar();
+    if (spellType === 'fire_pillar') {
+      this.activeSpells.push({
+        type: 'fire_pillar',
+        x: player.x,
+        y: player.y,
+        timer: 0,
+        duration: 0.8,
+        damage: 45
+      });
+      game.spawnItemText(player.x, player.y - 60, '🔥 화염 기둥 경고!');
+    } else {
+      this.activeSpells.push({
+        type: 'lightning',
+        x: player.x + (Math.random() * 80 - 40),
+        y: player.y,
+        timer: 0,
+        duration: 0.6,
+        damage: 55
+      });
+      game.spawnItemText(player.x, player.y - 60, '⚡ 낙뢰 경고!');
+    }
+  }
+
+  die(player, game) {
+    window.audio.playMonsterDie();
+    player.gainExp(15000, game);
+    game.spawnDrop('meso', 50000, this.x - 40, this.y + 80);
+    game.spawnDrop('meso', 50000, this.x + 40, this.y + 80);
+    game.spawnDrop('red_potion', 20, this.x - 80, this.y + 80);
+    game.spawnDrop('blue_potion', 20, this.x + 80, this.y + 80);
+    game.spawnDrop('equip', 1, this.x, this.y + 80, '👑 자쿰의 투구');
+    game.spawnItemText(this.x, this.y - 60, '👑 ★ 자쿰 레이드 클리어! ★ 👑');
+  }
+}
+
+// === NPC Class ===
+class NPC {
+  constructor(name, type, x, y, dialog) {
+    this.name = name;
+    this.type = type;
+    this.x = x;
+    this.y = y;
+    this.dialog = dialog;
+    this.width = type.includes('cab') ? 122 : 52;
+    this.height = 70;
+  }
+}
+
+// === Portal Class ===
+class Portal {
+  constructor(x, y, targetMap, targetX, targetY, name) {
+    this.x = x;
+    this.y = y;
+    this.targetMap = targetMap;
+    this.targetX = targetX;
+    this.targetY = targetY;
+    this.name = name;
+  }
+}
+
 window.DamageDigit = DamageDigit;
 window.Projectile = Projectile;
 window.Player = Player;
 window.Monster = Monster;
+window.ZakumBoss = ZakumBoss;
+window.NPC = NPC;
+window.Portal = Portal;
 window.DropItem = DropItem;
 window.FloatingText = FloatingText;

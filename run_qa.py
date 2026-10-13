@@ -102,10 +102,29 @@ async def main():
             auto_stats = await eval_js("({ kills: window.game.autoHunt.stats.kills, expGained: window.game.autoHunt.stats.expGained, duration: window.game.autoHunt.stats.duration })")
             print(f"6. Auto-Hunt running stats: {auto_stats}")
 
-            # 4. Test Boss Mushmom Spawn
+            # 4. Test Multi-Map Engine & World Travel
+            maps_to_test = ['henesys_town', 'ant_tunnel', 'ellinia', 'zakum_altar']
+            for mkey in maps_to_test:
+                await eval_js(f"window.game.changeMap('{mkey}')")
+                curr_map_name = await eval_js("window.game.map.name")
+                fhs_count = await eval_js("window.game.map.footholds.length")
+                npcs_count = await eval_js("window.game.map.npcs.length")
+                print(f"   - Traveled to '{curr_map_name}': {fhs_count} footholds, {npcs_count} NPCs.")
+                await asyncio.sleep(0.5)
+
+            # Test Zakum Boss on Zakum's Altar
+            zakum_arms = await eval_js("window.game.boss ? window.game.boss.arms.length : 0")
+            print(f"7. Zakum Boss arms count on altar: {zakum_arms}")
+
+            # Test Chat
+            await eval_js("window.game.sendChatMessage('빅뱅 이전 클래식 메이플 최고!')")
+            speech_text = await eval_js("window.game.player.speechText")
+            print(f"8. Player speech bubble: '{speech_text}'")
+
+            # Return to Henesys Hunting Ground 1 for final screenshot
+            await eval_js("window.game.changeMap('henesys_hhg', 1050, 1320)")
             await eval_js("window.game.spawnBoss()")
-            boss_alive = await eval_js("window.game.boss !== null && window.game.boss.isAlive()")
-            print(f"7. Boss Mushmom spawned and alive: {boss_alive}")
+            await asyncio.sleep(0.5)
 
             # 5. Capture Screenshot
             msg_id += 1

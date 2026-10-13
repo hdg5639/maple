@@ -17,13 +17,55 @@ class UIManager {
     document.getElementById('btn-boss-spawn')?.addEventListener('click', () => this.game.spawnBoss());
     document.getElementById('btn-auto-hunt')?.addEventListener('click', () => this.game.autoHunt.toggle());
     document.getElementById('btn-job-select-open')?.addEventListener('click', () => this.showJobAdvancementModal());
+    document.getElementById('btn-map-travel-open')?.addEventListener('click', () => this.showMapTravelModal());
 
     document.querySelectorAll('.btn-window-close').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const win = e.target.closest('.maple-window') || e.target.closest('#modal-job-advance');
+        const win = e.target.closest('.maple-window') || e.target.closest('.maple-dialog-modal') || e.target.closest('#modal-job-advance');
         if (win) win.style.display = 'none';
         window.audio.playButtonClick();
       });
+    });
+
+    document.getElementById('btn-npc-dialog-close')?.addEventListener('click', () => {
+      document.getElementById('modal-npc-dialog').style.display = 'none';
+    });
+    document.getElementById('btn-npc-dialog-exit')?.addEventListener('click', () => {
+      document.getElementById('modal-npc-dialog').style.display = 'none';
+    });
+
+    document.getElementById('btn-map-travel-close')?.addEventListener('click', () => {
+      document.getElementById('modal-map-travel').style.display = 'none';
+    });
+
+    // Map travel modal destination buttons
+    document.querySelectorAll('.btn-map-target').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mapKey = btn.dataset.map;
+        const modal = document.getElementById('modal-map-travel');
+        if (modal) modal.style.display = 'none';
+        this.game.changeMap(mapKey);
+      });
+    });
+
+    // Chat input handlers
+    const chatInput = document.getElementById('chat-input');
+    const sendChat = () => {
+      if (!chatInput) return;
+      const text = chatInput.value.trim();
+      if (text) {
+        this.game.sendChatMessage(text);
+        chatInput.value = '';
+        chatInput.blur();
+      }
+    };
+
+    document.getElementById('btn-chat-send')?.addEventListener('click', sendChat);
+    chatInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendChat();
+      }
     });
 
     document.querySelectorAll('.inven-tab').forEach(tab => {
@@ -156,6 +198,10 @@ class UIManager {
       else if (code === 'Digit1') this.game.player.usePotion('red_potion');
       else if (code === 'Digit2') this.game.player.usePotion('blue_potion');
     });
+  }
+
+  updateHud() {
+    this.updateHUD();
   }
 
   updateHUD() {
@@ -338,6 +384,142 @@ class UIManager {
     const modal = document.getElementById('modal-job-advance');
     if (!modal) return;
     modal.style.display = 'flex';
+  }
+
+  // --- CLASSIC NPC DIALOGUE SYSTEM ---
+  showNpcDialog(npc) {
+    const modal = document.getElementById('modal-npc-dialog');
+    if (!modal) return;
+
+    window.audio.playButtonClick();
+
+    document.getElementById('npc-dialog-title').innerText = `${npc.name} 대화`;
+    document.getElementById('npc-dialog-portrait').src = `assets/npcs/${npc.type}.png`;
+    document.getElementById('npc-dialog-name').innerText = npc.name;
+
+    const textEl = document.getElementById('npc-dialog-text');
+    const choicesEl = document.getElementById('npc-dialog-choices');
+    choicesEl.innerHTML = '';
+
+    if (npc.type === 'regular_cab') {
+      textEl.innerText = '안녕하세요! 빅토리아 아일랜드 각 마을과 사냥터로 안전하게 모시는 중형택시입니다. 어디로 이동하시겠습니까?';
+      const destinations = [
+        { name: '헤네시스 사냥터 1 (초보자 사냥터)', map: 'henesys_hhg', x: 1050, y: 1320 },
+        { name: '헤네시스 마을 (자유시장 & 상점)', map: 'henesys_town', x: 2200, y: 880 },
+        { name: '마법의 숲 엘리니아 (요정의 마을)', map: 'ellinia', x: 1400, y: 4550 },
+        { name: '던전 개미굴 1 (위험한 동굴 탐험)', map: 'ant_tunnel', x: 400, y: 240 }
+      ];
+
+      destinations.forEach(dest => {
+        const btn = document.createElement('button');
+        btn.className = 'npc-choice-btn';
+        btn.innerText = `▶ ${dest.name} 로 이동`;
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          this.game.changeMap(dest.map, dest.x, dest.y);
+        });
+        choicesEl.appendChild(btn);
+      });
+    } else if (npc.type === 'vip_cab') {
+      textEl.innerText = '심해와 던전 깊은 곳까지 빠르게 직통으로 모시는 모범택시입니다. 어디로 가시겠습니까?';
+      const destinations = [
+        { name: '던전 개미굴 1 (직통 이동)', map: 'ant_tunnel', x: 400, y: 240 },
+        { name: '자쿰의 제단 (고대 거신 보스 구역)', map: 'zakum_altar', x: 180, y: 490 },
+        { name: '헤네시스 마을로 복귀', map: 'henesys_town', x: 2200, y: 880 }
+      ];
+
+      destinations.forEach(dest => {
+        const btn = document.createElement('button');
+        btn.className = 'npc-choice-btn';
+        btn.innerText = `▶ ${dest.name}`;
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          this.game.changeMap(dest.map, dest.x, dest.y);
+        });
+        choicesEl.appendChild(btn);
+      });
+    } else if (npc.type === 'adobis') {
+      textEl.innerText = '자쿰의 제단에 오신 것을 환영합니다. 제단에 불의 눈을 바쳐 고대 거신 자쿰을 깨우시겠습니까?';
+      const choices = [
+        { text: '🔥 자쿰 레이드 시작 (자쿰 소환)', action: () => this.game.spawnZakumBoss() },
+        { text: '헤네시스로 안전하게 귀환하기', action: () => this.game.changeMap('henesys_hhg', 1050, 1320) }
+      ];
+
+      choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'npc-choice-btn';
+        btn.innerText = `▶ ${ch.text}`;
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          ch.action();
+        });
+        choicesEl.appendChild(btn);
+      });
+    } else if (npc.type === 'chief_stan') {
+      textEl.innerText = '반갑네, 젊은 모험가여! 헤네시스 사냥터에서 주황버섯과 슬라임을 사냥하며 수련을 쌓게나.';
+      const btn = document.createElement('button');
+      btn.className = 'npc-choice-btn';
+      btn.innerText = '▶ 헤네시스 사냥터 1로 바로 가기';
+      btn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        this.game.changeMap('henesys_hhg', 1050, 1320);
+      });
+      choicesEl.appendChild(btn);
+    } else {
+      textEl.innerText = '반갑습니다! 메이플 월드를 여행하는 중이신가요? 오늘도 즐거운 모험 되세요!';
+      const btn = document.createElement('button');
+      btn.className = 'npc-choice-btn';
+      btn.innerText = '▶ 대화 마치기';
+      btn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+      choicesEl.appendChild(btn);
+    }
+
+    modal.style.display = 'flex';
+  }
+
+  // --- QUICK WORLD MAP TRAVEL MODAL ---
+  showMapTravelModal() {
+    const modal = document.getElementById('modal-map-travel');
+    if (!modal) return;
+    window.audio.playButtonClick();
+    modal.style.display = 'flex';
+  }
+
+  // --- CHAT SYSTEM ---
+  addChatMessage(sender, text, type = 'player') {
+    const container = document.getElementById('chat-messages-container');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.className = `chat-msg ${type}`;
+    if (type === 'system') {
+      row.innerText = text;
+    } else {
+      row.innerHTML = `<span class="chat-sender">${sender}</span> : ${text}`;
+    }
+
+    container.appendChild(row);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // --- BOTTOM-RIGHT LOOT & EXP LOG POPUP ---
+  addLootLog(text, type = 'meso') {
+    const logBox = document.getElementById('maple-loot-log');
+    if (!logBox) return;
+
+    const item = document.createElement('div');
+    item.className = `loot-log-item ${type}`;
+    item.innerText = text;
+
+    logBox.appendChild(item);
+
+    setTimeout(() => {
+      if (item.parentNode === logBox) {
+        logBox.removeChild(item);
+      }
+    }, 3200);
   }
 }
 

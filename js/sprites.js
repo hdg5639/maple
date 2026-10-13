@@ -116,6 +116,31 @@ class SpriteRenderer {
 
     // 6. Preload Minimap
     this.minimapImg = this.loadImage('ui_minimap', 'assets/map/henesys_minimap.png');
+
+    // 7. Preload NPCs
+    this.npcs = {
+      regular_cab: this.loadImage('npc_regular_cab', 'assets/npcs/regular_cab.png'),
+      vip_cab: this.loadImage('npc_vip_cab', 'assets/npcs/vip_cab.png'),
+      chief_stan: this.loadImage('npc_chief_stan', 'assets/npcs/chief_stan.png'),
+      betty: this.loadImage('npc_betty', 'assets/npcs/betty.png'),
+      maya: this.loadImage('npc_maya', 'assets/npcs/maya.png'),
+      adobis: this.loadImage('npc_adobis', 'assets/npcs/adobis.png')
+    };
+
+    // 8. Preload Zakum Boss (Body 8 frames, Arms 1..8 with 8 frames each)
+    this.zakum = {
+      body: [],
+      arms: {}
+    };
+    for (let f = 0; f < 8; f++) {
+      this.zakum.body.push(this.loadImage(`zakum_body_${f}`, `assets/monsters/zakum/stand_${f}.png`));
+    }
+    for (let armId = 1; armId <= 8; armId++) {
+      this.zakum.arms[armId] = [];
+      for (let f = 0; f < 8; f++) {
+        this.zakum.arms[armId].push(this.loadImage(`zakum_arm_${armId}_${f}`, `assets/monsters/zakum/arm_${armId}_${f}.png`));
+      }
+    }
   }
 
   // --- Dust Particles ---
@@ -581,6 +606,275 @@ class SpriteRenderer {
       ctx.fillText('LEVEL UP!', 0, -20 - p * 20);
       ctx.restore();
     }
+
+    ctx.restore();
+  }
+
+  // --- DRAW NPC ---
+  drawNPC(ctx, npc, isPlayerNear = false) {
+    ctx.save();
+    const sprite = this.npcs[npc.type];
+
+    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      const sw = sprite.naturalWidth;
+      const sh = sprite.naturalHeight;
+      // Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+      ctx.beginPath();
+      ctx.ellipse(npc.x, npc.y + 2, Math.max(16, sw * 0.35), 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // NPC Sprite
+      ctx.drawImage(sprite, Math.round(npc.x - sw / 2), Math.round(npc.y - sh), sw, sh);
+
+      // Name Tag (Classic Maple Brown Pill)
+      ctx.font = 'bold 11px "Malgun Gothic", Dotum, sans-serif';
+      const textMetrics = ctx.measureText(npc.name);
+      const tagW = textMetrics.width + 12;
+      const tagH = 16;
+      const tagX = Math.round(npc.x - tagW / 2);
+      const tagY = Math.round(npc.y + 6);
+
+      ctx.fillStyle = '#3a2614';
+      ctx.strokeStyle = '#6d4c2b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(tagX, tagY, tagW, tagH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#fef08a';
+      ctx.textAlign = 'center';
+      ctx.fillText(npc.name, Math.round(npc.x), tagY + 12);
+
+      // Space Interaction Bubble
+      if (isPlayerNear) {
+        const bounce = Math.sin(performance.now() / 200) * 3;
+        const bubbleY = Math.round(npc.y - sh - 14 + bounce);
+        ctx.fillStyle = '#fef08a';
+        ctx.strokeStyle = '#854d0e';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(Math.round(npc.x - 42), bubbleY, 84, 18, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#713f12';
+        ctx.font = 'bold 10px "Malgun Gothic", sans-serif';
+        ctx.fillText('💬 Space 대화', Math.round(npc.x), bubbleY + 13);
+      }
+    }
+    ctx.restore();
+  }
+
+  // --- DRAW PORTAL (AUTHENTIC CYAN VORTEX) ---
+  drawPortal(ctx, portal) {
+    ctx.save();
+    const t = performance.now() / 1000;
+    const px = Math.round(portal.x);
+    const py = Math.round(portal.y);
+
+    // Glowing Oval Base
+    const pulse = 0.85 + Math.sin(t * 4) * 0.15;
+    ctx.save();
+    ctx.translate(px, py - 40);
+
+    // Outer glow
+    const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 36);
+    grad.addColorStop(0, 'rgba(56, 189, 248, ' + (0.85 * pulse) + ')');
+    grad.addColorStop(0.6, 'rgba(14, 165, 233, ' + (0.45 * pulse) + ')');
+    grad.addColorStop(1, 'rgba(2, 132, 199, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 26, 42, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Spiraling Inner Core
+    ctx.rotate(t * 1.5);
+    ctx.strokeStyle = 'rgba(224, 242, 254, 0.75)';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 14, 28, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.rotate(t * -3.0);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 7, 18, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Rising Sparkles
+    for (let i = 0; i < 4; i++) {
+      const moteT = (t * 2.5 + i * 1.2) % 3.0;
+      const my = py - 10 - moteT * 24;
+      const mx = px + Math.sin(t * 3 + i * 2) * 14;
+      const alpha = Math.max(0, 1 - (moteT / 3.0));
+      ctx.fillStyle = `rgba(186, 230, 253, ${alpha})`;
+      ctx.beginPath();
+      ctx.arc(mx, my, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Portal Destination Name Tag
+    if (portal.name) {
+      ctx.font = 'bold 10px "Malgun Gothic", Dotum, sans-serif';
+      const tw = ctx.measureText(portal.name).width;
+      const tagW = tw + 10;
+      const tagH = 15;
+      const tagX = Math.round(px - tagW / 2);
+      const tagY = Math.round(py + 6);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(tagX, tagY, tagW, tagH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.textAlign = 'center';
+      ctx.fillText(portal.name, px, tagY + 11);
+    }
+
+    ctx.restore();
+  }
+
+  // --- DRAW ZAKUM BOSS (BODY & 8 INDEPENDENT ARMS) ---
+  drawZakumBoss(ctx, boss) {
+    if (!boss || !boss.isAlive()) return;
+    ctx.save();
+
+    const t = performance.now() / 1000;
+    const bodyFrameIdx = Math.floor(t * 4) % 8;
+    const armFrameIdx = Math.floor(t * 5) % 8;
+
+    // 1. Draw 8 Arms (Arm 1-4 Left, Arm 5-8 Right)
+    if (boss.arms) {
+      boss.arms.forEach(arm => {
+        if (!arm.isAlive) return;
+
+        const armSpriteList = this.zakum.arms[arm.id];
+        if (!armSpriteList || !armSpriteList[armFrameIdx]) return;
+        const sprite = armSpriteList[armFrameIdx];
+
+        if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+          const sw = sprite.naturalWidth;
+          const sh = sprite.naturalHeight;
+          const swayY = Math.sin(t * 2.5 + arm.id) * 4;
+          const ax = Math.round(boss.x + arm.offsetX);
+          const ay = Math.round(boss.y + arm.offsetY + swayY);
+
+          ctx.save();
+          if (arm.hitTimer > 0) {
+            // Hit flash
+            ctx.filter = 'brightness(2.0)';
+          }
+          ctx.drawImage(sprite, ax - sw / 2, ay - sh / 2, sw, sh);
+          ctx.restore();
+
+          // Small HP gauge above arm if damaged
+          if (arm.hp < arm.maxHp) {
+            const barW = 40;
+            const barH = 4;
+            const barX = ax - barW / 2;
+            const barY = ay - sh / 2 - 8;
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(barX, barY, Math.max(0, (arm.hp / arm.maxHp) * barW), barH);
+          }
+        }
+      });
+    }
+
+    // 2. Draw Zakum Body
+    const bodySprite = this.zakum.body[bodyFrameIdx];
+    if (bodySprite && bodySprite.complete && bodySprite.naturalWidth > 0) {
+      const bw = bodySprite.naturalWidth;
+      const bh = bodySprite.naturalHeight;
+      const bx = Math.round(boss.x - bw / 2);
+      const by = Math.round(boss.y - bh / 2);
+
+      ctx.save();
+      if (boss.hitTimer > 0) {
+        ctx.filter = 'brightness(2.2)';
+      }
+      ctx.drawImage(bodySprite, bx, by, bw, bh);
+      ctx.restore();
+    }
+
+    // 3. Draw Active Spells (Lightning / Fire Pillar)
+    if (boss.activeSpells) {
+      boss.activeSpells.forEach(spell => {
+        if (spell.type === 'fire_pillar') {
+          const progress = spell.timer / spell.duration;
+          ctx.save();
+          const fGrad = ctx.createLinearGradient(spell.x, spell.y, spell.x, spell.y - 200);
+          fGrad.addColorStop(0, 'rgba(239, 68, 68, 0.9)');
+          fGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.7)');
+          fGrad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+          ctx.fillStyle = fGrad;
+          ctx.fillRect(spell.x - 30, spell.y - 200, 60, 200);
+          ctx.restore();
+        } else if (spell.type === 'lightning') {
+          ctx.save();
+          ctx.strokeStyle = 'rgba(125, 211, 252, 0.9)';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.moveTo(spell.x, 0);
+          ctx.lineTo(spell.x - 15, spell.y * 0.4);
+          ctx.lineTo(spell.x + 20, spell.y * 0.7);
+          ctx.lineTo(spell.x, spell.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      });
+    }
+
+    ctx.restore();
+  }
+
+  // --- DRAW SPEECH BUBBLE ---
+  drawSpeechBubble(ctx, x, y, text) {
+    if (!text) return;
+    ctx.save();
+    ctx.font = '11px "Malgun Gothic", Dotum, sans-serif';
+    const tm = ctx.measureText(text);
+    const bw = Math.max(48, tm.width + 16);
+    const bh = 22;
+    const bx = Math.round(x - bw / 2);
+    const by = Math.round(y - bh);
+
+    // Bubble Fill & Border
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#18181b';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, 5);
+    ctx.fill();
+    ctx.stroke();
+
+    // Downward Pointer Triangle
+    ctx.beginPath();
+    ctx.moveTo(x - 4, by + bh);
+    ctx.lineTo(x, by + bh + 5);
+    ctx.lineTo(x + 4, by + bh);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.stroke();
+
+    // Fill over base to clear the stroke line on top of pointer
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x - 3, by + bh - 1.5, 6, 2);
+
+    // Text
+    ctx.fillStyle = '#18181b';
+    ctx.textAlign = 'center';
+    ctx.fillText(text, Math.round(x), by + 15);
 
     ctx.restore();
   }

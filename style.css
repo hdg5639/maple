@@ -693,3 +693,401 @@ body, html {
   color: #92400e;
   margin-top: 4px;
 }
+
+/* === CLASSIC MAPLE CHAT WINDOW (BOTTOM-LEFT) === */
+#maple-chat-container {
+  position: absolute;
+  bottom: 74px;
+  left: 14px;
+  width: 380px;
+  height: 160px;
+  background: rgba(18, 22, 30, 0.88);
+  border: 2px solid #574635;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  z-index: 55;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+}
+
+.chat-tab-bar {
+  display: flex;
+  background: linear-gradient(180deg, #423223 0%, #2c2117 100%);
+  border-bottom: 1px solid #574635;
+  padding: 3px 6px;
+  gap: 4px;
+}
+
+.chat-tab {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a89a87;
+  padding: 2px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.chat-tab.active {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+#chat-messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e2e8f0;
+}
+
+#chat-messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat-messages-container::-webkit-scrollbar-thumb {
+  background: #574635;
+  border-radius: 3px;
+}
+
+.chat-msg {
+  margin-bottom: 3px;
+  word-break: break-all;
+}
+
+.chat-msg.system {
+  color: #facc15;
+}
+
+.chat-msg.player {
+  color: #ffffff;
+}
+
+.chat-msg.mock {
+  color: #93c5fd;
+}
+
+.chat-sender {
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.chat-input-bar {
+  display: flex;
+  border-top: 1px solid #334155;
+  background: rgba(10, 13, 18, 0.95);
+  padding: 4px;
+  gap: 4px;
+}
+
+#chat-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #475569;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #ffffff;
+  font-size: 12px;
+  outline: none;
+}
+
+#chat-input:focus {
+  border-color: #38bdf8;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#btn-chat-send {
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  border: 1px solid #0369a1;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+/* === BOTTOM-RIGHT FLOATING LOOT & EXP LOG === */
+#maple-loot-log {
+  position: absolute;
+  bottom: 74px;
+  right: 14px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 55;
+}
+
+.loot-log-item {
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px #000, -1px -1px 2px #000;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  animation: loot-fade 3.2s forwards;
+}
+
+.loot-log-item.meso {
+  color: #fef08a;
+}
+
+.loot-log-item.exp {
+  color: #67e8f9;
+}
+
+.loot-log-item.item {
+  color: #86efac;
+}
+
+@keyframes loot-fade {
+  0% { opacity: 0; transform: translateY(10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* === AUTHENTIC PARCHMENT NPC DIALOG MODAL === */
+.maple-dialog-modal {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65);
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.npc-dialog-box {
+  background: #fdfae8;
+  border: 3px solid #6b4c2b;
+  border-radius: 8px;
+  width: 460px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(180, 140, 80, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.npc-dialog-header {
+  background: linear-gradient(180deg, #604122 0%, #452d16 100%);
+  color: #fef08a;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.npc-dialog-content {
+  display: flex;
+  padding: 16px;
+  gap: 16px;
+}
+
+.npc-portrait-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+
+#npc-dialog-portrait {
+  max-width: 90px;
+  max-height: 90px;
+  object-fit: contain;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.npc-dialog-name-tag {
+  background: #372516;
+  border: 1px solid #78512e;
+  border-radius: 4px;
+  color: #fef08a;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  text-align: center;
+}
+
+.npc-dialog-text-area {
+  flex: 1;
+}
+
+.npc-text-bubble {
+  background: #fff;
+  border: 2px solid #a88a65;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #27272a;
+  margin-bottom: 12px;
+}
+
+.npc-choices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.npc-choice-btn {
+  background: linear-gradient(180deg, #fefce8 0%, #fef3c7 100%);
+  border: 1.5px solid #d97706;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e3a8a;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.15s;
+}
+
+.npc-choice-btn:hover {
+  background: linear-gradient(180deg, #fef08a 0%, #fde68a 100%);
+  transform: translateX(4px);
+  color: #b45309;
+}
+
+.npc-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  border-top: 1px dashed #d1c4a9;
+}
+
+.npc-btn {
+  background: linear-gradient(180deg, #e4d7be 0%, #ab9875 100%);
+  border: 1.5px solid #735d41;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  color: #27272a;
+  cursor: pointer;
+}
+
+/* === QUICK WORLD TRAVEL MODAL === */
+.map-travel-box {
+  background: #fdfbf7;
+  border: 3px solid #735d41;
+  border-radius: 8px;
+  width: 480px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+.map-travel-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.btn-map-target {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 2px solid #94a3b8;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.15s;
+}
+
+.btn-map-target:hover {
+  transform: translateY(-2px);
+  border-color: #0284c7;
+  background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+}
+
+.map-target-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0369a1;
+}
+
+.map-target-desc {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* === BOSS HP BAR (FULL TOP BAR) === */
+#boss-bar-container {
+  display: none;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 520px;
+  z-index: 60;
+}
+
+#boss-hp-frame {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 10, 10, 0.9);
+  border: 3px solid #b91c1c;
+  border-radius: 8px;
+  padding: 4px 8px;
+  box-shadow: 0 0 20px rgba(185, 28, 28, 0.7);
+}
+
+#boss-hp-portrait {
+  width: 38px;
+  height: 38px;
+  background: #3f1010;
+  border: 2px solid #dc2626;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#boss-portrait-img {
+  max-width: 34px;
+  max-height: 34px;
+  object-fit: contain;
+}
+
+#boss-hp-track {
+  flex: 1;
+  height: 18px;
+  background: #3f1010;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #7f1d1d;
+  position: relative;
+}
+
+#boss-hp-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f87171, #dc2626);
+  transition: width 0.2s ease-out;
+}
+
+#boss-hp-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+}
+

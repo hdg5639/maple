@@ -1,11 +1,11 @@
-// js/game.js - Main Game Loop, Camera, Input, Spawning, Projectiles, and Rendering
+// js/game.js - Main Game Loop, Camera, Input, Multi-Map Engine, NPC Dialogue, and Combat Rendering
 
 class Game {
   constructor() {
     this.canvas = document.getElementById('game-canvas');
     this.ctx = this.canvas.getContext('2d');
 
-    this.map = new GameMap();
+    this.map = new GameMap('henesys_hhg');
     this.player = new Player(400, 1318);
     this.monsters = [];
     this.drops = [];
@@ -24,6 +24,7 @@ class Game {
 
     this.maxMonsters = 24;
     this.spawnTimer = 0;
+    this.ambientChatTimer = 10.0;
 
     this.initCanvasSize();
     this.initInputs();
@@ -54,6 +55,32 @@ class Game {
       this.keys[e.code] = true;
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'AltLeft', 'ControlLeft'].includes(e.code)) {
         e.preventDefault();
+      }
+
+      // Space: NPC Interaction or Portal Entrance
+      if (e.code === 'Space') {
+        // 1. Check near NPC
+        const nearNpc = this.map.npcs.find(npc => Math.hypot(npc.x - this.player.x, npc.y - this.player.y) < 75);
+        if (nearNpc) {
+          this.ui.showNpcDialog(nearNpc);
+          return;
+        }
+
+        // 2. Check near Portal
+        const nearPortal = this.map.portals.find(p => Math.hypot(p.x - this.player.x, p.y - this.player.y) < 55);
+        if (nearPortal) {
+          this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
+          return;
+        }
+      }
+
+      // ArrowUp Portal Warp
+      if (e.code === 'ArrowUp') {
+        const nearPortal = this.map.portals.find(p => Math.hypot(p.x - this.player.x, p.y - this.player.y) < 50);
+        if (nearPortal) {
+          this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
+          return;
+        }
       }
 
       // Jump
@@ -98,6 +125,20 @@ class Game {
       if (e.code === 'KeyZ') {
         this.pickUpNearbyDrops();
       }
+
+      // Potions
+      if (e.code === 'Digit1') this.player.usePotion('red_potion');
+      if (e.code === 'Digit2') this.player.usePotion('blue_potion');
+
+      // Auto-hunt [KeyR]
+      if (e.code === 'KeyR') {
+        this.autoHunt.toggle();
+      }
+
+      // Boss Mushmom spawn [KeyB]
+      if (e.code === 'KeyB') {
+        this.spawnBoss();
+      }
     });
 
     window.addEventListener('keyup', (e) => {
@@ -126,9 +167,110 @@ class Game {
     this.ui.updateStatsWindow();
     this.ui.updateSkillsWindow();
     this.spawnItemText(this.player.x, this.player.y - 45, `★ ${jobName} 전직 완료! ★`);
+    this.ui.addChatMessage('시스템', `축하합니다! ${jobName} 으로 1차 전직을 완료하였습니다.`, 'system');
+  }
+
+  // --- MULTI-MAP TRAVEL ENGINE ---
+  changeMap(mapKey, spawnX = null, spawnY = null) {
+    this.map.loadMap(mapKey);
+
+    this.player.x = spawnX !== null ? spawnX : this.map.defaultSpawn.x;
+    this.player.y = spawnY !== null ? spawnY : this.map.defaultSpawn.y;
+    this.player.vx = 0;
+    this.player.vy = 0;
+    this.player.onLadder = false;
+    this.player.currentFoothold = null;
+    this.player.onGround = false;
+
+    // Reset combat state for new map
+    this.monsters = [];
+    this.drops = [];
+    this.projectiles = [];
+    this.floatingTexts = [];
+    this.damageDigits = [];
+    this.skillEffects = [];
+    this.boss = null;
+
+    // Rebuild Auto-Hunt Topological Graph
+    if (this.autoHunt) {
+      this.autoHunt.graph = new FootholdGraph(this.map);
+    }
+
+    if (this.map.isBossMap || mapKey === 'zakum_altar') {
+      this.spawnZakumBoss();
+    } else {
+      const bBar = document.getElementById('boss-bar-container');
+      if (bBar) bBar.style.display = 'none';
+      this.initMonsters();
+    }
+
+    // Warp sound & notification
+    window.audio.playFlashJump();
+    this.spawnItemText(this.player.x, this.player.y - 45, `★ ${this.map.name} 도착! ★`);
+    this.ui.addChatMessage('시스템', `[맵 이동] ${this.map.name} 에 입장하였습니다.`, 'system');
+    this.ui.addLootLog(`[맵 이동] ${this.map.name}`, 'item');
   }
 
   initMonsters() {
+    this.monsters = [];
+    const key = this.map.currentKey;
+
+    if (key === 'zakum_altar') {
+      this.spawnZakumBoss();
+      return;
+    }
+
+    if (key === 'ant_tunnel') {
+      // Ant Tunnel Dungeon spawns
+      const antSpawns = [
+        { type: 'zombie_mushroom', x: 450, y: 240 },
+        { type: 'zombie_mushroom', x: 800, y: 240 },
+        { type: 'blue_snail', x: 1200, y: 240 },
+        { type: 'zombie_mushroom', x: 600, y: 650 },
+        { type: 'zombie_mushroom', x: 950, y: 650 },
+        { type: 'green_mushroom', x: 1400, y: 650 },
+        { type: 'zombie_mushroom', x: 500, y: 1200 },
+        { type: 'zombie_mushroom', x: 900, y: 1200 },
+        { type: 'blue_snail', x: 1300, y: 1200 },
+        { type: 'zombie_mushroom', x: 700, y: 1800 },
+        { type: 'green_mushroom', x: 1100, y: 1800 },
+        { type: 'zombie_mushroom', x: 1500, y: 1800 },
+        { type: 'zombie_mushroom', x: 800, y: 2380 },
+        { type: 'zombie_mushroom', x: 1200, y: 2380 },
+        { type: 'green_mushroom', x: 1600, y: 2380 }
+      ];
+      antSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
+      return;
+    }
+
+    if (key === 'ellinia') {
+      const elliniaSpawns = [
+        { type: 'slime', x: 600, y: 4550 },
+        { type: 'green_mushroom', x: 1000, y: 4550 },
+        { type: 'slime', x: 1800, y: 4550 },
+        { type: 'slime', x: 800, y: 3900 },
+        { type: 'green_mushroom', x: 1400, y: 3900 },
+        { type: 'slime', x: 700, y: 3100 },
+        { type: 'green_mushroom', x: 1200, y: 3100 },
+        { type: 'slime', x: 900, y: 2400 },
+        { type: 'green_mushroom', x: 1500, y: 2400 }
+      ];
+      elliniaSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
+      return;
+    }
+
+    if (key === 'henesys_town') {
+      const townSpawns = [
+        { type: 'snail', x: 1200, y: 880 },
+        { type: 'blue_snail', x: 2600, y: 880 },
+        { type: 'snail', x: 3800, y: 880 },
+        { type: 'blue_snail', x: 5200, y: 880 }
+      ];
+      townSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
+      return;
+    }
+
+    // Default Henesys Hunting Ground 1 (24 Monsters across 4 Tiers)
     const spawnList = [
       // Ground Level (Y ~ 1320)
       { type: 'snail', x: 300, y: 1320 },
@@ -166,25 +308,33 @@ class Game {
   }
 
   spawnMonster() {
+    if (this.map.isBossMap || this.map.currentKey === 'zakum_altar') return;
     if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
+    if (!this.map.footholds || this.map.footholds.length === 0) return;
 
     const fh = this.map.footholds[Math.floor(Math.random() * this.map.footholds.length)];
     const x = fh.x1 + 15 + Math.random() * Math.max(10, (fh.x2 - fh.x1) - 30);
     const y = fh.getYAtX(x);
 
     let type = 'snail';
-    if (y >= 1280) {
-      const r = Math.random();
-      type = r < 0.25 ? 'snail' : (r < 0.55 ? 'blue_snail' : (r < 0.8 ? 'slime' : 'ribbon_pig'));
-    } else if (y >= 950) {
-      const r = Math.random();
-      type = r < 0.35 ? 'blue_snail' : (r < 0.7 ? 'red_snail' : 'slime');
-    } else if (y >= 700) {
-      const r = Math.random();
-      type = r < 0.4 ? 'slime' : (r < 0.75 ? 'orange_mushroom' : 'ribbon_pig');
+    if (this.map.currentKey === 'ant_tunnel') {
+      type = Math.random() < 0.6 ? 'zombie_mushroom' : 'green_mushroom';
+    } else if (this.map.currentKey === 'ellinia') {
+      type = Math.random() < 0.6 ? 'slime' : 'green_mushroom';
     } else {
-      const r = Math.random();
-      type = r < 0.4 ? 'orange_mushroom' : (r < 0.8 ? 'green_mushroom' : 'zombie_mushroom');
+      if (y >= 1280) {
+        const r = Math.random();
+        type = r < 0.25 ? 'snail' : (r < 0.55 ? 'blue_snail' : (r < 0.8 ? 'slime' : 'ribbon_pig'));
+      } else if (y >= 950) {
+        const r = Math.random();
+        type = r < 0.35 ? 'blue_snail' : (r < 0.7 ? 'red_snail' : 'slime');
+      } else if (y >= 700) {
+        const r = Math.random();
+        type = r < 0.4 ? 'slime' : (r < 0.75 ? 'orange_mushroom' : 'ribbon_pig');
+      } else {
+        const r = Math.random();
+        type = r < 0.4 ? 'orange_mushroom' : (r < 0.8 ? 'green_mushroom' : 'zombie_mushroom');
+      }
     }
 
     this.monsters.push(new Monster(type, x, y));
@@ -202,7 +352,28 @@ class Game {
     this.spawnItemText(this.player.x, this.player.y - 45, '★ [BOSS] 거대 보스 머쉬맘 출현! ★');
 
     const bBar = document.getElementById('boss-bar-container');
+    const pImg = document.getElementById('boss-portrait-img');
     if (bBar) bBar.style.display = 'block';
+    if (pImg) pImg.src = 'assets/monsters/mushmom/stand_0.png';
+  }
+
+  spawnZakumBoss() {
+    this.boss = new ZakumBoss(600, 360);
+    this.monsters = [this.boss];
+    window.audio.playBossRoar();
+    this.spawnItemText(this.player.x, this.player.y - 45, '👑 ★ 고대 거신 자쿰이 소환되었습니다! ★ 👑');
+    this.ui.addChatMessage('시스템', '★ 경고: 고대 거신 자쿰이 제단에서 눈을 떴습니다! ★', 'system');
+
+    const bBar = document.getElementById('boss-bar-container');
+    const pImg = document.getElementById('boss-portrait-img');
+    if (bBar) bBar.style.display = 'block';
+    if (pImg) pImg.src = 'assets/monsters/zakum/stand_0.png';
+  }
+
+  sendChatMessage(text) {
+    if (!text) return;
+    this.player.say(text);
+    this.ui.addChatMessage(this.player.name, text, 'player');
   }
 
   pickUpNearbyDrops() {
@@ -212,12 +383,16 @@ class Game {
       if (drop.canPickUp(this.player)) {
         if (drop.type === 'meso') {
           this.player.addMeso(drop.amount, this);
+          this.ui.addLootLog(`메소를 얻었습니다 (+${drop.amount})`, 'meso');
         } else if (drop.type === 'red_potion') {
           this.player.addItem('red_potion', '빨간 포션', drop.amount, this);
+          this.ui.addLootLog(`아이템을 얻었습니다 (빨간 포션 x${drop.amount})`, 'item');
         } else if (drop.type === 'blue_potion') {
           this.player.addItem('blue_potion', '파란 포션', drop.amount, this);
+          this.ui.addLootLog(`아이템을 얻었습니다 (파란 포션 x${drop.amount})`, 'item');
         } else {
           this.player.addItem(drop.type, drop.name, drop.amount, this);
+          this.ui.addLootLog(`아이템을 얻었습니다 (${drop.name})`, 'item');
         }
         this.drops.splice(i, 1);
         picked = true;
@@ -254,6 +429,7 @@ class Game {
 
   spawnExpText(x, y, amount) {
     this.floatingTexts.push(new FloatingText(x, y, `${amount}`, 'exp'));
+    this.ui.addLootLog(`경험치를 얻었습니다 (+${amount})`, 'exp');
   }
 
   spawnItemText(x, y, text) {
@@ -284,6 +460,22 @@ class Game {
     this.map.update(dt);
     this.player.update(dt, this.map);
     this.pickUpNearbyDrops();
+
+    // Ambient chatter ticker (Classic MMO chatter atmosphere)
+    this.ambientChatTimer -= dt;
+    if (this.ambientChatTimer <= 0) {
+      this.ambientChatTimer = 12 + Math.random() * 8;
+      const quotes = [
+        { sender: 'CWPlayer18', text: 'drop game anyone' },
+        { sender: 'CWPlayer23', text: 'r>party for mushmom' },
+        { sender: '마정', text: '냄뚜 팝니다 @@@ 10만 메소' },
+        { sender: '단풍길드', text: '초보자 길드원 상시 모집중 매너필수' },
+        { sender: '제네트', text: '개미굴 좀비버섯 파티 구합니다 2/6' },
+        { sender: '신대륙모험가', text: '엘리니아 배 언제 출발해요?' }
+      ];
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      this.ui.addChatMessage(q.sender, q.text, 'mock');
+    }
 
     // Update Projectiles
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
@@ -348,15 +540,15 @@ class Game {
     // Skill effects update
     for (let i = this.skillEffects.length - 1; i >= 0; i--) {
       const fx = this.skillEffects[i];
-      fx.progress += dt / fx.duration;
+      fx.progress += dt / (fx.duration || 0.4);
       if (fx.progress >= 1.0) {
         this.skillEffects.splice(i, 1);
       }
     }
 
     this.updateCamera();
-    this.ui.updateHUD();
     this.updateBossBar();
+    this.ui.updateHud();
   }
 
   updateCamera() {
@@ -374,12 +566,18 @@ class Game {
     const bBar = document.getElementById('boss-bar-container');
     const bFill = document.getElementById('boss-hp-fill');
     const bText = document.getElementById('boss-hp-text');
+    const pImg = document.getElementById('boss-portrait-img');
 
     if (this.boss && this.boss.isAlive()) {
       if (bBar) bBar.style.display = 'block';
       const pct = Math.max(0, (this.boss.hp / this.boss.maxHp) * 100);
       if (bFill) bFill.style.width = `${pct}%`;
-      if (bText) bText.innerText = `${this.boss.name} (${this.boss.hp} / ${this.boss.maxHp})`;
+      if (bText) bText.innerText = `${this.boss.name} (${this.boss.hp.toLocaleString()} / ${this.boss.maxHp.toLocaleString()})`;
+      if (pImg) {
+        pImg.src = (typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss)
+          ? 'assets/monsters/zakum/stand_0.png'
+          : 'assets/monsters/mushmom/stand_0.png';
+      }
     } else {
       if (bBar) bBar.style.display = 'none';
     }
@@ -393,35 +591,55 @@ class Game {
     ctx.save();
     ctx.translate(-Math.round(this.camera.x), -Math.round(this.camera.y));
 
-    // 1. Map & Scenery
+    // 1. Map & Scenery & Portals
     this.map.draw(ctx, this.camera);
 
-    // 2. Drops
+    // 2. NPCs
+    if (this.map.npcs) {
+      this.map.npcs.forEach(npc => {
+        const isNear = Math.hypot(npc.x - this.player.x, npc.y - this.player.y) < 70;
+        window.sprites.drawNPC(ctx, npc, isNear);
+      });
+    }
+
+    // 3. Drops
     this.drops.forEach(d => window.sprites.drawDrop(ctx, d));
 
-    // 3. Monsters
-    this.monsters.forEach(m => window.sprites.drawMonster(ctx, m));
+    // 4. Monsters & Zakum Boss
+    if (this.boss && typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss && this.boss.isAlive()) {
+      window.sprites.drawZakumBoss(ctx, this.boss);
+    }
+    this.monsters.forEach(m => {
+      if (!(typeof ZakumBoss !== 'undefined' && m instanceof ZakumBoss)) {
+        window.sprites.drawMonster(ctx, m);
+      }
+    });
 
-    // 4. Projectiles (Arrows, Shurikens, Energy Bolts)
+    // 5. Projectiles (Arrows, Shurikens, Energy Bolts)
     this.projectiles.forEach(p => window.sprites.drawProjectile(ctx, p));
 
-    // 5. Player
+    // 6. Player
     window.sprites.drawPlayer(ctx, this.player);
 
-    // 6. Skill Effects
+    // 7. Player Speech Bubble
+    if (this.player.speechText) {
+      window.sprites.drawSpeechBubble(ctx, this.player.x, this.player.y - this.player.height - 18, this.player.speechText);
+    }
+
+    // 8. Skill Effects
     this.skillEffects.forEach(fx => window.sprites.drawSkillEffects(ctx, fx));
 
-    // 7. Auto-Hunt Crosshair
+    // 9. Auto-Hunt Crosshair
     this.autoHunt.drawTargetIndicator(ctx);
 
-    // 8. Particles & Staggered Damage Numbers
+    // 10. Particles & Staggered Damage Numbers
     window.sprites.drawDustParticles(ctx);
     this.damageDigits.forEach(dd => window.sprites.drawDamageDigit(ctx, dd));
     this.floatingTexts.forEach(ft => window.sprites.drawFloatingText(ctx, ft));
 
     ctx.restore();
 
-    // 9. Minimap
+    // 11. Minimap
     this.drawMinimap(ctx);
   }
 
@@ -441,47 +659,75 @@ class Game {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Title Bar
+    // Dynamic Title Bar
     ctx.font = 'bold 10px "Malgun Gothic", "Gulim", sans-serif';
     ctx.fillStyle = '#fef08a';
     ctx.textAlign = 'left';
-    ctx.fillText('헤네시스 사냥터 1', mmX + 8, mmY + 14);
+    ctx.fillText(this.map.name, mmX + 8, mmY + 14);
 
     const mapImg = window.sprites.minimapImg;
-    const contentX = mmX + 8;
-    const contentY = mmY + 20;
-    const contentW = mmW - 16;
-    const contentH = mmH - 26;
+    const innerX = mmX + 6;
+    const innerY = mmY + 20;
+    const innerW = mmW - 12;
+    const innerH = mmH - 26;
 
     if (mapImg && mapImg.complete && mapImg.naturalWidth > 0) {
-      ctx.drawImage(mapImg, contentX, contentY, contentW, contentH);
+      ctx.drawImage(mapImg, innerX, innerY, innerW, innerH);
     } else {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-      ctx.fillRect(contentX, contentY, contentW, contentH);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fillRect(innerX, innerY, innerW, innerH);
     }
 
-    const scaleX = contentW / this.map.width;
-    const scaleY = contentH / this.map.height;
+    const scaleX = innerW / this.map.width;
+    const scaleY = innerH / this.map.height;
 
-    // Monsters (red dots)
-    ctx.fillStyle = '#ef4444';
+    // Camera view rectangle
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(
+      innerX + this.camera.x * scaleX,
+      innerY + this.camera.y * scaleY,
+      this.camera.width * scaleX,
+      this.camera.height * scaleY
+    );
+
+    // Portal dots (cyan)
+    if (this.map.portals) {
+      ctx.fillStyle = '#38bdf8';
+      this.map.portals.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(innerX + p.x * scaleX, innerY + p.y * scaleY, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    // NPC dots (blue)
+    if (this.map.npcs) {
+      ctx.fillStyle = '#60a5fa';
+      this.map.npcs.forEach(npc => {
+        ctx.beginPath();
+        ctx.arc(innerX + npc.x * scaleX, innerY + npc.y * scaleY, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    // Monster dots (red)
+    ctx.fillStyle = '#f87171';
     this.monsters.forEach(m => {
       if (m.isAlive()) {
-        const mx = contentX + m.x * scaleX;
-        const my = contentY + m.y * scaleY;
-        ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
+        ctx.beginPath();
+        ctx.arc(innerX + m.x * scaleX, innerY + m.y * scaleY, 1.8, 0, Math.PI * 2);
+        ctx.fill();
       }
     });
 
-    // Player (yellow dot with border)
-    const plx = contentX + this.player.x * scaleX;
-    const ply = contentY + this.player.y * scaleY;
+    // Player dot (yellow)
     ctx.fillStyle = '#facc15';
-    ctx.beginPath();
-    ctx.arc(plx, ply, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#78350f';
+    ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(innerX + this.player.x * scaleX, innerY + this.player.y * scaleY, 3.2, 0, Math.PI * 2);
+    ctx.fill();
     ctx.stroke();
 
     ctx.restore();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>클래식 메이플스토리 웹 (OpenMaple Classic) - 자동사냥 에디션</title>
+  <title>클래식 메이플스토리 웹 (OpenMaple Classic) - 공식 5대 월드 & 자쿰 레이드</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍁</text></svg>">
 </head>
@@ -13,6 +13,7 @@
     <div id="top-bar-overlay">
       <button id="btn-auto-hunt" class="maple-badge-btn btn-auto-hunt">⚔️ 자동사냥 시작 (R)</button>
       <div id="auto-hunt-badge">⚡ AUTO HUNTING...</div>
+      <button id="btn-map-travel-open" class="maple-badge-btn">🗺️ 월드 이동 / 택시</button>
       <button id="btn-job-select-open" class="maple-badge-btn">🛡️ 직업 선택/변경</button>
       <button id="btn-boss-spawn" class="maple-badge-btn">👑 머쉬맘 소환 (B)</button>
       <button id="btn-sound-toggle" class="maple-badge-btn">🎵 BGM 토글</button>
@@ -39,17 +40,44 @@
       </div>
     </div>
 
-    <!-- Boss HP Bar -->
+    <!-- Boss HP Bar (Full Width Top Bar) -->
     <div id="boss-bar-container">
-      <div id="boss-hp-track">
-        <div id="boss-hp-fill"></div>
-        <div id="boss-hp-text">★ 머쉬맘 (BOSS) ★</div>
+      <div id="boss-hp-frame">
+        <div id="boss-hp-portrait">
+          <img id="boss-portrait-img" src="assets/monsters/mushmom/stand_0.png" alt="Boss">
+        </div>
+        <div id="boss-hp-track">
+          <div id="boss-hp-fill"></div>
+          <div id="boss-hp-text">★ 머쉬맘 (BOSS) ★</div>
+        </div>
       </div>
     </div>
 
     <!-- Main Game Canvas Container -->
     <div id="canvas-container">
       <canvas id="game-canvas"></canvas>
+
+      <!-- Bottom-Left Classic Maple Chat Window -->
+      <div id="maple-chat-container">
+        <div class="chat-tab-bar">
+          <span class="chat-tab active">ALL</span>
+          <span class="chat-tab">파티</span>
+          <span class="chat-tab">길드</span>
+        </div>
+        <div id="chat-messages-container">
+          <div class="chat-msg system">[안내] 클래식 메이플스토리 엔진에 오신 것을 환영합니다!</div>
+          <div class="chat-msg system">[안내] NPC 택시와 포탈을 이용해 빅토리아 아일랜드를 탐험하세요.</div>
+          <div class="chat-msg mock"><span class="chat-sender">CWPlayer18</span> : drop game anyone</div>
+          <div class="chat-msg mock"><span class="chat-sender">CWPlayer23</span> : r>party for mushmom</div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" id="chat-input" placeholder="엔터를 눌러 대화하세요... (Enter)" maxlength="60">
+          <button id="btn-chat-send">전송</button>
+        </div>
+      </div>
+
+      <!-- Bottom-Right Floating Loot & EXP Log -->
+      <div id="maple-loot-log"></div>
     </div>
 
     <!-- Classic Maple Bottom HUD Status Bar -->
@@ -238,6 +266,65 @@
     </div>
   </div>
 
+  <!-- AUTHENTIC PARCHMENT NPC DIALOG MODAL -->
+  <div id="modal-npc-dialog" class="maple-dialog-modal">
+    <div class="npc-dialog-box">
+      <div class="npc-dialog-header">
+        <span id="npc-dialog-title" class="npc-name-header">NPC 대화</span>
+        <button id="btn-npc-dialog-close" class="btn-window-close">×</button>
+      </div>
+      <div class="npc-dialog-content">
+        <div class="npc-portrait-wrapper">
+          <img id="npc-dialog-portrait" src="assets/npcs/regular_cab.png" alt="NPC">
+          <div id="npc-dialog-name" class="npc-dialog-name-tag">중형택시</div>
+        </div>
+        <div class="npc-dialog-text-area">
+          <div id="npc-dialog-text" class="npc-text-bubble">
+            안녕하세요! 빅토리아 아일랜드 전역으로 모셔다 드립니다.
+          </div>
+          <div id="npc-dialog-choices" class="npc-choices-list">
+            <!-- Dynamically populated choices -->
+          </div>
+        </div>
+      </div>
+      <div class="npc-dialog-footer">
+        <button id="btn-npc-dialog-exit" class="npc-btn">대화 종료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK WORLD TRAVEL MODAL -->
+  <div id="modal-map-travel" class="maple-dialog-modal">
+    <div class="map-travel-box">
+      <div class="maple-window-header">
+        <span class="window-title">🗺️ 빅토리아 아일랜드 월드 맵 이동</span>
+        <button id="btn-map-travel-close" class="btn-window-close">×</button>
+      </div>
+      <div class="map-travel-grid">
+        <div class="btn-map-target" data-map="henesys_hhg">
+          <div class="map-target-title">헤네시스 사냥터 1</div>
+          <div class="map-target-desc">달팽이, 슬라임, 주황버섯 서식지</div>
+        </div>
+        <div class="btn-map-target" data-map="henesys_town">
+          <div class="map-target-title">헤네시스 마을</div>
+          <div class="map-target-desc">장로 스탄, 자유시장 입구, 모범택시</div>
+        </div>
+        <div class="btn-map-target" data-map="ant_tunnel">
+          <div class="map-target-title">던전 개미굴 1</div>
+          <div class="map-target-desc">좀비버섯, 뿔버섯 출몰 위험 동굴</div>
+        </div>
+        <div class="btn-map-target" data-map="ellinia">
+          <div class="map-target-title">마법의 숲 엘리니아</div>
+          <div class="map-target-desc">거대 나무 요정 마을 & 베티 박사</div>
+        </div>
+        <div class="btn-map-target" data-map="zakum_altar">
+          <div class="map-target-title">자쿰의 제단 (보스)</div>
+          <div class="map-target-desc">8개의 팔을 가진 고대 거신 자쿰 레이드</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- JOB ADVANCEMENT MODAL (Lv.10+) -->
   <div id="modal-job-advance">
     <div class="job-modal-box">
@@ -270,6 +357,7 @@
 
   <!-- Scripts -->
   <script src="js/audio.js"></script>
+  <script src="js/map_data.js"></script>
   <script src="js/sprites.js"></script>
   <script src="js/map.js"></script>
   <script src="js/physics.js"></script>
