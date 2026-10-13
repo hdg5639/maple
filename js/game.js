@@ -6,7 +6,7 @@ class Game {
     this.ctx = this.canvas.getContext('2d');
 
     this.map = new GameMap();
-    this.player = new Player(200, 820);
+    this.player = new Player(400, 1318);
     this.monsters = [];
     this.drops = [];
     this.projectiles = [];
@@ -130,28 +130,34 @@ class Game {
 
   initMonsters() {
     const spawnList = [
-      { type: 'snail', x: 400, y: 820 },
-      { type: 'snail', x: 700, y: 820 },
-      { type: 'blue_snail', x: 950, y: 820 },
-      { type: 'blue_snail', x: 1200, y: 820 },
-      { type: 'red_snail', x: 1500, y: 820 },
-      { type: 'slime', x: 1750, y: 820 },
-      { type: 'slime', x: 2000, y: 820 },
-      { type: 'ribbon_pig', x: 2200, y: 820 },
+      // Ground Level (Y ~ 1320)
+      { type: 'snail', x: 300, y: 1320 },
+      { type: 'snail', x: 550, y: 1320 },
+      { type: 'blue_snail', x: 800, y: 1320 },
+      { type: 'blue_snail', x: 1050, y: 1320 },
+      { type: 'slime', x: 1350, y: 1320 },
+      { type: 'slime', x: 1650, y: 1320 },
+      { type: 'ribbon_pig', x: 1950, y: 1320 },
+      { type: 'ribbon_pig', x: 2150, y: 1320 },
 
-      { type: 'snail', x: 250, y: 700 },
-      { type: 'blue_snail', x: 750, y: 680 },
-      { type: 'slime', x: 1250, y: 700 },
-      { type: 'red_snail', x: 1800, y: 680 },
+      // Tier 1 Platforms (Y ~ 1022)
+      { type: 'snail', x: 350, y: 1022 },
+      { type: 'blue_snail', x: 700, y: 1022 },
+      { type: 'red_snail', x: 1100, y: 1022 },
+      { type: 'slime', x: 1550, y: 1022 },
+      { type: 'red_snail', x: 1900, y: 1022 },
 
-      { type: 'slime', x: 400, y: 550 },
-      { type: 'orange_mushroom', x: 900, y: 530 },
-      { type: 'orange_mushroom', x: 1450, y: 540 },
-      { type: 'ribbon_pig', x: 1950, y: 520 },
+      // Tier 2 Platforms (Y ~ 782)
+      { type: 'slime', x: 450, y: 782 },
+      { type: 'orange_mushroom', x: 950, y: 782 },
+      { type: 'orange_mushroom', x: 1450, y: 782 },
+      { type: 'ribbon_pig', x: 1850, y: 782 },
 
-      { type: 'orange_mushroom', x: 600, y: 400 },
-      { type: 'green_mushroom', x: 1100, y: 380 },
-      { type: 'green_mushroom', x: 1600, y: 390 }
+      // Tier 3 Platforms (Y ~ 542)
+      { type: 'orange_mushroom', x: 600, y: 542 },
+      { type: 'green_mushroom', x: 1050, y: 542 },
+      { type: 'green_mushroom', x: 1500, y: 542 },
+      { type: 'zombie_mushroom', x: 1750, y: 542 }
     ];
 
     spawnList.forEach(sp => {
@@ -163,22 +169,22 @@ class Game {
     if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
 
     const fh = this.map.footholds[Math.floor(Math.random() * this.map.footholds.length)];
-    const x = fh.x1 + 25 + Math.random() * Math.max(10, (fh.x2 - fh.x1) - 50);
+    const x = fh.x1 + 15 + Math.random() * Math.max(10, (fh.x2 - fh.x1) - 30);
     const y = fh.getYAtX(x);
 
     let type = 'snail';
-    if (y >= 810) {
+    if (y >= 1280) {
       const r = Math.random();
-      type = r < 0.3 ? 'snail' : (r < 0.6 ? 'blue_snail' : (r < 0.85 ? 'slime' : 'ribbon_pig'));
-    } else if (y >= 670) {
+      type = r < 0.25 ? 'snail' : (r < 0.55 ? 'blue_snail' : (r < 0.8 ? 'slime' : 'ribbon_pig'));
+    } else if (y >= 950) {
       const r = Math.random();
-      type = r < 0.4 ? 'blue_snail' : (r < 0.7 ? 'red_snail' : 'slime');
-    } else if (y >= 510) {
+      type = r < 0.35 ? 'blue_snail' : (r < 0.7 ? 'red_snail' : 'slime');
+    } else if (y >= 700) {
       const r = Math.random();
-      type = r < 0.45 ? 'slime' : (r < 0.8 ? 'orange_mushroom' : 'ribbon_pig');
+      type = r < 0.4 ? 'slime' : (r < 0.75 ? 'orange_mushroom' : 'ribbon_pig');
     } else {
       const r = Math.random();
-      type = r < 0.5 ? 'orange_mushroom' : 'green_mushroom';
+      type = r < 0.4 ? 'orange_mushroom' : (r < 0.8 ? 'green_mushroom' : 'zombie_mushroom');
     }
 
     this.monsters.push(new Monster(type, x, y));
@@ -191,7 +197,7 @@ class Game {
     }
 
     window.audio.playBossRoar();
-    this.boss = new Monster('mushmom', 1020, 250);
+    this.boss = new Monster('mushmom', 1500, 542);
     this.monsters.push(this.boss);
     this.spawnItemText(this.player.x, this.player.y - 45, '★ [BOSS] 거대 보스 머쉬맘 출현! ★');
 
@@ -421,12 +427,13 @@ class Game {
 
   drawMinimap(ctx) {
     const mmW = 160;
-    const mmH = 75;
+    const mmH = 126;
     const mmX = this.canvas.width - mmW - 15;
     const mmY = 15;
 
     ctx.save();
-    ctx.fillStyle = 'rgba(20, 25, 35, 0.75)';
+    // Classic Maple Minimap Frame
+    ctx.fillStyle = 'rgba(15, 20, 30, 0.88)';
     ctx.beginPath();
     ctx.roundRect(mmX, mmY, mmW, mmH, 6);
     ctx.fill();
@@ -434,42 +441,48 @@ class Game {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.font = 'bold 9px "Malgun Gothic", sans-serif';
+    // Title Bar
+    ctx.font = 'bold 10px "Malgun Gothic", "Gulim", sans-serif';
     ctx.fillStyle = '#fef08a';
     ctx.textAlign = 'left';
-    ctx.fillText('헤네시스 사냥터 1', mmX + 8, mmY + 12);
+    ctx.fillText('헤네시스 사냥터 1', mmX + 8, mmY + 14);
 
-    const scaleX = mmW / this.map.width;
-    const scaleY = (mmH - 16) / this.map.height;
+    const mapImg = window.sprites.minimapImg;
+    const contentX = mmX + 8;
+    const contentY = mmY + 20;
+    const contentW = mmW - 16;
+    const contentH = mmH - 26;
 
-    ctx.strokeStyle = 'rgba(110, 231, 183, 0.7)';
-    ctx.lineWidth = 1.5;
-    this.map.footholds.forEach(fh => {
-      const px1 = mmX + fh.x1 * scaleX;
-      const py1 = mmY + 16 + fh.y1 * scaleY;
-      const px2 = mmX + fh.x2 * scaleX;
-      const py2 = mmY + 16 + fh.y2 * scaleY;
-      ctx.beginPath();
-      ctx.moveTo(px1, py1);
-      ctx.lineTo(px2, py2);
-      ctx.stroke();
-    });
+    if (mapImg && mapImg.complete && mapImg.naturalWidth > 0) {
+      ctx.drawImage(mapImg, contentX, contentY, contentW, contentH);
+    } else {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.fillRect(contentX, contentY, contentW, contentH);
+    }
 
+    const scaleX = contentW / this.map.width;
+    const scaleY = contentH / this.map.height;
+
+    // Monsters (red dots)
     ctx.fillStyle = '#ef4444';
     this.monsters.forEach(m => {
       if (m.isAlive()) {
-        const mx = mmX + m.x * scaleX;
-        const my = mmY + 16 + m.y * scaleY;
-        ctx.fillRect(mx - 1, my - 1, 2, 2);
+        const mx = contentX + m.x * scaleX;
+        const my = contentY + m.y * scaleY;
+        ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
       }
     });
 
+    // Player (yellow dot with border)
+    const plx = contentX + this.player.x * scaleX;
+    const ply = contentY + this.player.y * scaleY;
     ctx.fillStyle = '#facc15';
-    const plx = mmX + this.player.x * scaleX;
-    const ply = mmY + 16 + this.player.y * scaleY;
     ctx.beginPath();
-    ctx.arc(plx, ply, 2.5, 0, Math.PI * 2);
+    ctx.arc(plx, ply, 3, 0, Math.PI * 2);
     ctx.fill();
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
     ctx.restore();
   }

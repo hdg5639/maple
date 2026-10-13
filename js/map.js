@@ -1,103 +1,49 @@
-// js/map.js - Henesys Hunting Ground 1 with Line Segment Footholds & 3-Layer Parallax
+// js/map.js - Authentic Henesys Hunting Ground 1 with Genuine Terrain & WZ Footholds
+
+const HENESYS_FOOTHOLDS_RAW = [{"id": 171, "x1": 450, "y1": 600, "x2": 528, "y2": 600, "canDropThrough": true}, {"id": 139, "x1": 399, "y1": 1320, "x2": 489, "y2": 1320, "canDropThrough": true}, {"id": 29, "x1": 517, "y1": 956, "x2": 525, "y2": 957, "canDropThrough": true}, {"id": 56, "x1": 560, "y1": 718, "x2": 568, "y2": 717, "canDropThrough": true}, {"id": 120, "x1": 1389, "y1": 1320, "x2": 1479, "y2": 1320, "canDropThrough": true}, {"id": 25, "x1": 465, "y1": 955, "x2": 479, "y2": 954, "canDropThrough": true}, {"id": 163, "x1": 391, "y1": 1254, "x2": 405, "y2": 1253, "canDropThrough": true}, {"id": 89, "x1": 702, "y1": 471, "x2": 710, "y2": 478, "canDropThrough": true}, {"id": 112, "x1": 1479, "y1": 1320, "x2": 1569, "y2": 1320, "canDropThrough": true}, {"id": 43, "x1": 1209, "y1": 780, "x2": 1299, "y2": 780, "canDropThrough": true}, {"id": 85, "x1": 648, "y1": 474, "x2": 673, "y2": 474, "canDropThrough": true}, {"id": 155, "x1": 1602, "y1": 1142, "x2": 1609, "y2": 1143, "canDropThrough": true}, {"id": 169, "x1": 458, "y1": 1253, "x2": 472, "y2": 1252, "canDropThrough": true}, {"id": 12, "x1": 939, "y1": 1020, "x2": 1029, "y2": 1020, "canDropThrough": true}, {"id": 150, "x1": 1739, "y1": 1200, "x2": 1850, "y2": 1200, "canDropThrough": true}, {"id": 118, "x1": 78, "y1": 1320, "x2": 129, "y2": 1320, "canDropThrough": true}, {"id": 27, "x1": 484, "y1": 957, "x2": 492, "y2": 956, "canDropThrough": true}, {"id": 127, "x1": 849, "y1": 1320, "x2": 939, "y2": 1320, "canDropThrough": true}, {"id": 30, "x1": 525, "y1": 957, "x2": 532, "y2": 954, "canDropThrough": true}, {"id": 68, "x1": 849, "y1": 540, "x2": 939, "y2": 540, "canDropThrough": true}, {"id": 4, "x1": 1479, "y1": 1020, "x2": 1569, "y2": 1020, "canDropThrough": true}, {"id": 45, "x1": 669, "y1": 780, "x2": 759, "y2": 780, "canDropThrough": true}, {"id": 87, "x1": 681, "y1": 475, "x2": 688, "y2": 472, "canDropThrough": true}, {"id": 14, "x1": 1749, "y1": 1020, "x2": 1800, "y2": 1020, "canDropThrough": true}, {"id": 114, "x1": 219, "y1": 1320, "x2": 309, "y2": 1320, "canDropThrough": true}, {"id": 157, "x1": 1646, "y1": 1142, "x2": 1652, "y2": 1140, "canDropThrough": true}, {"id": 32, "x1": 546, "y1": 953, "x2": 554, "y2": 960, "canDropThrough": true}, {"id": 106, "x1": 360, "y1": 840, "x2": 399, "y2": 840, "canDropThrough": true}, {"id": 66, "x1": 1299, "y1": 540, "x2": 1389, "y2": 540, "canDropThrough": true}, {"id": 101, "x1": 270, "y1": 900, "x2": 348, "y2": 900, "canDropThrough": true}, {"id": 16, "x1": 579, "y1": 1020, "x2": 669, "y2": 1020, "canDropThrough": true}, {"id": 144, "x1": 2160, "y1": 1320, "x2": 2199, "y2": 1320, "canDropThrough": true}, {"id": 178, "x1": 1350, "y1": 0, "x2": 1428, "y2": 0, "canDropThrough": true}, {"id": 99, "x1": 528, "y1": 420, "x2": 540, "y2": 420, "canDropThrough": true}, {"id": 53, "x1": 530, "y1": 718, "x2": 541, "y2": 716, "canDropThrough": true}, {"id": 136, "x1": 489, "y1": 1320, "x2": 579, "y2": 1320, "canDropThrough": true}, {"id": 71, "x1": 1479, "y1": 540, "x2": 1569, "y2": 540, "canDropThrough": true}, {"id": 131, "x1": 669, "y1": 1320, "x2": 759, "y2": 1320, "canDropThrough": true}, {"id": 21, "x1": 489, "y1": 1020, "x2": 579, "y2": 1020, "canDropThrough": true}, {"id": 40, "x1": 939, "y1": 780, "x2": 1029, "y2": 780, "canDropThrough": true}, {"id": 59, "x1": 601, "y1": 718, "x2": 608, "y2": 715, "canDropThrough": true}, {"id": 123, "x1": 1929, "y1": 1320, "x2": 2019, "y2": 1320, "canDropThrough": true}, {"id": 36, "x1": 1569, "y1": 780, "x2": 1659, "y2": 780, "canDropThrough": true}, {"id": 55, "x1": 555, "y1": 715, "x2": 560, "y2": 718, "canDropThrough": true}, {"id": 166, "x1": 418, "y1": 1255, "x2": 443, "y2": 1255, "canDropThrough": true}, {"id": 73, "x1": 1659, "y1": 540, "x2": 1698, "y2": 540, "canDropThrough": true}, {"id": 161, "x1": 1711, "y1": 1149, "x2": 1730, "y2": 1151, "canDropThrough": true}, {"id": 129, "x1": 759, "y1": 1320, "x2": 849, "y2": 1320, "canDropThrough": true}, {"id": 88, "x1": 688, "y1": 472, "x2": 702, "y2": 471, "canDropThrough": true}, {"id": 23, "x1": 1680, "y1": 901, "x2": 1791, "y2": 901, "canDropThrough": true}, {"id": 110, "x1": 270, "y1": 840, "x2": 309, "y2": 840, "canDropThrough": true}, {"id": 42, "x1": 1119, "y1": 780, "x2": 1209, "y2": 780, "canDropThrough": true}, {"id": 153, "x1": 1548, "y1": 1142, "x2": 1598, "y2": 1142, "canDropThrough": true}, {"id": 57, "x1": 568, "y1": 717, "x2": 593, "y2": 717, "canDropThrough": true}, {"id": 60, "x1": 608, "y1": 715, "x2": 622, "y2": 714, "canDropThrough": true}, {"id": 102, "x1": 360, "y1": 900, "x2": 438, "y2": 900, "canDropThrough": true}, {"id": 10, "x1": 1209, "y1": 1020, "x2": 1299, "y2": 1020, "canDropThrough": true}, {"id": 48, "x1": 450, "y1": 780, "x2": 528, "y2": 780, "canDropThrough": true}, {"id": 145, "x1": 2199, "y1": 1320, "x2": 2238, "y2": 1320, "canDropThrough": true}, {"id": 159, "x1": 1657, "y1": 1142, "x2": 1706, "y2": 1143, "canDropThrough": true}, {"id": 7, "x1": 849, "y1": 1020, "x2": 939, "y2": 1020, "canDropThrough": true}, {"id": 44, "x1": 1299, "y1": 780, "x2": 1389, "y2": 780, "canDropThrough": true}, {"id": 117, "x1": 2109, "y1": 1320, "x2": 2160, "y2": 1320, "canDropThrough": true}, {"id": 62, "x1": 759, "y1": 540, "x2": 849, "y2": 540, "canDropThrough": true}, {"id": 132, "x1": 1299, "y1": 1320, "x2": 1389, "y2": 1320, "canDropThrough": true}, {"id": 8, "x1": 1029, "y1": 1020, "x2": 1119, "y2": 1020, "canDropThrough": true}, {"id": 31, "x1": 532, "y1": 954, "x2": 546, "y2": 953, "canDropThrough": true}, {"id": 175, "x1": 360, "y1": 600, "x2": 399, "y2": 600, "canDropThrough": true}, {"id": 77, "x1": 618, "y1": 540, "x2": 669, "y2": 540, "canDropThrough": true}, {"id": 104, "x1": 348, "y1": 900, "x2": 360, "y2": 900, "canDropThrough": true}, {"id": 170, "x1": 472, "y1": 1252, "x2": 480, "y2": 1259, "canDropThrough": true}, {"id": 19, "x1": 360, "y1": 1020, "x2": 399, "y2": 1020, "canDropThrough": true}, {"id": 46, "x1": 759, "y1": 780, "x2": 849, "y2": 780, "canDropThrough": true}, {"id": 64, "x1": 1029, "y1": 540, "x2": 1119, "y2": 540, "canDropThrough": true}, {"id": 162, "x1": 380, "y1": 1256, "x2": 391, "y2": 1254, "canDropThrough": true}, {"id": 33, "x1": 1710, "y1": 780, "x2": 1788, "y2": 780, "canDropThrough": true}, {"id": 134, "x1": 1029, "y1": 1320, "x2": 1119, "y2": 1320, "canDropThrough": true}, {"id": 168, "x1": 451, "y1": 1256, "x2": 458, "y2": 1253, "canDropThrough": true}, {"id": 51, "x1": 1545, "y1": 714, "x2": 1744, "y2": 714, "canDropThrough": true}, {"id": 70, "x1": 1389, "y1": 540, "x2": 1479, "y2": 540, "canDropThrough": true}, {"id": 93, "x1": 360, "y1": 660, "x2": 438, "y2": 660, "canDropThrough": true}, {"id": 20, "x1": 438, "y1": 1020, "x2": 489, "y2": 1020, "canDropThrough": true}, {"id": 126, "x1": 1569, "y1": 1320, "x2": 1659, "y2": 1320, "canDropThrough": true}, {"id": 39, "x1": 849, "y1": 780, "x2": 939, "y2": 780, "canDropThrough": true}, {"id": 58, "x1": 593, "y1": 717, "x2": 601, "y2": 718, "canDropThrough": true}, {"id": 121, "x1": 1749, "y1": 1320, "x2": 1839, "y2": 1320, "canDropThrough": true}, {"id": 35, "x1": 1659, "y1": 780, "x2": 1710, "y2": 780, "canDropThrough": true}, {"id": 3, "x1": 1659, "y1": 1020, "x2": 1749, "y2": 1020, "canDropThrough": true}, {"id": 164, "x1": 405, "y1": 1253, "x2": 410, "y2": 1256, "canDropThrough": true}, {"id": 80, "x1": 1498, "y1": 418, "x2": 1609, "y2": 418, "canDropThrough": true}, {"id": 113, "x1": 129, "y1": 1320, "x2": 219, "y2": 1320, "canDropThrough": true}, {"id": 72, "x1": 1620, "y1": 540, "x2": 1659, "y2": 540, "canDropThrough": true}, {"id": 95, "x1": 540, "y1": 420, "x2": 618, "y2": 420, "canDropThrough": true}, {"id": 9, "x1": 1119, "y1": 1020, "x2": 1209, "y2": 1020, "canDropThrough": true}, {"id": 156, "x1": 1609, "y1": 1143, "x2": 1646, "y2": 1142, "canDropThrough": true}, {"id": 22, "x1": 1627, "y1": 956, "x2": 1826, "y2": 956, "canDropThrough": true}, {"id": 105, "x1": 309, "y1": 840, "x2": 348, "y2": 840, "canDropThrough": true}, {"id": 151, "x1": 1527, "y1": 1149, "x2": 1542, "y2": 1149, "canDropThrough": true}, {"id": 119, "x1": 2019, "y1": 1320, "x2": 2109, "y2": 1320, "canDropThrough": true}, {"id": 37, "x1": 1389, "y1": 780, "x2": 1479, "y2": 780, "canDropThrough": true}, {"id": 78, "x1": 669, "y1": 540, "x2": 759, "y2": 540, "canDropThrough": true}, {"id": 82, "x1": 621, "y1": 473, "x2": 635, "y2": 472, "canDropThrough": true}, {"id": 28, "x1": 492, "y1": 956, "x2": 517, "y2": 956, "canDropThrough": true}, {"id": 5, "x1": 1569, "y1": 1020, "x2": 1659, "y2": 1020, "canDropThrough": true}, {"id": 24, "x1": 454, "y1": 957, "x2": 465, "y2": 955, "canDropThrough": true}, {"id": 181, "x1": 1428, "y1": 0, "x2": 1440, "y2": 0, "canDropThrough": true}, {"id": 135, "x1": 579, "y1": 1320, "x2": 669, "y2": 1320, "canDropThrough": true}, {"id": 149, "x1": 1686, "y1": 1255, "x2": 1885, "y2": 1255, "canDropThrough": true}, {"id": 61, "x1": 622, "y1": 714, "x2": 630, "y2": 721, "canDropThrough": true}, {"id": 130, "x1": 1119, "y1": 1320, "x2": 1209, "y2": 1320, "canDropThrough": true}, {"id": 84, "x1": 640, "y1": 475, "x2": 648, "y2": 474, "canDropThrough": true}, {"id": 107, "x1": 399, "y1": 840, "x2": 438, "y2": 840, "canDropThrough": true}, {"id": 11, "x1": 1299, "y1": 1020, "x2": 1389, "y2": 1020, "canDropThrough": true}, {"id": 173, "x1": 399, "y1": 600, "x2": 438, "y2": 600, "canDropThrough": true}, {"id": 49, "x1": 528, "y1": 780, "x2": 579, "y2": 780, "canDropThrough": true}, {"id": 76, "x1": 540, "y1": 540, "x2": 618, "y2": 540, "canDropThrough": true}, {"id": 122, "x1": 1659, "y1": 1320, "x2": 1749, "y2": 1320, "canDropThrough": true}, {"id": 26, "x1": 479, "y1": 954, "x2": 484, "y2": 957, "canDropThrough": true}, {"id": 165, "x1": 410, "y1": 1256, "x2": 418, "y2": 1255, "canDropThrough": true}, {"id": 179, "x1": 1440, "y1": 0, "x2": 1518, "y2": 0, "canDropThrough": true}, {"id": 90, "x1": 450, "y1": 660, "x2": 528, "y2": 660, "canDropThrough": true}, {"id": 160, "x1": 1706, "y1": 1143, "x2": 1711, "y2": 1149, "canDropThrough": true}, {"id": 63, "x1": 939, "y1": 540, "x2": 1029, "y2": 540, "canDropThrough": true}, {"id": 128, "x1": 939, "y1": 1320, "x2": 1029, "y2": 1320, "canDropThrough": true}, {"id": 86, "x1": 673, "y1": 474, "x2": 681, "y2": 475, "canDropThrough": true}, {"id": 137, "x1": 309, "y1": 1320, "x2": 399, "y2": 1320, "canDropThrough": true}, {"id": 13, "x1": 1389, "y1": 1020, "x2": 1479, "y2": 1020, "canDropThrough": true}, {"id": 152, "x1": 1542, "y1": 1149, "x2": 1548, "y2": 1142, "canDropThrough": true}, {"id": 50, "x1": 579, "y1": 780, "x2": 669, "y2": 780, "canDropThrough": true}, {"id": 69, "x1": 1569, "y1": 540, "x2": 1620, "y2": 540, "canDropThrough": true}, {"id": 124, "x1": 1839, "y1": 1320, "x2": 1929, "y2": 1320, "canDropThrough": true}, {"id": 38, "x1": 1479, "y1": 780, "x2": 1569, "y2": 780, "canDropThrough": true}, {"id": 158, "x1": 1652, "y1": 1140, "x2": 1657, "y2": 1142, "canDropThrough": true}, {"id": 65, "x1": 1119, "y1": 540, "x2": 1209, "y2": 540, "canDropThrough": true}, {"id": 6, "x1": 759, "y1": 1020, "x2": 849, "y2": 1020, "canDropThrough": true}, {"id": 167, "x1": 443, "y1": 1255, "x2": 451, "y2": 1256, "canDropThrough": true}, {"id": 1, "x1": 1800, "y1": 1020, "x2": 1878, "y2": 1020, "canDropThrough": true}, {"id": 15, "x1": 669, "y1": 1020, "x2": 759, "y2": 1020, "canDropThrough": true}, {"id": 116, "x1": 0, "y1": 1320, "x2": 78, "y2": 1320, "canDropThrough": true}, {"id": 98, "x1": 450, "y1": 420, "x2": 528, "y2": 420, "canDropThrough": true}, {"id": 111, "x1": 348, "y1": 840, "x2": 360, "y2": 840, "canDropThrough": true}, {"id": 52, "x1": 1598, "y1": 659, "x2": 1709, "y2": 659, "canDropThrough": true}, {"id": 94, "x1": 438, "y1": 660, "x2": 450, "y2": 660, "canDropThrough": true}, {"id": 154, "x1": 1598, "y1": 1142, "x2": 1602, "y2": 1142, "canDropThrough": true}, {"id": 67, "x1": 1209, "y1": 540, "x2": 1299, "y2": 540, "canDropThrough": true}, {"id": 17, "x1": 399, "y1": 1020, "x2": 438, "y2": 1020, "canDropThrough": true}, {"id": 81, "x1": 610, "y1": 475, "x2": 621, "y2": 473, "canDropThrough": true}, {"id": 54, "x1": 541, "y1": 716, "x2": 555, "y2": 715, "canDropThrough": true}, {"id": 133, "x1": 1209, "y1": 1320, "x2": 1299, "y2": 1320, "canDropThrough": true}, {"id": 41, "x1": 1029, "y1": 780, "x2": 1119, "y2": 780, "canDropThrough": true}, {"id": 176, "x1": 438, "y1": 600, "x2": 450, "y2": 600, "canDropThrough": true}, {"id": 79, "x1": 1445, "y1": 473, "x2": 1644, "y2": 473, "canDropThrough": true}, {"id": 83, "x1": 635, "y1": 472, "x2": 640, "y2": 475, "canDropThrough": true}];
+const HENESYS_LADDERS_RAW = [{"id": 1, "x": 419, "top": 1022, "bottom": 1210, "isLadder": true}, {"id": 2, "x": 1769, "top": 1022, "bottom": 1162, "isLadder": true}, {"id": 3, "x": 825, "top": 782, "bottom": 978, "isLadder": false}, {"id": 4, "x": 1164, "top": 1022, "bottom": 1248, "isLadder": false}, {"id": 5, "x": 1726, "top": 782, "bottom": 867, "isLadder": true}, {"id": 6, "x": 1647, "top": 542, "bottom": 625, "isLadder": true}, {"id": 7, "x": 1197, "top": 542, "bottom": 738, "isLadder": false}, {"id": 8, "x": 1447, "top": 2, "bottom": 437, "isLadder": false}];
 
 class GameMap {
   constructor() {
     this.name = '헤네시스 사냥터 1 (Henesys Hunting Ground 1)';
-    this.width = 2400;
-    this.height = 950;
+    this.width = 2242;
+    this.height = 1634;
+    this.groundY = 1585;
 
-    // Line Segment Footholds: Foothold(id, x1, y1, x2, y2, canDropThrough, type)
-    this.footholds = [
-      // Main Ground Floor (with subtle organic slope segments)
-      new Foothold(1, 0, 820, 800, 820, false, 'ground'),
-      new Foothold(2, 800, 820, 1100, 814, false, 'ground'),   // Gentle uphill slope
-      new Foothold(3, 1100, 814, 1500, 820, false, 'ground'),  // Gentle downhill slope
-      new Foothold(4, 1500, 820, 2400, 820, false, 'ground'),
+    // Terrain Image
+    this.terrainImg = new Image();
+    this.terrainImg.src = 'assets/map/henesys_terrain.png';
+    this.terrainLoaded = false;
+    this.terrainImg.onload = () => {
+      this.terrainLoaded = true;
+    };
 
-      // Tier 1 Platforms (Can drop through)
-      new Foothold(10, 120, 700, 500, 700, true, 'grass'),
-      new Foothold(11, 580, 680, 1020, 680, true, 'grass'),
-      new Foothold(12, 1100, 700, 1500, 700, true, 'grass'),
-      new Foothold(13, 1600, 680, 2050, 680, true, 'grass'),
+    // Convert raw footholds into Foothold instances
+    this.footholds = HENESYS_FOOTHOLDS_RAW.map(f => 
+      new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, f.canDropThrough, f.y1 >= 1300 ? 'ground' : 'platform')
+    );
 
-      // Tier 2 Platforms (Sloped platforms supported!)
-      new Foothold(20, 260, 550, 580, 550, true, 'grass'),
-      new Foothold(21, 740, 530, 1160, 530, true, 'grass'),
-      new Foothold(22, 1300, 540, 1660, 540, true, 'grass'),
-      new Foothold(23, 1780, 520, 2160, 520, true, 'grass'),
-
-      // Tier 3 Platforms (Wood & Grassy branches)
-      new Foothold(30, 450, 400, 790, 400, true, 'wood'),
-      new Foothold(31, 950, 380, 1350, 380, true, 'wood'),
-      new Foothold(32, 1480, 390, 1820, 390, true, 'wood'),
-
-      // Tier 4 Peak Shrine Platform
-      new Foothold(40, 780, 250, 1260, 250, true, 'shrine')
-    ];
-
-    // Reference to base ground
-    this.groundFoothold = this.footholds[0];
+    // Reference to base ground foothold
+    this.groundFoothold = this.footholds.find(f => f.y1 >= 1300) || this.footholds[0];
 
     // Ladders and Ropes
-    this.ladders = [
-      { id: 1, x: 300, top: 700, bottom: 820, type: 'ladder', fromFh: 1, toFh: 10 },
-      { id: 2, x: 780, top: 680, bottom: 820, type: 'rope', fromFh: 1, toFh: 11 },
-      { id: 3, x: 1320, top: 700, bottom: 820, type: 'ladder', fromFh: 3, toFh: 12 },
-      { id: 4, x: 1800, top: 680, bottom: 820, type: 'rope', fromFh: 4, toFh: 13 },
+    this.ladders = HENESYS_LADDERS_RAW.map(l => ({
+      id: l.id,
+      x: l.x,
+      top: l.top,
+      bottom: l.bottom,
+      isLadder: l.isLadder,
+      type: l.isLadder ? 'ladder' : 'rope'
+    }));
 
-      { id: 5, x: 420, top: 550, bottom: 700, type: 'rope', fromFh: 10, toFh: 20 },
-      { id: 6, x: 920, top: 530, bottom: 680, type: 'ladder', fromFh: 11, toFh: 21 },
-      { id: 7, x: 1460, top: 540, bottom: 700, type: 'rope', fromFh: 12, toFh: 22 },
-      { id: 8, x: 1940, top: 520, bottom: 680, type: 'ladder', fromFh: 13, toFh: 23 },
-
-      { id: 9, x: 620, top: 400, bottom: 550, type: 'ladder', fromFh: 20, toFh: 30 },
-      { id: 10, x: 1140, top: 380, bottom: 530, type: 'rope', fromFh: 21, toFh: 31 },
-      { id: 11, x: 1650, top: 390, bottom: 540, type: 'ladder', fromFh: 22, toFh: 32 },
-
-      { id: 12, x: 1020, top: 250, bottom: 380, type: 'ladder', fromFh: 31, toFh: 40 }
-    ];
-
-    this.portals = [
-      { x: 80, y: 820, targetX: 2300, targetY: 820, label: '마을 (Town)' },
-      { x: 2320, y: 820, targetX: 100, targetY: 820, label: '깊은 숲 (Deep Forest)' }
-    ];
-
-    this.signs = [
-      { x: 180, y: 820, text: '헤네시스 사냥터 1' },
-      { x: 1020, y: 250, text: '★ 버섯동산 정상 ★' },
-      { x: 1700, y: 820, text: '위험! 주황버섯 출현' }
-    ];
-
+    // Parallax Clouds
     this.clouds = [
-      { x: 200, y: 90, speed: 0.15, size: 70 },
-      { x: 800, y: 60, speed: 0.25, size: 90 },
-      { x: 1400, y: 110, speed: 0.18, size: 80 },
-      { x: 2000, y: 75, speed: 0.22, size: 85 }
+      { x: 150, y: 120, speed: 0.15, size: 90 },
+      { x: 600, y: 80, speed: 0.22, size: 110 },
+      { x: 1150, y: 140, speed: 0.18, size: 85 },
+      { x: 1700, y: 90, speed: 0.25, size: 120 },
+      { x: 2100, y: 160, speed: 0.20, size: 95 }
     ];
-
-    this.scenery = [
-      { x: 240, y: 820, type: 'tree' },
-      { x: 650, y: 820, type: 'mushroom_house' },
-      { x: 1200, y: 816, type: 'tree' },
-      { x: 1550, y: 820, type: 'windmill' },
-      { x: 2100, y: 820, type: 'tree' }
-    ];
-  }
-
-  // Find continuous slope segment
-  findConnectingFoothold(currentFh, x) {
-    for (const fh of this.footholds) {
-      if (fh.id === currentFh.id) continue;
-      if (x >= fh.x1 && x <= fh.x2) {
-        // Vertical closeness check (within 6px)
-        const currentY = currentFh.getYAtX(x);
-        const targetY = fh.getYAtX(x);
-        if (Math.abs(currentY - targetY) <= 8) {
-          return fh;
-        }
-      }
-    }
-    return null;
   }
 
   get platforms() {
@@ -109,355 +55,157 @@ class GameMap {
     }));
   }
 
+  // Find continuous slope segment
+  findConnectingFoothold(currentFh, x) {
+    for (const fh of this.footholds) {
+      if (fh.id === currentFh.id) continue;
+      if (x >= fh.x1 && x <= fh.x2) {
+        const currentY = currentFh.getYAtX(x);
+        const targetY = fh.getYAtX(x);
+        if (Math.abs(currentY - targetY) <= 8) {
+          return fh;
+        }
+      }
+    }
+    return null;
+  }
+
   update(dt) {
     this.clouds.forEach(c => {
       c.x += c.speed;
-      if (c.x > this.width + 100) c.x = -150;
+      if (c.x > this.width + 150) c.x = -150;
     });
   }
 
-  // 3-Layer Parallax Drawing
   draw(ctx, camera) {
-    // 1. Far Layer (Sky, Sun, Clouds - Scroll Rate 0.1)
+    // 1. Far Sky & Parallax Backdrops
     this.drawSkyAndFarBackdrop(ctx, camera);
 
-    // 2. Mid Layer (Distant Hills, Windmills, Trees - Scroll Rate 0.4)
-    this.drawMidground(ctx, camera);
+    // 2. Authentic Henesys Terrain
+    if (this.terrainLoaded && this.terrainImg.complete) {
+      ctx.drawImage(this.terrainImg, 0, 0);
+    }
 
-    // 3. Near Layer (Footholds, Ladders, Portals - Scroll Rate 1.0)
-    this.drawLadders(ctx);
-    this.drawFootholds(ctx);
-    this.drawPortals(ctx);
-    this.drawSigns(ctx);
+    // 3. Render Pixel-Art Ladders & Ropes connecting platforms
+    this.drawLaddersAndRopes(ctx);
   }
 
   drawSkyAndFarBackdrop(ctx, camera) {
-    // Vibrant Blue Sky Gradient
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, this.height);
-    skyGrad.addColorStop(0, '#56b8f5');
-    skyGrad.addColorStop(0.5, '#99d9ea');
-    skyGrad.addColorStop(1, '#dff3fc');
+    // Sky Gradient
+    const skyGrad = ctx.createLinearGradient(0, camera.y, 0, camera.y + camera.height);
+    skyGrad.addColorStop(0, '#53a8ea');
+    skyGrad.addColorStop(0.5, '#87c6f5');
+    skyGrad.addColorStop(1, '#d2effd');
     ctx.fillStyle = skyGrad;
-    ctx.fillRect(0, 0, this.width, this.height);
+    ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
 
-    // Sun (Scroll rate 0.05)
-    const sunX = 400 + camera.x * 0.05;
-    ctx.fillStyle = 'rgba(255, 245, 180, 0.45)';
+    // Distant Rolling Henesys Hills (Parallax 0.25)
+    ctx.save();
+    const hillParallax = camera.x * 0.25;
+    ctx.translate(-hillParallax, 0);
+
+    ctx.fillStyle = 'rgba(125, 195, 75, 0.45)';
     ctx.beginPath();
-    ctx.arc(sunX, 150, 85, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fffae0';
-    ctx.beginPath();
-    ctx.arc(sunX, 150, 42, 0, Math.PI * 2);
+    ctx.moveTo(0, 1200);
+    for (let x = 0; x <= this.width + 1000; x += 300) {
+      ctx.quadraticCurveTo(x + 150, 850 + Math.sin(x * 0.01) * 80, x + 300, 1200);
+    }
+    ctx.lineTo(this.width + 1000, 1634);
+    ctx.lineTo(0, 1634);
+    ctx.closePath();
     ctx.fill();
 
-    // Drifting Fluffy Clouds
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+    // Floating Clouds
     this.clouds.forEach(c => {
+      const cx = c.x - camera.x * 0.12;
+      const cy = c.y + camera.y * 0.05;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
       ctx.beginPath();
-      ctx.arc(c.x, c.y, c.size * 0.4, 0, Math.PI * 2);
-      ctx.arc(c.x + c.size * 0.35, c.y - c.size * 0.15, c.size * 0.35, 0, Math.PI * 2);
-      ctx.arc(c.x + c.size * 0.7, c.y, c.size * 0.4, 0, Math.PI * 2);
-      ctx.arc(c.x + c.size * 0.35, c.y + c.size * 0.1, c.size * 0.4, 0, Math.PI * 2);
+      ctx.arc(cx, cy, c.size * 0.45, 0, Math.PI * 2);
+      ctx.arc(cx + c.size * 0.35, cy - c.size * 0.12, c.size * 0.4, 0, Math.PI * 2);
+      ctx.arc(cx + c.size * 0.7, cy, c.size * 0.42, 0, Math.PI * 2);
       ctx.fill();
     });
 
-    // Far Mountain Ridge (Parallax 0.15)
-    const pxFar = camera.x * 0.15;
-    ctx.fillStyle = '#9bd084';
-    ctx.beginPath();
-    ctx.moveTo(0, 750);
-    for (let x = 0; x <= this.width; x += 280) {
-      const peakY = 470 + Math.sin(x * 0.005 + pxFar * 0.003) * 80;
-      ctx.quadraticCurveTo(x + 140, peakY, x + 280, 750);
-    }
-    ctx.lineTo(this.width, this.height);
-    ctx.lineTo(0, this.height);
-    ctx.closePath();
-    ctx.fill();
+    ctx.restore();
   }
 
-  drawMidground(ctx, camera) {
-    // Midground Rolling Hills (Parallax 0.4)
-    ctx.fillStyle = '#7ac067';
-    ctx.beginPath();
-    ctx.moveTo(0, 800);
-    for (let x = 0; x <= this.width; x += 220) {
-      const peakY = 620 + Math.sin(x * 0.008) * 60;
-      ctx.quadraticCurveTo(x + 110, peakY, x + 220, 800);
-    }
-    ctx.lineTo(this.width, this.height);
-    ctx.lineTo(0, this.height);
-    ctx.closePath();
-    ctx.fill();
+  drawLaddersAndRopes(ctx) {
+    this.ladders.forEach(l => {
+      const x = l.x;
+      const top = l.top;
+      const bot = l.bottom;
+      const height = bot - top;
+      if (height <= 0) return;
 
-    // Scenery behind platforms
-    this.scenery.forEach(item => {
-      ctx.save();
-      ctx.translate(item.x, item.y);
-
-      if (item.type === 'tree') {
-        ctx.fillStyle = '#6b4226';
-        ctx.fillRect(-12, -130, 24, 130);
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(-12, -130, 24, 130);
-
-        // Cel-shaded canopy
-        ctx.fillStyle = '#3f822e'; // Dark shade
-        ctx.beginPath();
-        ctx.arc(0, -150, 56, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#52aa3c'; // Mid base
-        ctx.beginPath();
-        ctx.arc(-5, -155, 50, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#6bc752'; // Top highlight
-        ctx.beginPath();
-        ctx.arc(-10, -162, 38, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (item.type === 'mushroom_house') {
-        // Cel-shaded Henesys Mushroom House
-        ctx.fillStyle = '#fce4c8';
-        ctx.beginPath();
-        ctx.roundRect(-45, -70, 90, 70, 8);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.fillStyle = '#8b5a2b';
-        ctx.beginPath();
-        ctx.roundRect(-14, -45, 28, 45, [14, 14, 0, 0]);
-        ctx.fill();
-
-        ctx.fillStyle = '#60a5fa';
-        ctx.beginPath();
-        ctx.arc(-26, -35, 10, 0, Math.PI * 2);
-        ctx.arc(26, -35, 10, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Cel-Shaded Orange Mushroom Roof
-        ctx.fillStyle = '#c2410c'; // Base shadow
-        ctx.beginPath();
-        ctx.ellipse(0, -75, 62, 42, 0, Math.PI, 0, false);
-        ctx.fill();
-        ctx.fillStyle = '#ea580c'; // Mid orange
-        ctx.beginPath();
-        ctx.ellipse(0, -78, 58, 38, 0, Math.PI, 0, false);
-        ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        [-35, 0, 35].forEach((x, i) => {
-          ctx.beginPath();
-          ctx.arc(x, -88 - (i === 1 ? 14 : 0), 8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-        });
-      } else if (item.type === 'windmill') {
-        ctx.fillStyle = '#f5f5f4';
-        ctx.beginPath();
-        ctx.moveTo(-30, 0); ctx.lineTo(-18, -140); ctx.lineTo(18, -140); ctx.lineTo(30, 0);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 1.8;
-        ctx.stroke();
-
-        ctx.fillStyle = '#dc2626';
-        ctx.beginPath();
-        ctx.moveTo(-24, -140); ctx.lineTo(0, -180); ctx.lineTo(24, -140);
-        ctx.closePath();
-        ctx.fill();
-
-        const rot = (Date.now() / 1200) % (Math.PI * 2);
-        ctx.save();
-        ctx.translate(0, -140);
-        ctx.rotate(rot);
-        ctx.fillStyle = '#78350f';
-        for (let b = 0; b < 4; b++) {
-          ctx.rotate(Math.PI / 2);
-          ctx.fillRect(-4, -65, 8, 65);
-          ctx.fillStyle = '#fef08a';
-          ctx.fillRect(-12, -60, 24, 45);
-          ctx.fillStyle = '#78350f';
-        }
-        ctx.restore();
-      }
-
-      ctx.restore();
-    });
-  }
-
-  drawLadders(ctx) {
-    this.ladders.forEach(lad => {
-      const height = lad.bottom - lad.top;
-      if (lad.type === 'ladder') {
-        ctx.fillStyle = '#8b5a2b';
-        ctx.fillRect(lad.x - 12, lad.top, 5, height);
-        ctx.fillRect(lad.x + 7, lad.top, 5, height);
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 1.2;
-        ctx.strokeRect(lad.x - 12, lad.top, 5, height);
-        ctx.strokeRect(lad.x + 7, lad.top, 5, height);
-
-        const stepDist = 18;
-        ctx.fillStyle = '#d4a373';
-        for (let y = lad.top + 10; y < lad.bottom; y += stepDist) {
-          ctx.fillRect(lad.x - 10, y, 20, 4);
-          ctx.strokeRect(lad.x - 10, y, 20, 4);
-        }
-      } else {
-        ctx.strokeStyle = '#2d6a4f';
-        ctx.lineWidth = 6;
+      if (l.isLadder) {
+        // Wooden Ladder: 2 vertical rails + horizontal rungs
+        const railHalf = 9;
+        ctx.strokeStyle = '#5a3818';
+        ctx.lineWidth = 3.5;
         ctx.lineCap = 'round';
+        // Left rail
         ctx.beginPath();
-        ctx.moveTo(lad.x, lad.top);
-        for (let y = lad.top; y <= lad.bottom; y += 16) {
-          const wave = Math.sin(y * 0.1) * 2;
-          ctx.lineTo(lad.x + wave, y);
-        }
+        ctx.moveTo(x - railHalf, top);
+        ctx.lineTo(x - railHalf, bot);
+        ctx.stroke();
+        // Right rail
+        ctx.beginPath();
+        ctx.moveTo(x + railHalf, top);
+        ctx.lineTo(x + railHalf, bot);
         ctx.stroke();
 
-        ctx.fillStyle = '#52b788';
-        for (let y = lad.top + 20; y < lad.bottom; y += 36) {
+        // Inner wood highlight
+        ctx.strokeStyle = '#b8824a';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(x - railHalf, top);
+        ctx.lineTo(x - railHalf, bot);
+        ctx.moveTo(x + railHalf, top);
+        ctx.lineTo(x + railHalf, bot);
+        ctx.stroke();
+
+        // Rungs every 15px
+        for (let ry = top + 8; ry < bot - 4; ry += 15) {
+          ctx.strokeStyle = '#422810';
+          ctx.lineWidth = 4;
           ctx.beginPath();
-          ctx.ellipse(lad.x + 6, y, 6, 3, Math.PI / 4, 0, Math.PI * 2);
+          ctx.moveTo(x - railHalf, ry);
+          ctx.lineTo(x + railHalf, ry);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#d49b5c';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x - railHalf + 1, ry - 0.5);
+          ctx.lineTo(x + railHalf - 1, ry - 0.5);
+          ctx.stroke();
+        }
+      } else {
+        // Braided Hemp Climbing Rope
+        ctx.strokeStyle = '#3d2b14';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bot);
+        ctx.stroke();
+
+        // Braided texture
+        ctx.strokeStyle = '#c9a26b';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bot);
+        ctx.stroke();
+
+        // Rope fiber knots every 12px
+        ctx.fillStyle = '#6d4820';
+        for (let ry = top + 6; ry < bot - 3; ry += 12) {
+          ctx.beginPath();
+          ctx.ellipse(x, ry, 3.5, 2.5, 0.3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
-    });
-  }
-
-  // Draw Line Segment Footholds with Cel-Shaded Grass & Outlines
-  drawFootholds(ctx) {
-    this.footholds.forEach(fh => {
-      const length = fh.x2 - fh.x1;
-      const angle = Math.atan2(fh.y2 - fh.y1, fh.x2 - fh.x1);
-
-      ctx.save();
-      ctx.translate(fh.x1, fh.y1);
-      ctx.rotate(angle);
-
-      if (fh.type === 'ground') {
-        // Ground Foothold: 2-tone grass + dark earth
-        ctx.fillStyle = '#39782c'; // Grass shadow
-        ctx.fillRect(0, 0, length, 24);
-        ctx.fillStyle = '#52aa3c'; // Grass base
-        ctx.fillRect(0, 0, length, 12);
-        ctx.fillStyle = '#6bc752'; // Grass highlight
-        ctx.fillRect(0, 0, length, 4);
-
-        // 2px Outline on Foothold surface
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 0); ctx.lineTo(length, 0);
-        ctx.stroke();
-
-        // Earth
-        ctx.fillStyle = '#5a3821';
-        ctx.fillRect(0, 24, length, 110);
-      } else if (fh.type === 'shrine') {
-        // Ancient Stone Shrine
-        ctx.fillStyle = '#334155';
-        ctx.fillRect(0, 0, length, 22);
-        ctx.fillStyle = '#64748b';
-        ctx.fillRect(0, 0, length, 6);
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(0, 0, length, 22);
-
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = 'bold 10px monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText('❖  M U S H M O M   S H R I N E  ❖', length / 2, 15);
-      } else {
-        // Floating Platforms: Wooden base with cel-shaded grass topper
-        ctx.fillStyle = '#78350f';
-        ctx.beginPath();
-        ctx.roundRect(0, 0, length, 18, 4);
-        ctx.fill();
-
-        // Cel-shaded grass
-        ctx.fillStyle = '#39782c';
-        ctx.fillRect(0, 0, length, 7);
-        ctx.fillStyle = '#52aa3c';
-        ctx.fillRect(0, 0, length, 4);
-        ctx.fillStyle = '#86efac';
-        ctx.fillRect(0, 0, length, 1.5);
-
-        // 1.5px Outline
-        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-        ctx.lineWidth = 1.8;
-        ctx.strokeRect(0, 0, length, 18);
-
-        // Wood post drops
-        ctx.fillStyle = '#92400e';
-        ctx.fillRect(16, 18, 6, 12);
-        ctx.fillRect(length - 22, 18, 6, 12);
-      }
-
-      ctx.restore();
-    });
-  }
-
-  drawPortals(ctx) {
-    const pulse = Math.sin(Date.now() / 200) * 4;
-    this.portals.forEach(port => {
-      ctx.save();
-      ctx.translate(port.x, port.y - 35);
-
-      const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 24 + pulse);
-      grad.addColorStop(0, 'rgba(186, 230, 253, 0.95)');
-      grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.75)');
-      grad.addColorStop(0.9, 'rgba(14, 165, 233, 0.3)');
-      grad.addColorStop(1, 'rgba(3, 105, 161, 0)');
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 22 + pulse, 38 + pulse, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.font = 'bold 11px "Malgun Gothic", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#0369a1';
-      ctx.lineWidth = 3;
-      ctx.strokeText(port.label, 0, -48);
-      ctx.fillText(port.label, 0, -48);
-
-      ctx.restore();
-    });
-  }
-
-  drawSigns(ctx) {
-    this.signs.forEach(s => {
-      ctx.save();
-      ctx.translate(s.x, s.y);
-
-      ctx.fillStyle = '#5c3826';
-      ctx.fillRect(-3, -30, 6, 30);
-      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(-3, -30, 6, 30);
-
-      ctx.fillStyle = '#b4814a';
-      ctx.beginPath();
-      ctx.roundRect(-50, -52, 100, 24, 4);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.font = 'bold 10px "Malgun Gothic", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#2e190b';
-      ctx.fillText(s.text, 0, -36);
-
-      ctx.restore();
     });
   }
 }
-
-window.GameMap = GameMap;

@@ -62,7 +62,7 @@ class Projectile {
 }
 
 class Player {
-  constructor(x = 200, y = 820) {
+  constructor(x = 400, y = 1318) {
     this.x = x;
     this.y = y;
     this.vx = 0;
@@ -598,8 +598,8 @@ class Player {
   resurrect() {
     this.hp = Math.floor(this.maxHp * 0.5);
     this.mp = Math.floor(this.maxMp * 0.5);
-    this.x = 200;
-    this.y = 820;
+    this.x = 400;
+    this.y = 1318;
     this.vx = 0;
     this.vy = 0;
     this.onLadder = false;
@@ -824,6 +824,21 @@ class Monster {
           { type: 'meso', chance: 0.9, min: 50, max: 120 },
           { type: 'etc', name: '초록버섯의 갓', chance: 0.75 },
           { type: 'blue_potion', name: '파란 포션', chance: 0.4 }
+        ];
+        break;
+      case 'zombie_mushroom':
+        this.name = '좀비버섯';
+        this.level = 15;
+        this.maxHp = 420;
+        this.exp = 60;
+        this.atk = 48;
+        this.speed = 1.4;
+        this.width = 36;
+        this.height = 32;
+        this.dropTable = [
+          { type: 'meso', chance: 0.95, min: 65, max: 160 },
+          { type: 'etc', name: '죽은자의 부적', chance: 0.8 },
+          { type: 'blue_potion', name: '파란 포션', chance: 0.45 }
         ];
         break;
       case 'mushmom':

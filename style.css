@@ -40,8 +40,9 @@ body, html {
   display: block;
   width: 100%;
   height: 100%;
-  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
   image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* === TOP BAR OVERLAYS === */
@@ -307,14 +308,14 @@ body, html {
   position: relative;
   width: 44px;
   height: 44px;
-  background: #27272a;
-  border: 2px solid #71717a;
-  border-radius: 6px;
+  background: #181c24;
+  border: 2px solid #c8a86b;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.4);
   cursor: pointer;
   transition: transform 0.1s;
 }
