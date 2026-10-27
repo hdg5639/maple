@@ -130,6 +130,44 @@ class UIManager {
         window.audio.playLevelUp();
       });
     });
+
+    // Quickslots Click / Touch Trigger (for Desktop clicks and Mobile/LAN touch)
+    const addQuickslotAction = (id, action) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const trigger = (e) => {
+        if (e && e.cancelable) e.preventDefault();
+        if (e) e.stopPropagation();
+        el.style.transform = 'scale(0.9)';
+        setTimeout(() => { if (el) el.style.transform = ''; }, 120);
+        action();
+      };
+      el.addEventListener('click', trigger);
+      el.addEventListener('touchstart', trigger, { passive: false });
+    };
+
+    addQuickslotAction('quick-slot-attack', () => this.game.player.normalAttack(this.game));
+    addQuickslotAction('quick-slot-1', () => {
+      const skillId = this.game.getClassSkillId(0);
+      if (skillId) this.game.player.useSkill(skillId, this.game);
+    });
+    addQuickslotAction('quick-slot-2', () => {
+      const skillId = this.game.getClassSkillId(1);
+      if (skillId) this.game.player.useSkill(skillId, this.game);
+    });
+    addQuickslotAction('quick-slot-3', () => {
+      const skillId = this.game.getClassSkillId(2);
+      if (skillId) this.game.player.useSkill(skillId, this.game);
+    });
+    addQuickslotAction('quick-slot-4', () => {
+      const skillId = this.game.getClassSkillId(3) || 'flash_jump';
+      if (skillId) this.game.player.useSkill(skillId, this.game);
+    });
+    addQuickslotAction('quick-slot-jump', () => this.game.player.jump());
+    addQuickslotAction('quick-slot-loot', () => this.game.pickUpNearbyDrops());
+    addQuickslotAction('quick-slot-potion-red', () => this.game.player.usePotion('red_potion'));
+    addQuickslotAction('quick-slot-potion-blue', () => this.game.player.usePotion('blue_potion'));
+    addQuickslotAction('quick-slot-autohunt', () => this.game.autoHunt.toggle());
   }
 
   toggleWindow(id) {

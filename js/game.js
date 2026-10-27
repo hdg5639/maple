@@ -156,6 +156,81 @@ class Game {
         this.player.stopVerticalClimb();
       }
     });
+
+    // Touch / Mobile On-Screen Controls for LAN & Mobile devices
+    let touchStartTime = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let activeTouchId = null;
+
+    this.canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        activeTouchId = touch.identifier;
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartTime = performance.now();
+
+        const rect = this.canvas.getBoundingClientRect();
+        const touchX = touch.clientX - rect.left;
+        const width = rect.width;
+
+        // If touched left 40%, move left; right 40%, move right
+        if (touchX < width * 0.4) {
+          this.keys['ArrowLeft'] = true;
+          this.keys['ArrowRight'] = false;
+        } else if (touchX > width * 0.6) {
+          this.keys['ArrowRight'] = true;
+          this.keys['ArrowLeft'] = false;
+        }
+      }
+    }, { passive: true });
+
+    this.canvas.addEventListener('touchmove', (e) => {
+      const touch = Array.from(e.touches).find(t => t.identifier === activeTouchId);
+      if (!touch) return;
+      const deltaY = touch.clientY - touchStartY;
+      if (deltaY < -40) {
+        this.keys['ArrowUp'] = true;
+        this.keys['ArrowDown'] = false;
+      } else if (deltaY > 40) {
+        this.keys['ArrowDown'] = true;
+        this.keys['ArrowUp'] = false;
+      }
+    }, { passive: true });
+
+    const endTouch = () => {
+      if (activeTouchId !== null && touchStartTime > 0) {
+        const duration = performance.now() - touchStartTime;
+        // Tap gesture detection (< 250ms)
+        if (duration < 250) {
+          // Check NPC interaction
+          const nearNpc = this.map.npcs.find(npc => Math.hypot(npc.x - this.player.x, npc.y - this.player.y) < 75);
+          if (nearNpc) {
+            this.ui.showNpcDialog(nearNpc);
+          } else {
+            // Check Portal interaction
+            const nearPortal = this.map.portals.find(p => Math.hypot(p.x - this.player.x, p.y - this.player.y) < 55);
+            if (nearPortal) {
+              this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
+            } else if (this.player.onGround) {
+              this.player.jump();
+            }
+          }
+        }
+      }
+      activeTouchId = null;
+      touchStartTime = 0;
+      this.keys['ArrowLeft'] = false;
+      this.keys['ArrowRight'] = false;
+      this.keys['ArrowUp'] = false;
+      this.keys['ArrowDown'] = false;
+      this.player.stopHorizontal();
+      this.player.stopVerticalClimb();
+    };
+
+    this.canvas.addEventListener('touchend', endTouch, { passive: true });
+    this.canvas.addEventListener('touchcancel', endTouch, { passive: true });
   }
 
   getClassSkillId(index) {

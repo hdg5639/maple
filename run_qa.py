@@ -100,9 +100,20 @@ async def main():
                     await eval_js(f"window.game.player.useSkill('{skill_key}', window.game)")
                 await asyncio.sleep(0.3)
 
-            # 3. Test Auto-Hunt
-            auto_hunt_result = await eval_js("window.game.autoHunt.toggle()")
-            print(f"5. Toggle Auto-Hunt (should be true): {auto_hunt_result}")
+            # 3. Test Auto-Hunt & Quickslots
+            quickslot_ids = [
+                'quick-slot-attack', 'quick-slot-1', 'quick-slot-2', 'quick-slot-3', 'quick-slot-4',
+                'quick-slot-jump', 'quick-slot-loot', 'quick-slot-potion-red', 'quick-slot-potion-blue',
+                'quick-slot-autohunt'
+            ]
+            for qid in quickslot_ids:
+                res = await eval_js(f"(() => {{ const el = document.getElementById('{qid}'); if (!el) return false; el.click(); return true; }})()")
+                print(f"   - Quickslot #{qid} clicked: {res}")
+            
+            # Ensure autohunt is active
+            if not await eval_js("window.game.autoHunt.enabled"):
+                await eval_js("window.game.autoHunt.toggle()")
+            print(f"5. Auto-Hunt active: {await eval_js('window.game.autoHunt.enabled')}")
 
             # Wait 3 seconds with auto-hunt running to see if actions execute
             await asyncio.sleep(3)

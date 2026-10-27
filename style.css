@@ -208,6 +208,45 @@ body, html {
   text-shadow: 1px 1px 2px #000;
 }
 
+/* === Mobile and Small Screen Responsiveness for LAN Play === */
+@media (max-width: 900px) {
+  #top-bar-overlay {
+    flex-wrap: wrap;
+    gap: 6px;
+    top: 6px;
+    left: 8px;
+    max-width: 92vw;
+  }
+  .maple-badge-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  #maple-hud {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .hud-bars {
+    width: 150px;
+    flex-shrink: 0;
+  }
+  .hud-char-box {
+    flex-shrink: 0;
+  }
+  .hud-quickslots {
+    flex-shrink: 0;
+  }
+  .hud-right {
+    flex-shrink: 0;
+  }
+  .quickslot {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
 /* === CLASSIC MAPLE BOTTOM HUD STATUS BAR === */
 #maple-hud {
   position: relative;
@@ -1110,4 +1149,43 @@ body, html {
   font-weight: 800;
   text-shadow: 1px 1px 2px #000;
 }
+
+/* === Mobile and Small Screen Responsiveness for LAN Play === */
+@media (max-width: 900px) {
+  #top-bar-overlay {
+    flex-wrap: wrap;
+    gap: 6px;
+    top: 6px;
+    left: 8px;
+    max-width: 92vw;
+  }
+  .maple-badge-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  #maple-hud {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .hud-bars {
+    width: 150px;
+    flex-shrink: 0;
+  }
+  .hud-char-box {
+    flex-shrink: 0;
+  }
+  .hud-quickslots {
+    flex-shrink: 0;
+  }
+  .hud-right {
+    flex-shrink: 0;
+  }
+  .quickslot {
+    width: 38px;
+    height: 38px;
+  }
+}
+
 
