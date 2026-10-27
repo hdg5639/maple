@@ -83,8 +83,11 @@ class Projectile {
     // 2. Check Standard Field Monsters
     for (const m of game.monsters) {
       if (m.isAlive()) {
+        const mHitBox = m.getHitBox();
+        const inBox = (this.x >= mHitBox.x - 8 && this.x <= mHitBox.x + mHitBox.width + 8 &&
+                       this.y >= mHitBox.y - 10 && this.y <= mHitBox.y + mHitBox.height + 10);
         const d = Math.hypot(m.x - this.x, (m.y - m.height / 2) - this.y);
-        if (d < Math.max(24, m.width * 0.6)) {
+        if (inBox || d < Math.max(26, m.width * 0.7)) {
           this.hit = true;
           if (this.owner && !this.owner.checkHit(m)) {
             game.spawnMissText(m.x, m.y - m.height * 0.8);
@@ -214,11 +217,11 @@ class Player {
       this.walkSpeed = 4.2;
     } else {
       this.skills = {
-        power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️' },
-        slash_blast: { name: '슬래시 블러스트', level: 0, maxLevel: 20, mpCost: 10, hpCost: 8, dmgMult: 1.4, icon: '🌀' },
-        magic_claw: { name: '매직 클로', level: 0, maxLevel: 20, mpCost: 12, dmgMult: 1.3, icon: '✨' },
-        flash_jump: { name: '플래시 점프', level: 0, maxLevel: 5, mpCost: 5, icon: '⚡' },
-        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️' }
+        power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️', desc: '검을 강하게 내리쳐 큰 피해' },
+        slash_blast: { name: '슬래시 블러스트', level: 1, maxLevel: 20, mpCost: 10, hpCost: 6, dmgMult: 1.4, icon: '🌀', desc: '주변 다수의 적을 동시에 회전 타격' },
+        magic_claw: { name: '매직 클로', level: 1, maxLevel: 20, mpCost: 10, dmgMult: 1.3, hits: 2, icon: '✨', desc: '비전 손톱으로 2연속 할퀴기' },
+        flash_jump: { name: '플래시 점프', level: 1, maxLevel: 5, mpCost: 5, icon: '⚡', desc: '공중에서 2단 고속 대쉬 도약' },
+        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: '주기적으로 HP/MP 자동 회복' }
       };
       this.weaponType = 'sword';
     }
@@ -291,7 +294,7 @@ class Player {
     const levelDiff = Math.max(0, (target.level || 1) - this.level);
     const needAcc = Math.floor(avoid * (1.84 + 0.07 * levelDiff));
     if (this.accuracy >= needAcc) return true;
-    const hitRate = Math.max(0.05, this.accuracy / needAcc);
+    const hitRate = Math.max(0.50, this.accuracy / needAcc);
     return Math.random() < hitRate;
   }
 
@@ -569,9 +572,12 @@ class Player {
   }
 
   useSkill(skillId, game) {
-    if (this.attackTimer > 0) return false;
     const skill = this.skills[skillId];
     if (!skill || skill.level <= 0) return false;
+
+    // Buff and mobility skills can be used immediately without being blocked by attack cooldown
+    const isBuffOrMobility = ['iron_body', 'focus', 'haste', 'recovery', 'teleport', 'flash_jump'].includes(skillId);
+    if (!isBuffOrMobility && this.attackTimer > 0) return false;
 
     const dirSign = this.facing === 'right' ? 1 : -1;
 
@@ -762,6 +768,32 @@ class Player {
       return true;
     } else if (skillId === 'flash_jump') {
       return this.flashJump();
+    } else if (skillId === 'iron_body') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.defense += 20;
+      game.spawnItemText(this.x, this.y - 45, '🛡️ [아이언 바디] 방어력 +20!');
+      if (game.ui && game.ui.addChat) game.ui.addChat('system', '🛡️ [아이언 바디] 단단한 신체로 방어력이 20 증가했습니다.');
+      window.audio.playLevelUp();
+      return true;
+    } else if (skillId === 'focus') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.accuracy += 25;
+      this.walkSpeed = Math.min(5.5, this.walkSpeed + 0.6);
+      game.spawnItemText(this.x, this.y - 45, '👁️ [포커스] 명중/이속 증가!');
+      if (game.ui && game.ui.addChat) game.ui.addChat('system', '👁️ [포커스] 정신을 집중하여 명중률(+25)과 이동속도가 상승했습니다.');
+      window.audio.playLevelUp();
+      return true;
+    } else if (skillId === 'haste') {
+      if (this.mp < skill.mpCost) return false;
+      this.mp -= skill.mpCost;
+      this.walkSpeed = 5.6;
+      this.jumpForce = -11.5;
+      game.spawnItemText(this.x, this.y - 45, '💨 [헤이스트] 극상의 기동력!');
+      if (game.ui && game.ui.addChat) game.ui.addChat('system', '💨 [헤이스트] 바람의 가호를 받아 이동속도와 점프력이 비약적으로 상승했습니다!');
+      window.audio.playFlashJump();
+      return true;
     }
     return false;
   }
@@ -1136,14 +1168,20 @@ class Monster {
       this.vx = this.moveDir * this.speed;
     }
 
-    // Foothold Edge Boundary Check
+    // Foothold Edge Boundary Check (Only reverse if there is no continuous foothold)
     if (this.currentFoothold && this.onGround) {
-      if (this.x - 8 <= this.currentFoothold.x1) {
-        this.moveDir = 1;
-        this.facing = 'right';
-      } else if (this.x + 8 >= this.currentFoothold.x2) {
-        this.moveDir = -1;
-        this.facing = 'left';
+      if (this.x - 10 <= this.currentFoothold.x1) {
+        const contLeft = map.findConnectingFoothold(this.currentFoothold, this.x - 10, 'left');
+        if (!contLeft) {
+          this.moveDir = 1;
+          this.facing = 'right';
+        }
+      } else if (this.x + 10 >= this.currentFoothold.x2) {
+        const contRight = map.findConnectingFoothold(this.currentFoothold, this.x + 10, 'right');
+        if (!contRight) {
+          this.moveDir = -1;
+          this.facing = 'left';
+        }
       }
     }
 

@@ -21,9 +21,10 @@ class Foothold {
 
   // Calculate Y coordinate on the slope at given X
   getYAtX(x) {
-    if (x < this.x1 || x > this.x2) return null;
     if (this.x1 === this.x2) return this.y1;
-    const t = (x - this.x1) / (this.x2 - this.x1);
+    // Clamp X to segment bounds so it NEVER returns null or NaN!
+    const clampedX = Math.max(this.x1, Math.min(this.x2, x));
+    const t = (clampedX - this.x1) / (this.x2 - this.x1);
     return this.y1 + (this.y2 - this.y1) * t;
   }
 }
@@ -67,24 +68,36 @@ class Physics {
 
     // 3. Ground / Slope Foothold Physics
     if (entity.onGround && entity.currentFoothold) {
-      // Horizontal friction & movement
       entity.x += entity.vx;
 
-      // Check if player walked off the current foothold
-      if (entity.x < entity.currentFoothold.x1 - 2 || entity.x > entity.currentFoothold.x2 + 2) {
-        // Try to connect to an adjacent continuous foothold
-        const adjacent = map.findConnectingFoothold(entity.currentFoothold, entity.x);
-        if (adjacent) {
-          entity.currentFoothold = adjacent;
-          entity.y = adjacent.getYAtX(entity.x);
+      const fh = entity.currentFoothold;
+      if (entity.x > fh.x2) {
+        const nextFh = map.findConnectingFoothold(fh, entity.x, 'right');
+        if (nextFh) {
+          entity.currentFoothold = nextFh;
+          entity.y = nextFh.getYAtX(entity.x);
+          entity.vy = 0;
         } else {
-          // Walked off ledge -> fall!
+          // Walked off right ledge -> start falling
           entity.onGround = false;
           entity.currentFoothold = null;
+          entity.y = fh.y2;
+        }
+      } else if (entity.x < fh.x1) {
+        const prevFh = map.findConnectingFoothold(fh, entity.x, 'left');
+        if (prevFh) {
+          entity.currentFoothold = prevFh;
+          entity.y = prevFh.getYAtX(entity.x);
+          entity.vy = 0;
+        } else {
+          // Walked off left ledge -> start falling
+          entity.onGround = false;
+          entity.currentFoothold = null;
+          entity.y = fh.y1;
         }
       } else {
-        // Snap precisely to the slope Y
-        entity.y = entity.currentFoothold.getYAtX(entity.x);
+        // Snap precisely to current foothold slope
+        entity.y = fh.getYAtX(entity.x);
         entity.vy = 0;
       }
     } else {
@@ -99,27 +112,34 @@ class Physics {
 
       // Check foothold landing (only when falling downwards)
       if (entity.vy >= 0) {
+        let bestLandingFh = null;
+        let bestLandingY = Infinity;
+
         for (const fh of map.footholds) {
-          // Skip if player is intentionally dropping through
           if (entity.dropThroughTimer > 0 && fh.canDropThrough) {
             continue;
           }
 
-          if (entity.x >= fh.x1 && entity.x <= fh.x2) {
+          if (entity.x >= fh.x1 - 2 && entity.x <= fh.x2 + 2) {
             const slopeY = fh.getYAtX(entity.x);
-            // Crossing the line from above
-            if (prevY <= slopeY + 4 && entity.y >= slopeY - 2) {
-              entity.y = slopeY;
-              entity.vy = 0;
-              entity.onGround = true;
-              entity.currentFoothold = fh;
-
-              // Landing impact dust callback
-              if (entity.onLand) {
-                entity.onLand();
+            // Swept raycast check from prevY to current entity.y
+            if (prevY <= slopeY + 6 && entity.y >= slopeY - 4) {
+              if (slopeY < bestLandingY) {
+                bestLandingY = slopeY;
+                bestLandingFh = fh;
               }
-              break;
             }
+          }
+        }
+
+        if (bestLandingFh) {
+          entity.y = bestLandingY;
+          entity.vy = 0;
+          entity.onGround = true;
+          entity.currentFoothold = bestLandingFh;
+
+          if (entity.onLand) {
+            entity.onLand();
           }
         }
       }
@@ -135,12 +155,22 @@ class Physics {
       entity.vx = 0;
     }
 
-    // Failsafe floor
-    if (entity.y > map.height - 40) {
-      entity.y = 820;
-      entity.vy = 0;
-      entity.onGround = true;
-      entity.currentFoothold = map.groundFoothold;
+    // Failsafe floor - safely recover to closest ground foothold or default spawn
+    if (entity.y > map.height - 30) {
+      const safeFh = map.findGroundFootholdAt(entity.x);
+      if (safeFh) {
+        entity.y = safeFh.getYAtX(entity.x);
+        entity.vy = 0;
+        entity.onGround = true;
+        entity.currentFoothold = safeFh;
+      } else {
+        const spawn = map.defaultSpawn || { x: 400, y: 1300 };
+        entity.x = spawn.x;
+        entity.y = spawn.y;
+        entity.vy = 0;
+        entity.onGround = true;
+        entity.currentFoothold = map.findGroundFootholdAt(spawn.x);
+      }
     }
   }
 

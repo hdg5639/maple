@@ -61,9 +61,14 @@ class GameMap {
     }
 
     // Convert raw footholds into Foothold instances
-    this.footholds = (data.footholds || []).map(f => 
-      new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, f.canDropThrough, f.canDropThrough ? 'platform' : 'ground')
-    );
+    const rawFhs = data.footholds || [];
+    const maxY = rawFhs.length > 0 ? Math.max(...rawFhs.map(f => Math.max(f.y1, f.y2))) : 0;
+    this.footholds = rawFhs.map(f => {
+      // The bottom-most platform level must NEVER allow drop-through into the void!
+      const isBottomFloor = Math.max(f.y1, f.y2) >= maxY - 25;
+      const canDrop = isBottomFloor ? false : (f.canDropThrough !== undefined ? f.canDropThrough : true);
+      return new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, canDrop, canDrop ? 'platform' : 'ground');
+    });
 
     // Ladders and Ropes
     this.ladders = (data.ladders || []).map(l => ({
@@ -109,18 +114,39 @@ class GameMap {
   }
 
   // Find continuous slope segment
-  findConnectingFoothold(currentFh, x) {
+  findConnectingFoothold(currentFh, x, dir = null) {
+    if (!currentFh) return null;
     for (const fh of this.footholds) {
       if (fh.id === currentFh.id) continue;
-      if (x >= fh.x1 && x <= fh.x2) {
-        const currentY = currentFh.getYAtX(x);
-        const targetY = fh.getYAtX(x);
-        if (Math.abs(currentY - targetY) <= 8) {
-          return fh;
-        }
+      if (dir === 'right') {
+        if (Math.abs(fh.x1 - currentFh.x2) <= 5 && Math.abs(fh.y1 - currentFh.y2) <= 10) return fh;
+        if (x >= fh.x1 && x <= fh.x2 && Math.abs(currentFh.y2 - fh.getYAtX(x)) <= 12) return fh;
+      } else if (dir === 'left') {
+        if (Math.abs(fh.x2 - currentFh.x1) <= 5 && Math.abs(fh.y2 - currentFh.y1) <= 10) return fh;
+        if (x >= fh.x1 && x <= fh.x2 && Math.abs(currentFh.y1 - fh.getYAtX(x)) <= 12) return fh;
+      } else {
+        if (Math.abs(fh.x1 - currentFh.x2) <= 5 && Math.abs(fh.y1 - currentFh.y2) <= 10) return fh;
+        if (Math.abs(fh.x2 - currentFh.x1) <= 5 && Math.abs(fh.y2 - currentFh.y1) <= 10) return fh;
+        if (x >= fh.x1 && x <= fh.x2 && Math.abs(currentFh.getYAtX(x) - fh.getYAtX(x)) <= 12) return fh;
       }
     }
     return null;
+  }
+
+  // Find lowest / ground foothold beneath or closest to given X
+  findGroundFootholdAt(x) {
+    let best = null;
+    let maxY = -Infinity;
+    for (const fh of this.footholds) {
+      if (x >= fh.x1 - 10 && x <= fh.x2 + 10) {
+        const y = fh.getYAtX(x);
+        if (y > maxY) {
+          maxY = y;
+          best = fh;
+        }
+      }
+    }
+    return best;
   }
 
   update(dt) {
