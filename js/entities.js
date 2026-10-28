@@ -30,6 +30,8 @@ class Projectile {
     this.id = Math.random();
     this.x = x;
     this.y = y;
+    this.prevX = x;
+    this.prevY = y;
     this.vx = vx;
     this.vy = vy;
     this.type = type;
@@ -38,70 +40,69 @@ class Projectile {
     this.owner = owner;
     this.life = 1.6;
     this.hit = false;
+    this.starType = owner?.activeStar || 'steely';
   }
 
   update(dt, game) {
+    this.prevX = this.x;
+    this.prevY = this.y;
     this.x += this.vx * dt;
     this.y += this.vy * dt;
     this.life -= dt;
 
     if (this.hit) return;
 
-    // 1. Check Boss (Zakum or Mushmom)
-    if (game.boss && game.boss.isAlive()) {
-      if (typeof ZakumBoss !== 'undefined' && game.boss instanceof ZakumBoss) {
-        const hitBoxes = game.boss.getHitBoxes();
-        for (const hb of hitBoxes) {
-          if (this.x >= hb.x && this.x <= hb.x + hb.width && this.y >= hb.y && this.y <= hb.y + hb.height) {
-            this.hit = true;
-            if (this.owner && !this.owner.checkHit(game.boss)) {
-              game.spawnMissText(this.x, this.y - 20);
-              return;
-            }
-            const finalDmg = Math.max(1, Math.floor(this.damage - 20));
-            game.boss.takeDamage(finalDmg, this.isCrit, this.vx > 0 ? 'right' : 'left', game, hb);
-            game.spawnStaggeredDamage(this.x, this.y - 20, finalDmg, this.isCrit);
-            return;
-          }
-        }
-      } else {
-        const d = Math.hypot(game.boss.x - this.x, (game.boss.y - game.boss.height / 2) - this.y);
-        if (d < Math.max(32, game.boss.width * 0.5)) {
-          this.hit = true;
-          if (this.owner && !this.owner.checkHit(game.boss)) {
-            game.spawnMissText(game.boss.x, game.boss.y - game.boss.height * 0.8);
-            return;
-          }
-          const finalDmg = Math.max(1, Math.floor(this.damage - (game.boss.def || 0) * 0.5));
-          game.boss.takeDamage(finalDmg, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
-          game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.8, finalDmg, this.isCrit);
-          return;
-        }
-      }
-    }
-
-    // 2. Check Standard Field Monsters
-    for (const m of game.monsters) {
-      if (m.isAlive()) {
-        const mHitBox = m.getHitBox();
-        const inBox = (this.x >= mHitBox.x - 8 && this.x <= mHitBox.x + mHitBox.width + 8 &&
-                       this.y >= mHitBox.y - 10 && this.y <= mHitBox.y + mHitBox.height + 10);
-        const d = Math.hypot(m.x - this.x, (m.y - m.height / 2) - this.y);
-        if (inBox || d < Math.max(26, m.width * 0.7)) {
-          this.hit = true;
-          if (this.owner && !this.owner.checkHit(m)) {
-            game.spawnMissText(m.x, m.y - m.height * 0.8);
-            break;
-          }
-          const finalDmg = Math.max(1, Math.floor(this.damage - (m.def || 0) * 0.5));
-          m.takeDamage(finalDmg, this.isCrit, this.vx > 0 ? 'right' : 'left', game);
-          game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, finalDmg, this.isCrit);
-          break;
-        }
-      }
-    }
+    CombatSystem.resolveProjectileCollision(this, game);
   }
 }
+
+// Canonical Classic MapleStory Equipment Catalog
+const MAPLE_EQUIPMENT_CATALOG = {
+  swords: [
+    { id: 'wp_wood_sword', name: '초보자 목검', category: '전사 한손검', type: 'weapon', weaponType: 'sword', reqLevel: 0, atk: 7, str: 0, spd: 0, upgradeSlots: 7, icon: '🗡️', desc: '나무를 정성스레 깎아 만든 수련용 목검입니다.', color: '#b45309' },
+    { id: 'wp_two_handed_sword', name: '강철 양손검', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 20, atk: 32, str: 1, spd: 0, upgradeSlots: 7, icon: '⚔️', desc: '단단한 강철을 벼려낸 묵직한 양손검입니다.', color: '#64748b' },
+    { id: 'wp_highlander', name: '하이랜더', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 30, atk: 50, str: 2, spd: 5, upgradeSlots: 7, icon: '⚔️', desc: '황금 코등이와 푸른 도신이 아름다운 모험가의 상징 명품 양손검입니다.', color: '#38bdf8' },
+    { id: 'wp_gryunhill', name: '그륜힐', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 70, atk: 75, str: 4, def: 5, spd: 0, upgradeSlots: 7, icon: '🗡️', desc: '붉은 톱날 날이 돋아난 거대하고 파괴적인 전설의 대검입니다.', color: '#ef4444' },
+    { id: 'wp_dragon_claymore', name: '드래곤 클레이모어', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 110, atk: 95, str: 8, def: 12, spd: 3, upgradeSlots: 7, icon: '🐲', desc: '푸른 용의 날개와 영혼이 깃든 궁극의 드래곤 대검입니다.', color: '#06b6d4' }
+  ],
+  daggers: [
+    { id: 'wp_beginner_dagger', name: '초보자 대거', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 0, atk: 8, luk: 0, spd: 0, upgradeSlots: 7, icon: '🔪', desc: '가볍고 다루기 쉬운 기본 단검입니다.', color: '#94a3b8' },
+    { id: 'wp_fruit_dagger', name: '후르츠 대거', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 15, atk: 18, dex: 1, spd: 2, upgradeSlots: 7, icon: '🗡️', desc: '과일 깎기용이지만 칼날이 날카로운 실속형 단검입니다.', color: '#10b981' },
+    { id: 'wp_taeguk_fan', name: '태극 부채', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 35, atk: 35, luk: 2, spd: 10, upgradeSlots: 7, icon: '🪭', desc: '화려한 태극 문양이 수놓아진 부채. 매우 빠른 공격속도를 자랑합니다.', color: '#ef4444' },
+    { id: 'wp_geta', name: '게타', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 50, atk: 52, luk: 3, spd: 4, upgradeSlots: 7, icon: '🗡️', desc: '외날의 예리한 칼날을 가진 정통 닌자 탄토 단검입니다.', color: '#f59e0b' },
+    { id: 'wp_kandine', name: '칸디네', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 70, atk: 70, luk: 5, dex: 2, spd: 6, upgradeSlots: 7, icon: '🐍', desc: '물결치는 독사 모양의 날을 가진 은밀한 암살자의 보검입니다.', color: '#059669' },
+    { id: 'wp_dragon_toenail', name: '드래곤 토네일', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 110, atk: 92, luk: 9, dex: 4, spd: 8, upgradeSlots: 7, icon: '🐉', desc: '드래곤의 날카로운 발톱을 가공하여 만든 최고급 명품 단검입니다.', color: '#dc2626' }
+  ],
+  stars: [
+    { id: 'star_subi', starType: 'subi', name: '수비표창', category: '도적 표창', type: 'star', reqLevel: 10, atk: 15, count: 500, icon: '⭐', desc: '가장 널리 쓰이는 표준 4각 은빛 수리검입니다.', color: '#94a3b8' },
+    { id: 'star_mokbi', starType: 'mokbi', name: '목비표창', category: '도적 표창', type: 'star', reqLevel: 15, atk: 17, count: 700, icon: '🪵', desc: '청동과 나무를 결합하여 제작된 날카로운 십자 표창입니다.', color: '#b45309' },
+    { id: 'star_kumbi', starType: 'kumbi', name: '금비표창', category: '도적 표창', type: 'star', reqLevel: 25, atk: 21, count: 800, icon: '🌟', desc: '찬란한 순금 빛으로 반짝이며 날아가는 4방 황금 표창입니다.', color: '#fbbf24' },
+    { id: 'star_tobi', starType: 'tobi', name: '토비표창', category: '도적 표창', type: 'star', reqLevel: 35, atk: 23, count: 1000, icon: '💫', desc: '코발트 블루 날개에 바람의 소용돌이를 머금은 강력한 표창입니다.', color: '#3b82f6' },
+    { id: 'star_steely', starType: 'steely', name: '뇌전수리검', category: '도적 표창', type: 'star', reqLevel: 50, atk: 25, count: 1000, icon: '⚡', desc: '⚡ 푸른 번개와 스파크 방전 궤적을 남기며 적을 강타하는 모험가 선망의 번개 수리검입니다.', color: '#00f5ff' },
+    { id: 'star_ilbi', starType: 'ilbi', name: '일비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 800, icon: '🔮', desc: '⭐ 흑요석 3단 유선형 날과 붉은 루비 코어가 박힌 클래식 최고봉의 전설 표창입니다.', color: '#dc2626' },
+    { id: 'star_hwabi', starType: 'hwabi', name: '화비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 1200, icon: '🔥', desc: '🔥 작열하는 붉은 화염의 불꽃을 휘감고 날아가는 화염 수리검입니다.', color: '#ea580c' }
+  ],
+  claws: [
+    { id: 'wp_garnier', name: '가니어', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 10, atk: 12, upgradeSlots: 7, icon: '🧤', desc: '도적이 최초로 착용하는 가죽 아대입니다.', color: '#78350f' },
+    { id: 'wp_meba', name: '메바', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 25, atk: 22, luk: 1, spd: 5, upgradeSlots: 7, icon: '🦅', desc: '매우 빠른 연사 속도를 지닌 도적들의 국민 아대입니다.', color: '#3b82f6' },
+    { id: 'wp_scorp', name: '스칼라피온', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 50, atk: 45, luk: 3, upgradeSlots: 7, icon: '🦂', desc: '전갈의 독침 형태를 본뜬 위협적인 날을 가진 아대입니다.', color: '#8b5cf6' },
+    { id: 'wp_kandeo', name: '칸데오', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 70, atk: 65, luk: 5, upgradeSlots: 7, icon: '✨', desc: '황금 발톱이 장착되어 화려한 공격력을 자랑하는 상급 아대입니다.', color: '#f59e0b' },
+    { id: 'wp_dragon_sleve', name: '드래곤 슬레브', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 110, atk: 88, luk: 8, spd: 6, upgradeSlots: 7, icon: '🐲', desc: '드래곤의 단단한 비늘로 제련된 최고급 아대입니다.', color: '#10b981' }
+  ],
+  bows: [
+    { id: 'wp_hunter_bow', name: '사냥꾼의 활', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 10, atk: 14, upgradeSlots: 7, icon: '🏹', desc: '헤네시스 사냥꾼들이 애용하는 실용적인 활입니다.', color: '#84cc16' },
+    { id: 'wp_ryden', name: '라이덴', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 35, atk: 38, dex: 2, spd: 4, upgradeSlots: 7, icon: '⚡', desc: '번개의 탄성을 지닌 신속한 명품 활입니다.', color: '#06b6d4' },
+    { id: 'wp_metus', name: '메투스', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 70, atk: 68, dex: 5, upgradeSlots: 7, icon: '🎯', desc: '백발백중의 명중률을 자랑하는 전설의 활입니다.', color: '#f97316' },
+    { id: 'wp_dragon_shinebow', name: '드래곤 샤인보우', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 110, atk: 92, dex: 8, upgradeSlots: 7, icon: '🌟', desc: '드래곤의 영혼이 담긴 황금빛 광채의 궁극의 활입니다.', color: '#eab308' }
+  ],
+  wands: [
+    { id: 'wp_wood_wand', name: '나무 완드', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 8, atk: 10, int: 1, upgradeSlots: 7, icon: '🪄', desc: '엘리니아 숲의 성스러운 나뭇가지로 깎은 완드입니다.', color: '#15803d' },
+    { id: 'wp_wizard_wand', name: '위저드 완드', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 30, atk: 32, int: 3, upgradeSlots: 7, icon: '🔮', desc: '푸른 마력석이 박힌 정식 마법사용 완드입니다.', color: '#3b82f6' },
+    { id: 'wp_evil_wings', name: '이블윙즈', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 65, atk: 65, int: 6, upgradeSlots: 7, icon: '🦇', desc: '박쥐 날개 모양의 요사스러운 마력이 깃든 클래식 명품 완드입니다.', color: '#a855f7' },
+    { id: 'wp_dragon_wand', name: '드래곤 완드', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 110, atk: 90, int: 9, upgradeSlots: 7, icon: '🐉', desc: '드래곤의 심장 보석이 박혀 무한한 마력을 뿜어내는 완드입니다.', color: '#ec4899' }
+  ]
+};
+window.MAPLE_EQUIPMENT_CATALOG = MAPLE_EQUIPMENT_CATALOG;
 
 class Player {
   constructor(x = 400, y = 1318) {
@@ -117,6 +118,7 @@ class Player {
     this.currentFoothold = null;
     this.onLadder = false;
     this.currentLadder = null;
+    this.ladderCooldown = 0;
     this.dropThroughTimer = 0;
 
     this.attackTimer = 0;
@@ -139,16 +141,31 @@ class Player {
     this.speechText = null;
     this.speechTimer = 0;
     this.weakenedTimer = 0;
+    this.buffs = {}; // Active buffs with durations
+    this.comboCount = 0; // Combo attack count (0~5)
 
     this.walkSpeed = 3.6;
     this.jumpForce = Physics.JUMP_VELOCITY;
     this.ladderSpeed = 2.4;
     this.weaponType = 'sword';
+    this.activeStar = 'steely'; // Default signature 뇌전수리검
 
-    this.meso = 100;
+    this.meso = 10000; // Starting adventurer bonus
     this.inventory = {
       equip: [
-        { id: 'eq_wood_sword', name: '초보자 목검', type: 'weapon', atk: 7, upgradeSlots: 7, equipped: true },
+        { id: 'wp_wood_sword', name: '초보자 목검', category: '전사 한손검', type: 'weapon', weaponType: 'sword', atk: 7, upgradeSlots: 7, equipped: true },
+        { id: 'wp_highlander', name: '하이랜더', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 30, atk: 50, str: 2, spd: 5, upgradeSlots: 7, equipped: false, icon: '⚔️', desc: '황금 코등이와 푸른 도신의 명품 양손검' },
+        { id: 'wp_gryunhill', name: '그륜힐', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 70, atk: 75, str: 4, def: 5, upgradeSlots: 7, equipped: false, icon: '🗡️', desc: '붉은 톱날 날이 돋아난 거대 전설 대검' },
+        { id: 'wp_dragon_claymore', name: '드래곤 클레이모어', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 110, atk: 95, str: 8, def: 12, upgradeSlots: 7, equipped: false, icon: '🐲', desc: '푸른 용의 날개와 영혼의 궁극 대검' },
+        { id: 'wp_taeguk_fan', name: '태극 부채', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 35, atk: 35, luk: 2, spd: 10, upgradeSlots: 7, equipped: false, icon: '🪭', desc: '태극 문양 부채. 매우 빠른 공격속도' },
+        { id: 'wp_kandine', name: '칸디네', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 70, atk: 70, luk: 5, dex: 2, spd: 6, upgradeSlots: 7, equipped: false, icon: '🐍', desc: '독사 모양 물결 날의 암살자 보검' },
+        { id: 'wp_meba', name: '메바', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 25, atk: 22, luk: 1, spd: 5, upgradeSlots: 7, equipped: false, icon: '🦅', desc: '빠른 연사 속도의 도적 국민 아대' },
+        { id: 'star_steely', starType: 'steely', name: '뇌전수리검', category: '도적 표창', type: 'star', reqLevel: 50, atk: 25, count: 1000, equipped: true, icon: '⚡', desc: '⚡ 푸른 번개와 스파크 방전 궤적의 번개 수리검' },
+        { id: 'star_ilbi', starType: 'ilbi', name: '일비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 800, equipped: false, icon: '🔮', desc: '⭐ 흑요석 3단 유선형 날과 붉은 루비 코어의 전설 표창' },
+        { id: 'star_tobi', starType: 'tobi', name: '토비표창', category: '도적 표창', type: 'star', reqLevel: 35, atk: 23, count: 1000, equipped: false, icon: '💫', desc: '코발트 블루 날개에 바람 소용돌이 표창' },
+        { id: 'star_hwabi', starType: 'hwabi', name: '화비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 1200, equipped: false, icon: '🔥', desc: '🔥 작열하는 붉은 화염의 불꽃 수리검' },
+        { id: 'wp_ryden', name: '라이덴', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 35, atk: 38, dex: 2, spd: 4, upgradeSlots: 7, equipped: false, icon: '⚡', desc: '번개의 탄성을 지닌 신속한 명품 활' },
+        { id: 'wp_evil_wings', name: '이블윙즈', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 65, atk: 65, int: 6, upgradeSlots: 7, equipped: false, icon: '🦇', desc: '박쥐 날개 모양 마력의 클래식 명품 완드' },
         { id: 'eq_bandana', name: '빨간 띠', type: 'hat', def: 3, upgradeSlots: 7, equipped: true }
       ],
       use: [
@@ -174,6 +191,66 @@ class Player {
     this.regenTimer = 0;
   }
 
+  healHp(amount) {
+    this.hp = Math.min(this.maxHp, this.hp + amount);
+  }
+
+  healMp(amount) {
+    this.mp = Math.min(this.maxMp, this.mp + amount);
+  }
+
+  usePotion(potionId) {
+    const pot = this.inventory.use.find(p => p.id === potionId);
+    if (!pot || pot.count <= 0) return false;
+    pot.count--;
+    if (pot.healHp) this.healHp(pot.healHp);
+    if (pot.healMp) this.healMp(pot.healMp);
+    if (window.audio) window.audio.playPickItem();
+    return true;
+  }
+
+  takeDamage(amount, game = null, fromX = null) {
+    if (this.invincibleTimer > 0) return 0;
+    if (this.buffs && this.buffs.dark_site) return 0; // Dark Site stealth ignores collision damage!
+
+    // Magic Guard calculation: 80% absorbed by MP if available
+    let hpDmg = amount;
+    if (this.buffs && this.buffs.magic_guard && this.mp > 0) {
+      const absorbed = Math.min(this.mp, Math.floor(amount * 0.8));
+      this.mp -= absorbed;
+      hpDmg = Math.max(1, amount - absorbed);
+    }
+
+    this.hp = Math.max(0, this.hp - hpDmg);
+    this.invincibleTimer = 1.2; // 1.2s authentic i-Frame
+
+    if (window.audio) {
+      window.audio.playHit();
+    }
+
+    // Knockback away from damage source
+    if (fromX !== null) {
+      this.vx = (this.x >= fromX ? 1 : -1) * 3.6;
+      this.vy = -2.8;
+      this.onGround = false;
+      this.currentFoothold = null;
+    }
+
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.say('마을로 귀환합니다...');
+      if (game) {
+        setTimeout(() => {
+          this.hp = this.maxHp;
+          this.mp = this.maxMp;
+          game.changeMap('henesys_hhg', 400, 1300);
+        }, 1500);
+      }
+    }
+
+    return hpDmg;
+  }
+
   onLand() {
     window.sprites.spawnLandingDust(this.x, this.y);
   }
@@ -181,49 +258,62 @@ class Player {
   initSkillsForJob(job) {
     if (job === '전사') {
       this.skills = {
-        power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️', desc: '강력한 세로 베기로 단일 적에게 치명타' },
-        slash_blast: { name: '슬래시 블러스트', level: 1, maxLevel: 20, mpCost: 10, hpCost: 8, dmgMult: 1.4, icon: '🌀', desc: '360도 회전하며 주변 모든 적 타격' },
-        iron_body: { name: '아이언 바디', level: 1, maxLevel: 10, mpCost: 8, icon: '🛡️', desc: '물리 방어력과 체력을 증가시킴' },
+        power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️', desc: '단일 적에게 치명타 일격' },
+        slash_blast: { name: '슬래시 블러스트', level: 1, maxLevel: 20, mpCost: 10, hpCost: 6, dmgMult: 1.4, icon: '🌀', desc: '360도 회전 베기 주변 적 타격' },
+        iron_body: { name: '아이언 바디', level: 1, maxLevel: 10, mpCost: 8, icon: '🛡️', desc: '물리 방어력 +25 상승 버프' },
+        rage: { name: '분노 (Rage)', level: 1, maxLevel: 20, mpCost: 12, icon: '🔥', desc: '60초간 공격력 +35 대폭 증폭!' },
+        combo_attack: { name: '콤보 어택', level: 1, maxLevel: 20, mpCost: 15, icon: '🔮', desc: '타격 시 콤보 구슬 누적 공격력 증폭!' },
+        brandish: { name: '브랜디쉬', level: 1, maxLevel: 30, mpCost: 16, dmgMult: 2.2, hits: 2, icon: '⚡', desc: '거대한 십자 검기로 2연속 쾌도난마!' },
         recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: '주기적으로 HP 자동 회복' }
       };
       this.weaponType = 'sword';
       this.walkSpeed = 3.6;
     } else if (job === '마법사') {
       this.skills = {
-        energy_bolt: { name: '에너지 볼트', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.3, icon: '🔮', desc: '비전 마법 탄환을 전방으로 발사' },
-        magic_claw: { name: '매직 클로', level: 1, maxLevel: 20, mpCost: 12, dmgMult: 1.3, hits: 2, icon: '✨', desc: '적의 위치에 2연속 비전 손톱 할퀴기' },
+        energy_bolt: { name: '에너지 볼트', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.3, icon: '🔮', desc: '비전 마법 탄환 전방 발사' },
+        magic_claw: { name: '매직 클로', level: 1, maxLevel: 20, mpCost: 10, dmgMult: 1.3, hits: 2, icon: '✨', desc: '보라색 마법 손톱 2연속 할퀴기' },
         teleport: { name: '텔레포트', level: 1, maxLevel: 5, mpCost: 8, icon: '🌌', desc: '바라보는 방향으로 즉시 순간이동' },
+        magic_guard: { name: '매직 가드', level: 1, maxLevel: 20, mpCost: 15, icon: '💎', desc: '받는 피해의 80%를 MP로 대체 흡수!' },
+        thunderbolt: { name: '썬더볼트', level: 1, maxLevel: 30, mpCost: 20, dmgMult: 1.9, icon: '⚡', desc: '하늘에서 번개가 쏟아지는 전 화면 광역기!' },
+        holy_symbol: { name: '홀리 심볼', level: 1, maxLevel: 30, mpCost: 25, icon: '🕊️', desc: '60초간 치유 및 경험치 +50% 획득!' },
         recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: 'MP 자동 회복량 증가' }
       };
       this.weaponType = 'staff';
       this.walkSpeed = 3.6;
     } else if (job === '궁수') {
       this.skills = {
-        arrow_blow: { name: '애로우 블로우', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.6, icon: '🏹', desc: '관통하는 강력한 화살 1발 발사' },
-        double_shot: { name: '더블 샷', level: 1, maxLevel: 20, mpCost: 10, dmgMult: 1.2, icon: '🎯', desc: '화살 2발을 고속 연속 발사' },
-        focus: { name: '포커스', level: 1, maxLevel: 10, mpCost: 8, icon: '👁️', desc: '명중률과 이동속도 증가' },
+        arrow_blow: { name: '애로우 블로우', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.6, icon: '🏹', desc: '관통하는 강력한 화살 1발' },
+        double_shot: { name: '더블 샷', level: 1, maxLevel: 20, mpCost: 10, dmgMult: 1.25, hits: 2, icon: '🎯', desc: '화살 2발을 고속 연속 발사' },
+        focus: { name: '포커스', level: 1, maxLevel: 10, mpCost: 8, icon: '👁️', desc: '명중률 +25 및 이동속도 증가' },
+        soul_arrow: { name: '소울 애로우', level: 1, maxLevel: 20, mpCost: 12, icon: '✨', desc: '황금 날개 활 버프! 공격력 +15!' },
+        arrow_bomb: { name: '애로우 밤', level: 1, maxLevel: 30, mpCost: 16, dmgMult: 1.8, icon: '💣', desc: '화살 폭탄이 폭발하며 광역 스턴!' },
+        hurricane: { name: '폭풍의 시', level: 1, maxLevel: 30, mpCost: 6, dmgMult: 1.4, icon: '🌪️', desc: '초고속으로 기관총 화살 난사!' },
         recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: 'HP/MP 주기적 회복' }
       };
       this.weaponType = 'bow';
       this.walkSpeed = 3.8;
     } else if (job === '도적') {
       this.skills = {
-        lucky_seven: { name: '럭키 세븐', level: 1, maxLevel: 20, mpCost: 8, dmgMult: 1.5, icon: '⭐', desc: '수리검 2개를 날려 크리티컬 폭발' },
-        double_stab: { name: '더블 스탭', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.3, icon: '🗡️', desc: '단검으로 급소를 2연속 찌르기' },
-        flash_jump: { name: '플래시 점프', level: 1, maxLevel: 5, mpCost: 6, icon: '⚡', desc: '공중에서 2단 대쉬 점프' },
-        haste: { name: '헤이스트', level: 1, maxLevel: 10, mpCost: 10, icon: '💨', desc: '이동속도와 점프력을 대폭 증가' }
+        lucky_seven: { name: '럭키 세븐', level: 1, maxLevel: 20, mpCost: 8, dmgMult: 1.6, hits: 2, icon: '⭐', desc: '수리검 2개를 투척하는 고화력기' },
+        double_stab: { name: '더블 스탭', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.3, hits: 2, icon: '🗡️', desc: '단검으로 급소 2연속 찌르기' },
+        flash_jump: { name: '플래시 점프', level: 1, maxLevel: 5, mpCost: 6, icon: '⚡', desc: '공중 2단 고속 도약' },
+        haste: { name: '헤이스트', level: 1, maxLevel: 20, mpCost: 12, icon: '💨', desc: '이동속도 5.6 & 점프력 극대화!' },
+        dark_site: { name: '다크 사이트', level: 1, maxLevel: 10, mpCost: 8, icon: '👤', desc: '투명화 은신! 몬스터 충돌 무시!' },
+        shadow_partner: { name: '쉐도우 파트너', level: 1, maxLevel: 30, mpCost: 24, icon: '👥', desc: '붉은 그림자 분신 소환 2배 타격!' },
+        avenger: { name: '어벤저', level: 1, maxLevel: 30, mpCost: 18, dmgMult: 1.9, icon: '🌀', desc: '거대한 회전 수리검으로 다수 적 관통!' }
       };
       this.weaponType = 'claw';
       this.walkSpeed = 4.2;
     } else {
       this.skills = {
+        three_snails: { name: '달팽이 세껍질', level: 1, maxLevel: 3, mpCost: 3, dmgMult: 1.5, icon: '🐌', desc: '달팽이 껍질을 던져 원거리 타격' },
         power_strike: { name: '파워 스트라이크', level: 1, maxLevel: 20, mpCost: 6, dmgMult: 1.8, icon: '⚔️', desc: '검을 강하게 내리쳐 큰 피해' },
-        slash_blast: { name: '슬래시 블러스트', level: 1, maxLevel: 20, mpCost: 10, hpCost: 6, dmgMult: 1.4, icon: '🌀', desc: '주변 다수의 적을 동시에 회전 타격' },
-        magic_claw: { name: '매직 클로', level: 1, maxLevel: 20, mpCost: 10, dmgMult: 1.3, hits: 2, icon: '✨', desc: '비전 손톱으로 2연속 할퀴기' },
-        flash_jump: { name: '플래시 점프', level: 1, maxLevel: 5, mpCost: 5, icon: '⚡', desc: '공중에서 2단 고속 대쉬 도약' },
-        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: '주기적으로 HP/MP 자동 회복' }
+        slash_blast: { name: '슬래시 블러스트', level: 1, maxLevel: 20, mpCost: 8, hpCost: 4, dmgMult: 1.4, icon: '🌀', desc: '회전하며 주변 다수 타격' },
+        flash_jump: { name: '플래시 점프', level: 1, maxLevel: 5, mpCost: 5, icon: '⚡', desc: '공중 2단 고속 도약' },
+        recovery: { name: '회복력 향상', level: 1, maxLevel: 10, passive: true, icon: '❤️', desc: '주기적 HP/MP 자동 회복' }
       };
       this.weaponType = 'sword';
+      this.walkSpeed = 3.6;
     }
   }
 
@@ -260,6 +350,14 @@ class Player {
     }
     this.defense = Math.floor(this.totalStr * 0.2 + this.totalDex * 0.1) + equipDef;
 
+    // Apply active buff stat modifications
+    if (this.buffs) {
+      if (this.buffs.rage) equipAtk += 35;
+      if (this.buffs.iron_body) equipDef += 25;
+      if (this.buffs.focus) this.accuracy += 25;
+      if (this.buffs.soul_arrow) equipAtk += 15;
+    }
+
     if (this.job === '전사') {
       this.maxHp = 120 + this.level * 28 + this.totalStr * 6;
       this.maxMp = 30 + this.level * 8 + this.totalInt * 2;
@@ -288,8 +386,19 @@ class Player {
     }
   }
 
+  getHitBox() {
+    return {
+      x: this.x - this.width / 2,
+      y: this.y - this.height,
+      width: this.width,
+      height: this.height
+    };
+  }
+
   checkHit(target) {
     if (!target) return true;
+    // Guaranteed hit if target level <= player level (removes fake 50% beginner misses)
+    if ((target.level || 1) <= this.level) return true;
     const avoid = target.avoid || 5;
     const levelDiff = Math.max(0, (target.level || 1) - this.level);
     const needAcc = Math.floor(avoid * (1.84 + 0.07 * levelDiff));
@@ -298,15 +407,56 @@ class Player {
     return Math.random() < hitRate;
   }
 
-  toggleEquip(item) {
+  equipItem(item) {
     if (!item) return;
-    if (item.equipped) {
-      item.equipped = false;
+    if (item.type === 'star' || item.starType) {
+      this.inventory.equip.forEach(eq => {
+        if (eq.type === 'star' || eq.starType) eq.equipped = false;
+      });
+      item.equipped = true;
+      this.activeStar = item.starType;
+    } else if (item.type === 'weapon') {
+      this.inventory.equip.forEach(eq => {
+        if (eq.type === 'weapon') eq.equipped = false;
+      });
+      item.equipped = true;
+      this.weaponType = item.weaponType || 'sword';
     } else {
       this.inventory.equip.forEach(eq => {
         if (eq.type === item.type) eq.equipped = false;
       });
       item.equipped = true;
+    }
+    this.calcDerivedStats();
+  }
+
+  equipById(itemId) {
+    let item = this.inventory.equip.find(eq => eq.id === itemId);
+    if (!item) {
+      // Find from MAPLE_EQUIPMENT_CATALOG
+      for (const cat of Object.values(MAPLE_EQUIPMENT_CATALOG)) {
+        const found = cat.find(i => i.id === itemId);
+        if (found) {
+          item = { ...found, upgradeSlots: found.upgradeSlots || 7, equipped: false };
+          this.inventory.equip.push(item);
+          break;
+        }
+      }
+    }
+    if (item) {
+      this.equipItem(item);
+      return item;
+    }
+    return null;
+  }
+
+  toggleEquip(item) {
+    if (!item) return;
+    if (item.equipped) {
+      item.equipped = false;
+    } else {
+      this.equipItem(item);
+      return;
     }
     this.calcDerivedStats();
   }
@@ -343,10 +493,22 @@ class Player {
 
   setJob(jobName) {
     this.job = jobName;
-    if (jobName === '전사') this.str = Math.max(25, this.str);
-    else if (jobName === '마법사') this.int = Math.max(25, this.int);
-    else if (jobName === '궁수') this.dex = Math.max(25, this.dex);
-    else if (jobName === '도적') this.luk = Math.max(25, this.luk);
+    this.buffs = {};
+    this.comboCount = 0;
+    if (jobName === '전사') {
+      this.str = Math.max(25, this.str);
+      this.equipById('wp_highlander');
+    } else if (jobName === '마법사') {
+      this.int = Math.max(25, this.int);
+      this.equipById('wp_evil_wings');
+    } else if (jobName === '궁수') {
+      this.dex = Math.max(25, this.dex);
+      this.equipById('wp_ryden');
+    } else if (jobName === '도적') {
+      this.luk = Math.max(25, this.luk);
+      this.equipById('wp_meba');
+      this.equipById('star_steely');
+    }
 
     this.initSkillsForJob(jobName);
     this.calcDerivedStats();
@@ -371,6 +533,7 @@ class Player {
   update(dt, map) {
     if (this.attackTimer > 0) this.attackTimer -= dt;
     if (this.invincibleTimer > 0) this.invincibleTimer -= dt;
+    if (this.ladderCooldown > 0) this.ladderCooldown -= dt;
 
     if (this.speechTimer > 0) {
       this.speechTimer -= dt;
@@ -383,6 +546,26 @@ class Player {
       const rec = (this.skills.recovery?.level || 1) * 4;
       this.healHp(5 + rec);
       this.healMp(5 + rec);
+    }
+
+    // Update active buffs & expiration
+    let buffsChanged = false;
+    for (const [key, b] of Object.entries(this.buffs)) {
+      b.duration -= dt;
+      if (b.duration <= 0) {
+        delete this.buffs[key];
+        buffsChanged = true;
+        if (key === 'haste') {
+          this.walkSpeed = this.job === '도적' ? 4.2 : (this.job === '궁수' ? 3.8 : 3.6);
+          this.jumpForce = Physics.JUMP_VELOCITY;
+        }
+        if (key === 'combo_attack') {
+          this.comboCount = 0;
+        }
+      }
+    }
+    if (buffsChanged) {
+      this.calcDerivedStats();
     }
 
     Physics.updateEntityFixed(this, map, dt);
@@ -404,11 +587,16 @@ class Player {
     this.vx = 0;
   }
 
-  jump() {
+  jump(keys = {}) {
     if (this.onLadder) {
       this.onLadder = false;
       this.currentLadder = null;
-      this.vy = this.jumpForce * 0.8;
+      this.ladderCooldown = 0.25;
+      this.vy = this.jumpForce * 0.85;
+      const kickDir = (keys && (keys['ArrowRight'] || keys['KeyD'])) ? 1 : ((keys && (keys['ArrowLeft'] || keys['KeyA'])) ? -1 : 0);
+      this.vx = kickDir * 3.5;
+      if (kickDir > 0) this.facing = 'right';
+      else if (kickDir < 0) this.facing = 'left';
       window.audio.playJump();
       return;
     }
@@ -441,6 +629,7 @@ class Player {
   }
 
   climbUp(map) {
+    if (this.ladderCooldown > 0) return;
     if (!this.onLadder) {
       const lad = Physics.checkLadderGrab(this, map, 'up');
       if (lad) {
@@ -450,18 +639,27 @@ class Player {
         this.vx = 0;
       }
     }
-    if (this.onLadder) {
+    if (this.onLadder && this.currentLadder) {
       this.vy = -this.ladderSpeed;
-      if (this.y < this.currentLadder.top) {
-        this.y = this.currentLadder.top;
+      if (this.y <= this.currentLadder.top + 2) {
+        const lad = this.currentLadder;
         this.onLadder = false;
+        this.currentLadder = null;
+        this.ladderCooldown = 0.25; // 250ms hysteresis cooldown to prevent infinite grab loop!
         this.onGround = true;
         this.vy = 0;
+        this.y = lad.top - 4;
+        const fh = map.findGroundFootholdAt(this.x);
+        if (fh) {
+          this.currentFoothold = fh;
+          this.y = fh.getYAtX(this.x);
+        }
       }
     }
   }
 
   climbDown(map) {
+    if (this.ladderCooldown > 0) return;
     if (!this.onLadder) {
       const lad = Physics.checkLadderGrab(this, map, 'down');
       if (lad) {
@@ -470,15 +668,24 @@ class Player {
         this.x = lad.x; // Snap precisely to ladder X!
         this.y += 10;
         this.vx = 0;
+        this.onGround = false;
+        this.currentFoothold = null;
       }
     }
-    if (this.onLadder) {
+    if (this.onLadder && this.currentLadder) {
       this.vy = this.ladderSpeed;
-      if (this.y > this.currentLadder.bottom) {
+      if (this.y >= this.currentLadder.bottom) {
         this.y = this.currentLadder.bottom;
         this.onLadder = false;
+        this.currentLadder = null;
+        this.ladderCooldown = 0.25;
         this.onGround = true;
         this.vy = 0;
+        const fh = map.findGroundFootholdAt(this.x);
+        if (fh) {
+          this.currentFoothold = fh;
+          this.y = fh.getYAtX(this.x);
+        }
       }
     }
   }
@@ -489,386 +696,66 @@ class Player {
     }
   }
 
-  normalAttack(game) {
-    if (this.attackTimer > 0) return false;
-    this.attackTimer = this.attackDuration;
-    window.audio.playAttack();
-
-    const dirSign = this.facing === 'right' ? 1 : -1;
-
-    if (this.job === '궁수') {
-      const { damage, isCrit } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 500, 0, 'arrow', damage, isCrit, this));
-      return true;
-    } else if (this.job === '도적') {
-      const { damage, isCrit } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 540, 0, 'shuriken', damage, isCrit, this));
-      return true;
-    } else if (this.job === '마법사') {
-      const { damage, isCrit } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 420, 0, 'energy_bolt', damage, isCrit, this));
-      return true;
+  getPrimarySkillId() {
+    switch (this.job) {
+      case '초보자': return 'three_snails';
+      case '전사': return 'power_strike';
+      case '마법사': return 'magic_claw';
+      case '궁수': return 'arrow_blow';
+      case '도적':
+        return this.weaponType === 'dagger' ? 'double_stab' : 'lucky_seven';
+      default: return 'three_snails';
     }
-
-    const range = 58;
-    const hitBox = {
-      x: this.facing === 'right' ? this.x : this.x - range,
-      y: this.y - 36,
-      width: range,
-      height: 38
-    };
-
-    let hit = false;
-    if (this.checkAndHitBoss(hitBox, 1.0, game)) hit = true;
-
-    for (const m of game.monsters) {
-      if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
-        if (!this.checkHit(m)) {
-          game.spawnMissText(m.x, m.y - m.height * 0.7);
-          hit = true;
-          continue;
-        }
-        const { damage, isCrit } = this.getDamage();
-        const finalDmg = Math.max(1, Math.floor(damage - (m.def || 0) * 0.5));
-        m.takeDamage(finalDmg, isCrit, this.facing, game);
-        game.spawnStaggeredDamage(m.x, m.y - m.height * 0.7, finalDmg, isCrit);
-        hit = true;
-      }
-    }
-    return hit;
   }
 
-  checkAndHitBoss(hitBox, multiplier = 1.0, game) {
-    if (!game.boss || !game.boss.isAlive()) return false;
-    if (typeof ZakumBoss !== 'undefined' && game.boss instanceof ZakumBoss) {
-      const hitBoxes = game.boss.getHitBoxes();
-      for (const hb of hitBoxes) {
-        if (this.checkCollision(hitBox, hb)) {
-          if (!this.checkHit(game.boss)) {
-            game.spawnMissText(hb.x + hb.width / 2, hb.y);
-            return true;
-          }
-          const { damage, isCrit } = this.getDamage();
-          const finalDmg = Math.max(1, Math.floor(damage * multiplier - 20));
-          game.boss.takeDamage(finalDmg, isCrit, this.facing, game, hb);
-          game.spawnStaggeredDamage(hb.x + hb.width / 2, hb.y, finalDmg, isCrit);
-          return true;
-        }
-      }
-    } else {
-      if (this.checkCollision(hitBox, game.boss.getHitBox())) {
-        if (!this.checkHit(game.boss)) {
-          game.spawnMissText(game.boss.x, game.boss.y - game.boss.height * 0.7);
-          return true;
-        }
-        const { damage, isCrit } = this.getDamage();
-        const finalDmg = Math.max(1, Math.floor(damage * multiplier - (game.boss.def || 0) * 0.5));
-        game.boss.takeDamage(finalDmg, isCrit, this.facing, game);
-        game.spawnStaggeredDamage(game.boss.x, game.boss.y - game.boss.height * 0.7, finalDmg, isCrit);
-        return true;
-      }
+  getPrimarySkillName() {
+    switch (this.job) {
+      case '초보자': return '달팽이 세껍질';
+      case '전사': return '파워 스트라이크';
+      case '마법사': return '매직 클로';
+      case '궁수': return '애로우 블로우';
+      case '도적':
+        return this.weaponType === 'dagger' ? '더블 스탭' : '럭키 세븐';
+      default: return '기본 스킬';
     }
-    return false;
+  }
+
+  getPrimarySkillIcon() {
+    switch (this.job) {
+      case '초보자': return '🐌';
+      case '전사': return '⚔️';
+      case '마법사': return '✨';
+      case '궁수': return '🏹';
+      case '도적':
+        return this.weaponType === 'dagger' ? '🗡️' : '⭐';
+      default: return '⚔️';
+    }
+  }
+
+  // Primary basic skill attack (replaces normal attack with job signature skill)
+  primaryAttack(game) {
+    const primarySkill = this.getPrimarySkillId();
+    const res = this.useSkill(primarySkill, game);
+    if (res) return true;
+    return this.normalAttack(game);
+  }
+
+  normalAttack(game) {
+    this.attackTimer = this.attackDuration;
+    window.audio.playAttack();
+    const hitBox = {
+      x: this.facing === 'right' ? this.x - 20 : this.x - 75,
+      y: this.y - 48,
+      width: 95,
+      height: 58
+    };
+    return CombatSystem.executeMeleeAttack(this, hitBox, 1.0, game);
   }
 
   useSkill(skillId, game) {
-    const skill = this.skills[skillId];
+    const skill = this.skills ? this.skills[skillId] : null;
     if (!skill || skill.level <= 0) return false;
-
-    // Buff and mobility skills can be used immediately without being blocked by attack cooldown
-    const isBuffOrMobility = ['iron_body', 'focus', 'haste', 'recovery', 'teleport', 'flash_jump'].includes(skillId);
-    if (!isBuffOrMobility && this.attackTimer > 0) return false;
-
-    const dirSign = this.facing === 'right' ? 1 : -1;
-
-    if (skillId === 'power_strike') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration * 1.1;
-      window.audio.playPowerStrike();
-
-      game.skillEffects.push({
-        type: 'power_strike',
-        x: this.facing === 'right' ? this.x + 30 : this.x - 30,
-        y: this.y - 15,
-        progress: 0,
-        duration: 0.35
-      });
-
-      const hitBox = {
-        x: this.facing === 'right' ? this.x : this.x - 70,
-        y: this.y - 45,
-        width: 70,
-        height: 48
-      };
-
-      this.checkAndHitBoss(hitBox, (skill.dmgMult + skill.level * 0.08), game);
-
-      for (const m of game.monsters) {
-        if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
-          if (!this.checkHit(m)) {
-            game.spawnMissText(m.x, m.y - m.height * 0.8);
-            break;
-          }
-          const { damage } = this.getDamage();
-          const strikeDmg = Math.max(1, Math.floor(damage * (skill.dmgMult + skill.level * 0.08) - (m.def || 0) * 0.5));
-          m.takeDamage(strikeDmg, true, this.facing, game);
-          game.spawnStaggeredDamage(m.x, m.y - m.height * 0.8, strikeDmg, true);
-          break;
-        }
-      }
-      return true;
-    } else if (skillId === 'slash_blast') {
-      if (this.mp < skill.mpCost || this.hp <= skill.hpCost) return false;
-      this.mp -= skill.mpCost;
-      this.hp -= skill.hpCost;
-      this.attackTimer = this.attackDuration * 1.2;
-      window.audio.playSlashBlast();
-
-      game.skillEffects.push({
-        type: 'slash_blast',
-        x: this.x,
-        y: this.y - 15,
-        progress: 0,
-        duration: 0.4
-      });
-
-      const radius = 100;
-      for (const m of game.monsters) {
-        if (m.isAlive()) {
-          const dist = Math.hypot(m.x - this.x, (m.y - m.height / 2) - (this.y - 18));
-          if (dist <= radius) {
-            const { damage, isCrit } = this.getDamage();
-            const slashDmg = Math.floor(damage * (skill.dmgMult + skill.level * 0.05));
-            m.takeDamage(slashDmg, isCrit, m.x > this.x ? 'right' : 'left', game);
-            game.spawnStaggeredDamage(m.x, m.y - m.height * 0.7, slashDmg, isCrit);
-          }
-        }
-      }
-      return true;
-    } else if (skillId === 'energy_bolt') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration;
-      window.audio.playAttack();
-      const { damage, isCrit } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 440, 0, 'energy_bolt', Math.floor(damage * 1.4), isCrit, this));
-      return true;
-    } else if (skillId === 'magic_claw') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration * 1.1;
-      window.audio.playMagicClaw();
-
-      const range = 120;
-      const hitBox = {
-        x: this.facing === 'right' ? this.x : this.x - range,
-        y: this.y - 45,
-        width: range,
-        height: 50
-      };
-
-      this.checkAndHitBoss(hitBox, (1.1 + skill.level * 0.06), game);
-
-      for (const m of game.monsters) {
-        if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
-          game.skillEffects.push({
-            type: 'magic_claw',
-            x: m.x,
-            y: m.y - m.height / 2,
-            progress: 0,
-            duration: 0.35
-          });
-
-          for (let hit = 0; hit < 2; hit++) {
-            setTimeout(() => {
-              if (m.isAlive()) {
-                const { damage, isCrit } = this.getDamage();
-                const clawDmg = Math.floor(damage * (1.1 + skill.level * 0.06));
-                m.takeDamage(clawDmg, isCrit, this.facing, game);
-                game.spawnStaggeredDamage(m.x + (hit * 12 - 6), m.y - m.height * 0.8 - hit * 15, clawDmg, isCrit);
-              }
-            }, hit * 120);
-          }
-          break;
-        }
-      }
-      return true;
-    } else if (skillId === 'teleport') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.x += dirSign * 130;
-      window.audio.playFlashJump();
-      return true;
-    } else if (skillId === 'arrow_blow') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration;
-      window.audio.playAttack();
-      const { damage } = this.getDamage();
-      game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 520, 0, 'arrow', Math.floor(damage * 1.8), true, this));
-      return true;
-    } else if (skillId === 'double_shot') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration * 1.2;
-      window.audio.playAttack();
-
-      for (let s = 0; s < 2; s++) {
-        setTimeout(() => {
-          const { damage, isCrit } = this.getDamage();
-          game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16, dirSign * 500, 0, 'arrow', Math.floor(damage * 1.25), isCrit, this));
-        }, s * 140);
-      }
-      return true;
-    } else if (skillId === 'lucky_seven') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration * 1.1;
-      window.audio.playAttack();
-
-      for (let s = 0; s < 2; s++) {
-        setTimeout(() => {
-          const { damage } = this.getDamage();
-          const starDmg = Math.floor(damage * 1.7);
-          game.projectiles.push(new Projectile(this.x + dirSign * 16, this.y - 16 + (s * 8 - 4), dirSign * 560, (s * 40 - 20), 'shuriken', starDmg, true, this));
-        }, s * 100);
-      }
-      return true;
-    } else if (skillId === 'double_stab') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.attackTimer = this.attackDuration * 0.9;
-      window.audio.playAttack();
-
-      const range = 52;
-      const hitBox = {
-        x: this.facing === 'right' ? this.x : this.x - range,
-        y: this.y - 36,
-        width: range,
-        height: 38
-      };
-
-      this.checkAndHitBoss(hitBox, 1.4, game);
-
-      for (const m of game.monsters) {
-        if (m.isAlive() && this.checkCollision(hitBox, m.getHitBox())) {
-          for (let s = 0; s < 2; s++) {
-            setTimeout(() => {
-              if (m.isAlive()) {
-                const { damage, isCrit } = this.getDamage();
-                m.takeDamage(damage, isCrit, this.facing, game);
-                game.spawnStaggeredDamage(m.x + (s * 10 - 5), m.y - m.height * 0.7 - s * 12, damage, isCrit);
-              }
-            }, s * 100);
-          }
-          break;
-        }
-      }
-      return true;
-    } else if (skillId === 'flash_jump') {
-      return this.flashJump();
-    } else if (skillId === 'iron_body') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.defense += 20;
-      game.spawnItemText(this.x, this.y - 45, '🛡️ [아이언 바디] 방어력 +20!');
-      if (game.ui && game.ui.addChat) game.ui.addChat('system', '🛡️ [아이언 바디] 단단한 신체로 방어력이 20 증가했습니다.');
-      window.audio.playLevelUp();
-      return true;
-    } else if (skillId === 'focus') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.accuracy += 25;
-      this.walkSpeed = Math.min(5.5, this.walkSpeed + 0.6);
-      game.spawnItemText(this.x, this.y - 45, '👁️ [포커스] 명중/이속 증가!');
-      if (game.ui && game.ui.addChat) game.ui.addChat('system', '👁️ [포커스] 정신을 집중하여 명중률(+25)과 이동속도가 상승했습니다.');
-      window.audio.playLevelUp();
-      return true;
-    } else if (skillId === 'haste') {
-      if (this.mp < skill.mpCost) return false;
-      this.mp -= skill.mpCost;
-      this.walkSpeed = 5.6;
-      this.jumpForce = -11.5;
-      game.spawnItemText(this.x, this.y - 45, '💨 [헤이스트] 극상의 기동력!');
-      if (game.ui && game.ui.addChat) game.ui.addChat('system', '💨 [헤이스트] 바람의 가호를 받아 이동속도와 점프력이 비약적으로 상승했습니다!');
-      window.audio.playFlashJump();
-      return true;
-    }
-    return false;
-  }
-
-  takeDamage(amount, game = null) {
-    if (this.invincibleTimer > 0 || this.hp <= 0) return;
-    const defReduction = Math.floor((this.defense || 0) * 0.4);
-    const finalAmount = Math.max(1, amount - defReduction);
-    this.hp -= finalAmount;
-    this.invincibleTimer = 1.2;
-    window.audio.playHit();
-
-    // Knockback
-    this.vx = (this.facing === 'right' ? -1 : 1) * 3.5;
-    this.vy = -2.8;
-    this.onGround = false;
-    this.currentFoothold = null;
-
-    if (this.hp <= 0) {
-      this.hp = 0;
-      const lostExp = Math.floor(this.maxExp * 0.10);
-      this.exp = Math.max(0, this.exp - lostExp);
-      window.audio.playTombstone();
-      if (game) {
-        if (game.triggerScreenShake) game.triggerScreenShake(0.6, 6);
-        if (game.ui && game.ui.addChat) {
-          game.ui.addChat('system', `💀 [사망 페널티] 비석이 떨어졌습니다! 경험치 10%를 잃었습니다 (-${lostExp} EXP)`);
-        }
-      }
-      setTimeout(() => {
-        this.resurrect();
-      }, 3000);
-    }
-  }
-
-  resurrect() {
-    this.hp = Math.floor(this.maxHp * 0.5);
-    this.mp = Math.floor(this.maxMp * 0.5);
-    this.x = 400;
-    this.y = 1318;
-    this.vx = 0;
-    this.vy = 0;
-    this.onLadder = false;
-  }
-
-  healHp(amount) {
-    this.hp = Math.min(this.maxHp, this.hp + amount);
-  }
-
-  healMp(amount) {
-    this.mp = Math.min(this.maxMp, this.mp + amount);
-  }
-
-  usePotion(type) {
-    const pot = this.inventory.use.find(p => p.id === type);
-    if (!pot || pot.count <= 0) return false;
-
-    if (pot.healHp && this.hp >= this.maxHp && !pot.healMp) return false;
-    if (pot.healMp && this.mp >= this.maxMp && !pot.healHp) return false;
-
-    pot.count--;
-    window.audio.playUsePotion();
-    if (pot.healHp) this.healHp(pot.healHp);
-    if (pot.healMp) this.healMp(pot.healMp);
-    return true;
-  }
-
-  gainExp(amount, game) {
-    this.exp += amount;
-    game.spawnExpText(this.x, this.y - 45, amount);
-
-    while (this.exp >= this.maxExp) {
-      this.exp -= this.maxExp;
-      this.levelUp(game);
-    }
+    return SkillRegistry.execute(skillId, this, game);
   }
 
   levelUp(game) {
@@ -945,6 +832,9 @@ class Monster {
     this.currentFoothold = null;
     this.hitTimer = 0;
     this.hitstopTimer = 0;
+    this.state = 'alive';
+    this.dyingDuration = 0.45;
+    this.dyingTimer = 0;
 
     this.initMonsterType(type);
     this.hp = this.maxHp;
@@ -1118,7 +1008,11 @@ class Monster {
   }
 
   isAlive() {
-    return this.hp > 0;
+    return this.hp > 0 && this.state !== 'dying' && this.state !== 'dead';
+  }
+
+  isDying() {
+    return this.state === 'dying';
   }
 
   getHitBox() {
@@ -1130,7 +1024,30 @@ class Monster {
     };
   }
 
+  getHitBoxes() {
+    return [this.getHitBox()];
+  }
+
+  getLevel() {
+    return this.level || 1;
+  }
+
+  getAvoid() {
+    return this.avoid || 5;
+  }
+
+  getDefense() {
+    return this.def || 0;
+  }
+
   update(dt, player, map, game) {
+    if (this.state === 'dying') {
+      this.dyingTimer -= dt;
+      if (this.dyingTimer <= 0) {
+        this.state = 'dead';
+      }
+      return;
+    }
     if (!this.isAlive()) return;
 
     // Hitstop Freeze
@@ -1168,6 +1085,19 @@ class Monster {
       this.vx = this.moveDir * this.speed;
     }
 
+    // Soft horizontal separation between monsters on same platform (prevents stacking)
+    if (game && game.monsters) {
+      for (let j = 0; j < game.monsters.length; j++) {
+        const other = game.monsters[j];
+        if (other !== this && other.isAlive() && Math.abs(other.y - this.y) < 16) {
+          const distX = this.x - other.x;
+          if (Math.abs(distX) < 26) {
+            this.vx += (distX >= 0 ? 0.35 : -0.35);
+          }
+        }
+      }
+    }
+
     // Foothold Edge Boundary Check (Only reverse if there is no continuous foothold)
     if (this.currentFoothold && this.onGround) {
       if (this.x - 10 <= this.currentFoothold.x1) {
@@ -1195,13 +1125,16 @@ class Monster {
         height: player.height
       };
       if (player.checkCollision(pBox, this.getHitBox())) {
-        player.takeDamage(this.atk);
-        game.spawnDamageText(player.x, player.y - 25, this.atk, false, 'player');
+        const dmg = player.takeDamage(this.atk, game, this.x);
+        if (dmg > 0) {
+          game.spawnDamageText(player.x, player.y - 25, dmg, false, 'player');
+        }
       }
     }
   }
 
-  takeDamage(amount, isCrit, fromDir, game) {
+  takeDamage(amount, isCrit, fromDir, gameOrPlayer) {
+    if (!this.isAlive()) return;
     this.hp -= amount;
     this.hitTimer = 0.15;
     this.hitstopTimer = 0.08; // 0.08s hitstop!
@@ -1216,27 +1149,68 @@ class Monster {
 
     if (this.hp <= 0) {
       this.hp = 0;
+      let player = null;
+      let game = null;
+      if (gameOrPlayer) {
+        if (typeof gameOrPlayer.gainExp === 'function') {
+          player = gameOrPlayer;
+          game = window.game;
+        } else if (gameOrPlayer.player) {
+          player = gameOrPlayer.player;
+          game = gameOrPlayer;
+        }
+      }
+      this.startDying(player, game);
     }
   }
 
-  die(player, game) {
+  startDying(player, game) {
+    if (this.state === 'dying' || this.state === 'dead') return;
+    this.state = 'dying';
+    this.dyingTimer = this.dyingDuration;
+    this.vx = 0;
+    this.vy = 0;
+    this.hitstopTimer = 0;
     window.audio.playMonsterDie();
-    player.gainExp(this.exp, game);
 
+    const actualPlayer = (player && typeof player.gainExp === 'function') 
+      ? player 
+      : ((game && game.player && typeof game.player.gainExp === 'function') ? game.player : (window.game?.player));
+
+    if (actualPlayer && typeof actualPlayer.gainExp === 'function') {
+      actualPlayer.gainExp(this.exp, game || window.game);
+    }
+    this.spawnDrops(game || window.game);
+  }
+
+  spawnDrops(game) {
+    if (!game || !game.spawnDrop) return;
     this.dropTable.forEach(drop => {
       if (Math.random() <= drop.chance) {
         if (drop.type === 'meso') {
           const amt = Math.floor(drop.min + Math.random() * (drop.max - drop.min + 1));
           game.spawnDrop('meso', amt, this.x + (Math.random() * 20 - 10), this.y - 10);
         } else if (drop.type === 'red_potion') {
-          game.spawnDrop('red_potion', 1, this.x + (Math.random() * 20 - 10), this.y - 10);
+          game.spawnDrop('red_potion', drop.count || 1, this.x + (Math.random() * 20 - 10), this.y - 10);
         } else if (drop.type === 'blue_potion') {
-          game.spawnDrop('blue_potion', 1, this.x + (Math.random() * 20 - 10), this.y - 10);
+          game.spawnDrop('blue_potion', drop.count || 1, this.x + (Math.random() * 20 - 10), this.y - 10);
         } else {
-          game.spawnDrop(drop.type, 1, this.x + (Math.random() * 20 - 10), this.y - 10, drop.name);
+          game.spawnDrop(drop.type, drop.count || 1, this.x + (Math.random() * 20 - 10), this.y - 10, drop.name);
         }
       }
     });
+
+    // Potion drop bonus (Authentic Maple: 35% Red potion, 35% Blue potion)
+    if (Math.random() < 0.35) {
+      game.spawnDrop('red_potion', 1, this.x + (Math.random() * 24 - 12), this.y - 12);
+    }
+    if (Math.random() < 0.35) {
+      game.spawnDrop('blue_potion', 1, this.x + (Math.random() * 24 - 12), this.y - 12);
+    }
+  }
+
+  die(player, game) {
+    this.startDying(player, game);
   }
 }
 
@@ -1294,6 +1268,17 @@ class FloatingText {
 
 // === Zakum Boss Class (Body + 8 Independent Floating Arms) ===
 class ZakumBoss {
+  getLevel() {
+    return this.level || 50;
+  }
+
+  getAvoid() {
+    return 25;
+  }
+
+  getDefense() {
+    return 40;
+  }
   constructor(x = 600, y = 350) {
     this.id = 'zakum';
     this.name = '★ 자쿰 (ZAKUM BOSS) ★';
@@ -1409,8 +1394,10 @@ class ZakumBoss {
               game.ui.addChat('system', '⚠️ [자쿰 기믹] 체력과 마나가 1로 떨어지고 허약(점프 불가) 상태가 되었습니다! 즉시 물약을 드세요!');
             }
           } else {
-            player.takeDamage(sp.damage, game);
-            game.spawnDamageText(player.x, player.y - 25, sp.damage, false, 'player');
+            const dmg = player.takeDamage(sp.damage, game, sp.x);
+            if (dmg > 0) {
+              game.spawnDamageText(player.x, player.y - 25, dmg, false, 'player');
+            }
           }
         }
         this.activeSpells.splice(i, 1);

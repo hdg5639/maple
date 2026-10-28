@@ -17,6 +17,9 @@ class Foothold {
     }
     this.canDropThrough = canDropThrough;
     this.type = type;
+    this.length = Math.hypot(this.x2 - this.x1, this.y2 - this.y1);
+    this.width = Math.abs(this.x2 - this.x1);
+    this.isProp = (this.type === 'prop' || this.width < 25); // Classify props and tiny footholds as non-walkable
   }
 
   // Calculate Y coordinate on the slope at given X
@@ -120,6 +123,12 @@ class Physics {
             continue;
           }
 
+          // Prevent monsters, drops, and pets from landing on tiny decorative prop footholds (haystacks/fences)
+          const isNonPlayer = Boolean(entity.isMonster || (entity.hp !== undefined && entity.job === undefined) || entity.amount !== undefined);
+          if (isNonPlayer && fh.isProp) {
+            continue;
+          }
+
           if (entity.x >= fh.x1 - 2 && entity.x <= fh.x2 + 2) {
             const slopeY = fh.getYAtX(entity.x);
             // Swept raycast check from prevY to current entity.y
@@ -174,16 +183,21 @@ class Physics {
     }
   }
 
-  // Ladder snap detection (X +- 12px)
+  // Ladder snap detection (X +- 14px) with top/bottom hysteresis
   static checkLadderGrab(player, map, dir) {
+    if (player.ladderCooldown > 0) {
+      return null;
+    }
     const snapRange = 14;
     for (const lad of map.ladders) {
       if (Math.abs(player.x - lad.x) <= snapRange) {
         if (dir === 'up') {
-          if (player.y >= lad.top && player.y <= lad.bottom + 15) {
+          // If already at or above platform level, pressing UP must NOT grab ladder underneath!
+          if (player.y > lad.top + 6 && player.y <= lad.bottom + 15) {
             return lad;
           }
         } else if (dir === 'down') {
+          // Can grab ladder going down from platform above
           if (player.y >= lad.top - 12 && player.y < lad.bottom) {
             return lad;
           }

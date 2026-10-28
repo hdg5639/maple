@@ -29,7 +29,7 @@ const MAP_DATABASE = {
       {
         "name": "중형택시 (Regular Cab)",
         "type": "regular_cab",
-        "x": 820,
+        "x": 350,
         "y": 1320,
         "dialog": "cab"
       },
@@ -48,15 +48,15 @@ const MAP_DATABASE = {
         "targetMap": "henesys_town",
         "targetX": 6000,
         "targetY": 880,
-        "name": "헤네시스 마을로"
+        "name": "헤네시스 마을"
       },
       {
         "x": 2180,
         "y": 1320,
         "targetMap": "ant_tunnel",
-        "targetX": 300,
-        "targetY": 240,
-        "name": "개미굴 입구로"
+        "targetX": 2450,
+        "targetY": 580,
+        "name": "개미굴 던전 입구"
       }
     ],
     "footholds": [
@@ -314,14 +314,6 @@ const MAP_DATABASE = {
         "y1": 1320,
         "x2": 2199,
         "y2": 1320,
-        "canDropThrough": true
-      },
-      {
-        "id": 178,
-        "x1": 1350,
-        "y1": 0,
-        "x2": 1428,
-        "y2": 0,
         "canDropThrough": true
       },
       {
@@ -901,14 +893,6 @@ const MAP_DATABASE = {
         "canDropThrough": true
       },
       {
-        "id": 181,
-        "x1": 1428,
-        "y1": 0,
-        "x2": 1440,
-        "y2": 0,
-        "canDropThrough": true
-      },
-      {
         "id": 135,
         "x1": 579,
         "y1": 1320,
@@ -1010,14 +994,6 @@ const MAP_DATABASE = {
         "y1": 1256,
         "x2": 418,
         "y2": 1255,
-        "canDropThrough": true
-      },
-      {
-        "id": 179,
-        "x1": 1440,
-        "y1": 0,
-        "x2": 1518,
-        "y2": 0,
         "canDropThrough": true
       },
       {
@@ -1290,56 +1266,56 @@ const MAP_DATABASE = {
         "id": 1,
         "x": 419,
         "top": 1022,
-        "bottom": 1210,
+        "bottom": 1320,
         "isLadder": true
       },
       {
         "id": 2,
         "x": 1769,
         "top": 1022,
-        "bottom": 1162,
+        "bottom": 1320,
         "isLadder": true
       },
       {
         "id": 3,
         "x": 825,
         "top": 782,
-        "bottom": 978,
+        "bottom": 1020,
         "isLadder": false
       },
       {
         "id": 4,
         "x": 1164,
         "top": 1022,
-        "bottom": 1248,
+        "bottom": 1320,
         "isLadder": false
       },
       {
         "id": 5,
         "x": 1726,
         "top": 782,
-        "bottom": 867,
+        "bottom": 1020,
         "isLadder": true
       },
       {
         "id": 6,
         "x": 1647,
         "top": 542,
-        "bottom": 625,
+        "bottom": 780,
         "isLadder": true
       },
       {
         "id": 7,
         "x": 1197,
         "top": 542,
-        "bottom": 738,
+        "bottom": 780,
         "isLadder": false
       },
       {
         "id": 8,
         "x": 1447,
         "top": 2,
-        "bottom": 437,
+        "bottom": 540,
         "isLadder": false
       }
     ]
@@ -1365,6 +1341,13 @@ const MAP_DATABASE = {
     "boss": null,
     "npcs": [
       {
+        "name": "장로 스탄 (Chief Stan)",
+        "type": "chief_stan",
+        "x": 1800,
+        "y": 880,
+        "dialog": "stan"
+      },
+      {
         "name": "중형택시 (Regular Cab)",
         "type": "regular_cab",
         "x": 2250,
@@ -1377,13 +1360,6 @@ const MAP_DATABASE = {
         "x": 3100,
         "y": 880,
         "dialog": "vip_cab"
-      },
-      {
-        "name": "장로 스탄 (Chief Stan)",
-        "type": "chief_stan",
-        "x": 1800,
-        "y": 880,
-        "dialog": "stan"
       },
       {
         "name": "마야 (Maya)",
@@ -1400,15 +1376,15 @@ const MAP_DATABASE = {
         "targetMap": "henesys_hhg",
         "targetX": 200,
         "targetY": 1320,
-        "name": "사냥터 1로"
+        "name": "헤네시스 사냥터 1"
       },
       {
         "x": 100,
         "y": 880,
         "targetMap": "ellinia",
         "targetX": 500,
-        "targetY": 4500,
-        "name": "엘리니아로"
+        "targetY": 4480,
+        "name": "엘리니아 나무마을"
       }
     ],
     "footholds": [
@@ -3171,6 +3147,622 @@ const MAP_DATABASE = {
         "x2": 2108,
         "y2": 559,
         "canDropThrough": true
+      },
+      {
+        "id": 305,
+        "x1": 0,
+        "y1": 880,
+        "x2": 90,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 306,
+        "x1": 90,
+        "y1": 880,
+        "x2": 180,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 307,
+        "x1": 180,
+        "y1": 880,
+        "x2": 270,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 308,
+        "x1": 270,
+        "y1": 880,
+        "x2": 360,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 309,
+        "x1": 360,
+        "y1": 880,
+        "x2": 450,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 310,
+        "x1": 450,
+        "y1": 880,
+        "x2": 540,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 311,
+        "x1": 540,
+        "y1": 880,
+        "x2": 630,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 312,
+        "x1": 630,
+        "y1": 880,
+        "x2": 720,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 313,
+        "x1": 720,
+        "y1": 880,
+        "x2": 810,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 314,
+        "x1": 810,
+        "y1": 880,
+        "x2": 900,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 315,
+        "x1": 900,
+        "y1": 880,
+        "x2": 990,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 316,
+        "x1": 990,
+        "y1": 880,
+        "x2": 1080,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 317,
+        "x1": 1080,
+        "y1": 880,
+        "x2": 1170,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 318,
+        "x1": 1170,
+        "y1": 880,
+        "x2": 1260,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 319,
+        "x1": 1260,
+        "y1": 880,
+        "x2": 1350,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 320,
+        "x1": 1350,
+        "y1": 880,
+        "x2": 1440,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 321,
+        "x1": 1440,
+        "y1": 880,
+        "x2": 1530,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 322,
+        "x1": 1530,
+        "y1": 880,
+        "x2": 1620,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 323,
+        "x1": 1620,
+        "y1": 880,
+        "x2": 1710,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 324,
+        "x1": 1710,
+        "y1": 880,
+        "x2": 1800,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 325,
+        "x1": 1800,
+        "y1": 880,
+        "x2": 1890,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 326,
+        "x1": 1890,
+        "y1": 880,
+        "x2": 1980,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 327,
+        "x1": 1980,
+        "y1": 880,
+        "x2": 2070,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 328,
+        "x1": 2070,
+        "y1": 880,
+        "x2": 2160,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 329,
+        "x1": 2160,
+        "y1": 880,
+        "x2": 2250,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 330,
+        "x1": 2250,
+        "y1": 880,
+        "x2": 2340,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 331,
+        "x1": 2340,
+        "y1": 880,
+        "x2": 2430,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 332,
+        "x1": 2430,
+        "y1": 880,
+        "x2": 2520,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 333,
+        "x1": 2520,
+        "y1": 880,
+        "x2": 2610,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 334,
+        "x1": 2610,
+        "y1": 880,
+        "x2": 2700,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 335,
+        "x1": 2700,
+        "y1": 880,
+        "x2": 2790,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 336,
+        "x1": 2790,
+        "y1": 880,
+        "x2": 2880,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 337,
+        "x1": 2880,
+        "y1": 880,
+        "x2": 2970,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 338,
+        "x1": 2970,
+        "y1": 880,
+        "x2": 3060,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 339,
+        "x1": 3060,
+        "y1": 880,
+        "x2": 3150,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 340,
+        "x1": 3150,
+        "y1": 880,
+        "x2": 3240,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 341,
+        "x1": 3240,
+        "y1": 880,
+        "x2": 3330,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 342,
+        "x1": 3330,
+        "y1": 880,
+        "x2": 3420,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 343,
+        "x1": 3420,
+        "y1": 880,
+        "x2": 3510,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 344,
+        "x1": 3510,
+        "y1": 880,
+        "x2": 3600,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 345,
+        "x1": 3600,
+        "y1": 880,
+        "x2": 3690,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 346,
+        "x1": 3690,
+        "y1": 880,
+        "x2": 3780,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 347,
+        "x1": 3780,
+        "y1": 880,
+        "x2": 3870,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 348,
+        "x1": 3870,
+        "y1": 880,
+        "x2": 3960,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 349,
+        "x1": 3960,
+        "y1": 880,
+        "x2": 4050,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 350,
+        "x1": 4050,
+        "y1": 880,
+        "x2": 4140,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 351,
+        "x1": 4140,
+        "y1": 880,
+        "x2": 4230,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 352,
+        "x1": 4230,
+        "y1": 880,
+        "x2": 4320,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 353,
+        "x1": 4320,
+        "y1": 880,
+        "x2": 4410,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 354,
+        "x1": 4410,
+        "y1": 880,
+        "x2": 4500,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 355,
+        "x1": 4500,
+        "y1": 880,
+        "x2": 4590,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 356,
+        "x1": 4590,
+        "y1": 880,
+        "x2": 4680,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 357,
+        "x1": 4680,
+        "y1": 880,
+        "x2": 4770,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 358,
+        "x1": 4770,
+        "y1": 880,
+        "x2": 4860,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 359,
+        "x1": 4860,
+        "y1": 880,
+        "x2": 4950,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 360,
+        "x1": 4950,
+        "y1": 880,
+        "x2": 5040,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 361,
+        "x1": 5040,
+        "y1": 880,
+        "x2": 5130,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 362,
+        "x1": 5130,
+        "y1": 880,
+        "x2": 5220,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 363,
+        "x1": 5220,
+        "y1": 880,
+        "x2": 5310,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 364,
+        "x1": 5310,
+        "y1": 880,
+        "x2": 5400,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 365,
+        "x1": 5400,
+        "y1": 880,
+        "x2": 5490,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 366,
+        "x1": 5490,
+        "y1": 880,
+        "x2": 5580,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 367,
+        "x1": 5580,
+        "y1": 880,
+        "x2": 5670,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 368,
+        "x1": 5670,
+        "y1": 880,
+        "x2": 5760,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 369,
+        "x1": 5760,
+        "y1": 880,
+        "x2": 5850,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 370,
+        "x1": 5850,
+        "y1": 880,
+        "x2": 5940,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 371,
+        "x1": 5940,
+        "y1": 880,
+        "x2": 6030,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 372,
+        "x1": 6030,
+        "y1": 880,
+        "x2": 6120,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 373,
+        "x1": 6120,
+        "y1": 880,
+        "x2": 6210,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 374,
+        "x1": 6210,
+        "y1": 880,
+        "x2": 6300,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 375,
+        "x1": 6300,
+        "y1": 880,
+        "x2": 6390,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 376,
+        "x1": 6390,
+        "y1": 880,
+        "x2": 6480,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 377,
+        "x1": 6480,
+        "y1": 880,
+        "x2": 6570,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 378,
+        "x1": 6570,
+        "y1": 880,
+        "x2": 6660,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 379,
+        "x1": 6660,
+        "y1": 880,
+        "x2": 6750,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 380,
+        "x1": 6750,
+        "y1": 880,
+        "x2": 6840,
+        "y2": 880,
+        "canDropThrough": false
+      },
+      {
+        "id": 381,
+        "x1": 6840,
+        "y1": 880,
+        "x2": 6894,
+        "y2": 880,
+        "canDropThrough": false
       }
     ],
     "ladders": [
@@ -3178,7 +3770,7 @@ const MAP_DATABASE = {
         "id": 1,
         "x": 5948,
         "top": 381,
-        "bottom": 624,
+        "bottom": 679,
         "isLadder": true
       },
       {
@@ -3200,13 +3792,11 @@ const MAP_DATABASE = {
     "img": "assets/map/ant_tunnel.png",
     "minimap": "assets/map/ant_tunnel_minimap.png",
     "defaultSpawn": {
-      "x": 400,
-      "y": 240
+      "x": 2450,
+      "y": 580
     },
     "spawnMonsters": [
       "zombie_mushroom",
-      "blue_snail",
-      "orange_mushroom",
       "green_mushroom"
     ],
     "isBossMap": false,
@@ -3215,27 +3805,27 @@ const MAP_DATABASE = {
       {
         "name": "모범택시 (VIP Cab)",
         "type": "vip_cab",
-        "x": 600,
-        "y": 240,
+        "x": 2500,
+        "y": 580,
         "dialog": "vip_cab"
       }
     ],
     "portals": [
       {
-        "x": 250,
-        "y": 240,
+        "x": 2360,
+        "y": 580,
         "targetMap": "henesys_hhg",
         "targetX": 2100,
         "targetY": 1320,
-        "name": "헤네시스로"
+        "name": "헤네시스 귀환"
       },
       {
         "x": 2800,
         "y": 2380,
         "targetMap": "zakum_altar",
-        "targetX": 200,
+        "targetX": 180,
         "targetY": 490,
-        "name": "자쿰의 제단으로"
+        "name": "자쿰의 제단 입구"
       }
     ],
     "footholds": [
@@ -10510,6 +11100,46 @@ const MAP_DATABASE = {
         "x2": 461,
         "y2": 895,
         "canDropThrough": true
+      },
+      {
+        "id": 1043,
+        "x1": 2300,
+        "y1": 580,
+        "x2": 2360,
+        "y2": 580,
+        "canDropThrough": false
+      },
+      {
+        "id": 1044,
+        "x1": 2360,
+        "y1": 580,
+        "x2": 2420,
+        "y2": 580,
+        "canDropThrough": false
+      },
+      {
+        "id": 1045,
+        "x1": 2420,
+        "y1": 580,
+        "x2": 2480,
+        "y2": 580,
+        "canDropThrough": false
+      },
+      {
+        "id": 1046,
+        "x1": 2480,
+        "y1": 580,
+        "x2": 2540,
+        "y2": 580,
+        "canDropThrough": false
+      },
+      {
+        "id": 1047,
+        "x1": 2540,
+        "y1": 580,
+        "x2": 2600,
+        "y2": 580,
+        "canDropThrough": false
       }
     ],
     "ladders": [
@@ -10517,112 +11147,112 @@ const MAP_DATABASE = {
         "id": 1,
         "x": 469,
         "top": 901,
-        "bottom": 989,
+        "bottom": 1007,
         "isLadder": true
       },
       {
         "id": 2,
         "x": 2806,
         "top": 648,
-        "bottom": 846,
+        "bottom": 881,
         "isLadder": false
       },
       {
         "id": 3,
         "x": 3050,
         "top": 882,
-        "bottom": 1019,
+        "bottom": 1077,
         "isLadder": false
       },
       {
         "id": 4,
         "x": 2854,
         "top": 1079,
-        "bottom": 1276,
+        "bottom": 1295,
         "isLadder": false
       },
       {
         "id": 5,
         "x": 3253,
         "top": 1085,
-        "bottom": 1310,
+        "bottom": 1360,
         "isLadder": false
       },
       {
         "id": 6,
         "x": 3478,
         "top": 1444,
-        "bottom": 1672,
+        "bottom": 1702,
         "isLadder": false
       },
       {
         "id": 7,
         "x": 1211,
         "top": 1954,
-        "bottom": 2213,
+        "bottom": 2269,
         "isLadder": false
       },
       {
         "id": 8,
         "x": 165,
         "top": 1071,
-        "bottom": 1212,
+        "bottom": 1241,
         "isLadder": true
       },
       {
         "id": 9,
         "x": 1103,
         "top": 1011,
-        "bottom": 1210,
+        "bottom": 1250,
         "isLadder": false
       },
       {
         "id": 10,
         "x": 1147,
         "top": 861,
-        "bottom": 967,
+        "bottom": 1004,
         "isLadder": false
       },
       {
         "id": 11,
         "x": 746,
         "top": 1082,
-        "bottom": 1311,
+        "bottom": 1356,
         "isLadder": false
       },
       {
         "id": 12,
         "x": 436,
         "top": 1969,
-        "bottom": 2167,
+        "bottom": 2195,
         "isLadder": false
       },
       {
         "id": 13,
         "x": 2174,
         "top": 996,
-        "bottom": 1196,
+        "bottom": 1261,
         "isLadder": false
       },
       {
         "id": 14,
         "x": 2109,
         "top": 2188,
-        "bottom": 2388,
+        "bottom": 2439,
         "isLadder": false
       },
       {
         "id": 15,
         "x": 2196,
         "top": 1992,
-        "bottom": 2160,
+        "bottom": 2179,
         "isLadder": false
       },
       {
         "id": 16,
         "x": 2705,
         "top": 2157,
-        "bottom": 2387,
+        "bottom": 2435,
         "isLadder": false
       },
       {
@@ -10636,14 +11266,14 @@ const MAP_DATABASE = {
         "id": 18,
         "x": 2095,
         "top": 1786,
-        "bottom": 1955,
+        "bottom": 1989,
         "isLadder": false
       },
       {
         "id": 19,
         "x": 2192,
         "top": 1471,
-        "bottom": 1730,
+        "bottom": 1789,
         "isLadder": false
       },
       {
@@ -10666,7 +11296,7 @@ const MAP_DATABASE = {
     "minimap": "assets/map/ellinia_minimap.png",
     "defaultSpawn": {
       "x": 1400,
-      "y": 4550
+      "y": 4480
     },
     "spawnMonsters": [
       "slime",
@@ -10679,33 +11309,33 @@ const MAP_DATABASE = {
         "name": "중형택시 (Regular Cab)",
         "type": "regular_cab",
         "x": 1600,
-        "y": 4550,
+        "y": 4480,
         "dialog": "cab"
       },
       {
         "name": "베티 박사 (Dr. Betty)",
         "type": "betty",
         "x": 900,
-        "y": 4150,
+        "y": 4186,
         "dialog": "betty"
       }
     ],
     "portals": [
       {
         "x": 300,
-        "y": 4550,
+        "y": 4480,
         "targetMap": "henesys_town",
         "targetX": 200,
         "targetY": 880,
-        "name": "헤네시스로"
+        "name": "헤네시스 마을"
       },
       {
         "x": 2500,
-        "y": 4550,
+        "y": 4480,
         "targetMap": "zakum_altar",
-        "targetX": 200,
+        "targetX": 180,
         "targetY": 490,
-        "name": "자쿰의 제단 입구로"
+        "name": "자쿰의 제단 입구"
       }
     ],
     "footholds": [
@@ -20444,6 +21074,254 @@ const MAP_DATABASE = {
         "x2": 2323,
         "y2": 1060,
         "canDropThrough": true
+      },
+      {
+        "id": 1218,
+        "x1": 0,
+        "y1": 4480,
+        "x2": 90,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1219,
+        "x1": 90,
+        "y1": 4480,
+        "x2": 180,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1220,
+        "x1": 180,
+        "y1": 4480,
+        "x2": 270,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1221,
+        "x1": 270,
+        "y1": 4480,
+        "x2": 360,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1222,
+        "x1": 360,
+        "y1": 4480,
+        "x2": 450,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1223,
+        "x1": 450,
+        "y1": 4480,
+        "x2": 540,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1224,
+        "x1": 540,
+        "y1": 4480,
+        "x2": 630,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1225,
+        "x1": 630,
+        "y1": 4480,
+        "x2": 720,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1226,
+        "x1": 720,
+        "y1": 4480,
+        "x2": 810,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1227,
+        "x1": 810,
+        "y1": 4480,
+        "x2": 900,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1228,
+        "x1": 900,
+        "y1": 4480,
+        "x2": 990,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1229,
+        "x1": 990,
+        "y1": 4480,
+        "x2": 1080,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1230,
+        "x1": 1080,
+        "y1": 4480,
+        "x2": 1170,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1231,
+        "x1": 1170,
+        "y1": 4480,
+        "x2": 1260,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1232,
+        "x1": 1260,
+        "y1": 4480,
+        "x2": 1350,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1233,
+        "x1": 1350,
+        "y1": 4480,
+        "x2": 1440,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1234,
+        "x1": 1440,
+        "y1": 4480,
+        "x2": 1530,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1235,
+        "x1": 1530,
+        "y1": 4480,
+        "x2": 1620,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1236,
+        "x1": 1620,
+        "y1": 4480,
+        "x2": 1710,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1237,
+        "x1": 1710,
+        "y1": 4480,
+        "x2": 1800,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1238,
+        "x1": 1800,
+        "y1": 4480,
+        "x2": 1890,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1239,
+        "x1": 1890,
+        "y1": 4480,
+        "x2": 1980,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1240,
+        "x1": 1980,
+        "y1": 4480,
+        "x2": 2070,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1241,
+        "x1": 2070,
+        "y1": 4480,
+        "x2": 2160,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1242,
+        "x1": 2160,
+        "y1": 4480,
+        "x2": 2250,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1243,
+        "x1": 2250,
+        "y1": 4480,
+        "x2": 2340,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1244,
+        "x1": 2340,
+        "y1": 4480,
+        "x2": 2430,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1245,
+        "x1": 2430,
+        "y1": 4480,
+        "x2": 2520,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1246,
+        "x1": 2520,
+        "y1": 4480,
+        "x2": 2610,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1247,
+        "x1": 2610,
+        "y1": 4480,
+        "x2": 2700,
+        "y2": 4480,
+        "canDropThrough": false
+      },
+      {
+        "id": 1248,
+        "x1": 2700,
+        "y1": 4480,
+        "x2": 2775,
+        "y2": 4480,
+        "canDropThrough": false
       }
     ],
     "ladders": [
@@ -20458,91 +21336,91 @@ const MAP_DATABASE = {
         "id": 2,
         "x": 487,
         "top": 1819,
-        "bottom": 1953,
+        "bottom": 1974,
         "isLadder": false
       },
       {
         "id": 3,
         "x": 452,
         "top": 1366,
-        "bottom": 1681,
+        "bottom": 1700,
         "isLadder": false
       },
       {
         "id": 4,
         "x": 959,
         "top": 3827,
-        "bottom": 4051,
+        "bottom": 4080,
         "isLadder": false
       },
       {
         "id": 5,
         "x": 1430,
         "top": 2994,
-        "bottom": 3193,
+        "bottom": 3215,
         "isLadder": false
       },
       {
         "id": 6,
         "x": 1851,
         "top": 3431,
-        "bottom": 3723,
+        "bottom": 3772,
         "isLadder": true
       },
       {
         "id": 7,
         "x": 908,
         "top": 4189,
-        "bottom": 4383,
+        "bottom": 4416,
         "isLadder": false
       },
       {
         "id": 8,
         "x": 1946,
         "top": 2256,
-        "bottom": 2512,
+        "bottom": 2539,
         "isLadder": false
       },
       {
         "id": 9,
         "x": 1931,
         "top": 3419,
-        "bottom": 3733,
+        "bottom": 3766,
         "isLadder": false
       },
       {
         "id": 10,
         "x": 1378,
         "top": 2263,
-        "bottom": 2455,
+        "bottom": 2488,
         "isLadder": false
       },
       {
         "id": 11,
         "x": 2586,
         "top": 2649,
-        "bottom": 2964,
+        "bottom": 2984,
         "isLadder": false
       },
       {
         "id": 12,
         "x": 1652,
         "top": 660,
-        "bottom": 1216,
+        "bottom": 1241,
         "isLadder": false
       },
       {
         "id": 13,
         "x": 899,
         "top": 2300,
-        "bottom": 2384,
+        "bottom": 2422,
         "isLadder": true
       },
       {
         "id": 14,
         "x": 2465,
         "top": 2045,
-        "bottom": 2240,
+        "bottom": 2282,
         "isLadder": false
       },
       {
@@ -20570,14 +21448,14 @@ const MAP_DATABASE = {
         "id": 18,
         "x": 2367,
         "top": 3896,
-        "bottom": 4364,
+        "bottom": 4385,
         "isLadder": false
       },
       {
         "id": 19,
         "x": 1854,
         "top": 3776,
-        "bottom": 3887,
+        "bottom": 3933,
         "isLadder": false
       },
       {
@@ -20591,70 +21469,70 @@ const MAP_DATABASE = {
         "id": 21,
         "x": 1859,
         "top": 3935,
-        "bottom": 4158,
+        "bottom": 4185,
         "isLadder": false
       },
       {
         "id": 22,
         "x": 1229,
         "top": 1284,
-        "bottom": 1575,
+        "bottom": 1601,
         "isLadder": false
       },
       {
         "id": 23,
         "x": 1424,
         "top": 1312,
-        "bottom": 1504,
+        "bottom": 1561,
         "isLadder": true
       },
       {
         "id": 24,
         "x": 2287,
         "top": 429,
-        "bottom": 1022,
+        "bottom": 1056,
         "isLadder": false
       },
       {
         "id": 25,
         "x": 1546,
         "top": 3496,
-        "bottom": 3837,
+        "bottom": 3880,
         "isLadder": false
       },
       {
         "id": 26,
         "x": 1448,
         "top": 3217,
-        "bottom": 3449,
+        "bottom": 3507,
         "isLadder": false
       },
       {
         "id": 27,
         "x": 1417,
         "top": 1887,
-        "bottom": 2056,
+        "bottom": 2100,
         "isLadder": false
       },
       {
         "id": 28,
         "x": 1373,
         "top": 1615,
-        "bottom": 1864,
+        "bottom": 1886,
         "isLadder": false
       },
       {
         "id": 29,
         "x": 357,
         "top": 4185,
-        "bottom": 4446,
+        "bottom": 4480,
         "isLadder": false
       },
       {
         "id": 30,
         "x": 1774,
         "top": 1517,
-        "bottom": 1710,
+        "bottom": 1733,
         "isLadder": false
       },
       {
@@ -20675,14 +21553,14 @@ const MAP_DATABASE = {
         "id": 33,
         "x": 769,
         "top": 398,
-        "bottom": 1071,
+        "bottom": 1110,
         "isLadder": false
       },
       {
         "id": 34,
         "x": 730,
         "top": 3500,
-        "bottom": 3744,
+        "bottom": 3762,
         "isLadder": true
       },
       {
@@ -20703,7 +21581,7 @@ const MAP_DATABASE = {
         "id": 37,
         "x": 851,
         "top": 2151,
-        "bottom": 2284,
+        "bottom": 2302,
         "isLadder": false
       }
     ]
@@ -20718,7 +21596,7 @@ const MAP_DATABASE = {
     "img": "assets/map/zakum_altar.png",
     "minimap": "assets/map/zakum_altar_minimap.png",
     "defaultSpawn": {
-      "x": 180,
+      "x": 260,
       "y": 490
     },
     "spawnMonsters": [],
@@ -20728,19 +21606,19 @@ const MAP_DATABASE = {
       {
         "name": "아도비스 (Adobis)",
         "type": "adobis",
-        "x": 150,
+        "x": 160,
         "y": 490,
         "dialog": "adobis"
       }
     ],
     "portals": [
       {
-        "x": 80,
+        "x": 60,
         "y": 490,
         "targetMap": "henesys_hhg",
         "targetX": 1050,
         "targetY": 1320,
-        "name": "헤네시스로 귀환"
+        "name": "헤네시스로 퇴장"
       }
     ],
     "footholds": [
@@ -22071,6 +22949,134 @@ const MAP_DATABASE = {
         "x2": 399,
         "y2": 342,
         "canDropThrough": true
+      },
+      {
+        "id": 173,
+        "x1": 0,
+        "y1": 490,
+        "x2": 80,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 174,
+        "x1": 80,
+        "y1": 490,
+        "x2": 160,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 175,
+        "x1": 160,
+        "y1": 490,
+        "x2": 240,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 176,
+        "x1": 240,
+        "y1": 490,
+        "x2": 320,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 177,
+        "x1": 320,
+        "y1": 490,
+        "x2": 400,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 178,
+        "x1": 400,
+        "y1": 490,
+        "x2": 480,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 179,
+        "x1": 480,
+        "y1": 490,
+        "x2": 560,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 180,
+        "x1": 560,
+        "y1": 490,
+        "x2": 640,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 181,
+        "x1": 640,
+        "y1": 490,
+        "x2": 720,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 182,
+        "x1": 720,
+        "y1": 490,
+        "x2": 800,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 183,
+        "x1": 800,
+        "y1": 490,
+        "x2": 880,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 184,
+        "x1": 880,
+        "y1": 490,
+        "x2": 960,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 185,
+        "x1": 960,
+        "y1": 490,
+        "x2": 1040,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 186,
+        "x1": 1040,
+        "y1": 490,
+        "x2": 1120,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 187,
+        "x1": 1120,
+        "y1": 490,
+        "x2": 1200,
+        "y2": 490,
+        "canDropThrough": false
+      },
+      {
+        "id": 188,
+        "x1": 1200,
+        "y1": 490,
+        "x2": 1211,
+        "y2": 490,
+        "canDropThrough": false
       }
     ],
     "ladders": [
@@ -22078,7 +23084,7 @@ const MAP_DATABASE = {
         "id": 1,
         "x": 970,
         "top": 28,
-        "bottom": 189,
+        "bottom": 229,
         "isLadder": false
       },
       {
@@ -22091,3 +23097,5 @@ const MAP_DATABASE = {
     ]
   }
 };
+
+window.MAP_DATABASE = MAP_DATABASE;

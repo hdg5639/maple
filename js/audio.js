@@ -13,30 +13,50 @@ class AudioManager {
     this.masterVolume = 0.7;
     this.bgmVolume = 0.4;
     this.sfxVolume = 0.6;
+
+    // Automatic one-time gesture unlocker to satisfy browser Autoplay policies
+    const unlock = () => {
+      this.init();
+      this.resume();
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchstart', unlock);
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('pointerdown', unlock, { once: true });
+      window.addEventListener('keydown', unlock, { once: true });
+      window.addEventListener('touchstart', unlock, { once: true });
+    }
   }
 
   init() {
     if (this.ctx) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const AudioContext = (typeof window !== 'undefined') && (window.AudioContext || window.webkitAudioContext);
     if (!AudioContext) return;
-    this.ctx = new AudioContext();
+    try {
+      this.ctx = new AudioContext();
 
-    this.masterGain = this.ctx.createGain();
-    this.masterGain.gain.setValueAtTime(this.masterVolume, this.ctx.currentTime);
-    this.masterGain.connect(this.ctx.destination);
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.setValueAtTime(this.masterVolume, this.ctx.currentTime);
+      this.masterGain.connect(this.ctx.destination);
 
-    this.bgmGain = this.ctx.createGain();
-    this.bgmGain.gain.setValueAtTime(this.bgmVolume, this.ctx.currentTime);
-    this.bgmGain.connect(this.masterGain);
+      this.bgmGain = this.ctx.createGain();
+      this.bgmGain.gain.setValueAtTime(this.bgmVolume, this.ctx.currentTime);
+      this.bgmGain.connect(this.masterGain);
 
-    this.sfxGain = this.ctx.createGain();
-    this.sfxGain.gain.setValueAtTime(this.sfxVolume, this.ctx.currentTime);
-    this.sfxGain.connect(this.masterGain);
+      this.sfxGain = this.ctx.createGain();
+      this.sfxGain.gain.setValueAtTime(this.sfxVolume, this.ctx.currentTime);
+      this.sfxGain.connect(this.masterGain);
+    } catch (e) {
+      // AudioContext unavailable or blocked
+    }
   }
 
   resume() {
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {
+        // Silently catch suspended context before gesture
+      });
     }
   }
 

@@ -6,6 +6,9 @@ class UIManager {
     this.initWindows();
     this.initHotkeys();
     this.initDraggableWindows();
+    if (this.game.player) {
+      this.updateQuickslotsForJob(this.game.player.job);
+    }
   }
 
   initWindows() {
@@ -18,6 +21,69 @@ class UIManager {
     document.getElementById('btn-auto-hunt')?.addEventListener('click', () => this.game.autoHunt.toggle());
     document.getElementById('btn-job-select-open')?.addEventListener('click', () => this.showJobAdvancementModal());
     document.getElementById('btn-map-travel-open')?.addEventListener('click', () => this.showMapTravelModal());
+    document.getElementById('btn-keyconfig-open')?.addEventListener('click', () => this.toggleWindow('win-keyconfig'));
+    document.getElementById('btn-keyconfig-toggle')?.addEventListener('click', () => this.toggleWindow('win-keyconfig'));
+    document.getElementById('btn-armory-open')?.addEventListener('click', () => this.toggleWindow('win-armory'));
+    document.getElementById('btn-armory-toggle')?.addEventListener('click', () => this.toggleWindow('win-armory'));
+    document.getElementById('btn-login-open')?.addEventListener('click', () => this.showLoginModal());
+    document.getElementById('btn-shop-open')?.addEventListener('click', () => this.showShopModal());
+
+    // Login modal buttons
+    document.getElementById('btn-login-submit')?.addEventListener('click', () => {
+      const u = document.getElementById('login-username')?.value.trim();
+      const p = document.getElementById('login-password')?.value.trim();
+      if (!u || !p) {
+        alert('아이디와 비밀번호를 모두 입력해주세요!');
+        return;
+      }
+      window.audio.playButtonClick();
+      this.game.network?.login(u, p);
+    });
+
+    document.getElementById('btn-register-submit')?.addEventListener('click', () => {
+      const u = document.getElementById('login-username')?.value.trim();
+      const p = document.getElementById('login-password')?.value.trim();
+      if (!u || !p) {
+        alert('아이디와 비밀번호를 모두 입력해주세요!');
+        return;
+      }
+      window.audio.playButtonClick();
+      this.game.network?.register(u, p);
+    });
+
+    document.getElementById('btn-login-guest')?.addEventListener('click', () => {
+      const modal = document.getElementById('modal-maple-login');
+      if (modal) modal.style.display = 'none';
+      window.audio.playButtonClick();
+    });
+
+    // Armory category tab listeners
+    document.querySelectorAll('.armory-tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.armory-tab-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        const cat = e.target.dataset.category;
+        window.audio.playButtonClick();
+        this.renderArmoryWindow(cat);
+      });
+    });
+
+    // Key Config Preset Buttons
+    document.getElementById('btn-preset-classic')?.addEventListener('click', () => {
+      this.game.keyConfig?.applyPreset('classic');
+      window.audio.playButtonClick();
+      this.renderKeyConfigWindow();
+    });
+    document.getElementById('btn-preset-wasd')?.addEventListener('click', () => {
+      this.game.keyConfig?.applyPreset('wasd');
+      window.audio.playButtonClick();
+      this.renderKeyConfigWindow();
+    });
+    document.getElementById('btn-preset-reset')?.addEventListener('click', () => {
+      this.game.keyConfig?.applyPreset('default');
+      window.audio.playButtonClick();
+      this.renderKeyConfigWindow();
+    });
 
     document.querySelectorAll('.btn-window-close').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -147,23 +213,13 @@ class UIManager {
     };
 
     addQuickslotAction('quick-slot-attack', () => this.game.player.normalAttack(this.game));
-    addQuickslotAction('quick-slot-1', () => {
-      const skillId = this.game.getClassSkillId(0);
-      if (skillId) this.game.player.useSkill(skillId, this.game);
-    });
-    addQuickslotAction('quick-slot-2', () => {
-      const skillId = this.game.getClassSkillId(1);
-      if (skillId) this.game.player.useSkill(skillId, this.game);
-    });
-    addQuickslotAction('quick-slot-3', () => {
-      const skillId = this.game.getClassSkillId(2);
-      if (skillId) this.game.player.useSkill(skillId, this.game);
-    });
-    addQuickslotAction('quick-slot-4', () => {
-      const skillId = this.game.getClassSkillId(3) || 'flash_jump';
-      if (skillId) this.game.player.useSkill(skillId, this.game);
-    });
-    addQuickslotAction('quick-slot-jump', () => this.game.player.jump());
+    for (let slot = 1; slot <= 8; slot++) {
+      addQuickslotAction(`quick-slot-${slot}`, () => {
+        const skillId = this.game.getQuickslotSkill(slot - 1);
+        if (skillId) this.game.player.useSkill(skillId, this.game);
+      });
+    }
+    addQuickslotAction('quick-slot-jump', () => this.game.player.jump(this.game.keys));
     addQuickslotAction('quick-slot-loot', () => this.game.pickUpNearbyDrops());
     addQuickslotAction('quick-slot-potion-red', () => this.game.player.usePotion('red_potion'));
     addQuickslotAction('quick-slot-potion-blue', () => this.game.player.usePotion('blue_potion'));
@@ -181,6 +237,8 @@ class UIManager {
       if (id === 'win-stats') this.updateStatsWindow();
       if (id === 'win-inventory') this.renderInventoryTab('use');
       if (id === 'win-skills') this.updateSkillsWindow();
+      if (id === 'win-keyconfig') this.renderKeyConfigWindow();
+      if (id === 'win-armory') this.renderArmoryWindow('swords');
     }
   }
 
@@ -227,11 +285,10 @@ class UIManager {
       if (e.target.tagName === 'INPUT') return;
 
       const code = e.code;
-      if (code === 'KeyS') this.toggleWindow('win-stats');
+      if (code === 'KeyC') this.toggleWindow('win-stats');
       else if (code === 'KeyI') this.toggleWindow('win-inventory');
       else if (code === 'KeyK') this.toggleWindow('win-skills');
       else if (code === 'KeyO') this.toggleWindow('win-auto-config');
-      else if (code === 'KeyR') this.game.autoHunt.toggle();
       else if (code === 'KeyB') this.game.spawnBoss();
       else if (code === 'Digit1') this.game.player.usePotion('red_potion');
       else if (code === 'Digit2') this.game.player.usePotion('blue_potion');
@@ -281,6 +338,27 @@ class UIManager {
     if (qRed) qRed.innerText = redCount;
     if (qBlue) qBlue.innerText = blueCount;
 
+    // Render Active Buff Bar
+    const buffContainer = document.getElementById('hud-buff-bar');
+    if (buffContainer && player.buffs) {
+      const buffEntries = Object.entries(player.buffs);
+      if (buffEntries.length === 0) {
+        buffContainer.innerHTML = '';
+      } else {
+        buffContainer.innerHTML = buffEntries.map(([k, b]) => {
+          const iconHtml = (window.SkillSvgIcons && SkillSvgIcons.ICONS[k])
+            ? `<div style="width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center;">${SkillSvgIcons.getIcon(k)}</div>`
+            : b.icon;
+          return `
+          <div class="hud-buff-badge" title="${b.name} (${Math.ceil(b.duration)}초 남음)">
+            <span class="buff-icon">${iconHtml}</span>
+            <span class="buff-timer">${Math.ceil(b.duration)}s</span>
+          </div>
+        `;
+        }).join('');
+      }
+    }
+
     if (this.game.autoHunt.enabled) {
       const st = this.game.autoHunt.stats;
       const mins = Math.floor(st.duration / 60);
@@ -292,33 +370,226 @@ class UIManager {
     }
   }
 
-  updateQuickslotsForJob(job) {
-    const q1 = document.getElementById('quick-slot-1');
-    const q2 = document.getElementById('quick-slot-2');
-    const q3 = document.getElementById('quick-slot-3');
-    const q4 = document.getElementById('quick-slot-4');
+  renderKeyConfigWindow() {
+    const container = document.getElementById('keyconfig-list-container');
+    if (!container || !this.game.keyConfig) return;
 
-    if (job === '전사') {
-      if (q1) { q1.title = '파워 스트라이크 [Shift/Q]'; q1.querySelector('.slot-icon').innerText = '⚔️'; }
-      if (q2) { q2.title = '슬래시 블러스트 [W]'; q2.querySelector('.slot-icon').innerText = '🌀'; }
-      if (q3) { q3.title = '아이언 바디 [E]'; q3.querySelector('.slot-icon').innerText = '🛡️'; }
-      if (q4) { q4.title = '회복력 향상 [F]'; q4.querySelector('.slot-icon').innerText = '❤️'; }
-    } else if (job === '마법사') {
-      if (q1) { q1.title = '에너지 볼트 [Shift/Q]'; q1.querySelector('.slot-icon').innerText = '🔮'; }
-      if (q2) { q2.title = '매직 클로 [W]'; q2.querySelector('.slot-icon').innerText = '✨'; }
-      if (q3) { q3.title = '텔레포트 [E]'; q3.querySelector('.slot-icon').innerText = '🌌'; }
-      if (q4) { q4.title = '회복력 [F]'; q4.querySelector('.slot-icon').innerText = '❤️'; }
-    } else if (job === '궁수') {
-      if (q1) { q1.title = '애로우 블로우 [Shift/Q]'; q1.querySelector('.slot-icon').innerText = '🏹'; }
-      if (q2) { q2.title = '더블 샷 [W]'; q2.querySelector('.slot-icon').innerText = '🎯'; }
-      if (q3) { q3.title = '포커스 [E]'; q3.querySelector('.slot-icon').innerText = '👁️'; }
-      if (q4) { q4.title = '회복력 [F]'; q4.querySelector('.slot-icon').innerText = '❤️'; }
-    } else if (job === '도적') {
-      if (q1) { q1.title = '럭키 세븐 [Shift/Q]'; q1.querySelector('.slot-icon').innerText = '⭐'; }
-      if (q2) { q2.title = '더블 스탭 [W]'; q2.querySelector('.slot-icon').innerText = '🗡️'; }
-      if (q3) { q3.title = '플래시 점프 [E]'; q3.querySelector('.slot-icon').innerText = '⚡'; }
-      if (q4) { q4.title = '헤이스트 [F]'; q4.querySelector('.slot-icon').innerText = '💨'; }
+    container.innerHTML = '';
+    const bindings = this.game.keyConfig.bindings;
+
+    for (const [actionKey, data] of Object.entries(bindings)) {
+      const row = document.createElement('div');
+      row.className = 'keyconfig-row';
+      row.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; background: #fff; border: 1px solid #d1c4a9; border-radius: 4px; font-size: 11px;';
+
+      const isListening = this.listeningKeyAction === actionKey;
+
+      row.innerHTML = `
+        <span style="font-weight: 700; color: #451a03;">${data.label}</span>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <span class="key-badge" style="background: ${isListening ? '#fef08a' : '#1f2937'}; color: ${isListening ? '#b45309' : '#fef08a'}; padding: 2px 8px; border-radius: 3px; font-weight: 800; font-size: 10px; border: 1px solid #c8a86b;">
+            ${isListening ? '⌨️ 키 입력...' : data.display}
+          </span>
+          <button class="btn-change-key btn-maple" style="padding: 2px 8px; font-size: 10px;">${isListening ? '취소' : '변경'}</button>
+        </div>
+      `;
+
+      const btn = row.querySelector('.btn-change-key');
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this.listeningKeyAction === actionKey) {
+          this.listeningKeyAction = null;
+          this.renderKeyConfigWindow();
+        } else {
+          this.startListeningKey(actionKey);
+        }
+      });
+
+      container.appendChild(row);
     }
+  }
+
+  startListeningKey(actionKey) {
+    this.listeningKeyAction = actionKey;
+    this.renderKeyConfigWindow();
+
+    const onKeyDown = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.removeEventListener('keydown', onKeyDown, true);
+
+      // Escape cancels
+      if (e.code !== 'Escape') {
+        this.game.keyConfig.bindKey(actionKey, e.code);
+        window.audio.playButtonClick();
+      }
+      this.listeningKeyAction = null;
+      this.renderKeyConfigWindow();
+      this.updateHUD();
+    };
+
+    window.addEventListener('keydown', onKeyDown, true);
+  }
+
+  renderArmoryWindow(category = 'swords') {
+    const container = document.getElementById('armory-grid-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const catalog = window.MAPLE_EQUIPMENT_CATALOG || {};
+    const items = catalog[category] || [];
+    const p = this.game.player;
+
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'armory-card';
+
+      // Check if equipped
+      let isEquipped = false;
+      if (item.type === 'star') {
+        isEquipped = p.activeStar === item.starType;
+      } else {
+        const eqWp = p.inventory?.equip?.find(e => e.id === item.id && e.equipped);
+        isEquipped = !!eqWp;
+      }
+
+      if (isEquipped) card.classList.add('equipped');
+
+      // Stat string
+      let statsText = `공격력: +${item.atk || 0}`;
+      if (item.str) statsText += ` | STR: +${item.str}`;
+      if (item.dex) statsText += ` | DEX: +${item.dex}`;
+      if (item.int) statsText += ` | INT: +${item.int}`;
+      if (item.luk) statsText += ` | LUK: +${item.luk}`;
+      if (item.def) statsText += ` | 방어: +${item.def}`;
+      if (item.spd) statsText += ` | 이속: +${item.spd}`;
+      if (item.count) statsText += ` | 충전: ${item.count}개`;
+
+      card.innerHTML = `
+        <div>
+          <div class="armory-card-header">
+            <div class="armory-card-icon" style="background: ${item.color || '#e2e8f0'}22; border-color: ${item.color || '#94a3b8'};">
+              ${item.icon || '⚔️'}
+            </div>
+            <div>
+              <div class="armory-card-name" style="color: ${item.color || '#1e293b'}">${item.name}</div>
+              <div class="armory-card-cat">${item.category || ''} (제한: Lv.${item.reqLevel || 0})</div>
+            </div>
+          </div>
+          <div class="armory-card-stats">${statsText}</div>
+          <div class="armory-card-desc">${item.desc || ''}</div>
+        </div>
+        <button class="armory-btn-equip ${isEquipped ? 'equipped' : ''}">
+          ${isEquipped ? '✓ 장착 중' : '장착하기'}
+        </button>
+      `;
+
+      const btn = card.querySelector('.armory-btn-equip');
+      if (!isEquipped) {
+        btn.addEventListener('click', () => {
+          p.equipById(item.id);
+          window.audio.playPickItem();
+          this.game.spawnItemText(p.x, p.y - 45, `✨ [장착] ${item.name}!`);
+          this.addChatMessage('시스템', `⚔️ [장비 장착] ${item.name}을(를) 장착했습니다!`, 'system');
+          this.updateStatsWindow();
+          this.updateHUD();
+          this.updateQuickslotsForJob(p.job);
+          this.renderArmoryWindow(category);
+        });
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+  updateQuickslotsForJob(job) {
+    const defaultQuickslots = {
+      '초보자': [
+        { key: 'Shift', id: 'three_snails', name: '달팽이 세껍질', icon: '🐌' },
+        { key: 'Q', id: 'power_strike', name: '파워 스트라이크', icon: '⚔️' },
+        { key: 'W', id: 'slash_blast', name: '슬래시 블러스트', icon: '🌀' },
+        { key: 'E', id: 'flash_jump', name: '플래시 점프', icon: '⚡' },
+        { key: 'A', id: 'recovery', name: '회복력 향상', icon: '❤️' },
+        { key: 'S', id: null, name: '빈 슬롯', icon: '—' },
+        { key: 'D', id: null, name: '빈 슬롯', icon: '—' },
+        { key: 'F', id: 'flash_jump', name: '플래시 점프', icon: '⚡' }
+      ],
+      '전사': [
+        { key: 'Shift', id: 'power_strike', name: '파워 스트라이크', icon: '⚔️' },
+        { key: 'Q', id: 'slash_blast', name: '슬래시 블러스트', icon: '🌀' },
+        { key: 'W', id: 'iron_body', name: '아이언 바디', icon: '🛡️' },
+        { key: 'E', id: 'rage', name: '분노', icon: '🔥' },
+        { key: 'A', id: 'combo_attack', name: '콤보 어택', icon: '🔮' },
+        { key: 'S', id: 'brandish', name: '브랜디쉬', icon: '⚡' },
+        { key: 'D', id: null, name: '빈 슬롯', icon: '—' },
+        { key: 'F', id: 'power_strike', name: '파워 스트라이크', icon: '⚔️' }
+      ],
+      '마법사': [
+        { key: 'Shift', id: 'energy_bolt', name: '에너지 볼트', icon: '🔮' },
+        { key: 'Q', id: 'magic_claw', name: '매직 클로', icon: '✨' },
+        { key: 'W', id: 'teleport', name: '텔레포트', icon: '🌌' },
+        { key: 'E', id: 'magic_guard', name: '매직 가드', icon: '💎' },
+        { key: 'A', id: 'thunderbolt', name: '썬더볼트', icon: '⚡' },
+        { key: 'S', id: 'holy_symbol', name: '홀리 심볼', icon: '🕊️' },
+        { key: 'D', id: null, name: '빈 슬롯', icon: '—' },
+        { key: 'F', id: 'teleport', name: '텔레포트', icon: '🌌' }
+      ],
+      '궁수': [
+        { key: 'Shift', id: 'arrow_blow', name: '애로우 블로우', icon: '🏹' },
+        { key: 'Q', id: 'double_shot', name: '더블 샷', icon: '🎯' },
+        { key: 'W', id: 'focus', name: '포커스', icon: '👁️' },
+        { key: 'E', id: 'soul_arrow', name: '소울 애로우', icon: '✨' },
+        { key: 'A', id: 'arrow_bomb', name: '애로우 밤', icon: '💣' },
+        { key: 'S', id: 'hurricane', name: '폭풍의 시', icon: '🌪️' },
+        { key: 'D', id: null, name: '빈 슬롯', icon: '—' },
+        { key: 'F', id: 'hurricane', name: '폭풍의 시', icon: '🌪️' }
+      ],
+      '도적': [
+        { key: 'Shift', id: 'lucky_seven', name: '럭키 세븐', icon: '⭐' },
+        { key: 'Q', id: 'double_stab', name: '더블 스탭', icon: '🗡️' },
+        { key: 'W', id: 'flash_jump', name: '플래시 점프', icon: '⚡' },
+        { key: 'E', id: 'haste', name: '헤이스트', icon: '💨' },
+        { key: 'A', id: 'dark_site', name: '다크 사이트', icon: '👤' },
+        { key: 'S', id: 'shadow_partner', name: '쉐도우 파트너', icon: '👥' },
+        { key: 'D', id: 'avenger', name: '어벤저', icon: '🌀' },
+        { key: 'F', id: 'flash_jump', name: '플래시 점프', icon: '⚡' }
+      ]
+    };
+
+    // Dynamically update Primary Basic Skill on quick-slot-attack
+    const qAttack = document.getElementById('quick-slot-attack');
+    if (qAttack && this.game.player) {
+      const primId = this.game.player.getPrimarySkillId();
+      qAttack.title = `${this.game.player.getPrimarySkillName()} [Ctrl] (기본 스킬)`;
+      const iconEl = qAttack.querySelector('.slot-icon');
+      if (iconEl) {
+        if (window.SkillSvgIcons && SkillSvgIcons.ICONS[primId]) {
+          iconEl.innerHTML = SkillSvgIcons.getIcon(primId);
+        } else {
+          iconEl.innerText = this.game.player.getPrimarySkillIcon();
+        }
+      }
+    }
+
+    const slots = defaultQuickslots[job] || defaultQuickslots['초보자'];
+    if (this.game.player) {
+      this.game.player.quickslotBindings = slots.map(s => s.id);
+    }
+
+    slots.forEach((s, idx) => {
+      const el = document.getElementById(`quick-slot-${idx + 1}`);
+      if (el) {
+        el.title = s.id ? `${s.name} [${s.key}]` : `빈 슬롯 [${s.key}]`;
+        const iconEl = el.querySelector('.slot-icon');
+        if (iconEl) {
+          if (s.id && window.SkillSvgIcons && SkillSvgIcons.ICONS[s.id]) {
+            iconEl.innerHTML = SkillSvgIcons.getIcon(s.id);
+          } else {
+            iconEl.innerText = s.icon || '';
+          }
+        }
+      }
+    });
   }
 
   updateStatsWindow() {
@@ -429,15 +700,25 @@ class UIManager {
     Object.entries(p.skills).forEach(([id, skill]) => {
       const row = document.createElement('div');
       row.className = 'skill-row';
+      const iconHtml = (window.SkillSvgIcons && SkillSvgIcons.ICONS[id])
+        ? `<div style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">${SkillSvgIcons.getIcon(id)}</div>`
+        : skill.icon;
+
       row.innerHTML = `
-        <div class="skill-icon">${skill.icon}</div>
+        <div class="skill-icon" style="width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; padding: 1px;">${iconHtml}</div>
         <div class="skill-info">
           <div class="skill-name">${skill.name}</div>
           <div class="skill-level">Lv. ${skill.level} / ${skill.maxLevel}</div>
           <div style="font-size: 9px; color: #854d0e;">${skill.desc || ''}</div>
         </div>
+        <button class="btn-skill-cast" title="스킬 즉시 사용">사용</button>
         <button class="btn-maple btn-sp-add" ${p.sp <= 0 || skill.level >= skill.maxLevel ? 'disabled' : ''}>+</button>
       `;
+
+      row.querySelector('.btn-skill-cast')?.addEventListener('click', () => {
+        p.useSkill(id, this.game);
+        this.updateHUD();
+      });
 
       row.querySelector('.btn-sp-add')?.addEventListener('click', () => {
         if (p.sp > 0 && skill.level < skill.maxLevel) {
@@ -530,6 +811,10 @@ class UIManager {
     } else if (npc.type === 'chief_stan') {
       textEl.innerText = '반갑네, 젊은 모험가여! 헤네시스 사냥터의 몬스터를 물리치고 마을을 수호해주어 고맙네. 자네의 명예를 치하하여 인기도를 올려주겠네!';
       const choices = [
+        {
+          text: '🛒 헤네시스 잡화상점 이용하기 (물약/주문서 구매 & 전리품 판매)',
+          action: () => this.showShopModal()
+        },
         {
           text: '🏅 장로스탄의 칭찬 받기 (인기도 +5 획득)',
           action: () => {
@@ -640,6 +925,139 @@ class UIManager {
         logBox.removeChild(item);
       }
     }, 3200);
+  }
+
+  // --- LOGIN MODAL ---
+  showLoginModal() {
+    const modal = document.getElementById('modal-maple-login');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    window.audio.playButtonClick();
+  }
+
+  // --- TOWN SHOP MODAL ---
+  showShopModal() {
+    const modal = document.getElementById('modal-maple-shop');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    window.audio.playButtonClick();
+    this.renderShopModal();
+  }
+
+  renderShopModal() {
+    const p = this.game.player;
+    if (!p) return;
+
+    const mesoEl = document.getElementById('shop-user-meso');
+    if (mesoEl) mesoEl.innerText = p.meso.toLocaleString();
+
+    // 1. Buy List
+    const buyListEl = document.getElementById('shop-buy-list');
+    if (buyListEl) {
+      buyListEl.innerHTML = '';
+      SHOP_ITEMS_FOR_SALE.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'shop-item-row';
+        row.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 16px;">${item.icon}</span>
+            <div>
+              <div style="font-weight: 700; color: #1e293b;">${item.name}</div>
+              <div style="font-size: 9px; color: #64748b;">${item.desc}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-weight: 800; color: #b45309;">${item.price.toLocaleString()} 메소</span>
+            <button class="btn-maple shop-item-btn btn-buy">구매</button>
+          </div>
+        `;
+        row.querySelector('.btn-buy').addEventListener('click', () => {
+          ShopSystem.buyItem(p, item, this.game);
+          this.renderShopModal();
+        });
+        buyListEl.appendChild(row);
+      });
+    }
+
+    // 2. Sell List (Etc & Use Items)
+    const sellListEl = document.getElementById('shop-sell-list');
+    if (sellListEl) {
+      sellListEl.innerHTML = '';
+      const itemsToSell = [];
+
+      // Collect from etc
+      p.inventory.etc.forEach((it, idx) => {
+        itemsToSell.push({ tab: 'etc', idx, item: it });
+      });
+      // Collect from use
+      p.inventory.use.forEach((it, idx) => {
+        itemsToSell.push({ tab: 'use', idx, item: it });
+      });
+
+      if (itemsToSell.length === 0) {
+        sellListEl.innerHTML = '<div style="color: #94a3b8; text-align: center; margin-top: 30px;">판매할 소지품이 없습니다.</div>';
+      } else {
+        itemsToSell.forEach(({ tab, idx, item }) => {
+          const unitPrice = ITEM_SELL_PRICES[item.id] || Math.max(1, Math.floor((item.price || 10) * 0.4));
+          const row = document.createElement('div');
+          row.className = 'shop-item-row';
+          row.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 14px;">📦</span>
+              <div>
+                <span style="font-weight: 700;">${item.name}</span>
+                <span style="color: #64748b; font-size: 10px;">x${item.count || 1}</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-weight: 700; color: #15803d;">개당 ${unitPrice} 메소</span>
+              <button class="btn-maple shop-item-btn btn-sell" style="background: #ef4444; color: #fff;">판매</button>
+            </div>
+          `;
+          row.querySelector('.btn-sell').addEventListener('click', () => {
+            ShopSystem.sellItem(p, tab, idx, this.game);
+            this.renderShopModal();
+          });
+          sellListEl.appendChild(row);
+        });
+      }
+    }
+  }
+
+  // --- PEER USER INTERACTION ---
+  showPeerInteractionModal(peer) {
+    const modal = document.getElementById('modal-user-interaction');
+    if (!modal || !peer) return;
+
+    window.audio.playButtonClick();
+    modal.style.display = 'flex';
+
+    const nameEl = document.getElementById('peer-interact-name');
+    if (nameEl) nameEl.innerText = peer.name;
+
+    const infoEl = document.getElementById('peer-interact-info');
+    if (infoEl) infoEl.innerText = `Lv.${peer.level} ${peer.job} | 🌟 인기도: ${peer.fame || 0}`;
+
+    const btnFame = document.getElementById('btn-interact-fame');
+    if (btnFame) {
+      btnFame.onclick = () => {
+        window.audio.playLevelUp();
+        this.game.network?.sendFameUp(peer.name);
+        modal.style.display = 'none';
+      };
+    }
+
+    const btnWhisper = document.getElementById('btn-interact-whisper');
+    if (btnWhisper) {
+      btnWhisper.onclick = () => {
+        const chatInput = document.getElementById('chat-input');
+        if (chatInput) {
+          chatInput.value = `/w ${peer.name} `;
+          chatInput.focus();
+        }
+        modal.style.display = 'none';
+      };
+    }
   }
 }
 

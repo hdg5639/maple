@@ -67,7 +67,12 @@ class GameMap {
       // The bottom-most platform level must NEVER allow drop-through into the void!
       const isBottomFloor = Math.max(f.y1, f.y2) >= maxY - 25;
       const canDrop = isBottomFloor ? false : (f.canDropThrough !== undefined ? f.canDropThrough : true);
-      return new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, canDrop, canDrop ? 'platform' : 'ground');
+      const isDecorativeProp = key === 'henesys_hhg' && (
+        Math.abs(f.y1 - 473) <= 6 || Math.abs(f.y1 - 714) <= 6 ||
+        Math.abs(f.y1 - 956) <= 6 || Math.abs(f.y1 - 1255) <= 6
+      );
+      const type = isDecorativeProp ? 'prop' : (canDrop ? 'platform' : 'ground');
+      return new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, canDrop, type);
     });
 
     // Ladders and Ropes
@@ -79,6 +84,29 @@ class GameMap {
       isLadder: l.isLadder,
       type: l.isLadder ? 'ladder' : 'rope'
     }));
+
+    // For Zakum Altar, inject authentic multi-tier side towers and ropes so all 8 arms are reachable by melee players
+    if (key === 'zakum_altar') {
+      const extraFhs = [
+        new Foothold('zk_fh_l1', 180, 405, 380, 405, true, 'platform'),
+        new Foothold('zk_fh_l2', 200, 315, 400, 315, true, 'platform'),
+        new Foothold('zk_fh_l3', 240, 225, 440, 225, true, 'platform'),
+        new Foothold('zk_fh_r1', 820, 405, 1020, 405, true, 'platform'),
+        new Foothold('zk_fh_r2', 800, 315, 1000, 315, true, 'platform'),
+        new Foothold('zk_fh_r3', 760, 225, 960, 225, true, 'platform')
+      ];
+      this.footholds.push(...extraFhs);
+
+      const extraLadders = [
+        { id: 'zk_lad_l1', x: 260, top: 400, bottom: 495, isLadder: false, type: 'rope' },
+        { id: 'zk_lad_l2', x: 240, top: 310, bottom: 405, isLadder: false, type: 'rope' },
+        { id: 'zk_lad_l3', x: 280, top: 220, bottom: 315, isLadder: false, type: 'rope' },
+        { id: 'zk_lad_r1', x: 940, top: 400, bottom: 495, isLadder: false, type: 'rope' },
+        { id: 'zk_lad_r2', x: 960, top: 310, bottom: 405, isLadder: false, type: 'rope' },
+        { id: 'zk_lad_r3', x: 920, top: 220, bottom: 315, isLadder: false, type: 'rope' }
+      ];
+      this.ladders.push(...extraLadders);
+    }
 
     // NPCs
     this.npcs = (data.npcs || []).map(npcData => ({
@@ -163,6 +191,16 @@ class GameMap {
     // 2. Authentic Map Terrain Blit
     if (this.terrainLoaded && this.terrainImg.complete) {
       ctx.drawImage(this.terrainImg, 0, 0);
+    }
+
+    // 2.5 Ellinia Procedural Ancient Trunks and Branch Platforms (replaces empty void)
+    if (this.currentKey === 'ellinia') {
+      this.drawElliniaProceduralTerrain(ctx, camera);
+    }
+
+    // 2.6 Zakum Altar Ancient Basalt Platforms
+    if (this.currentKey === 'zakum_altar') {
+      this.drawZakumAltarPlatforms(ctx, camera);
     }
 
     // 3. Render Pixel-Art Ladders & Ropes connecting platforms
@@ -274,6 +312,220 @@ class GameMap {
 
       ctx.restore();
     }
+  }
+
+  drawElliniaProceduralTerrain(ctx, camera) {
+    const viewLeft = camera.x - 80;
+    const viewRight = camera.x + camera.width + 80;
+    const viewTop = camera.y - 80;
+    const viewBottom = camera.y + camera.height + 80;
+
+    // 1. Giant Ancient Oak Trunks that anchor the vertical forest
+    const giantTrunks = [
+      { x: 320, w: 260 },
+      { x: 880, w: 280 },
+      { x: 1520, w: 340 },
+      { x: 2220, w: 280 }
+    ];
+
+    ctx.save();
+    for (const trunk of giantTrunks) {
+      if (trunk.x + trunk.w < viewLeft || trunk.x > viewRight) continue;
+
+      // Bark Base
+      const trunkGrad = ctx.createLinearGradient(trunk.x, 0, trunk.x + trunk.w, 0);
+      trunkGrad.addColorStop(0, '#2d180a');
+      trunkGrad.addColorStop(0.15, '#45260f');
+      trunkGrad.addColorStop(0.5, '#5c3417');
+      trunkGrad.addColorStop(0.85, '#45260f');
+      trunkGrad.addColorStop(1, '#241307');
+      ctx.fillStyle = trunkGrad;
+      ctx.fillRect(trunk.x, viewTop, trunk.w, viewBottom - viewTop);
+
+      // Bark vertical wood-grain ridges & cel-shading
+      ctx.strokeStyle = 'rgba(25, 12, 5, 0.65)';
+      ctx.lineWidth = 3;
+      for (let rx = trunk.x + 30; rx < trunk.x + trunk.w - 20; rx += 36) {
+        ctx.beginPath();
+        ctx.moveTo(rx, viewTop);
+        ctx.lineTo(rx + Math.sin(rx) * 6, viewBottom);
+        ctx.stroke();
+      }
+
+      // Outer Dark Outlines (AGENTS.md 1.5~2px border)
+      ctx.strokeStyle = 'rgba(15, 10, 8, 0.9)';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(trunk.x, viewTop, trunk.w, viewBottom - viewTop);
+    }
+    ctx.restore();
+
+    // 2. Mossy Wooden Branch Platforms along Footholds
+    ctx.save();
+    for (const fh of this.footholds) {
+      if (fh.x2 < viewLeft || fh.x1 > viewRight) continue;
+      const minY = Math.min(fh.y1, fh.y2);
+      const maxY = Math.max(fh.y1, fh.y2);
+      if (maxY < viewTop || minY > viewBottom) continue;
+
+      const w = fh.x2 - fh.x1;
+      if (w < 8) continue;
+
+      if (minY >= 4450) {
+        // Deep Ground Soil Floor
+        ctx.fillStyle = '#261609';
+        ctx.fillRect(fh.x1, minY, w, 500);
+
+        // Top lush moss grass strip
+        ctx.fillStyle = '#1e7b34';
+        ctx.fillRect(fh.x1, minY - 2, w, 8);
+        ctx.fillStyle = '#38a169';
+        ctx.fillRect(fh.x1, minY - 4, w, 4);
+
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(fh.x1, minY - 4);
+        ctx.lineTo(fh.x2, minY - 4);
+        ctx.stroke();
+      } else {
+        // Wooden Branch Platform
+        const branchH = 16;
+        const branchGrad = ctx.createLinearGradient(0, minY, 0, minY + branchH);
+        branchGrad.addColorStop(0, '#5a3418');
+        branchGrad.addColorStop(0.7, '#3d210d');
+        branchGrad.addColorStop(1, '#241307');
+
+        // Wooden Branch Slab
+        ctx.fillStyle = branchGrad;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(fh.x1 - 4, minY, w + 8, branchH, [0, 0, 6, 6]);
+        } else {
+          ctx.rect(fh.x1 - 4, minY, w + 8, branchH);
+        }
+        ctx.fill();
+
+        // 2px Dark Outline
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        // Top Moss Foliage Layer
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(fh.x1 - 5, minY - 4, w + 10, 6, [3, 3, 0, 0]);
+        } else {
+          ctx.rect(fh.x1 - 5, minY - 4, w + 10, 6);
+        }
+        ctx.fill();
+
+        // Moss Highlights & Shadow Strip
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(fh.x1 - 3, minY - 4, w + 6, 2);
+        ctx.fillStyle = '#15803d';
+        ctx.fillRect(fh.x1 - 3, minY, w + 6, 2);
+
+        // Hanging Ivy Tendrils for authentic Ellinia fantasy feel
+        if (w >= 40) {
+          ctx.fillStyle = '#15803d';
+          const vineCount = Math.min(4, Math.floor(w / 45));
+          for (let vi = 0; vi < vineCount; vi++) {
+            const vx = fh.x1 + 15 + vi * 38;
+            const vh = 10 + (vi % 3) * 6;
+            ctx.beginPath();
+            ctx.ellipse(vx, minY + branchH + vh * 0.4, 3, vh * 0.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(vx - 1, minY + branchH, 2, vh);
+          }
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+
+  drawZakumAltarPlatforms(ctx, camera) {
+    const viewLeft = camera.x - 60;
+    const viewRight = camera.x + camera.width + 60;
+    const viewTop = camera.y - 60;
+    const viewBottom = camera.y + camera.height + 60;
+
+    const sidePlatforms = [
+      { id: 'zk_fh_l1', x1: 180, y: 405, x2: 380 },
+      { id: 'zk_fh_l2', x1: 200, y: 315, x2: 400 },
+      { id: 'zk_fh_l3', x1: 240, y: 225, x2: 440 },
+      { id: 'zk_fh_r1', x1: 820, y: 405, x2: 1020 },
+      { id: 'zk_fh_r2', x1: 800, y: 315, x2: 1000 },
+      { id: 'zk_fh_r3', x1: 760, y: 225, x2: 960 }
+    ];
+
+    ctx.save();
+    for (const plat of sidePlatforms) {
+      if (plat.x2 < viewLeft || plat.x1 > viewRight) continue;
+      if (plat.y < viewTop || plat.y > viewBottom) continue;
+
+      const w = plat.x2 - plat.x1;
+      const h = 18;
+      const y = plat.y;
+
+      const slabGrad = ctx.createLinearGradient(0, y, 0, y + h);
+      slabGrad.addColorStop(0, '#2d2529');
+      slabGrad.addColorStop(0.3, '#221a1d');
+      slabGrad.addColorStop(0.7, '#151113');
+      slabGrad.addColorStop(1, '#0c090a');
+
+      ctx.fillStyle = slabGrad;
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(plat.x1, y, w, h, [0, 0, 8, 8]);
+      } else {
+        ctx.rect(plat.x1, y, w, h);
+      }
+      ctx.fill();
+
+      ctx.fillStyle = '#3e343a';
+      ctx.fillRect(plat.x1, y, w, 3);
+
+      ctx.strokeStyle = 'rgba(255, 87, 34, 0.85)';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(plat.x1 + 18, y + 2);
+      ctx.lineTo(plat.x1 + 42, y + 4);
+      ctx.lineTo(plat.x1 + 65, y + 2);
+      ctx.moveTo(plat.x1 + 110, y + 3);
+      ctx.lineTo(plat.x1 + 135, y + 1);
+      ctx.lineTo(plat.x1 + 160, y + 4);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(255, 193, 7, 0.9)';
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(plat.x1 + 22, y + 2);
+      ctx.lineTo(plat.x1 + 40, y + 3);
+      ctx.moveTo(plat.x1 + 115, y + 2);
+      ctx.lineTo(plat.x1 + 140, y + 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.9)';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(plat.x1, y, w, h, [0, 0, 8, 8]);
+      } else {
+        ctx.rect(plat.x1, y, w, h);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#4a4448';
+      ctx.fillRect(plat.x1 + 12, y + h, 8, 6);
+      ctx.fillRect(plat.x2 - 20, y + h, 8, 6);
+      ctx.strokeStyle = '#1a1618';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(plat.x1 + 12, y + h, 8, 6);
+      ctx.strokeRect(plat.x2 - 20, y + h, 8, 6);
+    }
+    ctx.restore();
   }
 
   drawLaddersAndRopes(ctx) {

@@ -21,8 +21,24 @@ class Game {
     this.shakeTimer = 0;
     this.shakeMagnitude = 0;
 
+    this.keyConfig = new KeyConfigManager(this);
     this.autoHunt = new AutoHuntManager(this);
     this.ui = new UIManager(this);
+    this.network = new NetworkManager(this);
+
+    // Click canvas to interact with other players
+    this.canvas.addEventListener('click', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left + this.camera.x;
+      const clickY = e.clientY - rect.top + this.camera.y;
+
+      for (const rp of this.network.remotePlayers.values()) {
+        if (Math.hypot(rp.x - clickX, rp.y - clickY) < 40) {
+          this.ui.showPeerInteractionModal(rp);
+          break;
+        }
+      }
+    });
 
     this.maxMonsters = 24;
     this.spawnTimer = 0;
@@ -32,6 +48,7 @@ class Game {
     this.initInputs();
     this.initMonsters();
     this.loadProgress();
+    this.ui.updateQuickslotsForJob(this.player.job);
 
     requestAnimationFrame((t) => this.loop(t));
     setInterval(() => this.saveProgress(), 15000);
@@ -53,91 +70,136 @@ class Game {
   }
 
   initInputs() {
+    this.lastHorizontalKey = null;
+
     window.addEventListener('keydown', (e) => {
       this.keys[e.code] = true;
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'AltLeft', 'ControlLeft'].includes(e.code)) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      const action = this.keyConfig ? this.keyConfig.getAction(e.code) : null;
+
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'AltLeft', 'AltRight', 'ControlLeft', 'ControlRight', 'Tab'].includes(e.code)) {
         e.preventDefault();
       }
 
-      // Space: NPC Interaction or Portal Entrance
-      if (e.code === 'Space') {
-        // 1. Check near NPC
-        const nearNpc = this.map.npcs.find(npc => Math.hypot(npc.x - this.player.x, npc.y - this.player.y) < 75);
+      // Generous Portal Detection (horizontal +-75px, vertical +-85px)
+      const nearPortal = this.map.portals.find(p =>
+        Math.abs(p.x - this.player.x) <= 75 && Math.abs(p.y - this.player.y) <= 85
+      );
+      // Generous NPC Detection (horizontal +-85px, vertical +-90px)
+      const nearNpc = this.map.npcs.find(npc =>
+        Math.abs(npc.x - this.player.x) <= 85 && Math.abs(npc.y - this.player.y) <= 90
+      );
+
+      // 1. Move Left
+      if (action === 'moveLeft' || e.code === 'ArrowLeft') {
+        this.keys['ArrowLeft'] = true;
+        this.lastHorizontalKey = 'ArrowLeft';
+      }
+      // 2. Move Right
+      if (action === 'moveRight' || e.code === 'ArrowRight') {
+        this.keys['ArrowRight'] = true;
+        this.lastHorizontalKey = 'ArrowRight';
+      }
+
+      // 3. Climb Up / Enter Portal
+      if (action === 'climbUp' || e.code === 'ArrowUp') {
+        this.keys['ArrowUp'] = true;
+        if (nearPortal) {
+          this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
+          return;
+        }
+      }
+
+      // 4. Climb Down
+      if (action === 'climbDown' || e.code === 'ArrowDown') {
+        this.keys['ArrowDown'] = true;
+      }
+
+      // 5. Interact (Space): NPC Dialog -> Portal Warp -> Jump
+      if (action === 'interact' || e.code === 'Space') {
         if (nearNpc) {
           this.ui.showNpcDialog(nearNpc);
           return;
         }
-
-        // 2. Check near Portal
-        const nearPortal = this.map.portals.find(p => Math.hypot(p.x - this.player.x, p.y - this.player.y) < 55);
         if (nearPortal) {
           this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
           return;
         }
-      }
-
-      // ArrowUp Portal Warp
-      if (e.code === 'ArrowUp') {
-        const nearPortal = this.map.portals.find(p => Math.hypot(p.x - this.player.x, p.y - this.player.y) < 50);
-        if (nearPortal) {
-          this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
-          return;
-        }
-      }
-
-      // Jump
-      if (e.code === 'AltLeft' || e.code === 'KeyC') {
         if (this.keys['ArrowDown']) {
           this.player.dropThrough();
         } else {
-          this.player.jump();
+          this.player.jump(this.keys);
         }
+        return;
       }
 
-      // Normal Attack [Ctrl]
-      if (e.code === 'ControlLeft') {
-        this.player.normalAttack(this);
+      // 6. Jump
+      if (action === 'jump' || e.code === 'AltLeft' || e.code === 'AltRight') {
+        if (this.keys['ArrowDown']) {
+          this.player.dropThrough();
+        } else {
+          this.player.jump(this.keys);
+        }
+        return;
       }
 
-      // Class Skill 1 [Shift or KeyQ]
-      if (e.code === 'ShiftLeft' || e.code === 'KeyQ') {
-        const skillId = this.getClassSkillId(0);
+      // 7. Primary Signature Skill Attack (replaces normal attack)
+      if (action === 'primarySkill' || e.code === 'ControlLeft' || e.code === 'ControlRight') {
+        this.player.primaryAttack(this);
+        return;
+      }
+
+      // 8. Quickslot Skills 1 to 8
+      if (action && action.startsWith('skill')) {
+        const slotIdx = parseInt(action.replace('skill', '')) - 1;
+        const skillId = this.getQuickslotSkill(slotIdx);
+        if (skillId) this.player.useSkill(skillId, this);
+        return;
+      }
+
+      // Fallback Hotkeys for Skills 1~8
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+        const skillId = this.getQuickslotSkill(0);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyQ') {
+        const skillId = this.getQuickslotSkill(1);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyW' && action !== 'climbUp') {
+        const skillId = this.getQuickslotSkill(2);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyE') {
+        const skillId = this.getQuickslotSkill(3);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyA' && action !== 'moveLeft') {
+        const skillId = this.getQuickslotSkill(4);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyS' && action !== 'climbDown') {
+        const skillId = this.getQuickslotSkill(5);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyD' && action !== 'moveRight') {
+        const skillId = this.getQuickslotSkill(6);
+        if (skillId) this.player.useSkill(skillId, this);
+      } else if (e.code === 'KeyF' && action !== 'interact') {
+        const skillId = this.getQuickslotSkill(7);
         if (skillId) this.player.useSkill(skillId, this);
       }
 
-      // Class Skill 2 [KeyW]
-      if (e.code === 'KeyW') {
-        const skillId = this.getClassSkillId(1);
-        if (skillId) this.player.useSkill(skillId, this);
-      }
-
-      // Class Skill 3 [KeyE]
-      if (e.code === 'KeyE') {
-        const skillId = this.getClassSkillId(2);
-        if (skillId) this.player.useSkill(skillId, this);
-      }
-
-      // Class Skill 4 / Flash Jump [KeyF]
-      if (e.code === 'KeyF') {
-        const skillId = this.getClassSkillId(3) || 'flash_jump';
-        this.player.useSkill(skillId, this);
-      }
-
-      // Item Pick Up [KeyZ]
-      if (e.code === 'KeyZ') {
+      // 9. Item Pick Up
+      if (action === 'pickUp' || e.code === 'KeyZ') {
         this.pickUpNearbyDrops();
       }
 
-      // Potions
-      if (e.code === 'Digit1') this.player.usePotion('red_potion');
-      if (e.code === 'Digit2') this.player.usePotion('blue_potion');
+      // 10. Potions
+      if (action === 'potionRed' || e.code === 'Digit1') this.player.usePotion('red_potion');
+      if (action === 'potionBlue' || e.code === 'Digit2') this.player.usePotion('blue_potion');
 
-      // Auto-hunt [KeyR]
-      if (e.code === 'KeyR') {
+      // 11. Auto-hunt
+      if (action === 'autoHunt' || e.code === 'KeyR') {
         this.autoHunt.toggle();
       }
 
-      // Boss Mushmom spawn [KeyB]
+      // Boss Mushmom spawn
       if (e.code === 'KeyB') {
         this.spawnBoss();
       }
@@ -145,16 +207,41 @@ class Game {
 
     window.addEventListener('keyup', (e) => {
       this.keys[e.code] = false;
+      const action = this.keyConfig ? this.keyConfig.getAction(e.code) : null;
 
-      if ((e.code === 'ArrowLeft' && !this.keys['ArrowRight']) ||
-          (e.code === 'ArrowRight' && !this.keys['ArrowLeft'])) {
-        this.player.stopHorizontal();
+      if (action === 'moveLeft' || e.code === 'ArrowLeft') {
+        this.keys['ArrowLeft'] = false;
+        if (this.keys['ArrowRight']) {
+          this.lastHorizontalKey = 'ArrowRight';
+        } else {
+          this.lastHorizontalKey = null;
+          this.player.stopHorizontal();
+        }
+      } else if (action === 'moveRight' || e.code === 'ArrowRight') {
+        this.keys['ArrowRight'] = false;
+        if (this.keys['ArrowLeft']) {
+          this.lastHorizontalKey = 'ArrowLeft';
+        } else {
+          this.lastHorizontalKey = null;
+          this.player.stopHorizontal();
+        }
       }
 
-      if ((e.code === 'ArrowUp' && !this.keys['ArrowDown']) ||
-          (e.code === 'ArrowDown' && !this.keys['ArrowUp'])) {
-        this.player.stopVerticalClimb();
+      if (action === 'climbUp' || e.code === 'ArrowUp') {
+        this.keys['ArrowUp'] = false;
+        if (!this.keys['ArrowDown']) this.player.stopVerticalClimb();
       }
+      if (action === 'climbDown' || e.code === 'ArrowDown') {
+        this.keys['ArrowDown'] = false;
+        if (!this.keys['ArrowUp']) this.player.stopVerticalClimb();
+      }
+    });
+
+    window.addEventListener('blur', () => {
+      this.keys = {};
+      this.lastHorizontalKey = null;
+      this.player.stopHorizontal();
+      this.player.stopVerticalClimb();
     });
 
     // Touch / Mobile On-Screen Controls for LAN & Mobile devices
@@ -233,6 +320,14 @@ class Game {
     this.canvas.addEventListener('touchcancel', endTouch, { passive: true });
   }
 
+  getQuickslotSkill(index) {
+    if (this.player.quickslotBindings && this.player.quickslotBindings[index] !== undefined) {
+      return this.player.quickslotBindings[index];
+    }
+    const keys = Object.keys(this.player.skills);
+    return keys[index] || null;
+  }
+
   getClassSkillId(index) {
     const keys = Object.keys(this.player.skills);
     return keys[index] || null;
@@ -256,8 +351,20 @@ class Game {
     this.player.vx = 0;
     this.player.vy = 0;
     this.player.onLadder = false;
-    this.player.currentFoothold = null;
-    this.player.onGround = false;
+
+    // Immediate Foothold Grounding (ensures player never falls into void on warp)
+    const groundFh = this.map.findGroundFootholdAt(this.player.x);
+    if (groundFh) {
+      this.player.currentFoothold = groundFh;
+      this.player.y = groundFh.getYAtX(this.player.x);
+      this.player.onGround = true;
+    } else {
+      this.player.currentFoothold = null;
+      this.player.onGround = false;
+    }
+
+    // Immediate Camera Snap to new map and player position
+    this.snapCameraToPlayer();
 
     // Reset combat state for new map
     this.monsters = [];
@@ -298,85 +405,84 @@ class Game {
     }
 
     if (key === 'ant_tunnel') {
-      // Ant Tunnel Dungeon spawns
+      // Ant Tunnel: Dungeon depth spawns (Y >= 1000)
       const antSpawns = [
-        { type: 'zombie_mushroom', x: 450, y: 240 },
-        { type: 'zombie_mushroom', x: 800, y: 240 },
-        { type: 'blue_snail', x: 1200, y: 240 },
-        { type: 'zombie_mushroom', x: 600, y: 650 },
-        { type: 'zombie_mushroom', x: 950, y: 650 },
-        { type: 'green_mushroom', x: 1400, y: 650 },
-        { type: 'zombie_mushroom', x: 500, y: 1200 },
-        { type: 'zombie_mushroom', x: 900, y: 1200 },
-        { type: 'blue_snail', x: 1300, y: 1200 },
-        { type: 'zombie_mushroom', x: 700, y: 1800 },
-        { type: 'green_mushroom', x: 1100, y: 1800 },
-        { type: 'zombie_mushroom', x: 1500, y: 1800 },
-        { type: 'zombie_mushroom', x: 800, y: 2380 },
-        { type: 'zombie_mushroom', x: 1200, y: 2380 },
-        { type: 'green_mushroom', x: 1600, y: 2380 }
+        { type: 'zombie_mushroom', x: 300, y: 1074 },
+        { type: 'zombie_mushroom', x: 570, y: 1005 },
+        { type: 'green_mushroom', x: 880, y: 1044 },
+        { type: 'zombie_mushroom', x: 1060, y: 1009 },
+        { type: 'green_mushroom', x: 2950, y: 1076 },
+        { type: 'zombie_mushroom', x: 1450, y: 1940 },
+        { type: 'green_mushroom', x: 1720, y: 1991 },
+        { type: 'zombie_mushroom', x: 2100, y: 1784 },
+        { type: 'zombie_mushroom', x: 2470, y: 1957 },
+        { type: 'green_mushroom', x: 2660, y: 2156 },
+        { type: 'zombie_mushroom', x: 2120, y: 2184 }
       ];
       antSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
       return;
     }
 
     if (key === 'ellinia') {
+      // Ellinia: Giant tree platforms
       const elliniaSpawns = [
-        { type: 'slime', x: 600, y: 4550 },
-        { type: 'green_mushroom', x: 1000, y: 4550 },
-        { type: 'slime', x: 1800, y: 4550 },
-        { type: 'slime', x: 800, y: 3900 },
-        { type: 'green_mushroom', x: 1400, y: 3900 },
-        { type: 'slime', x: 700, y: 3100 },
-        { type: 'green_mushroom', x: 1200, y: 3100 },
-        { type: 'slime', x: 900, y: 2400 },
-        { type: 'green_mushroom', x: 1500, y: 2400 }
+        // Ground floor
+        { type: 'slime', x: 600, y: 4480 },
+        { type: 'slime', x: 1000, y: 4480 },
+        { type: 'green_mushroom', x: 1900, y: 4480 },
+        { type: 'slime', x: 2300, y: 4480 },
+        // Tree branch platforms
+        { type: 'green_mushroom', x: 675, y: 4433 },
+        { type: 'slime', x: 1670, y: 4369 },
+        { type: 'green_mushroom', x: 2100, y: 4263 },
+        { type: 'slime', x: 1250, y: 4306 },
+        { type: 'green_mushroom', x: 2140, y: 4301 }
       ];
       elliniaSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
       return;
     }
 
     if (key === 'henesys_town') {
+      // Peaceful Town: No aggressive mobs in central town! 3 beginner snails on far outskirts only
       const townSpawns = [
-        { type: 'snail', x: 1200, y: 880 },
-        { type: 'blue_snail', x: 2600, y: 880 },
-        { type: 'snail', x: 3800, y: 880 },
-        { type: 'blue_snail', x: 5200, y: 880 }
+        { type: 'snail', x: 600, y: 880 },
+        { type: 'blue_snail', x: 5400, y: 880 },
+        { type: 'snail', x: 6100, y: 880 }
       ];
       townSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
       return;
     }
 
-    // Default Henesys Hunting Ground 1 (24 Monsters across 4 Tiers)
+    // Default Henesys Hunting Ground 1 (21 Authentically Placed Monsters Across 4 Tiers)
     const spawnList = [
-      // Ground Level (Y ~ 1320)
-      { type: 'snail', x: 300, y: 1320 },
-      { type: 'snail', x: 550, y: 1320 },
-      { type: 'blue_snail', x: 800, y: 1320 },
-      { type: 'blue_snail', x: 1050, y: 1320 },
-      { type: 'slime', x: 1350, y: 1320 },
-      { type: 'slime', x: 1650, y: 1320 },
-      { type: 'ribbon_pig', x: 1950, y: 1320 },
-      { type: 'ribbon_pig', x: 2150, y: 1320 },
+      // Ground Level (Y = 1320, span 0..2238) - Snails, Slimes, Ribbon Pigs
+      { type: 'snail', x: 250, y: 1320 },
+      { type: 'snail', x: 500, y: 1320 },
+      { type: 'blue_snail', x: 750, y: 1320 },
+      { type: 'blue_snail', x: 1000, y: 1320 },
+      { type: 'slime', x: 1250, y: 1320 },
+      { type: 'slime', x: 1600, y: 1320 },
+      { type: 'ribbon_pig', x: 1850, y: 1320 },
+      { type: 'ribbon_pig', x: 2100, y: 1320 },
 
-      // Tier 1 Platforms (Y ~ 1022)
-      { type: 'snail', x: 350, y: 1022 },
-      { type: 'blue_snail', x: 700, y: 1022 },
-      { type: 'red_snail', x: 1100, y: 1022 },
-      { type: 'slime', x: 1550, y: 1022 },
-      { type: 'red_snail', x: 1900, y: 1022 },
+      // Tier 1 Major Platform (Y = 1020, span 360..1878) - Slimes, Red Snails, Ribbon Pigs
+      { type: 'snail', x: 450, y: 1020 },
+      { type: 'blue_snail', x: 750, y: 1020 },
+      { type: 'red_snail', x: 1100, y: 1020 },
+      { type: 'slime', x: 1450, y: 1020 },
+      { type: 'red_snail', x: 1750, y: 1020 },
 
-      // Tier 2 Platforms (Y ~ 782)
-      { type: 'slime', x: 450, y: 782 },
-      { type: 'orange_mushroom', x: 950, y: 782 },
-      { type: 'orange_mushroom', x: 1450, y: 782 },
-      { type: 'ribbon_pig', x: 1850, y: 782 },
+      // Tier 2 Major Platform (Y = 780, span 450..1788) - Slimes, Orange Mushrooms, Ribbon Pigs
+      { type: 'slime', x: 550, y: 780 },
+      { type: 'orange_mushroom', x: 950, y: 780 },
+      { type: 'orange_mushroom', x: 1350, y: 780 },
+      { type: 'ribbon_pig', x: 1650, y: 780 },
 
-      // Tier 3 Platforms (Y ~ 542)
-      { type: 'orange_mushroom', x: 600, y: 542 },
-      { type: 'green_mushroom', x: 1050, y: 542 },
-      { type: 'green_mushroom', x: 1500, y: 542 },
-      { type: 'zombie_mushroom', x: 1750, y: 542 }
+      // Tier 3 Top Platform (Y = 540, span 540..1698) - Green Mushrooms, Zombie Mushrooms
+      { type: 'orange_mushroom', x: 650, y: 540 },
+      { type: 'green_mushroom', x: 1000, y: 540 },
+      { type: 'green_mushroom', x: 1350, y: 540 },
+      { type: 'zombie_mushroom', x: 1600, y: 540 }
     ];
 
     spawnList.forEach(sp => {
@@ -386,32 +492,68 @@ class Game {
 
   spawnMonster() {
     if (this.map.isBossMap || this.map.currentKey === 'zakum_altar') return;
-    if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
+
+    if (this.map.currentKey === 'henesys_town') {
+      const townMobs = this.monsters.filter(m => m.isAlive());
+      if (townMobs.length >= 3) return;
+    } else {
+      if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
+    }
+
     if (!this.map.footholds || this.map.footholds.length === 0) return;
 
-    const fh = this.map.footholds[Math.floor(Math.random() * this.map.footholds.length)];
-    const x = fh.x1 + 15 + Math.random() * Math.max(10, (fh.x2 - fh.x1) - 30);
+    // Filter candidate footholds:
+    // 1. Substantial platform (length >= 75)
+    // 2. Playable area (Y >= 150, excluding phantom sky footholds)
+    // 3. For Ant Tunnel: only inside cave depths (Y >= 950, excluding safe entrance)
+    const validFhs = this.map.footholds.filter(fh => {
+      if (fh.isProp) return false;
+      const w = Math.abs(fh.x2 - fh.x1);
+      const avgY = (fh.y1 + fh.y2) / 2;
+      if (w < 75) return false;
+      if (avgY < 150) return false;
+      if (this.map.currentKey === 'ant_tunnel' && avgY < 950) return false;
+      return true;
+    });
+
+    if (validFhs.length === 0) return;
+
+    const fh = validFhs[Math.floor(Math.random() * validFhs.length)];
+    const minX = Math.min(fh.x1, fh.x2) + 25;
+    const maxX = Math.max(fh.x1, fh.x2) - 25;
+    if (maxX <= minX) return;
+
+    const x = minX + Math.random() * (maxX - minX);
+
+    // Prevent spawning within 100px of any NPC (prevents taxi/Stan clutter!)
+    if (this.map.npcs) {
+      for (const npc of this.map.npcs) {
+        if (Math.abs(x - npc.x) < 100 && Math.abs(fh.getYAtX(x) - npc.y) < 50) return;
+      }
+    }
     const y = fh.getYAtX(x);
+    if (!y || y <= 0) return;
 
     let type = 'snail';
-    if (this.map.currentKey === 'ant_tunnel') {
-      type = Math.random() < 0.6 ? 'zombie_mushroom' : 'green_mushroom';
-    } else if (this.map.currentKey === 'ellinia') {
-      type = Math.random() < 0.6 ? 'slime' : 'green_mushroom';
-    } else {
-      if (y >= 1280) {
+    if (this.map.currentKey === 'henesys_hhg') {
+      if (y >= 1200) {
         const r = Math.random();
-        type = r < 0.25 ? 'snail' : (r < 0.55 ? 'blue_snail' : (r < 0.8 ? 'slime' : 'ribbon_pig'));
-      } else if (y >= 950) {
-        const r = Math.random();
-        type = r < 0.35 ? 'blue_snail' : (r < 0.7 ? 'red_snail' : 'slime');
+        type = r < 0.3 ? 'snail' : (r < 0.6 ? 'blue_snail' : (r < 0.85 ? 'red_snail' : 'slime'));
       } else if (y >= 700) {
         const r = Math.random();
-        type = r < 0.4 ? 'slime' : (r < 0.75 ? 'orange_mushroom' : 'ribbon_pig');
+        type = r < 0.35 ? 'slime' : (r < 0.7 ? 'orange_mushroom' : 'ribbon_pig');
       } else {
         const r = Math.random();
-        type = r < 0.4 ? 'orange_mushroom' : (r < 0.8 ? 'green_mushroom' : 'zombie_mushroom');
+        type = r < 0.6 ? 'green_mushroom' : 'zombie_mushroom';
       }
+    } else if (this.map.currentKey === 'ant_tunnel') {
+      const r = Math.random();
+      type = r < 0.65 ? 'zombie_mushroom' : 'green_mushroom';
+    } else if (this.map.currentKey === 'ellinia') {
+      const r = Math.random();
+      type = r < 0.6 ? 'slime' : 'green_mushroom';
+    } else if (this.map.currentKey === 'henesys_town') {
+      type = Math.random() < 0.6 ? 'snail' : 'blue_snail';
     }
 
     this.monsters.push(new Monster(type, x, y));
@@ -449,8 +591,12 @@ class Game {
 
   sendChatMessage(text) {
     if (!text) return;
-    this.player.say(text);
-    this.ui.addChatMessage(this.player.name, text, 'player');
+    if (this.network) {
+      this.network.sendChat(text, 'ALL');
+    } else {
+      this.player.say(text);
+      this.ui.addChatMessage(this.player.name, text, 'player');
+    }
   }
 
   pickUpNearbyDrops() {
@@ -530,16 +676,45 @@ class Game {
   // --- Main Update Loop ---
   update(dt) {
     if (!this.autoHunt.enabled) {
-      if (this.keys['ArrowLeft']) {
+      const isLeft = Boolean(
+        this.keys['ArrowLeft'] ||
+        (this.keyConfig && this.keyConfig.bindings.moveLeft && this.keys[this.keyConfig.bindings.moveLeft.key])
+      );
+      const isRight = Boolean(
+        this.keys['ArrowRight'] ||
+        (this.keyConfig && this.keyConfig.bindings.moveRight && this.keys[this.keyConfig.bindings.moveRight.key])
+      );
+
+      if (isLeft && isRight) {
+        const lastIsRight = (this.lastHorizontalKey === 'ArrowRight' || (this.keyConfig && this.lastHorizontalKey === this.keyConfig.bindings.moveRight?.key));
+        if (lastIsRight) {
+          this.player.moveRight();
+        } else {
+          this.player.moveLeft();
+        }
+      } else if (isLeft) {
         this.player.moveLeft();
-      } else if (this.keys['ArrowRight']) {
+      } else if (isRight) {
         this.player.moveRight();
+      } else {
+        this.player.stopHorizontal();
       }
 
-      if (this.keys['ArrowUp']) {
+      const isUp = Boolean(
+        this.keys['ArrowUp'] ||
+        (this.keyConfig && this.keyConfig.bindings.climbUp && this.keys[this.keyConfig.bindings.climbUp.key])
+      );
+      const isDown = Boolean(
+        this.keys['ArrowDown'] ||
+        (this.keyConfig && this.keyConfig.bindings.climbDown && this.keys[this.keyConfig.bindings.climbDown.key])
+      );
+
+      if (isUp) {
         this.player.climbUp(this.map);
-      } else if (this.keys['ArrowDown']) {
+      } else if (isDown) {
         this.player.climbDown(this.map);
+      } else {
+        this.player.stopVerticalClimb();
       }
     }
 
@@ -547,6 +722,12 @@ class Game {
     this.map.update(dt);
     this.player.update(dt, this.map);
     this.pickUpNearbyDrops();
+
+    // 🌐 Real-Time Multiplayer Network Sync
+    if (this.network) {
+      this.network.update(dt);
+      this.network.sendMove(this.player, this.map.currentKey);
+    }
 
     // Ambient chatter ticker (Classic MMO chatter atmosphere)
     this.ambientChatTimer -= dt;
@@ -584,13 +765,30 @@ class Game {
       const m = this.monsters[i];
       if (m.isAlive()) {
         m.update(dt, this.player, this.map, this);
-        if (!m.isAlive()) {
-          m.die(this.player, this);
+        if (m.hp <= 0 && !m.isDying()) {
+          m.startDying(this.player, this);
           this.autoHunt.recordKill(m.exp, 20);
+        }
+      } else if (m.isDying()) {
+        m.update(dt, this.player, this.map, this);
+        if (m.state === 'dead') {
           this.monsters.splice(i, 1);
         }
       } else {
         this.monsters.splice(i, 1);
+      }
+    }
+
+    // Anti-crowding label Y stagger for overlapping monsters
+    for (let i = 0; i < this.monsters.length; i++) {
+      const m1 = this.monsters[i];
+      m1.labelYOffset = 0;
+      for (let j = 0; j < i; j++) {
+        const m2 = this.monsters[j];
+        if (Math.abs(m1.x - m2.x) < 42 && Math.abs(m1.y - m2.y) < 22) {
+          m1.labelYOffset = 15;
+          break;
+        }
       }
     }
 
@@ -638,6 +836,15 @@ class Game {
     this.ui.updateHud();
   }
 
+  snapCameraToPlayer() {
+    this.camera.width = this.canvas.width;
+    this.camera.height = this.canvas.height;
+    const targetX = this.player.x - this.camera.width / 2;
+    const targetY = this.player.y - this.camera.height * 0.65;
+    this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, targetX));
+    this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, targetY));
+  }
+
   updateCamera(dt = 0.016) {
     if (this.shakeTimer > 0) {
       this.shakeTimer -= dt;
@@ -663,6 +870,9 @@ class Game {
     const bFill = document.getElementById('boss-hp-fill');
     const bText = document.getElementById('boss-hp-text');
     const pImg = document.getElementById('boss-portrait-img');
+    const armsCont = document.getElementById('boss-arms-container');
+    const armsCount = document.getElementById('boss-arms-count');
+    const armsPips = document.getElementById('boss-arms-pips');
 
     if (this.boss && this.boss.isAlive()) {
       if (bBar) bBar.style.display = 'block';
@@ -673,6 +883,19 @@ class Game {
         pImg.src = (typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss)
           ? 'assets/monsters/zakum/stand_0.png'
           : 'assets/monsters/mushmom/stand_0.png';
+      }
+
+      if (this.boss.arms && armsCont && armsCount && armsPips) {
+        armsCont.style.display = 'flex';
+        const aliveArms = this.boss.arms.filter(a => a.isAlive).length;
+        armsCount.innerText = `자쿰의 팔: ${aliveArms}/8`;
+        armsPips.innerHTML = this.boss.arms.map(a => {
+          const color = a.isAlive ? (a.hp < a.maxHp * 0.4 ? '#ef4444' : '#22c55e') : '#4b5563';
+          const title = `${a.name}: ${a.isAlive ? a.hp + '/' + a.maxHp : '파괴됨'}`;
+          return `<div title="${title}" style="width: 12px; height: 7px; background: ${color}; border-radius: 2px; border: 1px solid #1c1917;"></div>`;
+        }).join('');
+      } else if (armsCont) {
+        armsCont.style.display = 'none';
       }
     } else {
       if (bBar) bBar.style.display = 'none';
@@ -717,6 +940,16 @@ class Game {
     // 6. Player
     window.sprites.drawPlayer(ctx, this.player);
 
+    // 6.5. Remote Peer Players (Multiplayer)
+    if (this.network) {
+      this.network.drawRemotePlayers(ctx);
+      for (const rp of this.network.remotePlayers.values()) {
+        if (rp.speechText) {
+          window.sprites.drawSpeechBubble(ctx, rp.x, rp.y - rp.height - 18, rp.speechText);
+        }
+      }
+    }
+
     // 7. Player Speech Bubble
     if (this.player.speechText) {
       window.sprites.drawSpeechBubble(ctx, this.player.x, this.player.y - this.player.height - 18, this.player.speechText);
@@ -732,6 +965,45 @@ class Game {
     window.sprites.drawDustParticles(ctx);
     this.damageDigits.forEach(dd => window.sprites.drawDamageDigit(ctx, dd));
     this.floatingTexts.forEach(ft => window.sprites.drawFloatingText(ctx, ft));
+
+    // 10.5 Render interaction prompt overlay when standing near Portal or NPC
+    const nearP = this.map.portals.find(p => Math.abs(p.x - this.player.x) <= 75 && Math.abs(p.y - this.player.y) <= 85);
+    const nearN = this.map.npcs.find(n => Math.abs(n.x - this.player.x) <= 85 && Math.abs(n.y - this.player.y) <= 90);
+    if (nearP) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.8;
+      const text = `[ ↑ / Space ] ${nearP.name} 이동`;
+      ctx.font = 'bold 11px sans-serif';
+      const tw = ctx.measureText(text).width;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(this.player.x - tw / 2 - 8, this.player.y - 75, tw + 16, 22, 4);
+      else ctx.rect(this.player.x - tw / 2 - 8, this.player.y - 75, tw + 16, 22);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#fef08a';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, this.player.x, this.player.y - 60);
+      ctx.restore();
+    } else if (nearN) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1.8;
+      const text = `[ Space ] ${nearN.name} 대화`;
+      ctx.font = 'bold 11px sans-serif';
+      const tw = ctx.measureText(text).width;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(this.player.x - tw / 2 - 8, this.player.y - 75, tw + 16, 22, 4);
+      else ctx.rect(this.player.x - tw / 2 - 8, this.player.y - 75, tw + 16, 22);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#fef08a';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, this.player.x, this.player.y - 60);
+      ctx.restore();
+    }
 
     ctx.restore();
 
@@ -841,24 +1113,12 @@ class Game {
 
   saveProgress() {
     try {
-      const data = {
-        level: this.player.level,
-        job: this.player.job,
-        exp: this.player.exp,
-        maxExp: this.player.maxExp,
-        hp: this.player.hp,
-        mp: this.player.mp,
-        str: this.player.str,
-        dex: this.player.dex,
-        int: this.player.int,
-        luk: this.player.luk,
-        ap: this.player.ap,
-        sp: this.player.sp,
-        meso: this.player.meso,
-        inventory: this.player.inventory,
-        skills: this.player.skills
-      };
-      localStorage.setItem('openmaple_save', JSON.stringify(data));
+      if (typeof StorageManager !== 'undefined') {
+        StorageManager.save(this.player, this.map.currentKey);
+      }
+      if (this.network && this.network.authenticated) {
+        this.network.saveCurrentCharacter();
+      }
     } catch (e) {
       console.warn('Save failed:', e);
     }
@@ -866,27 +1126,29 @@ class Game {
 
   loadProgress() {
     try {
-      const raw = localStorage.getItem('openmaple_save');
-      if (raw) {
-        const data = JSON.parse(raw);
-        this.player.level = data.level || 1;
-        this.player.job = data.job || '초보자';
-        this.player.exp = data.exp || 0;
-        this.player.maxExp = data.maxExp || 15;
-        this.player.str = data.str || 12;
-        this.player.dex = data.dex || 8;
-        this.player.int = data.int || 4;
-        this.player.luk = data.luk || 4;
-        this.player.ap = data.ap || 5;
-        this.player.sp = data.sp || 3;
-        this.player.meso = data.meso || 100;
-        if (data.inventory) this.player.inventory = data.inventory;
-        if (data.skills) this.player.skills = data.skills;
+      if (typeof StorageManager !== 'undefined') {
+        const data = StorageManager.load();
+        if (data) {
+          this.player.level = data.level || 1;
+          this.player.job = data.job || '초보자';
+          this.player.exp = data.exp || 0;
+          this.player.maxExp = data.maxExp || 15;
+          this.player.str = data.str || 12;
+          this.player.dex = data.dex || 8;
+          this.player.int = data.int || 4;
+          this.player.luk = data.luk || 4;
+          this.player.ap = data.ap || 5;
+          this.player.sp = data.sp || 3;
+          this.player.fame = data.fame || 0;
+          this.player.meso = data.meso !== undefined ? data.meso : 500;
+          if (data.inventory) this.player.inventory = data.inventory;
+          if (data.skills) this.player.skills = data.skills;
 
-        this.player.calcDerivedStats();
-        this.player.hp = Math.min(this.player.maxHp, data.hp || this.player.maxHp);
-        this.player.mp = Math.min(this.player.maxMp, data.mp || this.player.maxMp);
-        this.ui.updateQuickslotsForJob(this.player.job);
+          this.player.calcDerivedStats();
+          this.player.hp = Math.min(this.player.maxHp, data.hp || this.player.maxHp);
+          this.player.mp = Math.min(this.player.maxMp, data.mp || this.player.maxMp);
+          this.ui.updateQuickslotsForJob(this.player.job);
+        }
       }
     } catch (e) {
       console.warn('Load failed:', e);

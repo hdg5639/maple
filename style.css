@@ -30,9 +30,9 @@ body, html {
 
 #canvas-container {
   position: relative;
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
@@ -48,25 +48,33 @@ body, html {
 /* === TOP BAR OVERLAYS === */
 #top-bar-overlay {
   position: absolute;
-  top: 12px;
-  left: 14px;
+  top: 8px;
+  left: 10px;
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 5px;
   align-items: center;
+  max-width: calc(100vw - 210px); /* Leave clean space for top-right Minimap! */
   z-index: 50;
+  pointer-events: auto;
 }
 
 .maple-badge-btn {
   background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
   border: 2px solid #78350f;
-  border-radius: 6px;
+  border-radius: 4px;
   color: #451a03;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 6px 14px;
+  padding: 3px 8px;
+  height: 26px;
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6);
   transition: transform 0.1s, filter 0.15s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .maple-badge-btn:hover {
@@ -250,6 +258,7 @@ body, html {
 /* === CLASSIC MAPLE BOTTOM HUD STATUS BAR === */
 #maple-hud {
   position: relative;
+  flex-shrink: 0;
   width: 100%;
   height: 64px;
   background: linear-gradient(180deg, #e4d7be 0%, #c4b595 50%, #ab9875 100%);
@@ -338,15 +347,17 @@ body, html {
 
 /* Quickslots */
 .hud-quickslots {
-  display: flex;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(7, 38px);
+  grid-template-rows: repeat(2, 38px);
+  gap: 4px;
   align-items: center;
 }
 
 .quickslot {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   background: #181c24;
   border: 2px solid #c8a86b;
   border-radius: 4px;
@@ -360,21 +371,33 @@ body, html {
 }
 
 .quickslot:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
 }
 
 .quickslot .slot-key {
   position: absolute;
-  top: 2px;
-  left: 3px;
+  top: 1px;
+  left: 2px;
   color: #fef08a;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 800;
+  text-shadow: 1px 1px 1px #000;
 }
 
 .quickslot .slot-icon {
-  font-size: 18px;
-  margin-top: 4px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.quickslot .slot-icon svg {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
 }
 
 .quickslot .slot-badge {
@@ -395,6 +418,10 @@ body, html {
 }
 
 .hud-menu-btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(180deg, #f5f5f4 0%, #e7e5e4 50%, #d6d3d1 100%);
   border: 2px solid #78716c;
   border-radius: 6px;
@@ -1082,10 +1109,10 @@ body, html {
 #boss-bar-container {
   display: none;
   position: absolute;
-  top: 12px;
+  top: 52px;
   left: 50%;
   transform: translateX(-50%);
-  width: 520px;
+  width: 480px;
   z-index: 60;
 }
 
@@ -1188,4 +1215,270 @@ body, html {
   }
 }
 
+
+
+/* Top-Right HUD Buff Status Bar (Positioned neatly beneath the Minimap!) */
+#hud-buff-bar {
+  position: absolute;
+  top: 135px;
+  right: 18px;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8px;
+  z-index: 55;
+  pointer-events: auto;
+}
+
+.hud-buff-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 48px;
+  background: rgba(30, 27, 24, 0.88);
+  border: 1.5px solid #f59e0b;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 6px rgba(245, 158, 11, 0.3);
+  animation: buffPulse 2s infinite ease-in-out;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.hud-buff-badge:hover {
+  transform: scale(1.1);
+}
+
+.hud-buff-badge .buff-icon {
+  font-size: 18px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.hud-buff-badge .buff-timer {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fef08a;
+  text-shadow: 0 1px 2px #000;
+}
+
+@keyframes buffPulse {
+  0%, 100% { border-color: #f59e0b; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 6px rgba(245, 158, 11, 0.3); }
+  50% { border-color: #fbbf24; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.6), inset 0 0 10px rgba(245, 158, 11, 0.5); }
+}
+
+#skill-list-container {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.btn-skill-cast {
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+  border: 1.5px solid #1e40af;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-skill-cast:hover {
+  background: linear-gradient(180deg, #93c5fd 0%, #3b82f6 100%);
+  transform: translateY(-1px);
+}
+
+/* --- WEAPON & SHURIKEN ARMORY MODAL STYLES --- */
+.armory-tab-btn {
+  background: #fef3c7;
+  border: 1.5px solid #d97706;
+  border-radius: 4px;
+  color: #78350f;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.armory-tab-btn:hover {
+  background: #fde68a;
+  transform: translateY(-1px);
+}
+
+.armory-tab-btn.active {
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+  color: #fff;
+  border-color: #78350f;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.armory-card {
+  background: #fffdf5;
+  border: 1.5px solid #d1c4a9;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  position: relative;
+  transition: transform 0.12s, border-color 0.12s;
+}
+
+.armory-card:hover {
+  border-color: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.armory-card.equipped {
+  border: 2px solid #ea580c;
+  background: #fff7ed;
+  box-shadow: 0 0 8px rgba(234, 88, 12, 0.35);
+}
+
+.armory-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.armory-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.armory-card-name {
+  font-weight: 800;
+  font-size: 12px;
+  color: #1e293b;
+}
+
+.armory-card-cat {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.armory-card-stats {
+  font-size: 10px;
+  color: #475569;
+  margin: 4px 0;
+  line-height: 1.35;
+}
+
+.armory-card-desc {
+  font-size: 9px;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.armory-btn-equip {
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+  border: 1.5px solid #78350f;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: all 0.15s;
+}
+
+.armory-btn-equip:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+.armory-btn-equip.equipped {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+  border-color: #064e3b;
+  cursor: default;
+}
+
+/* === MULTIPLAYER & ONLINE NETWORK BADGES === */
+.net-badge-online {
+  background: linear-gradient(180deg, #059669 0%, #047857 100%);
+  color: #ecfdf5;
+  border: 1.5px solid #34d399;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.net-badge-offline {
+  background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
+  color: #e5e7eb;
+  border: 1.5px solid #9ca3af;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.maple-online-badge {
+  background: rgba(15, 23, 42, 0.75);
+  color: #facc15;
+  border: 1px solid #c8a86b;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.btn-login-btn {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%) !important;
+  border-color: #7dd3fc !important;
+}
+
+.btn-shop-btn {
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%) !important;
+  border-color: #86efac !important;
+}
+
+/* Shop item rows */
+.shop-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 11px;
+}
+
+.shop-item-row:hover {
+  background: #fefce8;
+}
+
+.shop-item-btn {
+  padding: 2px 8px;
+  font-size: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+}
 

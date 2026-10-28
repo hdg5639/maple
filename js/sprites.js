@@ -188,7 +188,7 @@ class SpriteRenderer {
     ctx.translate(Math.round(player.x), Math.round(player.y));
 
     // Facing direction
-    if (player.facing === 'left') {
+    if (player.facing === 'right') {
       ctx.scale(-1, 1);
     }
 
@@ -255,6 +255,9 @@ class SpriteRenderer {
       ctx.fillStyle = '#facc15';
       ctx.fillRect(-12, -40, 24, 40);
     }
+
+    // Draw Equipped Weapon on Player's Hands
+    this.drawEquippedWeapon(ctx, player, actionKey);
 
     ctx.restore();
 
@@ -391,9 +394,12 @@ class SpriteRenderer {
     let frameList = mobData.stand;
     let frameIdx = 0;
 
-    if (!m.isAlive()) {
-      frameList = mobData.die1.length > 0 ? mobData.die1 : mobData.stand;
-      const progress = 1 - (m.deathTimer / 0.5);
+    const isDying = Boolean((m.isDying && m.isDying()) || (!m.isAlive() && m.state === 'dying'));
+    if (isDying) {
+      frameList = (mobData.die1 && mobData.die1.length > 0) ? mobData.die1 : mobData.stand;
+      const dTimer = (m.dyingTimer !== undefined ? m.dyingTimer : (m.deathTimer || 0));
+      const dDur = m.dyingDuration || 0.45;
+      const progress = Math.max(0, Math.min(1, 1 - (dTimer / dDur)));
       frameIdx = Math.min(frameList.length - 1, Math.floor(progress * frameList.length));
     } else if (m.hitstopTimer > 0) {
       frameList = mobData.hit1.length > 0 ? mobData.hit1 : mobData.stand;
@@ -441,14 +447,15 @@ class SpriteRenderer {
     ctx.restore();
 
     // Draw Monster Name & HP Bar (Never mirrored!)
-    if (m.isAlive()) {
+    if (m.isAlive() && !isDying) {
       this.drawMonsterUI(ctx, m);
     }
   }
 
   drawMonsterUI(ctx, m) {
     ctx.save();
-    const uiY = m.y - m.height - 10;
+    const yOff = m.labelYOffset || 0;
+    const uiY = m.y - m.height - 10 - yOff;
     ctx.translate(Math.round(m.x), Math.round(uiY));
 
     // Name Label
@@ -543,15 +550,521 @@ class SpriteRenderer {
       // Fast rotation
       const spin = (performance.now() * 0.02) % (Math.PI * 2);
       ctx.rotate(spin);
-      const sprite = this.projectiles.shuriken;
-      if (sprite && sprite.complete) {
-        ctx.drawImage(sprite, -10, -10, 20, 20);
-      }
+      this.drawThrowingStar(ctx, p.starType || 'steely', 18);
     } else if (p.type === 'energy_bolt') {
       const sprite = this.projectiles.energy_bolt;
       if (sprite && sprite.complete) {
         ctx.drawImage(sprite, -12, -12, 24, 24);
       }
+    } else if (p.type === 'snail_shell') {
+      const spin = (performance.now() * 0.018 * Math.sign(p.vx || 1)) % (Math.PI * 2);
+      ctx.rotate(spin);
+      const sprite = this.drops ? this.drops.snail_shell : null;
+      if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+        ctx.drawImage(sprite, -12, -12, 24, 24);
+      } else {
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.arc(0, 0, 10, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (p.type === 'arrow_bomb') {
+      const angle = Math.atan2(p.vy, p.vx);
+      ctx.rotate(angle);
+      ctx.save();
+      ctx.fillStyle = '#f59e0b';
+      ctx.shadowColor = '#ef4444';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(14, 0, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      const sprite = this.projectiles.arrow;
+      if (sprite && sprite.complete) {
+        ctx.drawImage(sprite, -16, -6, 32, 12);
+      }
+    } else if (p.type === 'avenger_star') {
+      const spin = (performance.now() * 0.035 * Math.sign(p.vx || 1)) % (Math.PI * 2);
+      ctx.rotate(spin);
+      ctx.shadowColor = '#a855f7';
+      ctx.shadowBlur = 18;
+      this.drawThrowingStar(ctx, p.starType || 'steely', 38);
+    }
+
+    ctx.restore();
+  }
+
+  // --- AUTHENTIC THROWING STARS ENGINE (뇌전수리검, 일비, 토비, 금비, 화비, 목비, 수비) ---
+  drawThrowingStar(ctx, starType = 'steely', size = 18) {
+    const r = size / 2;
+    ctx.save();
+
+    if (starType === 'steely') {
+      // ⚡ 뇌전수리검: 번개 궤적, 4각 샤프 다이아몬드 날, 전기 스파크 아크
+      ctx.shadowColor = '#00f5ff';
+      ctx.shadowBlur = 12;
+
+      ctx.fillStyle = '#00f5ff';
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        const pCos = Math.cos(a + Math.PI / 4);
+        const pSin = Math.sin(a + Math.PI / 4);
+        if (i === 0) ctx.moveTo(cos * r, sin * r);
+        else ctx.lineTo(cos * r, sin * r);
+        ctx.lineTo(pCos * (r * 0.32), pSin * (r * 0.32));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Electric core diamond
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(0, -r * 0.45);
+      ctx.lineTo(r * 0.45, 0);
+      ctx.lineTo(0, r * 0.45);
+      ctx.lineTo(-r * 0.45, 0);
+      ctx.closePath();
+      ctx.fill();
+
+      // Crackling lightning sparks
+      ctx.strokeStyle = '#e0f2fe';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      const sparkSeed = performance.now() * 0.01;
+      for (let s = 0; s < 3; s++) {
+        const sa = sparkSeed + s * 2.1;
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(sa) * (r * 0.5), Math.sin(sa) * (r * 0.5));
+        ctx.lineTo(Math.cos(sa + 0.3) * (r * 1.15), Math.sin(sa + 0.3) * (r * 1.15));
+      }
+      ctx.stroke();
+
+    } else if (starType === 'ilbi') {
+      // ⭐ 일비표창: 전설의 3단 곡선 흑요석 날 + 붉은 루비 코어
+      ctx.shadowColor = '#dc2626';
+      ctx.shadowBlur = 9;
+
+      for (let i = 0; i < 3; i++) {
+        ctx.save();
+        ctx.rotate((i * Math.PI * 2) / 3);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(r * 0.5, r * 0.2, r * 1.05, 0);
+        ctx.quadraticCurveTo(r * 0.4, -r * 0.55, 0, 0);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = '#f1f5f9';
+        ctx.lineWidth = 1.0;
+        ctx.beginPath();
+        ctx.moveTo(r * 0.4, r * 0.15);
+        ctx.lineTo(r * 1.05, 0);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.fillStyle = '#ef4444';
+      ctx.strokeStyle = '#7f1d1d';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-r * 0.08, -r * 0.08, r * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'tobi') {
+      // 💫 토비표창: 코발트 블루 4곡선 날 + 바람 소용돌이 링
+      ctx.shadowColor = '#3b82f6';
+      ctx.shadowBlur = 10;
+
+      ctx.strokeStyle = 'rgba(191, 219, 254, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.75, 0, Math.PI * 1.6);
+      ctx.stroke();
+
+      ctx.fillStyle = '#2563eb';
+      ctx.strokeStyle = '#1e3a8a';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.35), Math.sin(a + Math.PI / 4) * (r * 0.35));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#93c5fd';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'kumbi') {
+      // 🌟 금비표창: 찬란한 순금 4각성 + 스파클
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 12;
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.strokeStyle = '#b45309';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.28), Math.sin(a + Math.PI / 4) * (r * 0.28));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.25, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'hwabi') {
+      // 🔥 화비표창: 불타는 화염 수리검
+      ctx.shadowColor = '#f97316';
+      ctx.shadowBlur = 14;
+
+      ctx.fillStyle = '#ea580c';
+      ctx.strokeStyle = '#7c2d12';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r * 1.05, Math.sin(a) * r * 1.05);
+        else ctx.lineTo(Math.cos(a) * r * 1.05, Math.sin(a) * r * 1.05);
+        ctx.lineTo(Math.cos(a + 0.35) * (r * 0.4), Math.sin(a + 0.35) * (r * 0.4));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'mokbi') {
+      // 🪵 목비표창: 청동/나무 십자 표창
+      ctx.fillStyle = '#92400e';
+      ctx.strokeStyle = '#451a03';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.35), Math.sin(a + Math.PI / 4) * (r * 0.35));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#d97706';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else {
+      // ⚙️ 수비표창: 표준 은빛 4각 수리검
+      ctx.fillStyle = '#cbd5e1';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.3), Math.sin(a + Math.PI / 4) * (r * 0.3));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  // --- DRAW EQUIPPED WEAPON ON PLAYER SPRITE ---
+  drawEquippedWeapon(ctx, player, actionKey) {
+    if (player.onLadder) return;
+
+    const now = performance.now();
+    const wp = player.inventory?.equip?.find(eq => eq.type === 'weapon' && eq.equipped);
+    const starType = player.activeStar || 'steely';
+
+    let handX = -10;
+    let handY = -15;
+    let angle = -0.2;
+
+    if (actionKey.startsWith('attack')) {
+      const frame = parseInt(actionKey.split('_')[1] || '0', 10);
+      if (frame === 0) {
+        handX = -8;
+        handY = -26;
+        angle = -0.75;
+      } else if (frame === 1) {
+        handX = -22;
+        handY = -18;
+        angle = 0.35;
+      } else {
+        handX = -18;
+        handY = -10;
+        angle = 1.05;
+      }
+    } else if (actionKey.startsWith('walk')) {
+      handX = -11;
+      handY = -16 + Math.sin(now / 90) * 1.5;
+      angle = -0.25;
+    } else if (actionKey.startsWith('jump')) {
+      handX = -12;
+      handY = -22;
+      angle = -0.45;
+    } else {
+      handX = -10;
+      handY = -15 + Math.sin(now / 350) * 0.8;
+      angle = -0.2;
+    }
+
+    ctx.save();
+    ctx.translate(handX, handY);
+    ctx.rotate(angle);
+
+    const wpId = wp ? wp.id : (player.job === '도적' ? 'wp_meba' : 'wp_wood_sword');
+
+    if (wpId === 'wp_highlander') {
+      ctx.fillStyle = '#e2e8f0';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -3);
+      ctx.lineTo(28, -3);
+      ctx.lineTo(34, 0);
+      ctx.lineTo(28, 3);
+      ctx.lineTo(0, 3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(4, 0);
+      ctx.lineTo(24, 0);
+      ctx.stroke();
+      ctx.fillStyle = '#f59e0b';
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(-2, -6, 4, 12);
+      ctx.strokeRect(-2, -6, 4, 12);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(-8, -2, 6, 4);
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(-9, 0, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (wpId === 'wp_gryunhill') {
+      ctx.fillStyle = '#cbd5e1';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -4);
+      ctx.lineTo(30, -4);
+      ctx.lineTo(37, 0);
+      ctx.lineTo(30, 4);
+      ctx.lineTo(0, 4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.moveTo(4, -4);
+      ctx.lineTo(10, -7);
+      ctx.lineTo(16, -4);
+      ctx.lineTo(22, -7);
+      ctx.lineTo(28, -4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#b91c1c';
+      ctx.fillRect(-2, -8, 5, 16);
+
+    } else if (wpId === 'wp_dragon_claymore') {
+      ctx.shadowColor = '#00f5ff';
+      ctx.shadowBlur = 8;
+      ctx.fillStyle = '#06b6d4';
+      ctx.strokeStyle = '#083344';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -4);
+      ctx.lineTo(32, -4);
+      ctx.lineTo(39, 0);
+      ctx.lineTo(32, 4);
+      ctx.lineTo(0, 4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#0284c7';
+      ctx.beginPath();
+      ctx.moveTo(-2, 0);
+      ctx.lineTo(-6, -9);
+      ctx.lineTo(4, -5);
+      ctx.lineTo(2, 0);
+      ctx.lineTo(4, 5);
+      ctx.lineTo(-6, 9);
+      ctx.closePath();
+      ctx.fill();
+
+    } else if (wpId === 'wp_taeguk_fan') {
+      ctx.fillStyle = '#fef3c7';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, 16, -Math.PI * 0.45, Math.PI * 0.45);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(8, -2, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#3b82f6';
+      ctx.beginPath();
+      ctx.arc(8, 2, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (wpId === 'wp_kandine') {
+      ctx.fillStyle = '#10b981';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(0, -2);
+      ctx.quadraticCurveTo(8, -6, 14, 0);
+      ctx.quadraticCurveTo(20, 6, 26, 0);
+      ctx.lineTo(24, 2);
+      ctx.quadraticCurveTo(18, 4, 12, -2);
+      ctx.lineTo(0, 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(-2, -4, 4, 8);
+
+    } else if (wpId === 'wp_dragon_toenail') {
+      ctx.fillStyle = '#dc2626';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -2);
+      ctx.quadraticCurveTo(12, -8, 24, -3);
+      ctx.lineTo(20, 3);
+      ctx.lineTo(0, 3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+    } else if (wp?.weaponType === 'dagger' || wpId.includes('dagger') || wpId === 'wp_geta' || wpId === 'wp_fruit_dagger') {
+      ctx.fillStyle = '#e2e8f0';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(0, -2);
+      ctx.lineTo(18, -2);
+      ctx.lineTo(22, 0);
+      ctx.lineTo(16, 2);
+      ctx.lineTo(0, 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(-5, -2, 5, 4);
+
+    } else if (wp?.weaponType === 'claw' || player.job === '도적') {
+      ctx.fillStyle = '#3b82f6';
+      ctx.strokeStyle = '#1e3a8a';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(-3, -4, 6, 8);
+      ctx.fillStyle = '#94a3b8';
+      ctx.beginPath();
+      ctx.moveTo(3, -3);
+      ctx.lineTo(8, -4);
+      ctx.lineTo(3, -1);
+      ctx.moveTo(3, 1);
+      ctx.lineTo(8, 2);
+      ctx.lineTo(3, 3);
+      ctx.fill();
+      ctx.save();
+      ctx.translate(6, 0);
+      this.drawThrowingStar(ctx, starType, 10);
+      ctx.restore();
+
+    } else if (wp?.weaponType === 'bow' || wpId.includes('bow') || wpId === 'wp_ryden') {
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      ctx.arc(0, 0, 16, -Math.PI * 0.4, Math.PI * 0.4);
+      ctx.stroke();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(-Math.PI * 0.4) * 16, Math.sin(-Math.PI * 0.4) * 16);
+      ctx.lineTo(Math.cos(Math.PI * 0.4) * 16, Math.sin(Math.PI * 0.4) * 16);
+      ctx.stroke();
+
+    } else if (wp?.weaponType === 'staff' || wpId === 'wp_evil_wings') {
+      ctx.fillStyle = '#581c87';
+      ctx.strokeStyle = '#1e1b4b';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(-2, -18, 4, 30);
+      ctx.fillStyle = '#9333ea';
+      ctx.beginPath();
+      ctx.moveTo(0, -18);
+      ctx.lineTo(-8, -24);
+      ctx.lineTo(-4, -18);
+      ctx.lineTo(0, -16);
+      ctx.lineTo(4, -18);
+      ctx.lineTo(8, -24);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(0, -18, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else {
+      ctx.fillStyle = '#b45309';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(0, -2, 20, 4);
+      ctx.strokeRect(0, -2, 20, 4);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(-4, -2, 4, 4);
     }
 
     ctx.restore();
@@ -663,6 +1176,70 @@ class SpriteRenderer {
       ctx.beginPath();
       ctx.moveTo(-20, -50 + progress * 60); ctx.lineTo(10, 10);
       ctx.moveTo(0, -60 + progress * 60); ctx.lineTo(30, 0);
+      ctx.stroke();
+      ctx.restore();
+    } else if (fx.type === 'brandish') {
+      const progress = fx.progress;
+      const alpha = Math.max(0, 1 - progress);
+      ctx.save();
+      ctx.lineWidth = 7;
+      ctx.lineCap = 'round';
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = '#38bdf8';
+
+      // First slash (top-left to bottom-right)
+      ctx.strokeStyle = `rgba(224, 242, 254, ${alpha})`;
+      ctx.beginPath();
+      const s1 = progress * 65;
+      ctx.moveTo(-45 + s1, -55 + s1 * 0.85);
+      ctx.lineTo(15 + s1, -5 + s1 * 0.85);
+      ctx.stroke();
+
+      // Second slash (top-right to bottom-left)
+      ctx.strokeStyle = `rgba(56, 189, 248, ${alpha * 0.9})`;
+      ctx.beginPath();
+      ctx.moveTo(45 - s1, -55 + s1 * 0.85);
+      ctx.lineTo(-15 - s1, -5 + s1 * 0.85);
+      ctx.stroke();
+
+      // Intersection spark
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
+      ctx.beginPath();
+      ctx.arc(0, -18, 12 * (1 - progress * 0.5), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    } else if (fx.type === 'thunderbolt') {
+      const progress = fx.progress;
+      const alpha = Math.max(0, 1 - progress);
+      ctx.save();
+      ctx.shadowBlur = 22;
+      ctx.shadowColor = '#60a5fa';
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = `rgba(219, 234, 254, ${alpha})`;
+
+      // Main zigzag bolt from the sky
+      ctx.beginPath();
+      ctx.moveTo(0, -260);
+      ctx.lineTo(-18, -190);
+      ctx.lineTo(22, -120);
+      ctx.lineTo(-12, -50);
+      ctx.lineTo(10, 0);
+      ctx.stroke();
+
+      // Secondary branching bolt
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = `rgba(147, 197, 253, ${alpha * 0.8})`;
+      ctx.beginPath();
+      ctx.moveTo(22, -120);
+      ctx.lineTo(48, -70);
+      ctx.lineTo(32, 0);
+      ctx.stroke();
+
+      // Ground electric discharge ring
+      ctx.strokeStyle = `rgba(191, 219, 254, ${alpha})`;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 55 * progress + 20, 14 * progress + 6, 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
     } else if (fx.type === 'level_up') {
