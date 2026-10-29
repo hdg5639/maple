@@ -9,17 +9,18 @@ class FootholdGraph {
   }
 
   buildGraph() {
-    this.map.footholds.forEach(fh => {
+    const walkable = this.map.footholds.filter(fh => !fh.isProp && fh.width > 0);
+    walkable.forEach(fh => {
       this.nodes.set(fh.id, fh);
       this.edges.set(fh.id, []);
     });
 
     // 1. Add Adjacent Walk Edges
-    this.map.footholds.forEach(fhA => {
-      this.map.footholds.forEach(fhB => {
+    walkable.forEach(fhA => {
+      walkable.forEach(fhB => {
         if (fhA.id !== fhB.id) {
           // Check horizontal adjacency
-          if (Math.abs(fhA.x2 - fhB.x1) <= 12 && Math.abs(fhA.y2 - fhB.y1) <= 12) {
+          if (Math.abs(fhA.x2 - fhB.x1) <= 2 && Math.abs(fhA.y2 - fhB.y1) <= 6) {
             this.edges.get(fhA.id).push({ targetId: fhB.id, type: 'walk', cost: 1 });
             this.edges.get(fhB.id).push({ targetId: fhA.id, type: 'walk', cost: 1 });
           }
@@ -29,16 +30,8 @@ class FootholdGraph {
 
     // 2. Add Ladder Edges
     this.map.ladders.forEach(lad => {
-      let bottomFh = null;
-      let topFh = null;
-
-      this.map.footholds.forEach(fh => {
-        if (lad.x >= fh.x1 && lad.x <= fh.x2) {
-          const sy = fh.getYAtX(lad.x);
-          if (Math.abs(sy - lad.bottom) <= 14) bottomFh = fh;
-          if (Math.abs(sy - lad.top) <= 14) topFh = fh;
-        }
-      });
+      const bottomFh = Physics.findLadderFoothold(this.map, lad, 'bottom');
+      const topFh = Physics.findLadderFoothold(this.map, lad, 'top');
 
       if (bottomFh && topFh && bottomFh.id !== topFh.id) {
         const cost = Math.abs(lad.bottom - lad.top) * 0.1;
@@ -59,31 +52,22 @@ class FootholdGraph {
       }
     });
 
-    // 3. Add Drop-Through Edges
-    this.map.footholds.forEach(upperFh => {
-      if (!upperFh.canDropThrough) return;
-      this.map.footholds.forEach(lowerFh => {
-        if (upperFh.id === lowerFh.id) return;
-        const overlapX1 = Math.max(upperFh.x1, lowerFh.x1);
-        const overlapX2 = Math.min(upperFh.x2, lowerFh.x2);
-
-        if (overlapX1 < overlapX2) {
-          const midX = (overlapX1 + overlapX2) / 2;
-          const upperY = upperFh.getYAtX(midX);
-          const lowerY = lowerFh.getYAtX(midX);
-
-          // If lower is below upper within fall distance (30~240px)
-          if (lowerY > upperY + 25 && lowerY < upperY + 240) {
-            this.edges.get(upperFh.id).push({
-              targetId: lowerFh.id,
-              type: 'drop',
-              dropX: midX,
-              cost: 1.5
-            });
-          }
-        }
-      });
-    });
+    // Drop edges must stop at the first lower surface, exactly as collision does.
+    for (const upper of walkable) {
+      if (!upper.canDropThrough) continue;
+      const overlapping = walkable.filter(lower => lower.id !== upper.id &&
+        Math.max(upper.x1, lower.x1) < Math.min(upper.x2, lower.x2));
+      for (const lower of overlapping) {
+        const x = (Math.max(upper.x1, lower.x1) + Math.min(upper.x2, lower.x2)) / 2;
+        const upperY = upper.getYAtX(x);
+        const lowerY = lower.getYAtX(x);
+        if (lowerY <= upperY + 1 || lowerY - upperY >= 600) continue;
+        const blocked = overlapping.some(other => other.id !== lower.id && x >= other.x1 && x <= other.x2 &&
+          other.getYAtX(x) > upperY + 1 && other.getYAtX(x) < lowerY - 1e-7);
+        if (blocked) continue;
+        this.edges.get(upper.id).push({targetId: lower.id, type: 'drop', dropX: x, cost: 1.5});
+      }
+    }
   }
 
   // A* Shortest Path between two footholds
@@ -379,7 +363,7 @@ class AutoHuntManager {
         this.commandQueue.push({ action: 'CLIMB_LADDER', ladder: edge.ladder, dir: edge.climbDir });
       } else if (edge.type === 'drop') {
         this.commandQueue.push({ action: 'MOVE_TO_X', x: edge.dropX });
-        this.commandQueue.push({ action: 'DROP_THROUGH' });
+        this.commandQueue.push({ action: 'DROP_THROUGH', targetId: edge.targetId });
       } else if (edge.type === 'walk') {
         const nextFh = this.graph.nodes.get(edge.targetId);
         this.commandQueue.push({ action: 'MOVE_TO_X', x: (nextFh.x1 + nextFh.x2) / 2 });
@@ -418,6 +402,11 @@ class AutoHuntManager {
     }
 
     if (cmd.action === 'CLIMB_LADDER') {
+      const destination = Physics.findLadderFoothold(map, cmd.ladder, cmd.dir === 'up' ? 'top' : 'bottom');
+      if (!player.onLadder && player.onGround && destination && player.currentFoothold?.id === destination.id) {
+        this.commandQueue.shift();
+        return;
+      }
       if (!player.onLadder) {
         if (Math.abs(player.x - cmd.ladder.x) > 10) {
           player.x = cmd.ladder.x;
@@ -427,23 +416,21 @@ class AutoHuntManager {
       } else {
         if (cmd.dir === 'up') {
           player.climbUp(map);
-          if (player.y <= cmd.ladder.top + 5) {
-            player.jump();
-            this.commandQueue.shift();
-          }
         } else {
           player.climbDown(map);
-          if (player.y >= cmd.ladder.bottom - 5) {
-            this.commandQueue.shift();
-          }
         }
       }
       return;
     }
 
     if (cmd.action === 'DROP_THROUGH') {
-      player.dropThrough();
-      this.commandQueue.shift();
+      player.stopHorizontal();
+      if (!cmd.started) {
+        cmd.started = player.dropThrough(map);
+      } else if (player.onGround) {
+        if (player.currentFoothold?.id === cmd.targetId) this.commandQueue.shift();
+        else this.commandQueue = []; // Replan if inertia landed on a neighboring segment.
+      }
       return;
     }
 

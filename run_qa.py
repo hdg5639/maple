@@ -72,7 +72,12 @@ async def main():
                             print(f"[JS EXCEPTION] {res['exceptionDetails']}")
                         return res.get('result', {}).get('value')
 
-            await asyncio.sleep(1.0)
+            for _ in range(100):
+                if await eval_js("Boolean(window.game && window.game.player && window.game.map)"):
+                    break
+                await asyncio.sleep(0.1)
+            else:
+                raise AssertionError(f"Game initialization timed out; browser exceptions: {errors}")
 
             # === TEST 1: Engine & SOLID Architecture Verification ===
             print("\n--- [TEST 1] SOLID Architecture & Module Presence ---")
@@ -197,9 +202,18 @@ async def main():
             print("\n--- [TEST 7] Ladder Physics & Player Movement Stop ---")
             physics_test = await eval_js("""(() => {
                 const p = window.game.player;
+                const map = window.game.map;
+                p.x = 260;
+                p.currentFoothold = map.findGroundFootholdAt(p.x);
+                p.y = p.currentFoothold.getYAtX(p.x);
+                p.onGround = true;
+                p.onLadder = false;
+                p.vx = 0;
                 p.moveRight();
+                p.update(1/60, map);
                 const movingVx = p.vx;
                 p.stopHorizontal();
+                for (let i = 0; i < 60; i++) p.update(1/60, map);
                 const stoppedVx = p.vx;
                 return { movingVx, stoppedVx };
             })()""")

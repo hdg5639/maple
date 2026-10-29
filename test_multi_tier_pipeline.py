@@ -62,7 +62,12 @@ async def run_pipeline():
                             print(f"[PIPELINE ERROR] {res['exceptionDetails']}")
                         return res.get('result', {}).get('value')
 
-            await asyncio.sleep(1.0)
+            for _ in range(100):
+                if await eval_js("Boolean(window.game && window.game.player && window.game.map)"):
+                    break
+                await asyncio.sleep(0.1)
+            else:
+                raise AssertionError('Game initialization timed out')
 
             print("\n=======================================================")
             print("  4-TIER AUTOMATED TEST PIPELINE EXECUTION (품질 관리 체계)")

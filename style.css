@@ -232,7 +232,7 @@ body, html {
   #maple-hud {
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0 8px;
+    padding: 8px;
     -webkit-overflow-scrolling: touch;
   }
   .hud-bars {
@@ -260,15 +260,22 @@ body, html {
   position: relative;
   flex-shrink: 0;
   width: 100%;
-  height: 64px;
+  height: auto;
   background: linear-gradient(180deg, #e4d7be 0%, #c4b595 50%, #ab9875 100%);
   border-top: 3px solid #735d41;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  gap: 12px;
+  padding: 8px 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
   box-shadow: 0 -4px 10px rgba(0,0,0,0.4);
   z-index: 100;
+}
+
+#maple-hud > div {
+  flex-shrink: 0;
 }
 
 .hud-left {
@@ -1193,7 +1200,7 @@ body, html {
   #maple-hud {
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0 8px;
+    padding: 8px;
     -webkit-overflow-scrolling: touch;
   }
   .hud-bars {

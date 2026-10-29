@@ -4,6 +4,7 @@ class SpriteRenderer {
   constructor() {
     this.loaded = false;
     this.images = {};
+    this.spriteFootY = new WeakMap();
     this.dustParticles = [];
 
     this.initAssets();
@@ -11,9 +12,18 @@ class SpriteRenderer {
 
   loadImage(key, path) {
     const img = new Image();
+    const footY = window.SPRITE_FOOT_Y?.[path];
+    if (footY !== undefined) this.spriteFootY.set(img, footY);
     img.src = path;
     this.images[key] = img;
     return img;
+  }
+
+  drawFootAlignedSprite(ctx, sprite) {
+    const width = sprite.naturalWidth;
+    const height = sprite.naturalHeight;
+    const footY = this.spriteFootY.get(sprite) ?? height;
+    ctx.drawImage(sprite, -width / 2, -footY, width, height);
   }
 
   initAssets() {
@@ -246,10 +256,7 @@ class SpriteRenderer {
 
     // Draw Character Sprite (aligned to feet at y=0)
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-      const sw = sprite.naturalWidth;
-      const sh = sprite.naturalHeight;
-      // Draw centered horizontally, bottom aligned with offset
-      ctx.drawImage(sprite, -sw / 2, -sh + 2, sw, sh);
+      this.drawFootAlignedSprite(ctx, sprite);
     } else {
       // Fallback
       ctx.fillStyle = '#facc15';
@@ -433,11 +440,9 @@ class SpriteRenderer {
       ctx.filter = 'brightness(2.5) contrast(1.5)';
     }
 
-    // Draw Monster Sprite (bottom-centered)
+    // Entity y is the visible foot contact, not the GIF frame's padded bottom.
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-      const sw = sprite.naturalWidth;
-      const sh = sprite.naturalHeight;
-      ctx.drawImage(sprite, -sw / 2, -sh + 2, sw, sh);
+      this.drawFootAlignedSprite(ctx, sprite);
     } else {
       // Fallback
       ctx.fillStyle = '#22c55e';

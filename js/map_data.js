@@ -8,6 +8,7 @@ const MAP_DATABASE = {
     "width": 2242,
     "height": 1634,
     "img": "assets/map/henesys_terrain.png",
+    "terrainOffset": { "x": 0, "y": -20 },
     "minimap": "assets/map/henesys_minimap.png",
     "defaultSpawn": {
       "x": 1050,
@@ -60,6 +61,30 @@ const MAP_DATABASE = {
       }
     ],
     "footholds": [
+      {
+        "id": 178,
+        "x1": 1350,
+        "y1": 0,
+        "x2": 1428,
+        "y2": 0,
+        "canDropThrough": true
+      },
+      {
+        "id": 181,
+        "x1": 1428,
+        "y1": 0,
+        "x2": 1440,
+        "y2": 0,
+        "canDropThrough": true
+      },
+      {
+        "id": 179,
+        "x1": 1440,
+        "y1": 0,
+        "x2": 1490,
+        "y2": 0,
+        "canDropThrough": true
+      },
       {
         "id": 171,
         "x1": 450,
