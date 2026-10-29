@@ -196,7 +196,7 @@ async def main():
                 };
             })()""")
             print(f"  Zakum Boss Stats: {zakum_info}")
-            assert zakum_info and zakum_info['armsCount'] == 8 and zakum_info['hitBoxesCount'] == 9, "Zakum 8 arms + body test failed!"
+            assert zakum_info and zakum_info['armsCount'] == 8 and zakum_info['hitBoxesCount'] == 8, "Zakum arms phase must expose eight independent arm targets!"
 
             # === TEST 7: Ladder Physics & Anti-Stick Stop ===
             print("\n--- [TEST 7] Ladder Physics & Player Movement Stop ---")

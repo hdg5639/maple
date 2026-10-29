@@ -217,42 +217,7 @@ body, html {
 }
 
 /* === Mobile and Small Screen Responsiveness for LAN Play === */
-@media (max-width: 900px) {
-  #top-bar-overlay {
-    flex-wrap: wrap;
-    gap: 6px;
-    top: 6px;
-    left: 8px;
-    max-width: 92vw;
-  }
-  .maple-badge-btn {
-    font-size: 11px;
-    padding: 4px 8px;
-  }
-  #maple-hud {
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px;
-    -webkit-overflow-scrolling: touch;
-  }
-  .hud-bars {
-    width: 150px;
-    flex-shrink: 0;
-  }
-  .hud-char-box {
-    flex-shrink: 0;
-  }
-  .hud-quickslots {
-    flex-shrink: 0;
-  }
-  .hud-right {
-    flex-shrink: 0;
-  }
-  .quickslot {
-    width: 38px;
-    height: 38px;
-  }
-}
+
 
 
 /* === CLASSIC MAPLE BOTTOM HUD STATUS BAR === */
@@ -268,7 +233,7 @@ body, html {
   justify-content: space-between;
   gap: 12px;
   padding: 8px 16px;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   box-shadow: 0 -4px 10px rgba(0,0,0,0.4);
   z-index: 100;
@@ -790,7 +755,7 @@ body, html {
 /* === CLASSIC MAPLE CHAT WINDOW (BOTTOM-LEFT) === */
 #maple-chat-container {
   position: absolute;
-  bottom: 74px;
+  bottom: 10px;
   left: 14px;
   width: 380px;
   height: 160px;
@@ -904,7 +869,7 @@ body, html {
 /* === BOTTOM-RIGHT FLOATING LOOT & EXP LOG === */
 #maple-loot-log {
   position: absolute;
-  bottom: 74px;
+  bottom: 10px;
   right: 14px;
   display: flex;
   flex-direction: column-reverse;
@@ -1185,42 +1150,7 @@ body, html {
 }
 
 /* === Mobile and Small Screen Responsiveness for LAN Play === */
-@media (max-width: 900px) {
-  #top-bar-overlay {
-    flex-wrap: wrap;
-    gap: 6px;
-    top: 6px;
-    left: 8px;
-    max-width: 92vw;
-  }
-  .maple-badge-btn {
-    font-size: 11px;
-    padding: 4px 8px;
-  }
-  #maple-hud {
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px;
-    -webkit-overflow-scrolling: touch;
-  }
-  .hud-bars {
-    width: 150px;
-    flex-shrink: 0;
-  }
-  .hud-char-box {
-    flex-shrink: 0;
-  }
-  .hud-quickslots {
-    flex-shrink: 0;
-  }
-  .hud-right {
-    flex-shrink: 0;
-  }
-  .quickslot {
-    width: 38px;
-    height: 38px;
-  }
-}
+
 
 
 
@@ -1489,3 +1419,141 @@ body, html {
   font-weight: 700;
 }
 
+
+/* Menu and boss HUD reserve the minimap's top-right area at every viewport width. */
+#boss-bar-container {
+  top: var(--game-overlay-bottom, 104px);
+  left: 10px;
+  transform: none;
+  width: min(480px, calc(100vw - 200px));
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Keep the raid floor visible; focusing chat restores the complete history panel. */
+.boss-map #maple-chat-container:not(:hover):not(:focus-within) {
+  height: 54px;
+  width: min(320px, 45vw);
+}
+
+/* Responsive play surface. Every HUD action fits without horizontal scrolling. */
+#game-container { width: 100%; height: 100dvh; }
+#top-bar-overlay {
+  top: 8px; left: 8px; max-width: none; flex-wrap: nowrap; gap: 6px;
+  z-index: 110;
+}
+#top-bar-overlay > .btn-auto-hunt { font-size: 11px; padding: 4px 7px; height: 30px; }
+#game-menu { position: relative; }
+#game-menu > summary { height: 30px; cursor: pointer; list-style: none; }
+#game-menu > summary::-webkit-details-marker { display: none; }
+.game-menu-content {
+  position: absolute; top: 36px; left: 0; width: 310px;
+  max-width: calc(100vw - 16px); max-height: calc(100dvh - 64px);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px;
+  padding: 12px; overflow-y: auto; background: rgba(30, 25, 20, .97);
+  border: 2px solid #b89b6c; border-radius: 6px; box-shadow: 0 6px 18px #0008;
+}
+#game-menu:not([open]) > .game-menu-content { display: none; }
+.game-menu-content .maple-badge-btn { height: 34px; white-space: normal; justify-content: center; text-align: center; }
+.game-menu-content .btn-login-btn, .game-menu-content .btn-shop-btn { color: #fff; }
+#net-status-badge, #hud-online-count { font-size: 10px; min-width: 0; }
+#auto-hunt-badge, #auto-stats-panel { grid-column: 1 / -1; }
+#auto-stats-panel {
+  position: static; min-width: 0; width: 100%; margin: 0; box-shadow: none;
+}
+#boss-bar-container {
+  top: 46px; left: 8px; width: min(480px, calc(100vw - 204px));
+}
+#boss-hp-frame { min-width: 0; padding: 4px; gap: 5px; }
+#boss-hp-portrait { flex-shrink: 0; width: 30px; height: 30px; }
+#boss-hp-track { min-width: 0; }
+#boss-hp-text { white-space: nowrap; font-size: 10px; }
+#boss-arms-container { flex-wrap: wrap; gap: 3px !important; }
+#hud-buff-bar { top: 138px; right: 8px; max-width: calc(100vw - 16px); flex-wrap: wrap; }
+#maple-hud {
+  display: grid; grid-template-columns: minmax(220px, 1fr) 290px 210px;
+  gap: 10px; padding: 8px; overflow: visible; min-width: 0;
+}
+#maple-hud > div { min-width: 0; }
+.hud-left { gap: 8px; }
+.hud-char-box { min-width: 0; padding: 4px 6px; }
+#hud-player-name { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hud-bars { width: auto; min-width: 95px; flex: 1; }
+.hud-quickslots { width: 290px; grid-template-columns: repeat(7, 38px); justify-content: center; }
+.hud-right { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.hud-menu-btn { width: 100%; justify-content: center; font-size: 11px; padding: 8px 3px; }
+#maple-chat-container, .boss-map #maple-chat-container:not(:hover):not(:focus-within) {
+  left: 8px; bottom: 8px; width: min(340px, calc(100% - 16px));
+  height: min(150px, 30%); min-height: 92px;
+}
+#chat-input { min-width: 0; }
+.chat-tab-bar { align-items: center; }
+#btn-chat-toggle { margin-right: auto; padding: 2px 4px; border: 0; background: transparent; color: #f9d68a; font: inherit; font-size: 11px; cursor: pointer; }
+#game-container #maple-chat-container.chat-collapsed { width: 132px; height: 28px; min-height: 0; }
+.chat-collapsed #chat-messages-container, .chat-collapsed .chat-input-bar, .chat-collapsed .chat-tab { display: none; }
+#maple-loot-log { max-width: min(260px, 45%); pointer-events: none; }
+.maple-window {
+  min-width: min(260px, calc(100vw - 16px)); max-width: calc(100vw - 16px) !important;
+  max-height: calc(100dvh - 16px); display: none; overflow: hidden; z-index: 200;
+}
+.btn-window-close { flex-shrink: 0; }
+.maple-dialog-box {
+  background: #fff9e9; border: 3px solid #735d41; border-radius: 7px;
+  box-shadow: 0 8px 24px #0009;
+}
+.maple-dialog-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 7px 10px; background: linear-gradient(#8c6b43, #604122);
+  color: #fff5d8; font-size: 12px; font-weight: 700;
+}
+.maple-window-body { max-height: calc(100dvh - 64px) !important; overflow-y: auto; overflow-x: hidden; }
+#win-inventory .maple-window-body { max-height: max(120px, calc(100dvh - 230px)) !important; }
+.maple-dialog-modal, #modal-job-advance { position: fixed; height: 100dvh; padding: 8px; }
+.maple-dialog-box, .npc-dialog-box, .map-travel-box, .job-modal-box {
+  max-width: 100%; max-height: calc(100dvh - 16px); overflow-y: auto;
+}
+.maple-dialog-body { min-width: 0; }
+.job-modal-box { position: relative; }
+.job-modal-close { position: absolute; top: 8px; right: 8px; }
+#win-keyconfig .maple-window-body > div:first-child { flex-wrap: wrap; }
+.keyconfig-row > div { flex-shrink: 0; }
+.keyconfig-row > span { min-width: 0; }
+.shop-item-row { gap: 6px; flex-wrap: wrap; }
+.shop-item-row > div:last-child { margin-left: auto; flex-shrink: 0; }
+@media (max-width: 760px) {
+  #maple-hud { grid-template-columns: minmax(0, 1fr) 210px; gap: 7px; }
+  .hud-left { grid-column: 1 / -1; }
+  .hud-quickslots { justify-self: start; }
+  .hud-bars { max-width: none; }
+  .game-menu-content { left: 0; right: auto; }
+}
+@media (max-width: 540px) {
+  #maple-hud { grid-template-columns: minmax(0, 1fr); gap: 5px; padding: 6px 8px; }
+  .hud-left { grid-column: auto; }
+  .hud-char-box { padding: 3px 6px; }
+  #hud-player-name { max-width: 120px; font-size: 10px; }
+  .hud-quickslots { width: 100%; justify-self: center; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-template-rows: repeat(2, 36px); gap: 3px; }
+  .quickslot { width: 100%; height: 36px; }
+  .hud-right { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; }
+  .hud-menu-btn { padding: 6px 0; font-size: 9px; }
+  #top-bar-overlay > .btn-auto-hunt { max-width: 132px; font-size: 10px; }
+  #game-menu > summary { padding: 3px 6px; }
+  .game-menu-content { position: fixed; left: 8px; right: auto; top: 44px; width: min(310px, calc(100vw - 16px)); }
+  #boss-bar-container { width: calc(100vw - 188px); }
+  #boss-hp-portrait { display: none; }
+  #boss-hp-frame { border-width: 2px; }
+  #boss-hp-track { height: 34px; }
+  #boss-hp-text { font-size: 9px; line-height: 11px; white-space: normal; text-align: center; padding: 2px; }
+  #maple-loot-log { max-height: 58px; overflow: hidden; font-size: 10px; }
+  #boss-arms-count { font-size: 10px; }
+  .job-modal-box { padding: 12px; }
+  #modal-maple-shop .maple-dialog-body > div:first-child { flex-wrap: wrap; gap: 8px; }
+  #modal-maple-shop .maple-dialog-body > div:nth-child(2) { flex-direction: column; height: auto !important; }
+  #modal-maple-shop .maple-dialog-body > div:nth-child(2) > div { flex: none !important; max-height: 220px; }
+  #armory-grid-container { grid-template-columns: minmax(0, 1fr) !important; }
+  .npc-dialog-content { padding: 10px; gap: 8px; }
+  .npc-portrait-wrapper { width: 70px; flex-shrink: 0; }
+  #npc-dialog-portrait { max-width: 65px; }
+}

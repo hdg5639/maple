@@ -7,6 +7,9 @@ import subprocess
 import os
 import sys
 import time
+import socket
+import tempfile
+import uuid
 
 if sys.platform == 'win32' and hasattr(sys.stdout, 'reconfigure'):
     try:
@@ -21,6 +24,7 @@ PORT = 9222
 class GameQASuite:
     def __init__(self):
         self.proc = None
+        self.profile = None
         self.ws = None
         self.msg_id = 0
         self.pending_futures = {}
@@ -33,24 +37,43 @@ class GameQASuite:
         }
 
     async def start(self):
-        file_url = 'http://localhost:8000/'
+        session = uuid.uuid4().hex
+        file_url = f'http://localhost:8000/?qa_session={session}'
+        self.profile = tempfile.TemporaryDirectory(prefix='maple-cdp-', ignore_cleanup_errors=True)
+        with socket.socket() as reservation:
+            reservation.bind(('127.0.0.1', 0))
+            self.port = reservation.getsockname()[1]
         self.proc = subprocess.Popen([
             CHROME_PATH,
             '--headless=new',
-            f'--remote-debugging-port={PORT}',
+            f'--remote-debugging-port={self.port}',
+            f'--user-data-dir={self.profile.name}',
             '--window-size=1280,800',
             '--disable-gpu',
             file_url
         ])
-        await asyncio.sleep(2.0)
-
-        req = urllib.request.urlopen(f'http://localhost:{PORT}/json')
-        tabs = json.loads(req.read())
-        target = next((t for t in tabs if '8000' in t.get('url', '') or 'openmaple' in t.get('url', '') or 'index.html' in t.get('url', '')), None)
-        if not target:
-            raise RuntimeError("Failed to locate OpenMaple browser tab.")
-
-        self.ws = await websockets.connect(target['webSocketDebuggerUrl'])
+        # Chrome may publish a target before its WebSocket is attachable. Refresh
+        # discovery rather than failing the game gate on a transient CDP HTTP 500.
+        startup_error = None
+        await asyncio.sleep(2)
+        deadline = time.monotonic() + 15
+        while time.monotonic() < deadline:
+            try:
+                with urllib.request.urlopen(f'http://127.0.0.1:{self.port}/json', timeout=0.5) as req:
+                    tabs = json.loads(req.read())
+                target = next((t for t in tabs if session in t.get('url', '')), None)
+                if target:
+                    socket_url = target['webSocketDebuggerUrl'].replace('ws://localhost:', 'ws://127.0.0.1:')
+                    self.ws = await websockets.connect(socket_url, open_timeout=5, proxy=None)
+                    break
+            except Exception as error:
+                startup_error = error
+            await asyncio.sleep(0.1)
+        else:
+            self.proc.terminate()
+            self.proc.wait(timeout=10)
+            self.profile.cleanup()
+            raise RuntimeError(f'Failed to attach to OpenMaple Chrome: {startup_error}')
         asyncio.create_task(self._listen_events())
         await self.send_cmd('Runtime.enable')
         await self.send_cmd('Page.enable')
@@ -88,7 +111,10 @@ class GameQASuite:
         if params:
             payload['params'] = params
         await self.ws.send(json.dumps(payload))
-        return await fut
+        try:
+            return await asyncio.wait_for(fut, 30)
+        finally:
+            self.pending_futures.pop(curr_id, None)
 
     async def evaluate(self, expr):
         resp = await self.send_cmd('Runtime.evaluate', {'expression': expr, 'returnByValue': True})
@@ -149,7 +175,11 @@ class GameQASuite:
             window.game.player.x = 400;
             window.game.player.y = 1320;
             window.game.player.vx = 0;
-            window.game.player.invincibleTimer = 0;
+            window.game.player.invincibleTimer = 9999;
+            window.game.player.horizontalImpulseTimer = 0;
+            window.game.player.onLadder = false;
+            window.game.player.currentFoothold = window.game.map.findSpawnFoothold(400,1320);
+            window.game.player.onGround = true;
             window.game.keys = {};
             window.game.lastHorizontalKey = null;
             window.game.player.stopHorizontal();
@@ -258,9 +288,10 @@ class GameQASuite:
                              f"Roster: {skill_keys}")
 
             for sk in expected_skills:
-                # Set MP and attack timer
+                # Isolate roster checks; cooldown/repeat behavior has dedicated combat-assist regressions.
                 await self.evaluate("""
                     window.game.player.attackTimer = 0;
+                    window.game.player.skillCooldowns = {};
                     window.game.player.mp = window.game.player.maxMp;
                     window.game.player.hp = window.game.player.maxHp;
                 """)
@@ -372,10 +403,10 @@ class GameQASuite:
             if m == 'zakum_altar':
                 boss_only = await self.evaluate("window.game.monsters.length === 1 && window.game.monsters[0].id === 'zakum' && window.game.boss !== null")
                 self.record_test("Monsters", f"Boss Altar Sole Entity: {m}", boss_only, "Zakum Altar has 0 wild field mobs; Zakum Boss is the sole raid entity")
-            elif m == 'henesys_town':
+            elif m in ('henesys_town', 'ellinia'):
                 m_types = await self.evaluate("window.game.monsters.map(m => m.type)")
-                town_safe = len(m_types) <= 3 and all(t in ['snail', 'blue_snail'] for t in m_types)
-                self.record_test("Monsters", f"Peaceful Town Outskirts: {m}", town_safe, f"Town Mobs: {m_types}")
+                town_safe = len(m_types) == 0
+                self.record_test("Monsters", f"Peaceful Town Population: {m}", town_safe, f"Town Mobs: {m_types}")
             else:
                 m_alignment = await self.evaluate("""
                     window.game.monsters.every(mob => {

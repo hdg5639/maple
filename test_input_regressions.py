@@ -43,6 +43,40 @@ CHECKS = r"""(() => {
   g.ui.toggleWindow = () => windows++;
   g.ui.showNpcDialog = () => dialogs++;
   try {
+    check('chat Enter sends once locally and returns focus to gameplay', () => {
+      const input=document.getElementById('chat-input');
+      const send=g.sendChatMessage;
+      let sent=0;
+      g.sendChatMessage=()=>sent++;
+      try {
+        input.focus(); input.value='local-only keyboard regression';
+        input.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true}));
+        expect(sent===1,'chat was not sent exactly once');
+        expect(document.activeElement!==input,'chat Enter re-focused the input after sending');
+      } finally { g.sendChatMessage=send; input.value=''; input.blur(); }
+    });
+    check('native button Space activation and Tab navigation are not consumed by game input', () => {
+      const button=document.getElementById('quick-slot-attack');
+      button.focus();
+      const before={jumps,dialogs,attacks};
+      const space=new KeyboardEvent('keydown',{key:' ',code:'Space',bubbles:true,cancelable:true});
+      button.dispatchEvent(space);
+      expect(!space.defaultPrevented,'game prevented native Space activation');
+      expect(jumps===before.jumps && dialogs===before.dialogs,'button Space triggered game interaction');
+      button.click();
+      expect(attacks===before.attacks+1,'button activation did not use the primary action');
+      const tab=new KeyboardEvent('keydown',{key:'Tab',code:'Tab',bubbles:true,cancelable:true});
+      button.dispatchEvent(tab);
+      expect(!tab.defaultPrevented,'game trapped native Tab navigation');
+      button.blur();
+    });
+    check('HUD attack uses the same primary action as the configured attack key', () => {
+      const before = attacks;
+      document.getElementById('quick-slot-attack').click();
+      key(g.keyConfig.bindings.primarySkill.key);
+      key(g.keyConfig.bindings.primarySkill.key, false);
+      expect(attacks === before + 2, `primary attacks: ${attacks - before}`);
+    });
     check('one potion per key press', () => {
       p.hp = 1;
       const potion = p.inventory.use.find(item => item.id === 'red_potion');
@@ -214,7 +248,7 @@ async def main():
         # Game state is reset after these synthetic, synchronous browser events.
         results = await suite.evaluate(CHECKS)
         assert results, 'Regression script failed to execute'
-        for width, height in [(1280, 800), (1024, 768), (800, 600), (390, 844)]:
+        for width, height in [(1280, 800), (908, 810), (678, 810), (390, 844)]:
             await suite.send_cmd('Emulation.setDeviceMetricsOverride', {
                 'width': width, 'height': height, 'deviceScaleFactor': 1, 'mobile': False
             })
@@ -223,15 +257,16 @@ async def main():
               const hud = document.getElementById('maple-hud');
               const bounds = hud.getBoundingClientRect();
               const failures = [];
+              if (document.documentElement.scrollWidth > innerWidth) failures.push('Document horizontal overflow');
+              if (hud.scrollWidth > hud.clientWidth + 1) failures.push('HUD horizontal overflow');
               if (bounds.top < 0 || bounds.bottom > innerHeight + 1) failures.push('HUD outside viewport');
               for (const element of hud.querySelectorAll('.quickslot, .hud-menu-btn')) {
-                element.scrollIntoView({block: 'nearest', inline: 'nearest'});
                 const rect = element.getBoundingClientRect();
                 if (rect.top < bounds.top || rect.bottom > bounds.bottom + 1 || rect.bottom > innerHeight + 1) {
                   failures.push(`${element.id}: vertical clipping`);
                 }
                 if (rect.left < -1 || rect.right > innerWidth + 1) {
-                  failures.push(`${element.id}: cannot scroll into view`);
+                  failures.push(`${element.id}: horizontal clipping`);
                 }
               }
               hud.scrollLeft = 0;

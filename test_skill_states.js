@@ -75,7 +75,7 @@ test('ground teleport reattaches only to a same-height destination foothold', ()
   assert.equal(player.currentFoothold, destination);
   assert.equal(player.currentLadder, null);
   assert.equal(player.vy, 0);
-  assert.equal(player.mp, mp - 8);
+  assert.equal(player.mp, mp - 2);
   assert.equal(lookups.length, 1);
   assert.equal(lookups[0][0], 230);
   assert.equal(lookups[0][1], 100);

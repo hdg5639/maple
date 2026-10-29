@@ -61,14 +61,14 @@ const MAPLE_EQUIPMENT_CATALOG = {
   swords: [
     { id: 'wp_wood_sword', name: '초보자 목검', category: '전사 한손검', type: 'weapon', weaponType: 'sword', reqLevel: 0, atk: 7, str: 0, spd: 0, upgradeSlots: 7, icon: '🗡️', desc: '나무를 정성스레 깎아 만든 수련용 목검입니다.', color: '#b45309' },
     { id: 'wp_two_handed_sword', name: '강철 양손검', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 20, atk: 32, str: 1, spd: 0, upgradeSlots: 7, icon: '⚔️', desc: '단단한 강철을 벼려낸 묵직한 양손검입니다.', color: '#64748b' },
-    { id: 'wp_highlander', name: '하이랜더', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 30, atk: 50, str: 2, spd: 5, upgradeSlots: 7, icon: '⚔️', desc: '황금 코등이와 푸른 도신이 아름다운 모험가의 상징 명품 양손검입니다.', color: '#38bdf8' },
+    { id: 'wp_highlander', name: '하이랜더', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 30, atk: 50, str: 2, spd: 5, attackSpeedBonus: 0.06, upgradeSlots: 7, icon: '⚔️', desc: '황금 코등이와 푸른 도신이 아름다운 모험가의 상징 명품 양손검입니다.', color: '#38bdf8' },
     { id: 'wp_gryunhill', name: '그륜힐', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 70, atk: 75, str: 4, def: 5, spd: 0, upgradeSlots: 7, icon: '🗡️', desc: '붉은 톱날 날이 돋아난 거대하고 파괴적인 전설의 대검입니다.', color: '#ef4444' },
     { id: 'wp_dragon_claymore', name: '드래곤 클레이모어', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 110, atk: 95, str: 8, def: 12, spd: 3, upgradeSlots: 7, icon: '🐲', desc: '푸른 용의 날개와 영혼이 깃든 궁극의 드래곤 대검입니다.', color: '#06b6d4' }
   ],
   daggers: [
     { id: 'wp_beginner_dagger', name: '초보자 대거', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 0, atk: 8, luk: 0, spd: 0, upgradeSlots: 7, icon: '🔪', desc: '가볍고 다루기 쉬운 기본 단검입니다.', color: '#94a3b8' },
     { id: 'wp_fruit_dagger', name: '후르츠 대거', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 15, atk: 18, dex: 1, spd: 2, upgradeSlots: 7, icon: '🗡️', desc: '과일 깎기용이지만 칼날이 날카로운 실속형 단검입니다.', color: '#10b981' },
-    { id: 'wp_taeguk_fan', name: '태극 부채', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 35, atk: 35, luk: 2, spd: 10, upgradeSlots: 7, icon: '🪭', desc: '화려한 태극 문양이 수놓아진 부채. 매우 빠른 공격속도를 자랑합니다.', color: '#ef4444' },
+    { id: 'wp_taeguk_fan', name: '태극 부채', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 35, atk: 35, luk: 2, spd: 10, attackSpeedBonus: 0.18, upgradeSlots: 7, icon: '🪭', desc: '화려한 태극 문양이 수놓아진 부채. 매우 빠른 공격속도를 자랑합니다.', color: '#ef4444' },
     { id: 'wp_geta', name: '게타', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 50, atk: 52, luk: 3, spd: 4, upgradeSlots: 7, icon: '🗡️', desc: '외날의 예리한 칼날을 가진 정통 닌자 탄토 단검입니다.', color: '#f59e0b' },
     { id: 'wp_kandine', name: '칸디네', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 70, atk: 70, luk: 5, dex: 2, spd: 6, upgradeSlots: 7, icon: '🐍', desc: '물결치는 독사 모양의 날을 가진 은밀한 암살자의 보검입니다.', color: '#059669' },
     { id: 'wp_dragon_toenail', name: '드래곤 토네일', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 110, atk: 92, luk: 9, dex: 4, spd: 8, upgradeSlots: 7, icon: '🐉', desc: '드래곤의 날카로운 발톱을 가공하여 만든 최고급 명품 단검입니다.', color: '#dc2626' }
@@ -84,14 +84,14 @@ const MAPLE_EQUIPMENT_CATALOG = {
   ],
   claws: [
     { id: 'wp_garnier', name: '가니어', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 10, atk: 12, upgradeSlots: 7, icon: '🧤', desc: '도적이 최초로 착용하는 가죽 아대입니다.', color: '#78350f' },
-    { id: 'wp_meba', name: '메바', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 25, atk: 22, luk: 1, spd: 5, upgradeSlots: 7, icon: '🦅', desc: '매우 빠른 연사 속도를 지닌 도적들의 국민 아대입니다.', color: '#3b82f6' },
+    { id: 'wp_meba', name: '메바', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 25, atk: 22, luk: 1, spd: 5, attackSpeedBonus: 0.2, upgradeSlots: 7, icon: '🦅', desc: '매우 빠른 연사 속도를 지닌 도적들의 국민 아대입니다.', color: '#3b82f6' },
     { id: 'wp_scorp', name: '스칼라피온', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 50, atk: 45, luk: 3, upgradeSlots: 7, icon: '🦂', desc: '전갈의 독침 형태를 본뜬 위협적인 날을 가진 아대입니다.', color: '#8b5cf6' },
     { id: 'wp_kandeo', name: '칸데오', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 70, atk: 65, luk: 5, upgradeSlots: 7, icon: '✨', desc: '황금 발톱이 장착되어 화려한 공격력을 자랑하는 상급 아대입니다.', color: '#f59e0b' },
     { id: 'wp_dragon_sleve', name: '드래곤 슬레브', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 110, atk: 88, luk: 8, spd: 6, upgradeSlots: 7, icon: '🐲', desc: '드래곤의 단단한 비늘로 제련된 최고급 아대입니다.', color: '#10b981' }
   ],
   bows: [
     { id: 'wp_hunter_bow', name: '사냥꾼의 활', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 10, atk: 14, upgradeSlots: 7, icon: '🏹', desc: '헤네시스 사냥꾼들이 애용하는 실용적인 활입니다.', color: '#84cc16' },
-    { id: 'wp_ryden', name: '라이덴', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 35, atk: 38, dex: 2, spd: 4, upgradeSlots: 7, icon: '⚡', desc: '번개의 탄성을 지닌 신속한 명품 활입니다.', color: '#06b6d4' },
+    { id: 'wp_ryden', name: '라이덴', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 35, atk: 38, dex: 2, spd: 4, attackSpeedBonus: 0.12, upgradeSlots: 7, icon: '⚡', desc: '번개의 탄성을 지닌 신속한 명품 활입니다.', color: '#06b6d4' },
     { id: 'wp_metus', name: '메투스', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 70, atk: 68, dex: 5, upgradeSlots: 7, icon: '🎯', desc: '백발백중의 명중률을 자랑하는 전설의 활입니다.', color: '#f97316' },
     { id: 'wp_dragon_shinebow', name: '드래곤 샤인보우', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 110, atk: 92, dex: 8, upgradeSlots: 7, icon: '🌟', desc: '드래곤의 영혼이 담긴 황금빛 광채의 궁극의 활입니다.', color: '#eab308' }
   ],
@@ -105,6 +105,16 @@ const MAPLE_EQUIPMENT_CATALOG = {
 window.MAPLE_EQUIPMENT_CATALOG = MAPLE_EQUIPMENT_CATALOG;
 
 class Player {
+  static MAX_LEVEL = 200;
+
+  static expRequiredForLevel(level) {
+    let required = 15;
+    for (let current = 2; current <= Math.min(Player.MAX_LEVEL, Math.max(1, level)); current++) {
+      required = Math.min(Number.MAX_SAFE_INTEGER, Math.floor(required * 1.5 + current * 10));
+    }
+    return required;
+  }
+
   constructor(x = 400, y = 1318) {
     this.x = x;
     this.y = y;
@@ -123,6 +133,8 @@ class Player {
 
     this.attackTimer = 0;
     this.attackDuration = 0.26;
+    this.attackAnimationDuration = this.attackDuration;
+    this.skillCooldowns = {};
     this.invincibleTimer = 0;
 
     this.name = '단풍모험가';
@@ -174,7 +186,9 @@ class Player {
         { id: 'red_potion', name: '빨간 포션', count: 15, healHp: 50 },
         { id: 'blue_potion', name: '파란 포션', count: 10, healMp: 50 },
         { id: 'scroll_atk_60', name: '무기 공격력 주문서 60%', type: 'scroll', count: 2, rate: 0.6, bonusAtk: 2 },
-        { id: 'scroll_atk_10', name: '무기 공격력 주문서 10%', type: 'scroll', count: 1, rate: 0.1, bonusAtk: 5 }
+        { id: 'scroll_atk_10', name: '무기 공격력 주문서 10%', type: 'scroll', count: 1, rate: 0.1, bonusAtk: 5 },
+        { id: 'scroll_atk_100', name: '무기 공격력 주문서 100%', type: 'scroll', count: 3, rate: 1, bonusAtk: 1 },
+        { id: 'scroll_def_100', name: '방어구 방어력 주문서 100%', type: 'scroll', count: 2, rate: 1, bonusDef: 2 }
       ],
       etc: [
         { id: 'snail_shell', name: '달팽이의 껍질', count: 0 },
@@ -202,12 +216,27 @@ class Player {
   }
 
   usePotion(potionId) {
+    if (this.hp <= 0) return false;
     const pot = this.inventory.use.find(p => p.id === potionId);
     if (!pot || pot.count <= 0) return false;
+    if (potionId === 'town_scroll') {
+      if (!window.game?.changeMap) return false;
+      pot.count--;
+      window.game.changeMap('henesys_town');
+      this.persistProgress();
+      return true;
+    }
+    if (!pot.healHp && !pot.healMp && typeof SHOP_ITEMS_FOR_SALE !== 'undefined') {
+      const template = SHOP_ITEMS_FOR_SALE.find(item => item.id === potionId);
+      if (template?.healHp) pot.healHp = template.healHp;
+      if (template?.healMp) pot.healMp = template.healMp;
+    }
+    if (!pot.healHp && !pot.healMp) return false;
     pot.count--;
     if (pot.healHp) this.healHp(pot.healHp);
     if (pot.healMp) this.healMp(pot.healMp);
     if (window.audio) window.audio.playPickItem();
+    this.persistProgress();
     return true;
   }
 
@@ -245,14 +274,32 @@ class Player {
       this.say('마을로 귀환합니다...');
       if (game) {
         setTimeout(() => {
-          this.hp = this.maxHp;
-          this.mp = this.maxMp;
-          game.changeMap('henesys_hhg', 400, 1300);
+          if (this.hp <= 0) this.revive(game);
         }, 1500);
       }
     }
 
     return hpDmg;
+  }
+
+  revive(game = window.game) {
+    if (this.hp > 0 || !game?.changeMap) return false;
+    this.buffs = {};
+    this.comboCount = 0;
+    this.walkSpeed = this.job === '도적' ? 4.2 : (this.job === '궁수' ? 3.8 : 3.6);
+    this.jumpForce = Physics.JUMP_VELOCITY;
+    this.calcDerivedStats();
+    this.hp = this.maxHp;
+    this.mp = this.maxMp;
+    this.invincibleTimer = 2;
+    this.attackTimer = 0;
+    this.skillCooldowns = {};
+    this.horizontalImpulseTimer = 0;
+    game.changeMap('henesys_town');
+    game.ui?.updateHUD?.();
+    game.ui?.updateStatsWindow?.();
+    this.persistProgress(game);
+    return true;
   }
 
   onLand() {
@@ -319,6 +366,23 @@ class Player {
       this.weaponType = 'sword';
       this.walkSpeed = 3.6;
     }
+    this.syncSkillCosts();
+  }
+
+  syncSkillCosts() {
+    if (typeof SkillRegistry === 'undefined') return;
+    for (const [id, data] of Object.entries(this.skills || {})) {
+      const skill = SkillRegistry.get(id);
+      if (skill) data.mpCost = skill.getManaCost(this);
+    }
+  }
+
+  getAttackSpeedFactor() {
+    return 1 + Math.max(0, Math.min(0.5, this.attackSpeedBonus || 0));
+  }
+
+  getAttackDuration(multiplier = 1) {
+    return Math.max(0.1, this.attackDuration * multiplier / this.getAttackSpeedFactor());
   }
 
   calcDerivedStats() {
@@ -328,6 +392,7 @@ class Player {
     let equipDex = 0;
     let equipInt = 0;
     let equipLuk = 0;
+    let attackSpeedBonus = 0;
 
     if (this.inventory && this.inventory.equip) {
       this.inventory.equip.forEach(eq => {
@@ -338,6 +403,9 @@ class Player {
           equipDex += eq.dex || 0;
           equipInt += eq.int || 0;
           equipLuk += eq.luk || 0;
+          const canonical = Object.values(MAPLE_EQUIPMENT_CATALOG).flat().find(item => item.id === eq.id);
+          const speedBonus = eq.attackSpeedBonus ?? canonical?.attackSpeedBonus ?? 0;
+          attackSpeedBonus += Number.isFinite(speedBonus) ? speedBonus : 0;
         }
       });
     }
@@ -346,6 +414,7 @@ class Player {
     this.totalDex = this.dex + equipDex;
     this.totalInt = this.int + equipInt;
     this.totalLuk = this.luk + equipLuk;
+    this.attackSpeedBonus = Math.max(0, Math.min(0.5, attackSpeedBonus));
 
     // Classic Maple Accuracy & Defense formulas
     this.accuracy = Math.floor(this.totalDex * 0.8 + this.totalLuk * 0.5);
@@ -388,6 +457,17 @@ class Player {
       this.minAtk = Math.max(4, Math.floor(this.totalStr * 0.9 + this.totalDex * 0.4 + this.level * 2) + equipAtk);
       this.maxAtk = Math.max(8, Math.floor(this.totalStr * 1.5 + this.totalDex * 0.6 + this.level * 3) + equipAtk);
     }
+    // The local action-RPG ruleset provides room for sustained combat across every job.
+    this.maxHp = Math.max(300, Math.round(this.maxHp * 3));
+    this.maxMp = Math.max(100, Math.round(this.maxMp * 2));
+    if (Number.isFinite(this.hp)) this.hp = Math.min(this.hp, this.maxHp);
+    if (Number.isFinite(this.mp)) this.mp = Math.min(this.mp, this.maxMp);
+  }
+
+  persistProgress(game = window.game) {
+    if (game?.saveProgress) return game.saveProgress();
+    if (typeof StorageManager !== 'undefined') return StorageManager.save(this, game?.map?.currentKey);
+    return false;
   }
 
   getHitBox() {
@@ -432,6 +512,7 @@ class Player {
       item.equipped = true;
     }
     this.calcDerivedStats();
+    this.persistProgress();
   }
 
   equipById(itemId) {
@@ -463,36 +544,61 @@ class Player {
       return;
     }
     this.calcDerivedStats();
+    this.persistProgress();
   }
 
-  scrollWeapon(scrollItem, game) {
-    const weapon = this.inventory.equip.find(eq => eq.type === 'weapon' && eq.equipped);
-    if (!weapon) {
-      this.say('장착된 무기가 없습니다!');
-      return false;
-    }
-    if ((weapon.upgradeSlots || 0) <= 0) {
-      this.say('더 이상 업그레이드할 수 없는 무기입니다!');
-      return false;
-    }
-    if (scrollItem.count <= 0) return false;
-    scrollItem.count--;
+  getEnhancementFee(item) {
+    const level = Math.max(0, Number(item?.reqLevel) || 0);
+    return Math.min(5000, 250 + level * 25 + Math.max(0, Number(item?.enhancements) || 0) * 100);
+  }
 
-    const success = Math.random() < (scrollItem.rate || 0.6);
-    weapon.upgradeSlots--;
+  canUseEquipmentScroll(item, scroll) {
+    if (!item || !scroll || scroll.type !== 'scroll') return false;
+    if (scroll.bonusDef !== undefined) return item.type !== 'weapon' && item.type !== 'star' && Number.isFinite(item.upgradeSlots);
+    return item.type === 'weapon' && Number.isFinite(item.upgradeSlots);
+  }
 
+  enhanceEquipment(item, scroll, game = window.game) {
+    const reject = message => { this.say(message); return false; };
+    if (!this.inventory.equip.includes(item) || !this.inventory.use.includes(scroll)) return reject('소지 중인 장비와 주문서를 선택하세요.');
+    if (!this.canUseEquipmentScroll(item, scroll)) return reject('이 장비에 사용할 수 없는 주문서입니다.');
+    if (!Number.isInteger(item.upgradeSlots) || item.upgradeSlots <= 0) return reject('남은 업그레이드 횟수가 없습니다.');
+    if (!Number.isInteger(scroll.count) || scroll.count <= 0) return reject('주문서가 없습니다.');
+    const fee = this.getEnhancementFee(item);
+    if (this.meso < fee) return reject(`강화 수수료 ${fee.toLocaleString()} 메소가 필요합니다.`);
+    const rate = Number(scroll.rate ?? 0.6);
+    const stat = scroll.bonusDef !== undefined ? 'def' : 'atk';
+    const bonus = Number(stat === 'def' ? scroll.bonusDef : (scroll.bonusAtk ?? 2));
+    if (!Number.isFinite(rate) || rate < 0 || rate > 1 || !Number.isFinite(bonus) || bonus <= 0) return reject('올바른 강화 주문서가 아닙니다.');
+
+    const success = Math.random() < rate;
+    this.meso -= fee;
+    scroll.count--;
+    item.upgradeSlots--;
     if (success) {
-      weapon.atk = (weapon.atk || 0) + (scrollItem.bonusAtk || 2);
-      window.audio.playScrollSuccess();
-      game.spawnItemText(this.x, this.y - 45, '✨ 주문서 강화 성공! (+공격력)');
-      game.ui.addChat('system', `🎉 [강화 성공] ${weapon.name}의 공격력이 +${scrollItem.bonusAtk} 증가했습니다! (남은 업횟: ${weapon.upgradeSlots})`);
-      this.calcDerivedStats();
-    } else {
-      window.audio.playScrollFail();
-      game.spawnItemText(this.x, this.y - 45, '💨 주문서 강화 실패...');
-      game.ui.addChat('system', `❌ [강화 실패] 주문서의 마력이 사라졌습니다. (남은 업횟: ${weapon.upgradeSlots})`);
+      item[stat] = (Number(item[stat]) || 0) + bonus;
+      item.enhancements = (Number(item.enhancements) || 0) + 1;
     }
-    return true;
+    if (scroll.count === 0) this.inventory.use.splice(this.inventory.use.indexOf(scroll), 1);
+    this.calcDerivedStats();
+    this.lastEnhancementResult = {success, fee, stat, bonus: success ? bonus : 0,
+      itemName: item.name, remainingSlots: item.upgradeSlots};
+    this.persistProgress(game);
+    const resultText = success
+      ? `${item.name} 강화 성공! ${stat === 'atk' ? '공격력' : '방어력'} +${bonus}`
+      : `${item.name} 강화 실패. 기존 능력치는 유지됩니다.`;
+    window.audio?.[success ? 'playScrollSuccess' : 'playScrollFail']?.();
+    game?.spawnItemText?.(this.x, this.y - 45, resultText);
+    game?.ui?.addChat?.('system', `[강화] ${resultText} (수수료 ${fee.toLocaleString()} 메소, 남은 횟수 ${item.upgradeSlots})`);
+    game?.ui?.updateHUD?.();
+    game?.ui?.updateStatsWindow?.();
+    return this.lastEnhancementResult;
+  }
+
+  scrollWeapon(scrollItem, game = window.game) {
+    const item = this.inventory.equip.find(eq => eq.equipped && this.canUseEquipmentScroll(eq, scrollItem));
+    if (!item) { this.say('주문서에 맞는 장비를 장착하세요.'); return false; }
+    return Boolean(this.enhanceEquipment(item, scrollItem, game));
   }
 
   setJob(jobName) {
@@ -518,6 +624,7 @@ class Player {
     this.calcDerivedStats();
     this.hp = this.maxHp;
     this.mp = this.maxMp;
+    this.persistProgress();
   }
 
   getDamage() {
@@ -536,6 +643,9 @@ class Player {
 
   update(dt, map) {
     if (this.attackTimer > 0) this.attackTimer -= dt;
+    for (const id of Object.keys(this.skillCooldowns)) {
+      this.skillCooldowns[id] = Math.max(0, this.skillCooldowns[id] - dt);
+    }
     if (this.invincibleTimer > 0) this.invincibleTimer -= dt;
     if (this.ladderCooldown > 0) this.ladderCooldown = Math.max(0, this.ladderCooldown - dt);
     if (this.weakenedTimer > 0) this.weakenedTimer = Math.max(0, this.weakenedTimer - dt);
@@ -546,11 +656,11 @@ class Player {
     }
 
     this.regenTimer += dt;
-    if (this.regenTimer >= 5) {
-      this.regenTimer = 0;
+    if (this.regenTimer >= 2 && this.hp > 0) {
+      this.regenTimer -= 2;
       const rec = (this.skills.recovery?.level || 1) * 4;
-      this.healHp(5 + rec);
-      this.healMp(5 + rec);
+      this.healHp(Math.max(8, Math.ceil(this.maxHp * 0.03)) + rec);
+      this.healMp(Math.max(8, Math.ceil(this.maxMp * 0.08)) + rec);
     }
 
     // Update active buffs & expiration
@@ -700,7 +810,9 @@ class Player {
 
   normalAttack(game) {
     if (this.hp <= 0 || this.onLadder || this.attackTimer > 0) return false;
-    this.attackTimer = this.attackDuration;
+    CombatSystem.prepareAutoAim(this, game, {range: 75, verticalRange: 48});
+    this.attackTimer = this.getAttackDuration();
+    this.attackAnimationDuration = this.attackTimer;
     window.audio.playAttack();
     const hitBox = {
       x: this.facing === 'right' ? this.x - 20 : this.x - 75,
@@ -712,22 +824,48 @@ class Player {
   }
 
   useSkill(skillId, game) {
+    this.syncSkillCosts();
     const skill = this.skills ? this.skills[skillId] : null;
     if (!skill || skill.level <= 0) return false;
     return SkillRegistry.execute(skillId, this, game);
   }
 
-  levelUp(game) {
+  gainExp(amount, game = window.game) {
+    if (!Number.isFinite(amount) || amount <= 0 || this.level >= Player.MAX_LEVEL) return 0;
+    const gained = Math.floor(amount * (this.buffs?.holy_symbol ? 1.5 : 1));
+    if (gained <= 0) return 0;
+    this.exp = Math.max(0, Number.isFinite(this.exp) ? this.exp : 0) + gained;
+    this.maxExp = Player.expRequiredForLevel(this.level);
+    let gainedLevels = 0;
+    while (this.level < Player.MAX_LEVEL && this.exp >= this.maxExp) {
+      this.exp -= this.maxExp;
+      this.levelUp(game);
+      gainedLevels++;
+    }
+    if (this.level >= Player.MAX_LEVEL) this.exp = 0;
+    game?.spawnExpText?.(this.x, this.y - 35, gained);
+    if (gainedLevels && this.job === '초보자' && this.level >= 10) game?.ui?.showJobAdvancementModal?.();
+    game?.ui?.updateHUD?.();
+    if (gainedLevels) {
+      game?.ui?.updateStatsWindow?.();
+      game?.ui?.updateSkillsWindow?.();
+    }
+    this.persistProgress(game);
+    return gained;
+  }
+
+  levelUp(game = window.game) {
+    if (this.level >= Player.MAX_LEVEL) return false;
     this.level++;
     this.ap += 5;
     this.sp += 3;
-    this.maxExp = Math.floor(this.maxExp * 1.5 + this.level * 10);
+    this.maxExp = Player.expRequiredForLevel(this.level);
     this.calcDerivedStats();
     this.hp = this.maxHp;
     this.mp = this.maxMp;
 
-    window.audio.playLevelUp();
-    game.skillEffects.push({
+    window.audio?.playLevelUp?.();
+    game?.skillEffects?.push({
       type: 'level_up',
       x: this.x,
       y: this.y,
@@ -735,9 +873,8 @@ class Player {
       duration: 1.6
     });
 
-    if (this.level >= 10 && this.job === '초보자') {
-      game.ui.showJobAdvancementModal();
-    }
+    this.persistProgress(game);
+    return true;
   }
 
   advanceJob(newJob) {
@@ -745,26 +882,27 @@ class Player {
   }
 
   addMeso(amount, game) {
+    if (!Number.isFinite(amount) || amount <= 0) return false;
     this.meso += amount;
-    window.audio.playPickItem();
-    game.spawnMesoText(this.x, this.y - 35, amount);
+    window.audio?.playPickItem?.();
+    game?.spawnMesoText?.(this.x, this.y - 35, amount);
+    this.persistProgress(game);
+    return true;
   }
 
   addItem(itemId, name, count = 1, game) {
-    window.audio.playPickItem();
-    game.spawnItemText(this.x, this.y - 35, name);
-
-    const useItem = this.inventory.use.find(i => i.id === itemId);
-    if (useItem) {
-      useItem.count += count;
-      return;
-    }
-    const etcItem = this.inventory.etc.find(i => i.id === itemId);
-    if (etcItem) {
-      etcItem.count += count;
-      return;
-    }
-    this.inventory.etc.push({ id: itemId, name, count });
+    if (!Number.isInteger(count) || count <= 0) return false;
+    const template = typeof SHOP_ITEMS_FOR_SALE !== 'undefined'
+      ? SHOP_ITEMS_FOR_SALE.find(item => item.id === itemId) : null;
+    const list = template?.type === 'use' || this.inventory.use.some(item => item.id === itemId)
+      ? this.inventory.use : this.inventory.etc;
+    const existing = list.find(item => item.id === itemId);
+    if (existing) existing.count += count;
+    else list.push(template ? {...template, type: template.itemType || 'potion', count} : {id: itemId, name, count});
+    window.audio?.playPickItem?.();
+    game?.spawnItemText?.(this.x, this.y - 35, name);
+    this.persistProgress(game);
+    return true;
   }
 
   checkCollision(rect1, rect2) {
@@ -791,9 +929,13 @@ class Monster {
     this.currentFoothold = null;
     this.hitTimer = 0;
     this.hitstopTimer = 0;
+    this.hitFlashTimer = 0;
     this.state = 'alive';
     this.dyingDuration = 0.45;
     this.dyingTimer = 0;
+    this.dropsSpawned = false;
+    this.rewardsGranted = false;
+    this.quakePending = false;
 
     this.initMonsterType(type);
     this.hp = this.maxHp;
@@ -804,6 +946,22 @@ class Monster {
 
   initMonsterType(type) {
     switch (type) {
+      case 'horny_mushroom':
+      case 'shroom':
+      case 'stump': {
+        const definitions = {
+          horny_mushroom: ['뿔버섯', 22, 300, 35, 90, 30, 7, 1.4, 38, 40],
+          shroom: ['스포아', 2, 20, 5, 17, 0, 0, 0.8, 26, 24],
+          stump: ['스텀프', 4, 40, 8, 30, 0, 0, 0.5, 36, 36]
+        };
+        [this.name, this.level, this.maxHp, this.exp, this.atk, this.def, this.avoid,
+          this.speed, this.width, this.height] = definitions[type];
+        this.dropTable = [
+          {type:'meso', chance:0.9, min:10, max:80},
+          {type:'blue_potion', name:'파란 포션', chance:0.3}
+        ];
+        break;
+      }
       case 'snail':
         this.name = '달팽이';
         this.level = 1;
@@ -943,15 +1101,15 @@ class Monster {
         break;
       case 'mushmom':
         this.name = '★ 머쉬맘 (BOSS) ★';
-        this.level = 25;
+        this.level = 60;
         this.maxHp = 4500;
         this.exp = 950;
         this.atk = 75;
         this.def = 80;
         this.avoid = 35;
         this.speed = 1.6;
-        this.width = 80;
-        this.height = 70;
+        this.width = 119;
+        this.height = 110;
         this.dropTable = [
           { type: 'meso', chance: 1.0, min: 1000, max: 2500 },
           { type: 'red_potion', name: '빨간 포션', chance: 1.0, count: 5 },
@@ -1009,6 +1167,8 @@ class Monster {
     }
     if (!this.isAlive()) return;
 
+    this.hitFlashTimer = Math.max(0, this.hitFlashTimer - dt);
+
     // Hitstop Freeze
     if (this.hitstopTimer > 0) {
       this.hitstopTimer -= dt;
@@ -1037,6 +1197,10 @@ class Monster {
         this.vy = -6.5;
         this.onGround = false;
         this.currentFoothold = null;
+        if (this.type === 'mushmom') {
+          this.quakePending = true;
+          game?.spawnItemText?.(this.x, this.y - this.height - 12, '⚠️ 머쉬맘이 뛰어오릅니다!');
+        }
       }
     }
 
@@ -1074,7 +1238,18 @@ class Monster {
       }
     }
 
+    const wasGrounded = this.onGround;
     Physics.updateEntityFixed(this, map, dt);
+    if (this.type === 'mushmom' && this.quakePending && !wasGrounded && this.onGround) {
+      this.quakePending = false;
+      window.sprites?.spawnLandingDust?.(this.x, this.y);
+      game?.triggerScreenShake?.(0.25, 5);
+      if (player.hp > 0 && player.onGround && player.invincibleTimer <= 0 &&
+          Math.abs(player.x - this.x) <= 240 && Math.abs(player.y - this.y) <= 28) {
+        const damage = player.takeDamage(Math.round(this.atk * 0.8), game, this.x);
+        if (damage > 0) game?.spawnDamageText?.(player.x, player.y - 25, damage, false, 'player');
+      }
+    }
 
     if (player.hp > 0 && player.invincibleTimer <= 0) {
       const pBox = {
@@ -1093,10 +1268,11 @@ class Monster {
   }
 
   takeDamage(amount, isCrit, fromDir, gameOrPlayer) {
-    if (!this.isAlive()) return;
+    if (!this.isAlive() || !Number.isFinite(amount) || amount <= 0) return false;
     this.hp -= amount;
     this.hitTimer = 0.15;
     this.hitstopTimer = 0.08; // 0.08s hitstop!
+    this.hitFlashTimer = 0.12;
     window.audio.playHit();
 
     // Parabolic knockback
@@ -1130,20 +1306,26 @@ class Monster {
     this.vx = 0;
     this.vy = 0;
     this.hitstopTimer = 0;
+    this.hitFlashTimer = 0;
+    this.quakePending = false;
     window.audio.playMonsterDie();
 
     const actualPlayer = (player && typeof player.gainExp === 'function') 
       ? player 
       : ((game && game.player && typeof game.player.gainExp === 'function') ? game.player : (window.game?.player));
 
-    if (actualPlayer && typeof actualPlayer.gainExp === 'function') {
-      actualPlayer.gainExp(this.exp, game || window.game);
+    if (!this.rewardsGranted && actualPlayer && typeof actualPlayer.gainExp === 'function') {
+      this.rewardsGranted = true;
+      const rewardGame = game || window.game;
+      const gained = actualPlayer.gainExp(this.exp, rewardGame);
+      rewardGame?.autoHunt?.recordKill?.(Number.isFinite(gained) ? gained : this.exp, 0);
     }
     this.spawnDrops(game || window.game);
   }
 
   spawnDrops(game) {
-    if (!game || !game.spawnDrop) return;
+    if (this.dropsSpawned || !game || !game.spawnDrop) return;
+    this.dropsSpawned = true;
     this.dropTable.forEach(drop => {
       if (Math.random() <= drop.chance) {
         if (drop.type === 'meso') {
@@ -1225,25 +1407,14 @@ class FloatingText {
   }
 }
 
-// === Zakum Boss Class (Body + 8 Independent Floating Arms) ===
+// === Zakum Boss Class (Body + 8 Independently Damageable Arms) ===
 class ZakumBoss {
-  getLevel() {
-    return this.level || 50;
-  }
-
-  getAvoid() {
-    return 25;
-  }
-
-  getDefense() {
-    return 40;
-  }
   constructor(x = 600, y = 350) {
     this.id = 'zakum';
     this.name = '★ 자쿰 (ZAKUM BOSS) ★';
     this.x = x;
-    this.y = y;
-    this.level = 50;
+    this.y = y; // Body sprite center; setGroundPosition converts the arena floor anchor.
+    this.level = 140;
     this.maxHp = 100000;
     this.hp = this.maxHp;
     this.width = 385;
@@ -1251,177 +1422,222 @@ class ZakumBoss {
     this.hitTimer = 0;
     this.hitstopTimer = 0;
     this.atk = 85;
-
-    // 8 Independent Arms with their relative offsets from body center
-    this.arms = [
-      { id: 1, name: '자쿰의 1번째 팔', offsetX: -160, offsetY: -160, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 2, name: '자쿰의 2번째 팔', offsetX: -170, offsetY: -80, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 3, name: '자쿰의 3번째 팔', offsetX: -160, offsetY: 10, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 4, name: '자쿰의 4번째 팔', offsetX: -140, offsetY: 90, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 5, name: '자쿰의 5번째 팔', offsetX: 160, offsetY: -160, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 6, name: '자쿰의 6번째 팔', offsetX: 170, offsetY: -80, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 7, name: '자쿰의 7번째 팔', offsetX: 160, offsetY: 10, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 },
-      { id: 8, name: '자쿰의 8번째 팔', offsetX: 140, offsetY: 90, maxHp: 15000, hp: 15000, isAlive: true, hitTimer: 0 }
-    ];
-
+    this.state = 'alive';
+    this.phase = 'arms';
+    this.animationTime = 0;
+    this.dyingDuration = 0.9;
+    this.dyingTimer = 0;
+    this.rewardsGranted = false;
+    // WZ mob 8800003..8800010 alternate left/right. Every part shares the
+    // same WZ origin; its exported PNG padding is resolved by baked metadata.
+    this.arms = Array.from({length: 8}, (_, index) => ({
+      id: index + 1, name: `자쿰의 ${index + 1}번째 팔`, sourceMobId: 8800003 + index
+    })).map(arm => ({...arm, maxHp: 15000, hp: 15000, isAlive: true,
+      hitTimer: 0, state: 'alive', dyingTimer: 0, dyingDuration: 0.35}));
     this.activeSpells = [];
     this.spellCooldown = 3.5;
   }
 
-  isAlive() {
-    return this.hp > 0;
+  getLevel() { return this.level; }
+  getAvoid() { return 25; }
+  getDefense() { return 40; }
+  isAlive() { return this.state === 'alive' && this.hp > 0; }
+  isDying() { return this.state === 'dying'; }
+
+  getPartGeometry(part = 'body', arm = null) {
+    const isArm = part === 'arm';
+    const framesPerSecond = isArm ? 5 : 4;
+    const frame = Math.floor(this.animationTime * framesPerSecond) % 8;
+    const metadata = isArm ? window.BOSS_SPRITE_GEOMETRY?.arms?.[arm.id] : window.BOSS_SPRITE_GEOMETRY?.body;
+    const sprite = isArm ? window.sprites?.zakum?.arms?.[arm.id]?.[frame] : window.sprites?.zakum?.body?.[frame];
+    const spriteWidth = metadata?.width || sprite?.naturalWidth || (isArm ? 100 : this.width);
+    const spriteHeight = metadata?.height || sprite?.naturalHeight || (isArm ? 100 : this.height);
+    const bounds = metadata?.frames?.[frame] || [0, 0, spriteWidth, spriteHeight];
+    const bodyMetadata = window.BOSS_SPRITE_GEOMETRY?.body;
+    const bodyHeight = bodyMetadata?.height || this.height;
+    const bodyOrigin = bodyMetadata?.origins?.[0] || [this.width / 2, bodyHeight / 2];
+    const origin = metadata?.origins?.[frame] || [spriteWidth / 2, spriteHeight / 2];
+    // Keep this.y's body-center contract for camera/spells, while assembling
+    // all nine sprites at the original shared WZ origin. The PNGs already
+    // contain their limb animation: an extra per-arm bob detaches the joints.
+    const originX = this.x;
+    const originY = this.y + bodyOrigin[1] - bodyHeight / 2;
+    const drawX = Math.round(originX - origin[0]);
+    const drawY = Math.round(originY - origin[1]);
+    return {frame, drawX, drawY, spriteWidth, spriteHeight,
+      sourceWidth: spriteWidth, sourceHeight: spriteHeight,
+      originX, originY, maskRects: metadata?.maskRects?.[frame],
+      x: drawX + bounds[0], y: drawY + bounds[1],
+      width: bounds[2] - bounds[0], height: bounds[3] - bounds[1]};
+  }
+
+  setGroundPosition(x, groundY) {
+    const metadata = window.BOSS_SPRITE_GEOMETRY?.body;
+    const height = metadata?.height || this.height;
+    const footY = metadata?.frames?.[0]?.[3] ?? 387;
+    this.x = x;
+    this.y = groundY - (footY - height / 2);
+    return this;
+  }
+
+  getGroundY() {
+    const geometry = this.getPartGeometry();
+    return geometry.y + geometry.height;
   }
 
   getHitBoxes() {
-    const boxes = [];
-    // Prioritize alive arms
-    this.arms.forEach(arm => {
-      if (arm.isAlive) {
-        boxes.push({
-          type: 'arm',
-          target: arm,
-          x: this.x + arm.offsetX - 50,
-          y: this.y + arm.offsetY - 50,
-          width: 100,
-          height: 100
-        });
-      }
-    });
-    // Main stone body
-    boxes.push({
-      type: 'body',
-      target: this,
-      x: this.x - 120,
-      y: this.y - 140,
-      width: 240,
-      height: 280
-    });
-    return boxes;
+    if (!this.isAlive()) return [];
+    const aliveArms = this.arms.filter(arm => arm.isAlive);
+    if (aliveArms.length) {
+      const occluder = this.getPartGeometry(); // The statue is drawn in front of its shoulders.
+      return aliveArms.map(arm => ({...this.getPartGeometry('arm', arm),
+        type: 'arm', target: arm, occluder}));
+    }
+    return [{...this.getPartGeometry(), type: 'body', target: this}];
   }
 
   takeDamage(amount, isCrit, fromDir, game, hitTarget = null) {
-    if (hitTarget && hitTarget.type === 'arm') {
-      const arm = hitTarget.target;
-      arm.hp -= amount;
+    if (!this.isAlive() || !Number.isFinite(amount) || amount <= 0) return false;
+    const aliveArms = this.arms.some(arm => arm.isAlive);
+    if (aliveArms) {
+      const arm = hitTarget?.type === 'arm' ? hitTarget.target : null;
+      if (!arm || !this.arms.includes(arm) || !arm.isAlive) return false;
+      arm.hp = Math.max(0, arm.hp - amount);
       arm.hitTimer = 0.15;
-      if (arm.hp <= 0) {
-        arm.hp = 0;
+      if (arm.hp === 0) {
         arm.isAlive = false;
-        game.spawnItemText(this.x + arm.offsetX, this.y + arm.offsetY - 20, '💥 팔 파괴!');
+        arm.state = 'dying';
+        arm.dyingTimer = arm.dyingDuration;
+        const geometry = this.getPartGeometry('arm', arm);
+        game?.spawnItemText?.(geometry.x + geometry.width / 2, geometry.y, '💥 팔 파괴!');
         window.audio.playMonsterDie();
+        if (!this.arms.some(part => part.isAlive)) this.phase = 'body';
       }
     } else {
-      this.hp -= amount;
+      if (hitTarget && hitTarget.type !== 'body') return false;
+      this.hp = Math.max(0, this.hp - amount);
       this.hitTimer = 0.15;
     }
-
     this.hitstopTimer = 0.08;
     window.audio.playHit();
-    if (this.hp <= 0) {
-      this.hp = 0;
-      this.die(game.player, game);
-    }
+    if (this.hp === 0) this.startDying(game?.player, game);
+    return true;
+  }
+
+  getSpellHitBox(spell) {
+    if (spell.type === 'lightning') return {x: spell.x - 24, y: 0, width: 48, height: spell.y + 12};
+    if (spell.isOneToOne) return {x: spell.x - 55, y: spell.y - 160, width: 110, height: 172};
+    return {x: spell.x - 30, y: spell.y - 200, width: 60, height: 212};
   }
 
   update(dt, player, map, game) {
-    if (!this.isAlive()) return;
-
-    if (this.hitstopTimer > 0) {
-      this.hitstopTimer -= dt;
+    if (this.isDying()) {
+      this.animationTime += dt;
+      this.dyingTimer = Math.max(0, this.dyingTimer - dt);
+      if (this.dyingTimer === 0) {
+        this.grantRewards(this.rewardPlayer || player, this.rewardGame || game);
+        this.state = 'dead';
+        this.phase = 'dead';
+      }
       return;
     }
-    if (this.hitTimer > 0) this.hitTimer -= dt;
-    this.arms.forEach(a => {
-      if (a.hitTimer > 0) a.hitTimer -= dt;
-    });
-
-    // Spell update
-    for (let i = this.activeSpells.length - 1; i >= 0; i--) {
-      const sp = this.activeSpells[i];
-      sp.timer += dt;
-      if (sp.timer >= sp.duration) {
-        if (Math.abs(player.x - sp.x) < 55 && player.invincibleTimer <= 0) {
-          if (sp.isOneToOne) {
-            player.hp = 1;
-            player.mp = 1;
-            player.weakenedTimer = 4.0;
-            player.invincibleTimer = 1.5;
-            window.audio.playHit();
-            if (game.triggerScreenShake) game.triggerScreenShake(0.8, 8);
-            game.spawnItemText(player.x, player.y - 30, '💀 1/1 저주! HP 1 / MP 1');
-            if (game.ui && game.ui.addChat) {
-              game.ui.addChat('system', '⚠️ [자쿰 기믹] 체력과 마나가 1로 떨어지고 허약(점프 불가) 상태가 되었습니다! 즉시 물약을 드세요!');
-            }
-          } else {
-            const dmg = player.takeDamage(sp.damage, game, sp.x);
-            if (dmg > 0) {
-              game.spawnDamageText(player.x, player.y - 25, dmg, false, 'player');
-            }
-          }
-        }
-        this.activeSpells.splice(i, 1);
+    if (!this.isAlive()) return;
+    if (this.hitstopTimer > 0) {
+      this.hitstopTimer = Math.max(0, this.hitstopTimer - dt);
+      return;
+    }
+    this.animationTime += dt;
+    this.hitTimer = Math.max(0, this.hitTimer - dt);
+    for (const arm of this.arms) {
+      arm.hitTimer = Math.max(0, arm.hitTimer - dt);
+      if (arm.state === 'dying') {
+        arm.dyingTimer = Math.max(0, arm.dyingTimer - dt);
+        if (arm.dyingTimer === 0) arm.state = 'dead';
       }
     }
-
-    // Cast spells
+    const playerBox = player.getHitBox();
+    if (player.hp > 0 && player.invincibleTimer <= 0 && CombatSystem.checkAABB(playerBox, this.getPartGeometry())) {
+      const damage = player.takeDamage(this.atk, game, this.x);
+      if (damage > 0) game.spawnDamageText(player.x, player.y - 25, damage, false, 'player');
+    }
+    for (let index = this.activeSpells.length - 1; index >= 0; index--) {
+      const spell = this.activeSpells[index];
+      spell.timer += dt;
+      if (spell.timer < spell.duration) continue;
+      if (player.hp > 0 && player.invincibleTimer <= 0 && CombatSystem.checkAABB(player.getHitBox(), this.getSpellHitBox(spell))) {
+        if (spell.isOneToOne) {
+          player.hp = 1;
+          player.mp = 1;
+          player.weakenedTimer = 4;
+          player.invincibleTimer = 1.5;
+          window.audio.playHit();
+          game.triggerScreenShake?.(0.8, 8);
+          game.spawnItemText(player.x, player.y - 30, '💀 1/1 저주! HP 1 / MP 1');
+          game.ui?.addChat?.('system', '⚠️ [자쿰 기믹] HP/MP 1 및 허약 상태! 즉시 물약을 드세요.');
+        } else {
+          const damage = player.takeDamage(spell.damage, game, spell.x);
+          if (damage > 0) game.spawnDamageText(player.x, player.y - 25, damage, false, 'player');
+        }
+      }
+      this.activeSpells.splice(index, 1);
+    }
     this.spellCooldown -= dt;
-    if (this.spellCooldown <= 0) {
+    if (this.spellCooldown <= 0 && player.hp > 0) {
       this.spellCooldown = 3.2 + Math.random() * 2.8;
       this.castSpell(player, game);
     }
   }
 
   castSpell(player, game) {
+    if (!this.isAlive() || player.hp <= 0) return false;
     const roll = Math.random();
     window.audio.playBossRoar();
-
+    let spell;
     if (roll < 0.25) {
-      // Authentic Maple 1/1 skill
-      this.activeSpells.push({
-        type: 'one_to_one',
-        x: player.x,
-        y: player.y,
-        timer: 0,
-        duration: 1.2,
-        damage: 0,
-        isOneToOne: true
-      });
+      spell = {type: 'one_to_one', x: player.x, y: player.y, duration: 1.2, damage: 0, isOneToOne: true};
       game.spawnItemText(player.x, player.y - 65, '⚠️ ★ 자쿰의 1/1 마법진 전개! ★');
-      if (game.triggerScreenShake) game.triggerScreenShake(0.6, 6);
     } else if (roll < 0.65) {
-      this.activeSpells.push({
-        type: 'fire_pillar',
-        x: player.x,
-        y: player.y,
-        timer: 0,
-        duration: 0.8,
-        damage: 45
-      });
+      spell = {type: 'fire_pillar', x: player.x, y: player.y, duration: 0.8, damage: 45};
       game.spawnItemText(player.x, player.y - 60, '🔥 화염 기둥 경고!');
     } else {
-      this.activeSpells.push({
-        type: 'lightning',
-        x: player.x + (Math.random() * 80 - 40),
-        y: player.y,
-        timer: 0,
-        duration: 0.6,
-        damage: 55
-      });
+      spell = {type: 'lightning', x: player.x + Math.random() * 80 - 40, y: player.y, duration: 0.6, damage: 55};
       game.spawnItemText(player.x, player.y - 60, '⚡ 낙뢰 경고!');
     }
+    this.activeSpells.push({...spell, timer: 0});
+    return true;
   }
 
-  die(player, game) {
+  startDying(player, game) {
+    if (this.state !== 'alive') return false;
+    this.hp = 0;
+    this.state = 'dying';
+    this.phase = 'dying';
+    this.dyingTimer = this.dyingDuration;
+    this.hitstopTimer = 0;
+    this.activeSpells = [];
+    this.rewardPlayer = player;
+    this.rewardGame = game;
     window.audio.playMonsterDie();
-    player.gainExp(15000, game);
-    game.spawnDrop('meso', 50000, this.x - 40, this.y + 80);
-    game.spawnDrop('meso', 50000, this.x + 40, this.y + 80);
-    game.spawnDrop('red_potion', 20, this.x - 80, this.y + 80);
-    game.spawnDrop('blue_potion', 20, this.x + 80, this.y + 80);
-    game.spawnDrop('equip', 1, this.x, this.y + 80, '👑 자쿰의 투구');
+    return true;
+  }
+
+  grantRewards(player, game) {
+    if (this.rewardsGranted || !game) return;
+    this.rewardsGranted = true;
+    const gained = player?.gainExp?.(15000, game);
+    game.autoHunt?.recordKill?.(Number.isFinite(gained) ? gained : 15000, 0);
+    const y = this.getGroundY() - 8;
+    game.spawnDrop('meso', 50000, this.x - 40, y);
+    game.spawnDrop('meso', 50000, this.x + 40, y);
+    game.spawnDrop('red_potion', 20, this.x - 80, y);
+    game.spawnDrop('blue_potion', 20, this.x + 80, y);
+    game.spawnDrop('equip', 1, this.x, y, '👑 자쿰의 투구');
     game.spawnItemText(this.x, this.y - 60, '👑 ★ 자쿰 레이드 클리어! ★ 👑');
   }
+
+  die(player, game) { return this.startDying(player, game); }
 }
+
 
 // === NPC Class ===
 class NPC {
