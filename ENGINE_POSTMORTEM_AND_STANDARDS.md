@@ -161,4 +161,4 @@
 1. **4-Tier Pipeline (`test_multi_tier_pipeline.py`)**: 단위, 통합, 시스템, 인수 테스트 전수 통과
 2. **Closed-Loop QA (`run_qa.py`)**: CDP 헤드리스 8대 핵심 시스템 검증 (콘솔 에러 0건)
 3. **Comprehensive QA (`game_qa_suite.py`)**: 69개 전 영역 시뮬레이션 및 회귀 테스트 100% 통과
-4. **Targeted Engine Checks (`scratch_scripts/verify_specific_fixes.py`)**: 밧줄 루프, 키 충돌, SVG 아이콘, 0-MP, 드랍, 자쿰 타워 검증
+4. **Targeted Regression Checks**: `README.md`의 전체 검증 명령을 실행합니다. `test_ladder_browser.py`는 실제 CDP 키 입력, `test_physics_regressions.js`는 75개 밧줄·150개 끝점과 선분 물리·자동사냥, `test_combat_collisions.js`는 투사체 첫 접촉, `test_skill_states.js`는 이동 스킬의 상태 전이를 검사합니다. 기존 입력·픽셀 접지·버프 회귀 검사도 함께 유지합니다.

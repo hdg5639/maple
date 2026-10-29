@@ -219,7 +219,7 @@ class UIManager {
         if (skillId) this.game.player.useSkill(skillId, this.game);
       });
     }
-    addQuickslotAction('quick-slot-jump', () => this.game.player.jump(this.game.keys));
+    addQuickslotAction('quick-slot-jump', () => this.game.jumpPlayer());
     addQuickslotAction('quick-slot-loot', () => this.game.pickUpNearbyDrops());
     addQuickslotAction('quick-slot-potion-red', () => this.game.player.usePotion('red_potion'));
     addQuickslotAction('quick-slot-potion-blue', () => this.game.player.usePotion('blue_potion'));
@@ -282,16 +282,14 @@ class UIManager {
 
   initHotkeys() {
     window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT') return;
+      if (this.game.isTextInput(e.target) || this.game.isTextInput(document.activeElement)) return;
+      if (this.game.keyConfig.getAction(e.code)) return;
 
       const code = e.code;
       if (code === 'KeyC') this.toggleWindow('win-stats');
       else if (code === 'KeyI') this.toggleWindow('win-inventory');
       else if (code === 'KeyK') this.toggleWindow('win-skills');
       else if (code === 'KeyO') this.toggleWindow('win-auto-config');
-      else if (code === 'KeyB') this.game.spawnBoss();
-      else if (code === 'Digit1') this.game.player.usePotion('red_potion');
-      else if (code === 'Digit2') this.game.player.usePotion('blue_potion');
     });
   }
 

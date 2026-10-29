@@ -42,6 +42,11 @@ class GameMap {
     this.category = data.category || '사냥터';
     this.width = data.width;
     this.height = data.height;
+    this.terrainSourceWidth = data.width;
+    this.terrainOffset = {
+      x: data.terrainOffset?.x ?? 0,
+      y: data.terrainOffset?.y ?? 0
+    };
     this.defaultSpawn = data.defaultSpawn || { x: 400, y: 1300 };
     this.isBossMap = data.isBossMap || false;
     this.boss = data.boss || null;
@@ -67,14 +72,13 @@ class GameMap {
       // The bottom-most platform level must NEVER allow drop-through into the void!
       const isBottomFloor = Math.max(f.y1, f.y2) >= maxY - 25;
       const canDrop = isBottomFloor ? false : (f.canDropThrough !== undefined ? f.canDropThrough : true);
-      const isDecorativeProp = key === 'henesys_hhg' && (
+      const isDecorativeProp = f.isProp === true || f.type === 'prop' || (key === 'henesys_hhg' && (
         Math.abs(f.y1 - 473) <= 6 || Math.abs(f.y1 - 714) <= 6 ||
         Math.abs(f.y1 - 956) <= 6 || Math.abs(f.y1 - 1255) <= 6
-      );
+      ));
       const type = isDecorativeProp ? 'prop' : (canDrop ? 'platform' : 'ground');
       return new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, canDrop, type);
     });
-
     // Ladders and Ropes
     this.ladders = (data.ladders || []).map(l => ({
       id: l.id,
@@ -107,6 +111,10 @@ class GameMap {
       ];
       this.ladders.push(...extraLadders);
     }
+
+    // Cropped terrain images must not truncate authored footholds or climbing routes.
+    this.width = Math.max(this.width, ...this.footholds.map(fh => fh.x2), ...this.ladders.map(l => l.x));
+    this.bakeTerrainExtensions();
 
     // NPCs
     this.npcs = (data.npcs || []).map(npcData => ({
@@ -144,21 +152,36 @@ class GameMap {
   // Find continuous slope segment
   findConnectingFoothold(currentFh, x, dir = null) {
     if (!currentFh) return null;
+    let best = null;
+    let bestDistance = Infinity;
+    const right = dir === 'right' || (dir === null && x > currentFh.x2);
+    const edgeX = right ? currentFh.x2 : currentFh.x1;
+    const edgeY = right ? currentFh.y2 : currentFh.y1;
     for (const fh of this.footholds) {
-      if (fh.id === currentFh.id) continue;
-      if (dir === 'right') {
-        if (Math.abs(fh.x1 - currentFh.x2) <= 5 && Math.abs(fh.y1 - currentFh.y2) <= 10) return fh;
-        if (x >= fh.x1 && x <= fh.x2 && Math.abs(currentFh.y2 - fh.getYAtX(x)) <= 12) return fh;
-      } else if (dir === 'left') {
-        if (Math.abs(fh.x2 - currentFh.x1) <= 5 && Math.abs(fh.y2 - currentFh.y1) <= 10) return fh;
-        if (x >= fh.x1 && x <= fh.x2 && Math.abs(currentFh.y1 - fh.getYAtX(x)) <= 12) return fh;
-      } else {
-        if (Math.abs(fh.x1 - currentFh.x2) <= 5 && Math.abs(fh.y1 - currentFh.y2) <= 10) return fh;
-        if (Math.abs(fh.x2 - currentFh.x1) <= 5 && Math.abs(fh.y2 - currentFh.y1) <= 10) return fh;
-        if (x >= fh.x1 && x <= fh.x2 && Math.abs(currentFh.getYAtX(x) - fh.getYAtX(x)) <= 12) return fh;
+      if (fh.id === currentFh.id || fh.isProp || fh.width === 0) continue;
+      if (right ? fh.x2 <= edgeX : fh.x1 >= edgeX) continue;
+      if (edgeX < fh.x1 - 2 || edgeX > fh.x2 + 2) continue;
+      const distance = Math.abs(fh.getYAtX(edgeX) - edgeY);
+      if (distance <= 6 && distance < bestDistance) {
+        best = fh;
+        bestDistance = distance;
       }
     }
-    return null;
+    return best;
+  }
+
+  findFootholdNear(x, y, maxDistance = 16) {
+    let best = null;
+    let distance = Infinity;
+    for (const fh of this.footholds) {
+      if (fh.isProp || fh.width === 0 || x < fh.x1 || x > fh.x2) continue;
+      const delta = Math.abs(fh.getYAtX(x) - y);
+      if (delta <= maxDistance && delta < distance) {
+        best = fh;
+        distance = delta;
+      }
+    }
+    return best;
   }
 
   // Find lowest / ground foothold beneath or closest to given X
@@ -166,7 +189,7 @@ class GameMap {
     let best = null;
     let maxY = -Infinity;
     for (const fh of this.footholds) {
-      if (x >= fh.x1 - 10 && x <= fh.x2 + 10) {
+      if (!fh.isProp && fh.width > 0 && x >= fh.x1 && x <= fh.x2) {
         const y = fh.getYAtX(x);
         if (y > maxY) {
           maxY = y;
@@ -184,13 +207,92 @@ class GameMap {
     });
   }
 
+  bakeTerrainExtensions() {
+    this.terrainExtensions = [];
+    if (typeof document === 'undefined') return;
+    const imageLeft = this.terrainOffset.x;
+    const imageRight = imageLeft + this.terrainSourceWidth;
+    const margins = [[0, Math.min(this.width, imageLeft)], [Math.max(0, imageRight), this.width]];
+    const grassy = this.currentKey.startsWith('henesys') || this.currentKey === 'ellinia';
+    const colors = grassy
+      ? ['#8b7151', '#6d5339', '#493522', '#b4db79', '#538b3b']
+      : (this.currentKey === 'zakum_altar'
+        ? ['#655248', '#473931', '#2e231e', '#e99752', '#8d492d']
+        : ['#8c7451', '#665137', '#3e3021', '#c5a474', '#9a7b4d']);
+
+    for (const [left, right] of margins) {
+      if (right <= left) continue;
+      const segments = this.footholds.filter(fh => !fh.isProp && fh.width > 0 && fh.x2 > left && fh.x1 < right);
+      if (!segments.length) continue;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(right - left);
+      canvas.height = Math.ceil(this.height);
+      const ctx = canvas.getContext('2d');
+      ctx.translate(-left, 0);
+      ctx.lineJoin = 'bevel';
+
+      for (const fh of segments) {
+        const x1 = Math.max(left, fh.x1);
+        const x2 = Math.min(right, fh.x2);
+        const y1 = fh.getYAtX(x1);
+        const y2 = fh.getYAtX(x2);
+        const band = (top, bottom, color) => {
+          ctx.beginPath();
+          ctx.moveTo(x1, y1 + top);
+          ctx.lineTo(x2, y2 + top);
+          ctx.lineTo(x2, y2 + bottom);
+          ctx.lineTo(x1, y1 + bottom);
+          ctx.closePath();
+          ctx.fillStyle = color;
+          ctx.fill();
+        };
+        band(0, 7, colors[0]);
+        band(7, 13, colors[1]);
+        band(13, 18, colors[2]);
+        band(0, 3, colors[4]);
+
+        // Deterministic stone facets follow the same slope as the contact surface.
+        for (let x = x1 + 6; x < x2 - 9; x += 23) {
+          const y = fh.getYAtX(x);
+          ctx.beginPath();
+          ctx.moveTo(x, y + 7);
+          ctx.lineTo(x + 5, y + 5);
+          ctx.lineTo(x + 11, y + 9);
+          ctx.lineTo(x + 8, y + 13);
+          ctx.closePath();
+          ctx.fillStyle = colors[0];
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x2, y2 + 18);
+        ctx.lineTo(x1, y1 + 18);
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1 + 1);
+        ctx.lineTo(x2, y2 + 1);
+        ctx.strokeStyle = colors[3];
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      this.terrainExtensions.push({ canvas, x: left, y: 0 });
+    }
+  }
+
   draw(ctx, camera) {
     // 1. Far Sky & Parallax Backdrops
     this.drawSkyAndFarBackdrop(ctx, camera);
 
     // 2. Authentic Map Terrain Blit
     if (this.terrainLoaded && this.terrainImg.complete) {
-      ctx.drawImage(this.terrainImg, 0, 0);
+      ctx.drawImage(this.terrainImg, this.terrainOffset.x, this.terrainOffset.y);
+    }
+    for (const patch of this.terrainExtensions) {
+      ctx.drawImage(patch.canvas, patch.x, patch.y);
     }
 
     // 2.5 Ellinia Procedural Ancient Trunks and Branch Platforms (replaces empty void)

@@ -75,17 +75,25 @@ class KeyConfigManager {
       localStorage.setItem(KeyConfigManager.STORAGE_KEY, JSON.stringify(this.bindings));
     } catch (e) {}
     this.rebuildReverseMap();
+    this.game.resetInputs();
     this.updateHUDKeyLabels();
+  }
+
+  normalizeKey(code) {
+    return code?.replace(/^(Alt|Control|Shift)Right$/, '$1Left');
   }
 
   rebuildReverseMap() {
     this.keyToActionMap = {};
     for (const [action, data] of Object.entries(this.bindings)) {
+      if (!data.key) continue;
       this.keyToActionMap[data.key] = action;
       // Also register alternate left/right equivalents for Shift, Ctrl, Alt
-      if (data.key === 'AltLeft') this.keyToActionMap['AltRight'] = action;
-      if (data.key === 'ControlLeft') this.keyToActionMap['ControlRight'] = action;
-      if (data.key === 'ShiftLeft') this.keyToActionMap['ShiftRight'] = action;
+      const key = this.normalizeKey(data.key);
+      if (['AltLeft', 'ControlLeft', 'ShiftLeft'].includes(key)) {
+        this.keyToActionMap[key] = action;
+        this.keyToActionMap[key.replace('Left', 'Right')] = action;
+      }
     }
   }
 
@@ -95,6 +103,14 @@ class KeyConfigManager {
 
   bindKey(action, keyCode) {
     if (!this.bindings[action]) return false;
+
+    // A physical key (including both modifier variants) owns exactly one action.
+    for (const [otherAction, binding] of Object.entries(this.bindings)) {
+      if (otherAction !== action && this.normalizeKey(binding.key) === this.normalizeKey(keyCode)) {
+        binding.key = null;
+        binding.display = '—';
+      }
+    }
 
     // Format display string
     let display = keyCode.replace('Key', '').replace('Digit', '').replace('Left', '').replace('Right', '');

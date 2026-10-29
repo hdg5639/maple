@@ -147,6 +147,8 @@ class Player {
     this.walkSpeed = 3.6;
     this.jumpForce = Physics.JUMP_VELOCITY;
     this.ladderSpeed = 2.4;
+    this.horizontalInput = 0;
+    this.horizontalImpulseTimer = 0;
     this.weaponType = 'sword';
     this.activeStar = 'steely'; // Default signature 뇌전수리검
 
@@ -228,8 +230,10 @@ class Player {
       window.audio.playHit();
     }
 
-    // Knockback away from damage source
+    // Damage releases ropes before applying an airborne impulse.
+    if (this.onLadder) Physics.detachFromLadder(this);
     if (fromX !== null) {
+      this.horizontalImpulseTimer = 0.18;
       this.vx = (this.x >= fromX ? 1 : -1) * 3.6;
       this.vy = -2.8;
       this.onGround = false;
@@ -348,8 +352,6 @@ class Player {
     if (this.job === '마법사') {
       this.accuracy = Math.floor(this.totalInt * 0.1 + this.totalLuk * 0.4 + this.totalDex * 0.3);
     }
-    this.defense = Math.floor(this.totalStr * 0.2 + this.totalDex * 0.1) + equipDef;
-
     // Apply active buff stat modifications
     if (this.buffs) {
       if (this.buffs.rage) equipAtk += 35;
@@ -357,6 +359,8 @@ class Player {
       if (this.buffs.focus) this.accuracy += 25;
       if (this.buffs.soul_arrow) equipAtk += 15;
     }
+
+    this.defense = Math.floor(this.totalStr * 0.2 + this.totalDex * 0.1) + equipDef;
 
     if (this.job === '전사') {
       this.maxHp = 120 + this.level * 28 + this.totalStr * 6;
@@ -533,7 +537,8 @@ class Player {
   update(dt, map) {
     if (this.attackTimer > 0) this.attackTimer -= dt;
     if (this.invincibleTimer > 0) this.invincibleTimer -= dt;
-    if (this.ladderCooldown > 0) this.ladderCooldown -= dt;
+    if (this.ladderCooldown > 0) this.ladderCooldown = Math.max(0, this.ladderCooldown - dt);
+    if (this.weakenedTimer > 0) this.weakenedTimer = Math.max(0, this.weakenedTimer - dt);
 
     if (this.speechTimer > 0) {
       this.speechTimer -= dt;
@@ -571,129 +576,82 @@ class Player {
     Physics.updateEntityFixed(this, map, dt);
   }
 
-  moveLeft() {
-    if (this.onLadder) return;
-    this.vx = -this.walkSpeed;
-    this.facing = 'left';
+  setHorizontalInput(direction) {
+    this.horizontalInput = this.hp > 0 ? Math.sign(direction) : 0;
+    if (!this.onLadder && this.horizontalInput) this.facing = direction > 0 ? 'right' : 'left';
   }
 
-  moveRight() {
-    if (this.onLadder) return;
-    this.vx = this.walkSpeed;
-    this.facing = 'right';
-  }
+  moveLeft() { this.setHorizontalInput(-1); }
+  moveRight() { this.setHorizontalInput(1); }
+  stopHorizontal() { this.setHorizontalInput(0); }
 
-  stopHorizontal() {
-    this.vx = 0;
-  }
-
-  jump(keys = {}) {
+  jump(horizontalDirection = 0) {
+    if (this.hp <= 0 || this.weakenedTimer > 0) return false;
     if (this.onLadder) {
-      this.onLadder = false;
-      this.currentLadder = null;
-      this.ladderCooldown = 0.25;
+      const direction = Math.sign(horizontalDirection);
+      if (!direction) return false; // Classic ropes require Left/Right + Jump to dismount.
+      Physics.detachFromLadder(this);
       this.vy = this.jumpForce * 0.85;
-      const kickDir = (keys && (keys['ArrowRight'] || keys['KeyD'])) ? 1 : ((keys && (keys['ArrowLeft'] || keys['KeyA'])) ? -1 : 0);
-      this.vx = kickDir * 3.5;
-      if (kickDir > 0) this.facing = 'right';
-      else if (kickDir < 0) this.facing = 'left';
+      this.vx = direction * 3.5;
+      this.horizontalImpulseTimer = 0.1;
+      this.facing = direction > 0 ? 'right' : 'left';
       window.audio.playJump();
-      return;
+      return true;
     }
-    if (this.onGround) {
-      this.vy = this.jumpForce;
-      this.onGround = false;
-      this.currentFoothold = null;
-      window.audio.playJump();
-    }
+    if (!this.onGround || this.attackTimer > 0) return false;
+    this.vy = this.jumpForce;
+    this.onGround = false;
+    this.currentFoothold = null;
+    window.audio.playJump();
+    return true;
   }
 
   flashJump() {
-    const boost = 8.5;
-    this.vx = (this.facing === 'right' ? 1 : -1) * boost;
+    if (this.hp <= 0 || this.onLadder || this.weakenedTimer > 0) return false;
+    this.vx = (this.facing === 'right' ? 1 : -1) * 8.5;
     this.vy = -3.8;
+    this.horizontalImpulseTimer = 0.12;
     this.onGround = false;
     this.currentFoothold = null;
     window.audio.playFlashJump();
     return true;
   }
 
-  dropThrough() {
-    if (this.onGround && this.currentFoothold && this.currentFoothold.canDropThrough) {
-      this.dropThroughTimer = 18;
-      this.y += 6;
-      this.vy = 2.5;
-      this.onGround = false;
-      this.currentFoothold = null;
-    }
+  dropThrough(map = window.game?.map) {
+    if (this.hp <= 0 || this.weakenedTimer > 0 || this.onLadder ||
+        !this.onGround || !this.currentFoothold?.canDropThrough) return false;
+    if (map && !map.footholds.some(fh => !fh.isProp && fh.width > 0 &&
+        this.x >= fh.x1 && this.x <= fh.x2 && fh.getYAtX(this.x) > this.y + 1 &&
+        fh.getYAtX(this.x) - this.y < 600)) return false;
+    this.dropThroughFoothold = this.currentFoothold;
+    this.dropThroughUntilY = this.y + 10;
+    this.dropThroughTimer = 18;
+    this.vy = 2.5;
+    this.onGround = false;
+    this.currentFoothold = null;
+    return true;
   }
 
   climbUp(map) {
-    if (this.ladderCooldown > 0) return;
+    if (this.hp <= 0 || this.ladderCooldown > 0) return;
     if (!this.onLadder) {
-      const lad = Physics.checkLadderGrab(this, map, 'up');
-      if (lad) {
-        this.onLadder = true;
-        this.currentLadder = lad;
-        this.x = lad.x; // Snap precisely to ladder X!
-        this.vx = 0;
-      }
+      const ladder = Physics.checkLadderGrab(this, map, 'up');
+      if (ladder) Physics.attachToLadder(this, ladder);
     }
-    if (this.onLadder && this.currentLadder) {
-      this.vy = -this.ladderSpeed;
-      if (this.y <= this.currentLadder.top + 2) {
-        const lad = this.currentLadder;
-        this.onLadder = false;
-        this.currentLadder = null;
-        this.ladderCooldown = 0.25; // 250ms hysteresis cooldown to prevent infinite grab loop!
-        this.onGround = true;
-        this.vy = 0;
-        this.y = lad.top - 4;
-        const fh = map.findGroundFootholdAt(this.x);
-        if (fh) {
-          this.currentFoothold = fh;
-          this.y = fh.getYAtX(this.x);
-        }
-      }
-    }
+    if (this.onLadder) this.vy = -this.ladderSpeed;
   }
 
   climbDown(map) {
-    if (this.ladderCooldown > 0) return;
+    if (this.hp <= 0 || this.ladderCooldown > 0) return;
     if (!this.onLadder) {
-      const lad = Physics.checkLadderGrab(this, map, 'down');
-      if (lad) {
-        this.onLadder = true;
-        this.currentLadder = lad;
-        this.x = lad.x; // Snap precisely to ladder X!
-        this.y += 10;
-        this.vx = 0;
-        this.onGround = false;
-        this.currentFoothold = null;
-      }
+      const ladder = Physics.checkLadderGrab(this, map, 'down');
+      if (ladder) Physics.attachToLadder(this, ladder);
     }
-    if (this.onLadder && this.currentLadder) {
-      this.vy = this.ladderSpeed;
-      if (this.y >= this.currentLadder.bottom) {
-        this.y = this.currentLadder.bottom;
-        this.onLadder = false;
-        this.currentLadder = null;
-        this.ladderCooldown = 0.25;
-        this.onGround = true;
-        this.vy = 0;
-        const fh = map.findGroundFootholdAt(this.x);
-        if (fh) {
-          this.currentFoothold = fh;
-          this.y = fh.getYAtX(this.x);
-        }
-      }
-    }
+    if (this.onLadder) this.vy = this.ladderSpeed;
   }
 
   stopVerticalClimb() {
-    if (this.onLadder) {
-      this.vy = 0;
-    }
+    if (this.onLadder) this.vy = 0;
   }
 
   getPrimarySkillId() {
@@ -741,6 +699,7 @@ class Player {
   }
 
   normalAttack(game) {
+    if (this.hp <= 0 || this.onLadder || this.attackTimer > 0) return false;
     this.attackTimer = this.attackDuration;
     window.audio.playAttack();
     const hitBox = {

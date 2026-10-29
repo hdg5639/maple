@@ -54,7 +54,12 @@ class GameQASuite:
         asyncio.create_task(self._listen_events())
         await self.send_cmd('Runtime.enable')
         await self.send_cmd('Page.enable')
-        await asyncio.sleep(0.5)
+        for _ in range(100):
+            if await self.evaluate("Boolean(window.game && window.game.player && window.game.map)"):
+                break
+            await asyncio.sleep(0.1)
+        else:
+            raise RuntimeError(f'Game initialization timed out: {self.errors}')
 
     async def _listen_events(self):
         try:
@@ -179,7 +184,7 @@ class GameQASuite:
             window.game.keys['ArrowLeft'] = false;
             window.game.player.stopHorizontal();
         """)
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.5)  # Allow the specified 0.82 ground friction to settle.
         state_stop = await self.evaluate("window.game.player.vx === 0")
 
         lkw_passed = (state_left['vx'] < 0 and state_left['facing'] == 'left' and

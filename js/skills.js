@@ -15,6 +15,8 @@ class Skill {
   }
 
   canCast(user) {
+    if (user.hp <= 0 || user.onLadder) return false;
+    if (this.id === 'flash_jump' && user.weakenedTimer > 0) return false;
     const isPrimary = Boolean(user.getPrimarySkillId && user.getPrimarySkillId() === this.id);
     if (!isPrimary && this.mpCost > 0 && user.mp < this.mpCost) return false;
     if (this.hpCost > 0 && user.hp <= this.hpCost) return false;
@@ -310,7 +312,20 @@ SkillRegistry.register({
   desc: '바라보는 방향으로 즉시 순간이동',
   handler: (user, game) => {
     const dirSign = user.facing === 'right' ? 1 : -1;
-    user.x += dirSign * 130;
+    const wasGrounded = user.onGround;
+    const previousY = user.y;
+    const halfWidth = (user.width || 24) / 2;
+    const map = game.map;
+    user.x = Math.max(halfWidth, Math.min(map.width - halfWidth, user.x + dirSign * 130));
+    user.onLadder = false;
+    user.currentLadder = null;
+    const destination = wasGrounded ? map.findFootholdNear(user.x, previousY, 16) : null;
+    user.currentFoothold = destination;
+    user.onGround = Boolean(destination);
+    if (destination) {
+      user.y = destination.getYAtX(user.x);
+      user.vy = 0;
+    }
     window.audio.playFlashJump();
     return true;
   }

@@ -18,17 +18,32 @@ class CombatSystem {
    * Continuous Swept AABB check to completely prevent projectile tunneling through small targets
    */
   static checkSweptAABB(prevX, prevY, curX, curY, box, padX = 8, padY = 12) {
-    const sweepMinX = Math.min(prevX, curX) - padX;
-    const sweepMaxX = Math.max(prevX, curX) + padX;
-    const sweepMinY = Math.min(prevY, curY) - padY;
-    const sweepMaxY = Math.max(prevY, curY) + padY;
+    return this.getSweptHitTime(prevX, prevY, curX, curY, box, padX, padY) !== null;
+  }
 
-    return (
-      sweepMinX <= box.x + box.width &&
-      sweepMaxX >= box.x &&
-      sweepMinY <= box.y + box.height &&
-      sweepMaxY >= box.y
-    );
+  /** First segment entry into the target expanded by the projectile's half-size. */
+  static getSweptHitTime(prevX, prevY, curX, curY, box, padX = 8, padY = 12) {
+    const values = [prevX, prevY, curX, curY, box.x, box.y, box.width, box.height, padX, padY];
+    if (!values.every(Number.isFinite)) return null;
+
+    let entry = 0;
+    let exit = 1;
+    const axes = [
+      [prevX, curX - prevX, box.x - padX, box.x + box.width + padX],
+      [prevY, curY - prevY, box.y - padY, box.y + box.height + padY]
+    ];
+    for (const [start, delta, min, max] of axes) {
+      if (delta === 0) {
+        if (start < min || start > max) return null;
+        continue;
+      }
+      const t1 = (min - start) / delta;
+      const t2 = (max - start) / delta;
+      entry = Math.max(entry, Math.min(t1, t2));
+      exit = Math.min(exit, Math.max(t1, t2));
+      if (entry > exit) return null;
+    }
+    return entry;
   }
 
   /**
@@ -166,6 +181,7 @@ class CombatSystem {
     if (projectile.hit) return false;
 
     const targets = this.getAllDamageableTargets(game);
+    let firstHit = null;
 
     for (const target of targets) {
       if (!target.isAlive()) continue;
@@ -173,32 +189,29 @@ class CombatSystem {
       const targetBoxes = target.getHitBoxes ? target.getHitBoxes() : [target.getHitBox()];
 
       for (const tBox of targetBoxes) {
-        if (this.checkSweptAABB(projectile.prevX, projectile.prevY, projectile.x, projectile.y, tBox)) {
-          projectile.hit = true;
-
-          // Accuracy Check
-          if (projectile.owner && !this.checkHit(projectile.owner, target)) {
-            const spawnX = tBox.x + tBox.width / 2;
-            const spawnY = tBox.y;
-            game.spawnMissText(spawnX, spawnY);
-            return true;
-          }
-
-          const targetDef = target.getDefense ? target.getDefense() : (target.def || 0);
-          const finalDmg = Math.max(1, Math.floor(projectile.damage - targetDef * 0.5));
-          const hitDir = projectile.vx >= 0 ? 'right' : 'left';
-
-          target.takeDamage(finalDmg, projectile.isCrit, hitDir, game, tBox);
-
-          const spawnX = tBox.x + tBox.width / 2;
-          const spawnY = tBox.y;
-          game.spawnStaggeredDamage(spawnX, spawnY, finalDmg, projectile.isCrit);
-          return true;
+        const time = this.getSweptHitTime(projectile.prevX, projectile.prevY, projectile.x, projectile.y, tBox);
+        if (time !== null && (!firstHit || time < firstHit.time)) {
+          firstHit = { target, box: tBox, time };
         }
       }
     }
 
-    return false;
+    if (!firstHit) return false;
+    const { target, box: tBox } = firstHit;
+    projectile.hit = true;
+
+    // Accuracy is evaluated for the first contacted target, not the array's first entry.
+    if (projectile.owner && !this.checkHit(projectile.owner, target)) {
+      game.spawnMissText(tBox.x + tBox.width / 2, tBox.y);
+      return true;
+    }
+
+    const targetDef = target.getDefense ? target.getDefense() : (target.def || 0);
+    const finalDmg = Math.max(1, Math.floor(projectile.damage - targetDef * 0.5));
+    const hitDir = projectile.vx >= 0 ? 'right' : 'left';
+    target.takeDamage(finalDmg, projectile.isCrit, hitDir, game, tBox);
+    game.spawnStaggeredDamage(tBox.x + tBox.width / 2, tBox.y, finalDmg, projectile.isCrit);
+    return true;
   }
 }
 

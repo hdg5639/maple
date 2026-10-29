@@ -17,6 +17,7 @@ class Game {
     this.camera = { x: 0, y: 0, width: 800, height: 600 };
     this.keys = {};
     this.lastTime = performance.now();
+    this.simulationAccumulator = 0;
     this.boss = null;
     this.shakeTimer = 0;
     this.shakeMagnitude = 0;
@@ -69,18 +70,54 @@ class Game {
     resize();
   }
 
-  initInputs() {
+  isTextInput(target) {
+    return Boolean(target && (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable));
+  }
+
+  isActionPressed(action) {
+    return Boolean(this.touchActions?.[action] || Object.keys(this.keys).some(code =>
+      this.keys[code] && this.keyConfig.getAction(code) === action
+    ));
+  }
+
+  getHorizontalDirection() {
+    const left = this.isActionPressed('moveLeft');
+    const right = this.isActionPressed('moveRight');
+    if (left && right) return this.keyConfig.getAction(this.lastHorizontalKey) === 'moveRight' ? 1 : -1;
+    return right ? 1 : (left ? -1 : 0);
+  }
+
+  resetInputs() {
+    this.keys = {};
+    this.touchActions = {};
     this.lastHorizontalKey = null;
+    this.horizontalKeyOrder = [];
+    this.player.stopHorizontal();
+    this.player.vx = 0;
+    this.player.stopVerticalClimb();
+  }
+
+  jumpPlayer() {
+    if (!this.player.onLadder && this.isActionPressed('climbDown')) this.player.dropThrough(this.map);
+    else this.player.jump(this.getHorizontalDirection());
+  }
+
+  initInputs() {
+    this.touchActions = {};
+    this.lastHorizontalKey = null;
+    this.horizontalKeyOrder = [];
 
     window.addEventListener('keydown', (e) => {
+      if (this.isTextInput(e.target) || this.isTextInput(document.activeElement)) return;
+      const wasPressed = this.keys[e.code];
       this.keys[e.code] = true;
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       const action = this.keyConfig ? this.keyConfig.getAction(e.code) : null;
 
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'AltLeft', 'AltRight', 'ControlLeft', 'ControlRight', 'Tab'].includes(e.code)) {
+      if (action || e.code === 'Tab') {
         e.preventDefault();
       }
+      if (e.repeat && ['jump', 'interact', 'climbUp'].includes(action)) return;
 
       // Generous Portal Detection (horizontal +-75px, vertical +-85px)
       const nearPortal = this.map.portals.find(p =>
@@ -92,32 +129,38 @@ class Game {
       );
 
       // 1. Move Left
-      if (action === 'moveLeft' || e.code === 'ArrowLeft') {
-        this.keys['ArrowLeft'] = true;
-        this.lastHorizontalKey = 'ArrowLeft';
+      if (action === 'moveLeft') {
+        if (!wasPressed && !e.repeat) {
+          this.horizontalKeyOrder.push(e.code);
+          this.lastHorizontalKey = e.code;
+        }
+        return;
       }
       // 2. Move Right
-      if (action === 'moveRight' || e.code === 'ArrowRight') {
-        this.keys['ArrowRight'] = true;
-        this.lastHorizontalKey = 'ArrowRight';
+      if (action === 'moveRight') {
+        if (!wasPressed && !e.repeat) {
+          this.horizontalKeyOrder.push(e.code);
+          this.lastHorizontalKey = e.code;
+        }
+        return;
       }
 
       // 3. Climb Up / Enter Portal
-      if (action === 'climbUp' || e.code === 'ArrowUp') {
-        this.keys['ArrowUp'] = true;
+      if (action === 'climbUp') {
         if (nearPortal) {
           this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
           return;
         }
+        return;
       }
 
       // 4. Climb Down
-      if (action === 'climbDown' || e.code === 'ArrowDown') {
-        this.keys['ArrowDown'] = true;
+      if (action === 'climbDown') {
+        return;
       }
 
       // 5. Interact (Space): NPC Dialog -> Portal Warp -> Jump
-      if (action === 'interact' || e.code === 'Space') {
+      if (action === 'interact') {
         if (nearNpc) {
           this.ui.showNpcDialog(nearNpc);
           return;
@@ -126,26 +169,18 @@ class Game {
           this.changeMap(nearPortal.targetMap, nearPortal.targetX, nearPortal.targetY);
           return;
         }
-        if (this.keys['ArrowDown']) {
-          this.player.dropThrough();
-        } else {
-          this.player.jump(this.keys);
-        }
+        this.jumpPlayer();
         return;
       }
 
       // 6. Jump
-      if (action === 'jump' || e.code === 'AltLeft' || e.code === 'AltRight') {
-        if (this.keys['ArrowDown']) {
-          this.player.dropThrough();
-        } else {
-          this.player.jump(this.keys);
-        }
+      if (action === 'jump') {
+        this.jumpPlayer();
         return;
       }
 
       // 7. Primary Signature Skill Attack (replaces normal attack)
-      if (action === 'primarySkill' || e.code === 'ControlLeft' || e.code === 'ControlRight') {
+      if (action === 'primarySkill') {
         this.player.primaryAttack(this);
         return;
       }
@@ -158,49 +193,22 @@ class Game {
         return;
       }
 
-      // Fallback Hotkeys for Skills 1~8
-      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-        const skillId = this.getQuickslotSkill(0);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyQ') {
-        const skillId = this.getQuickslotSkill(1);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyW' && action !== 'climbUp') {
-        const skillId = this.getQuickslotSkill(2);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyE') {
-        const skillId = this.getQuickslotSkill(3);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyA' && action !== 'moveLeft') {
-        const skillId = this.getQuickslotSkill(4);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyS' && action !== 'climbDown') {
-        const skillId = this.getQuickslotSkill(5);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyD' && action !== 'moveRight') {
-        const skillId = this.getQuickslotSkill(6);
-        if (skillId) this.player.useSkill(skillId, this);
-      } else if (e.code === 'KeyF' && action !== 'interact') {
-        const skillId = this.getQuickslotSkill(7);
-        if (skillId) this.player.useSkill(skillId, this);
-      }
-
       // 9. Item Pick Up
-      if (action === 'pickUp' || e.code === 'KeyZ') {
+      if (action === 'pickUp') {
         this.pickUpNearbyDrops();
       }
 
       // 10. Potions
-      if (action === 'potionRed' || e.code === 'Digit1') this.player.usePotion('red_potion');
-      if (action === 'potionBlue' || e.code === 'Digit2') this.player.usePotion('blue_potion');
+      if (action === 'potionRed') this.player.usePotion('red_potion');
+      if (action === 'potionBlue') this.player.usePotion('blue_potion');
 
       // 11. Auto-hunt
-      if (action === 'autoHunt' || e.code === 'KeyR') {
+      if (action === 'autoHunt') {
         this.autoHunt.toggle();
       }
 
       // Boss Mushmom spawn
-      if (e.code === 'KeyB') {
+      if (!action && e.code === 'KeyB') {
         this.spawnBoss();
       }
     });
@@ -209,39 +217,27 @@ class Game {
       this.keys[e.code] = false;
       const action = this.keyConfig ? this.keyConfig.getAction(e.code) : null;
 
-      if (action === 'moveLeft' || e.code === 'ArrowLeft') {
-        this.keys['ArrowLeft'] = false;
-        if (this.keys['ArrowRight']) {
-          this.lastHorizontalKey = 'ArrowRight';
-        } else {
-          this.lastHorizontalKey = null;
-          this.player.stopHorizontal();
-        }
-      } else if (action === 'moveRight' || e.code === 'ArrowRight') {
-        this.keys['ArrowRight'] = false;
-        if (this.keys['ArrowLeft']) {
-          this.lastHorizontalKey = 'ArrowLeft';
-        } else {
-          this.lastHorizontalKey = null;
-          this.player.stopHorizontal();
-        }
+      this.horizontalKeyOrder = this.horizontalKeyOrder.filter(code => code !== e.code);
+      if (this.lastHorizontalKey === e.code) {
+        this.lastHorizontalKey = this.horizontalKeyOrder[this.horizontalKeyOrder.length - 1] || null;
+      }
+      if ((action === 'moveLeft' || action === 'moveRight') && !this.getHorizontalDirection()) {
+        this.lastHorizontalKey = null;
+        this.player.stopHorizontal();
       }
 
-      if (action === 'climbUp' || e.code === 'ArrowUp') {
-        this.keys['ArrowUp'] = false;
-        if (!this.keys['ArrowDown']) this.player.stopVerticalClimb();
-      }
-      if (action === 'climbDown' || e.code === 'ArrowDown') {
-        this.keys['ArrowDown'] = false;
-        if (!this.keys['ArrowUp']) this.player.stopVerticalClimb();
+      if ((action === 'climbUp' || action === 'climbDown') &&
+          !this.isActionPressed('climbUp') && !this.isActionPressed('climbDown')) {
+        this.player.stopVerticalClimb();
       }
     });
 
-    window.addEventListener('blur', () => {
-      this.keys = {};
-      this.lastHorizontalKey = null;
-      this.player.stopHorizontal();
-      this.player.stopVerticalClimb();
+    window.addEventListener('blur', () => this.resetInputs());
+    document.addEventListener('focusin', (e) => {
+      if (this.isTextInput(e.target)) this.resetInputs();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.resetInputs();
     });
 
     // Touch / Mobile On-Screen Controls for LAN & Mobile devices
@@ -264,11 +260,13 @@ class Game {
 
         // If touched left 40%, move left; right 40%, move right
         if (touchX < width * 0.4) {
-          this.keys['ArrowLeft'] = true;
-          this.keys['ArrowRight'] = false;
+          this.touchActions.moveLeft = true;
+          this.touchActions.moveRight = false;
+          this.lastHorizontalKey = this.keyConfig.bindings.moveLeft?.key;
         } else if (touchX > width * 0.6) {
-          this.keys['ArrowRight'] = true;
-          this.keys['ArrowLeft'] = false;
+          this.touchActions.moveRight = true;
+          this.touchActions.moveLeft = false;
+          this.lastHorizontalKey = this.keyConfig.bindings.moveRight?.key;
         }
       }
     }, { passive: true });
@@ -278,16 +276,16 @@ class Game {
       if (!touch) return;
       const deltaY = touch.clientY - touchStartY;
       if (deltaY < -40) {
-        this.keys['ArrowUp'] = true;
-        this.keys['ArrowDown'] = false;
+        this.touchActions.climbUp = true;
+        this.touchActions.climbDown = false;
       } else if (deltaY > 40) {
-        this.keys['ArrowDown'] = true;
-        this.keys['ArrowUp'] = false;
+        this.touchActions.climbDown = true;
+        this.touchActions.climbUp = false;
       }
     }, { passive: true });
 
-    const endTouch = () => {
-      if (activeTouchId !== null && touchStartTime > 0) {
+    const endTouch = (e) => {
+      if (e.type !== 'touchcancel' && activeTouchId !== null && touchStartTime > 0) {
         const duration = performance.now() - touchStartTime;
         // Tap gesture detection (< 250ms)
         if (duration < 250) {
@@ -308,10 +306,7 @@ class Game {
       }
       activeTouchId = null;
       touchStartTime = 0;
-      this.keys['ArrowLeft'] = false;
-      this.keys['ArrowRight'] = false;
-      this.keys['ArrowUp'] = false;
-      this.keys['ArrowDown'] = false;
+      this.touchActions = {};
       this.player.stopHorizontal();
       this.player.stopVerticalClimb();
     };
@@ -351,6 +346,14 @@ class Game {
     this.player.vx = 0;
     this.player.vy = 0;
     this.player.onLadder = false;
+    this.player.currentLadder = null;
+    this.player.ladderCooldown = 0;
+    this.player.dropThroughTimer = 0;
+    this.player.dropThroughFoothold = null;
+    this.player.dropThroughUntilY = null;
+    this.player.horizontalImpulseTimer = 0;
+    this.player.accumulator = 0;
+    this.resetInputs();
 
     // Immediate Foothold Grounding (ensures player never falls into void on warp)
     const groundFh = this.map.findGroundFootholdAt(this.player.x);
@@ -676,38 +679,17 @@ class Game {
   // --- Main Update Loop ---
   update(dt) {
     if (!this.autoHunt.enabled) {
-      const isLeft = Boolean(
-        this.keys['ArrowLeft'] ||
-        (this.keyConfig && this.keyConfig.bindings.moveLeft && this.keys[this.keyConfig.bindings.moveLeft.key])
-      );
-      const isRight = Boolean(
-        this.keys['ArrowRight'] ||
-        (this.keyConfig && this.keyConfig.bindings.moveRight && this.keys[this.keyConfig.bindings.moveRight.key])
-      );
-
-      if (isLeft && isRight) {
-        const lastIsRight = (this.lastHorizontalKey === 'ArrowRight' || (this.keyConfig && this.lastHorizontalKey === this.keyConfig.bindings.moveRight?.key));
-        if (lastIsRight) {
-          this.player.moveRight();
-        } else {
-          this.player.moveLeft();
-        }
-      } else if (isLeft) {
+      const direction = this.getHorizontalDirection();
+      if (direction < 0) {
         this.player.moveLeft();
-      } else if (isRight) {
+      } else if (direction > 0) {
         this.player.moveRight();
       } else {
         this.player.stopHorizontal();
       }
 
-      const isUp = Boolean(
-        this.keys['ArrowUp'] ||
-        (this.keyConfig && this.keyConfig.bindings.climbUp && this.keys[this.keyConfig.bindings.climbUp.key])
-      );
-      const isDown = Boolean(
-        this.keys['ArrowDown'] ||
-        (this.keyConfig && this.keyConfig.bindings.climbDown && this.keys[this.keyConfig.bindings.climbDown.key])
-      );
+      const isUp = this.isActionPressed('climbUp');
+      const isDown = this.isActionPressed('climbDown');
 
       if (isUp) {
         this.player.climbUp(this.map);
@@ -1105,7 +1087,11 @@ class Game {
     const dt = Math.min(0.1, (currentTime - this.lastTime) / 1000);
     this.lastTime = currentTime;
 
-    this.update(dt);
+    this.simulationAccumulator += dt;
+    while (this.simulationAccumulator >= Physics.FIXED_STEP) {
+      this.update(Physics.FIXED_STEP);
+      this.simulationAccumulator -= Physics.FIXED_STEP;
+    }
     this.render();
 
     requestAnimationFrame((t) => this.loop(t));
