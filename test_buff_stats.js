@@ -25,11 +25,12 @@ test('Iron Body adds its advertised 25 defense through the registered skill', ()
 });
 
 test('recalculation and refreshing Iron Body never stack its defense bonus', () => {
-  const { player, castIronBody } = createFixture();
+  const { player, map, castIronBody } = createFixture();
   const baseDefense = player.defense;
   assert.equal(castIronBody(), true);
   for (let i = 0; i < 5; i++) player.calcDerivedStats();
   assert.equal(player.defense, baseDefense + 25);
+  player.update(0.31, map); // Refresh after the common buff cast delay.
   assert.equal(castIronBody(), true);
   assert.equal(player.defense, baseDefense + 25);
 });

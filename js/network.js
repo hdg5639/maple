@@ -259,42 +259,9 @@ class NetworkManager {
   applyCharacterData(data) {
     const p = this.game.player;
     if (!p) return;
-    p.name = data.name || p.name;
-    p.job = data.job || p.job;
-    p.level = data.level || p.level;
-    p.exp = data.exp || p.exp;
-    p.hp = data.hp || p.hp;
-    p.maxHp = data.maxHp || p.maxHp;
-    p.mp = data.mp || p.mp;
-    p.maxMp = data.maxMp || p.maxMp;
-    p.str = data.str || p.str;
-    p.dex = data.dex || p.dex;
-    p.int = data.int || p.int;
-    p.luk = data.luk || p.luk;
-    p.ap = data.ap || p.ap;
-    p.sp = data.sp || p.sp;
-    p.fame = data.fame || p.fame;
-    p.meso = data.meso !== undefined ? data.meso : p.meso;
-
-    if (data.inventory && data.inventory.equip) {
-      p.inventory = data.inventory;
-    }
-    if (data.skills && Object.keys(data.skills).length > 0) {
-      p.skills = data.skills;
-    }
-    if (data.quickslots && data.quickslots.length > 0) {
-      p.quickslotBindings = data.quickslots;
-    }
-
-    p.calcDerivedStats();
-    if (this.game.ui) {
-      this.game.ui.updateHUD();
-      this.game.ui.updateStatsWindow();
-      this.game.ui.updateSkillsWindow();
-    }
-    if (data.currentMap && data.currentMap !== this.game.map.currentKey) {
-      this.game.changeMap(data.currentMap, data.x, data.y);
-    }
+    this.game.restorePlayerData(data);
+    this.game.ui?.updateStatsWindow();
+    this.game.ui?.updateSkillsWindow();
   }
 
   // --- Client Outbound API ---

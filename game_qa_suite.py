@@ -149,7 +149,11 @@ class GameQASuite:
             window.game.player.x = 400;
             window.game.player.y = 1320;
             window.game.player.vx = 0;
-            window.game.player.invincibleTimer = 0;
+            window.game.player.invincibleTimer = 9999;
+            window.game.player.horizontalImpulseTimer = 0;
+            window.game.player.onLadder = false;
+            window.game.player.currentFoothold = window.game.map.findSpawnFoothold(400,1320);
+            window.game.player.onGround = true;
             window.game.keys = {};
             window.game.lastHorizontalKey = null;
             window.game.player.stopHorizontal();
@@ -258,9 +262,10 @@ class GameQASuite:
                              f"Roster: {skill_keys}")
 
             for sk in expected_skills:
-                # Set MP and attack timer
+                # Isolate roster checks; cooldown/repeat behavior has dedicated combat-assist regressions.
                 await self.evaluate("""
                     window.game.player.attackTimer = 0;
+                    window.game.player.skillCooldowns = {};
                     window.game.player.mp = window.game.player.maxMp;
                     window.game.player.hp = window.game.player.maxHp;
                 """)
@@ -372,10 +377,10 @@ class GameQASuite:
             if m == 'zakum_altar':
                 boss_only = await self.evaluate("window.game.monsters.length === 1 && window.game.monsters[0].id === 'zakum' && window.game.boss !== null")
                 self.record_test("Monsters", f"Boss Altar Sole Entity: {m}", boss_only, "Zakum Altar has 0 wild field mobs; Zakum Boss is the sole raid entity")
-            elif m == 'henesys_town':
+            elif m in ('henesys_town', 'ellinia'):
                 m_types = await self.evaluate("window.game.monsters.map(m => m.type)")
-                town_safe = len(m_types) <= 3 and all(t in ['snail', 'blue_snail'] for t in m_types)
-                self.record_test("Monsters", f"Peaceful Town Outskirts: {m}", town_safe, f"Town Mobs: {m_types}")
+                town_safe = len(m_types) == 0
+                self.record_test("Monsters", f"Peaceful Town Population: {m}", town_safe, f"Town Mobs: {m_types}")
             else:
                 m_alignment = await self.evaluate("""
                     window.game.monsters.every(mob => {

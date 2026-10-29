@@ -67,8 +67,8 @@ window.SPRITE_FOOT_Y = Object.freeze({
   "assets/player/warrior/walk_2.png": 66,
   "assets/player/warrior/walk_3.png": 65,
   "assets/monsters/blue_snail/die1_0.png": 32,
-  "assets/monsters/blue_snail/die1_1.png": 32,
-  "assets/monsters/blue_snail/die1_2.png": 32,
+  "assets/monsters/blue_snail/die1_1.png": 29,
+  "assets/monsters/blue_snail/die1_2.png": 27,
   "assets/monsters/blue_snail/hit1_0.png": 39,
   "assets/monsters/blue_snail/move_0.png": 34,
   "assets/monsters/blue_snail/move_1.png": 34,
@@ -76,43 +76,55 @@ window.SPRITE_FOOT_Y = Object.freeze({
   "assets/monsters/blue_snail/move_3.png": 34,
   "assets/monsters/blue_snail/stand_0.png": 34,
   "assets/monsters/green_mushroom/die1_0.png": 49,
-  "assets/monsters/green_mushroom/die1_1.png": 49,
-  "assets/monsters/green_mushroom/die1_2.png": 50,
-  "assets/monsters/green_mushroom/die1_3.png": 49,
+  "assets/monsters/green_mushroom/die1_1.png": 48,
+  "assets/monsters/green_mushroom/die1_2.png": 47,
+  "assets/monsters/green_mushroom/die1_3.png": 46,
   "assets/monsters/green_mushroom/hit1_0.png": 56,
   "assets/monsters/green_mushroom/move_0.png": 52,
-  "assets/monsters/green_mushroom/move_1.png": 52,
+  "assets/monsters/green_mushroom/move_1.png": 51,
   "assets/monsters/green_mushroom/move_2.png": 52,
-  "assets/monsters/green_mushroom/move_3.png": 52,
+  "assets/monsters/green_mushroom/move_3.png": 51,
   "assets/monsters/green_mushroom/stand_0.png": 52,
   "assets/monsters/green_mushroom/stand_1.png": 52,
   "assets/monsters/green_mushroom/stand_2.png": 52,
+  "assets/monsters/horny_mushroom/die1_0.png": 50,
+  "assets/monsters/horny_mushroom/die1_1.png": 49,
+  "assets/monsters/horny_mushroom/die1_2.png": 49,
+  "assets/monsters/horny_mushroom/die1_3.png": 46,
+  "assets/monsters/horny_mushroom/hit1_0.png": 56,
+  "assets/monsters/horny_mushroom/move_0.png": 52,
+  "assets/monsters/horny_mushroom/move_1.png": 51,
+  "assets/monsters/horny_mushroom/move_2.png": 52,
+  "assets/monsters/horny_mushroom/move_3.png": 51,
+  "assets/monsters/horny_mushroom/stand_0.png": 52,
+  "assets/monsters/horny_mushroom/stand_1.png": 52,
+  "assets/monsters/horny_mushroom/stand_2.png": 52,
   "assets/monsters/mushmom/die1_0.png": 140,
-  "assets/monsters/mushmom/die1_1.png": 143,
-  "assets/monsters/mushmom/die1_2.png": 141,
-  "assets/monsters/mushmom/die1_3.png": 140,
-  "assets/monsters/mushmom/die1_4.png": 140,
-  "assets/monsters/mushmom/die1_5.png": 140,
+  "assets/monsters/mushmom/die1_1.png": 64,
+  "assets/monsters/mushmom/die1_2.png": 62,
+  "assets/monsters/mushmom/die1_3.png": 61,
+  "assets/monsters/mushmom/die1_4.png": 61,
+  "assets/monsters/mushmom/die1_5.png": 61,
   "assets/monsters/mushmom/hit1_0.png": 140,
-  "assets/monsters/mushmom/move_0.png": 180,
-  "assets/monsters/mushmom/move_1.png": 180,
-  "assets/monsters/mushmom/move_2.png": 180,
+  "assets/monsters/mushmom/move_0.png": 110,
+  "assets/monsters/mushmom/move_1.png": 105,
+  "assets/monsters/mushmom/move_2.png": 102,
   "assets/monsters/mushmom/move_3.png": 125,
-  "assets/monsters/mushmom/move_4.png": 145,
-  "assets/monsters/mushmom/move_5.png": 180,
+  "assets/monsters/mushmom/move_4.png": 125,
+  "assets/monsters/mushmom/move_5.png": 105,
   "assets/monsters/mushmom/stand_0.png": 110,
   "assets/monsters/orange_mushroom/die1_0.png": 59,
-  "assets/monsters/orange_mushroom/die1_1.png": 59,
-  "assets/monsters/orange_mushroom/die1_2.png": 59,
+  "assets/monsters/orange_mushroom/die1_1.png": 52,
+  "assets/monsters/orange_mushroom/die1_2.png": 44,
   "assets/monsters/orange_mushroom/hit1_0.png": 65,
-  "assets/monsters/orange_mushroom/move_0.png": 67,
+  "assets/monsters/orange_mushroom/move_0.png": 55,
   "assets/monsters/orange_mushroom/move_1.png": 64,
-  "assets/monsters/orange_mushroom/move_2.png": 67,
+  "assets/monsters/orange_mushroom/move_2.png": 55,
   "assets/monsters/orange_mushroom/stand_0.png": 58,
-  "assets/monsters/orange_mushroom/stand_1.png": 58,
+  "assets/monsters/orange_mushroom/stand_1.png": 55,
   "assets/monsters/red_snail/die1_0.png": 32,
-  "assets/monsters/red_snail/die1_1.png": 32,
-  "assets/monsters/red_snail/die1_2.png": 32,
+  "assets/monsters/red_snail/die1_1.png": 29,
+  "assets/monsters/red_snail/die1_2.png": 27,
   "assets/monsters/red_snail/hit1_0.png": 39,
   "assets/monsters/red_snail/move_0.png": 34,
   "assets/monsters/red_snail/move_1.png": 34,
@@ -120,57 +132,955 @@ window.SPRITE_FOOT_Y = Object.freeze({
   "assets/monsters/red_snail/move_3.png": 34,
   "assets/monsters/red_snail/stand_0.png": 34,
   "assets/monsters/ribbon_pig/die1_0.png": 56,
-  "assets/monsters/ribbon_pig/die1_1.png": 58,
-  "assets/monsters/ribbon_pig/die1_2.png": 59,
+  "assets/monsters/ribbon_pig/die1_1.png": 55,
+  "assets/monsters/ribbon_pig/die1_2.png": 52,
   "assets/monsters/ribbon_pig/hit1_0.png": 54,
-  "assets/monsters/ribbon_pig/move_0.png": 56,
-  "assets/monsters/ribbon_pig/move_1.png": 56,
+  "assets/monsters/ribbon_pig/move_0.png": 49,
+  "assets/monsters/ribbon_pig/move_1.png": 50,
   "assets/monsters/ribbon_pig/move_2.png": 49,
   "assets/monsters/ribbon_pig/stand_0.png": 49,
-  "assets/monsters/ribbon_pig/stand_1.png": 49,
-  "assets/monsters/ribbon_pig/stand_2.png": 49,
+  "assets/monsters/ribbon_pig/stand_1.png": 47,
+  "assets/monsters/ribbon_pig/stand_2.png": 45,
+  "assets/monsters/shroom/die1_0.png": 32,
+  "assets/monsters/shroom/die1_1.png": 33,
+  "assets/monsters/shroom/die1_2.png": 37,
+  "assets/monsters/shroom/die1_3.png": 27,
+  "assets/monsters/shroom/hit1_0.png": 36,
+  "assets/monsters/shroom/move_0.png": 36,
+  "assets/monsters/shroom/move_1.png": 37,
+  "assets/monsters/shroom/move_2.png": 36,
+  "assets/monsters/shroom/move_3.png": 36,
+  "assets/monsters/shroom/stand_0.png": 36,
+  "assets/monsters/shroom/stand_1.png": 36,
+  "assets/monsters/shroom/stand_2.png": 36,
   "assets/monsters/slime/die1_0.png": 60,
-  "assets/monsters/slime/die1_1.png": 60,
-  "assets/monsters/slime/die1_2.png": 60,
-  "assets/monsters/slime/die1_3.png": 60,
+  "assets/monsters/slime/die1_1.png": 59,
+  "assets/monsters/slime/die1_2.png": 54,
+  "assets/monsters/slime/die1_3.png": 40,
   "assets/monsters/slime/hit1_0.png": 66,
-  "assets/monsters/slime/move_0.png": 94,
-  "assets/monsters/slime/move_1.png": 94,
-  "assets/monsters/slime/move_2.png": 78,
-  "assets/monsters/slime/move_3.png": 77,
+  "assets/monsters/slime/move_0.png": 51,
+  "assets/monsters/slime/move_1.png": 53,
+  "assets/monsters/slime/move_2.png": 55,
+  "assets/monsters/slime/move_3.png": 54,
   "assets/monsters/slime/move_4.png": 84,
-  "assets/monsters/slime/move_5.png": 94,
-  "assets/monsters/slime/move_6.png": 94,
-  "assets/monsters/slime/stand_0.png": 50,
-  "assets/monsters/slime/stand_1.png": 50,
+  "assets/monsters/slime/move_5.png": 71,
+  "assets/monsters/slime/move_6.png": 46,
+  "assets/monsters/slime/stand_0.png": 49,
+  "assets/monsters/slime/stand_1.png": 49,
   "assets/monsters/slime/stand_2.png": 50,
   "assets/monsters/snail/die1_0.png": 33,
-  "assets/monsters/snail/die1_1.png": 33,
-  "assets/monsters/snail/die1_2.png": 33,
-  "assets/monsters/snail/die1_3.png": 33,
-  "assets/monsters/snail/die1_4.png": 33,
-  "assets/monsters/snail/die1_5.png": 33,
-  "assets/monsters/snail/die1_6.png": 33,
-  "assets/monsters/snail/die1_7.png": 33,
-  "assets/monsters/snail/die1_8.png": 33,
+  "assets/monsters/snail/die1_1.png": 31,
+  "assets/monsters/snail/die1_2.png": 24,
+  "assets/monsters/snail/die1_3.png": 24,
+  "assets/monsters/snail/die1_4.png": 23,
+  "assets/monsters/snail/die1_5.png": 18,
+  "assets/monsters/snail/die1_6.png": 14,
+  "assets/monsters/snail/die1_7.png": 10,
+  "assets/monsters/snail/die1_8.png": 6,
   "assets/monsters/snail/hit1_0.png": 33,
   "assets/monsters/snail/move_0.png": 26,
-  "assets/monsters/snail/move_1.png": 26,
-  "assets/monsters/snail/move_2.png": 26,
-  "assets/monsters/snail/move_3.png": 26,
-  "assets/monsters/snail/move_4.png": 26,
+  "assets/monsters/snail/move_1.png": 25,
+  "assets/monsters/snail/move_2.png": 25,
+  "assets/monsters/snail/move_3.png": 24,
+  "assets/monsters/snail/move_4.png": 24,
   "assets/monsters/snail/stand_0.png": 26,
-  "assets/monsters/zombie_mushroom/die1_0.png": 140,
-  "assets/monsters/zombie_mushroom/die1_1.png": 147,
-  "assets/monsters/zombie_mushroom/die1_2.png": 148,
-  "assets/monsters/zombie_mushroom/die1_3.png": 148,
-  "assets/monsters/zombie_mushroom/die1_4.png": 144,
-  "assets/monsters/zombie_mushroom/hit1_0.png": 161,
-  "assets/monsters/zombie_mushroom/move_0.png": 180,
-  "assets/monsters/zombie_mushroom/move_1.png": 181,
-  "assets/monsters/zombie_mushroom/move_2.png": 180,
-  "assets/monsters/zombie_mushroom/move_3.png": 125,
-  "assets/monsters/zombie_mushroom/move_4.png": 145,
-  "assets/monsters/zombie_mushroom/move_5.png": 181,
-  "assets/monsters/zombie_mushroom/stand_0.png": 99
+  "assets/monsters/stump/die1_0.png": 52,
+  "assets/monsters/stump/die1_1.png": 53,
+  "assets/monsters/stump/die1_2.png": 45,
+  "assets/monsters/stump/hit1_0.png": 58,
+  "assets/monsters/stump/move_0.png": 51,
+  "assets/monsters/stump/move_1.png": 54,
+  "assets/monsters/stump/move_2.png": 51,
+  "assets/monsters/stump/move_3.png": 54,
+  "assets/monsters/stump/stand_0.png": 51,
+  "assets/monsters/zombie_mushroom/die1_0.png": 59,
+  "assets/monsters/zombie_mushroom/die1_1.png": 52,
+  "assets/monsters/zombie_mushroom/die1_2.png": 44,
+  "assets/monsters/zombie_mushroom/hit1_0.png": 75,
+  "assets/monsters/zombie_mushroom/move_0.png": 55,
+  "assets/monsters/zombie_mushroom/move_1.png": 64,
+  "assets/monsters/zombie_mushroom/move_2.png": 67,
+  "assets/monsters/zombie_mushroom/move_3.png": 58,
+  "assets/monsters/zombie_mushroom/stand_0.png": 58,
+  "assets/monsters/zombie_mushroom/stand_1.png": 67,
+  "assets/npcs/adobis.png": 73,
+  "assets/npcs/betty.png": 71,
+  "assets/npcs/chief_stan.png": 73,
+  "assets/npcs/maya.png": 77,
+  "assets/npcs/regular_cab.png": 90,
+  "assets/npcs/vip_cab.png": 93
+});
+window.MONSTER_ASSETS = Object.freeze({
+  "snail": {
+    "mobId": 100100,
+    "name": "Snail",
+    "source": "https://maplestory.io/api/GMS/62/mob/100100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 5,
+      "hit1": 1,
+      "die1": 9
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 1,
+      "maxHP": 8,
+      "maxMP": 0,
+      "speed": -65,
+      "physicalDamage": 12,
+      "physicalDefense": 0,
+      "magicDamage": 0,
+      "magicDefense": 0,
+      "accuracy": 20,
+      "evasion": 0,
+      "exp": 3,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "blue_snail": {
+    "mobId": 100101,
+    "name": "Blue Snail",
+    "source": "https://maplestory.io/api/GMS/62/mob/100101",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 4,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 2,
+      "maxHP": 15,
+      "maxMP": 15,
+      "speed": -50,
+      "physicalDamage": 17,
+      "physicalDefense": 0,
+      "magicDamage": 0,
+      "magicDefense": 0,
+      "accuracy": 20,
+      "evasion": 0,
+      "exp": 4,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "red_snail": {
+    "mobId": 130101,
+    "name": "Red Snail",
+    "source": "https://maplestory.io/api/GMS/62/mob/130101",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 4,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 4,
+      "maxHP": 40,
+      "maxMP": 30,
+      "speed": -50,
+      "physicalDamage": 27,
+      "physicalDefense": 3,
+      "magicDamage": 0,
+      "magicDefense": 10,
+      "accuracy": 35,
+      "evasion": 0,
+      "exp": 8,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "slime": {
+    "mobId": 210100,
+    "name": "Slime",
+    "source": "https://maplestory.io/api/GMS/62/mob/210100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 7,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 6,
+      "maxHP": 50,
+      "maxMP": 35,
+      "speed": -20,
+      "physicalDamage": 32,
+      "physicalDefense": 5,
+      "magicDamage": 0,
+      "magicDefense": 10,
+      "accuracy": 35,
+      "evasion": 1,
+      "exp": 10,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "elementalAttributes": "L3",
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "ribbon_pig": {
+    "mobId": 1210101,
+    "name": "Ribbon Pig",
+    "source": "https://maplestory.io/api/GMS/62/mob/1210101",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 3,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 10,
+      "maxHP": 120,
+      "maxMP": 45,
+      "speed": 5,
+      "physicalDamage": 70,
+      "physicalDefense": 10,
+      "magicDamage": 0,
+      "magicDefense": 30,
+      "accuracy": 40,
+      "evasion": 2,
+      "exp": 20,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "orange_mushroom": {
+    "mobId": 1210102,
+    "name": "Orange Mushroom",
+    "source": "https://maplestory.io/api/GMS/62/mob/1210102",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 2,
+      "move": 3,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 8,
+      "maxHP": 80,
+      "maxMP": 45,
+      "speed": 0,
+      "physicalDamage": 42,
+      "physicalDefense": 0,
+      "magicDamage": 0,
+      "magicDefense": 10,
+      "accuracy": 42,
+      "evasion": 1,
+      "exp": 15,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "green_mushroom": {
+    "mobId": 1110100,
+    "name": "Green Mushroom",
+    "source": "https://maplestory.io/api/GMS/62/mob/1110100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 4,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 15,
+      "maxHP": 250,
+      "maxMP": 25,
+      "speed": -20,
+      "physicalDamage": 82,
+      "physicalDefense": 12,
+      "magicDamage": 0,
+      "magicDefense": 40,
+      "accuracy": 45,
+      "evasion": 5,
+      "exp": 26,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "elementalAttributes": "S1",
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "mushmom": {
+    "mobId": 6130101,
+    "name": "Mushmom",
+    "source": "https://maplestory.io/api/GMS/62/mob/6130101",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 60,
+      "maxHP": 20000,
+      "maxMP": 200,
+      "speed": 5,
+      "physicalDamage": 200,
+      "physicalDefense": 320,
+      "magicDamage": 300,
+      "magicDefense": 320,
+      "accuracy": 150,
+      "evasion": 27,
+      "exp": 1200,
+      "isUndead": false,
+      "minimumPushDamage": 1000,
+      "hpRecovery": 100,
+      "mpRecovery": 5,
+      "summonType": 0,
+      "hpTagColor": 1,
+      "hpTagBackgroundColor": 5,
+      "hpGaugeHide": true,
+      "revivesMonsterId": [],
+      "isBoss": true
+    }
+  },
+  "zombie_mushroom": {
+    "mobId": 2230101,
+    "name": "Zombie Mushroom",
+    "source": "https://maplestory.io/api/GMS/62/mob/2230101",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 2,
+      "move": 4,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 24,
+      "maxHP": 500,
+      "maxMP": 50,
+      "speed": 0,
+      "physicalDamage": 95,
+      "physicalDefense": 20,
+      "magicDamage": 0,
+      "magicDefense": 30,
+      "accuracy": 50,
+      "evasion": 8,
+      "exp": 42,
+      "isUndead": true,
+      "minimumPushDamage": 1,
+      "elementalAttributes": "H3",
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "horny_mushroom": {
+    "mobId": 2110200,
+    "name": "Horny Mushroom",
+    "source": "https://maplestory.io/api/GMS/62/mob/2110200",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 4,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 22,
+      "maxHP": 300,
+      "maxMP": 35,
+      "speed": -20,
+      "physicalDamage": 90,
+      "physicalDefense": 30,
+      "magicDamage": 0,
+      "magicDefense": 0,
+      "accuracy": 55,
+      "evasion": 7,
+      "exp": 35,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "stump": {
+    "mobId": 130100,
+    "name": "Stump",
+    "source": "https://maplestory.io/api/GMS/62/mob/130100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 4,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 4,
+      "maxHP": 40,
+      "maxMP": 30,
+      "speed": -70,
+      "physicalDamage": 30,
+      "physicalDefense": 0,
+      "magicDamage": 0,
+      "magicDefense": 10,
+      "accuracy": 30,
+      "evasion": 0,
+      "exp": 8,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "elementalAttributes": "F3",
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  },
+  "shroom": {
+    "mobId": 120100,
+    "name": "Shroom",
+    "source": "https://maplestory.io/api/GMS/62/mob/120100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 4,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {
+      "isBodyAttack": true,
+      "level": 2,
+      "maxHP": 20,
+      "maxMP": 15,
+      "speed": -30,
+      "physicalDamage": 17,
+      "physicalDefense": 0,
+      "magicDamage": 0,
+      "magicDefense": 0,
+      "accuracy": 30,
+      "evasion": 0,
+      "exp": 5,
+      "isUndead": false,
+      "minimumPushDamage": 1,
+      "summonType": 1,
+      "revivesMonsterId": []
+    }
+  }
+});
+window.BOSS_SPRITE_GEOMETRY = Object.freeze({
+  "body": {
+    "width": 385,
+    "height": 398,
+    "frames": [
+      [
+        1,
+        2,
+        385,
+        387
+      ],
+      [
+        1,
+        1,
+        385,
+        387
+      ],
+      [
+        1,
+        1,
+        385,
+        387
+      ],
+      [
+        1,
+        1,
+        385,
+        387
+      ],
+      [
+        1,
+        6,
+        385,
+        387
+      ],
+      [
+        1,
+        9,
+        385,
+        387
+      ],
+      [
+        1,
+        11,
+        385,
+        387
+      ],
+      [
+        1,
+        7,
+        385,
+        387
+      ]
+    ]
+  },
+  "arms": {
+    "1": {
+      "width": 261,
+      "height": 292,
+      "frames": [
+        [
+          57,
+          0,
+          210,
+          227
+        ],
+        [
+          37,
+          11,
+          208,
+          228
+        ],
+        [
+          22,
+          23,
+          207,
+          228
+        ],
+        [
+          12,
+          45,
+          206,
+          229
+        ],
+        [
+          2,
+          65,
+          204,
+          229
+        ],
+        [
+          12,
+          45,
+          206,
+          229
+        ],
+        [
+          22,
+          23,
+          207,
+          228
+        ],
+        [
+          37,
+          11,
+          208,
+          228
+        ]
+      ]
+    },
+    "2": {
+      "width": 213,
+      "height": 291,
+      "frames": [
+        [
+          1,
+          0,
+          160,
+          223
+        ],
+        [
+          3,
+          10,
+          179,
+          224
+        ],
+        [
+          4,
+          24,
+          193,
+          225
+        ],
+        [
+          5,
+          47,
+          202,
+          225
+        ],
+        [
+          7,
+          68,
+          212,
+          225
+        ],
+        [
+          5,
+          47,
+          202,
+          225
+        ],
+        [
+          4,
+          24,
+          193,
+          225
+        ],
+        [
+          3,
+          10,
+          179,
+          224
+        ]
+      ]
+    },
+    "3": {
+      "width": 270,
+      "height": 314,
+      "frames": [
+        [
+          5,
+          60,
+          234,
+          225
+        ],
+        [
+          0,
+          89,
+          233,
+          228
+        ],
+        [
+          5,
+          61,
+          234,
+          225
+        ],
+        [
+          10,
+          32,
+          235,
+          225
+        ],
+        [
+          21,
+          12,
+          236,
+          225
+        ],
+        [
+          38,
+          1,
+          238,
+          224
+        ],
+        [
+          21,
+          12,
+          236,
+          225
+        ],
+        [
+          10,
+          32,
+          235,
+          225
+        ]
+      ]
+    },
+    "4": {
+      "width": 250,
+      "height": 320,
+      "frames": [
+        [
+          3,
+          39,
+          242,
+          221
+        ],
+        [
+          3,
+          70,
+          244,
+          229
+        ],
+        [
+          1,
+          101,
+          248,
+          233
+        ],
+        [
+          3,
+          70,
+          244,
+          229
+        ],
+        [
+          4,
+          40,
+          242,
+          222
+        ],
+        [
+          3,
+          16,
+          234,
+          220
+        ],
+        [
+          1,
+          1,
+          219,
+          220
+        ],
+        [
+          3,
+          16,
+          234,
+          220
+        ]
+      ]
+    },
+    "5": {
+      "width": 275,
+      "height": 272,
+      "frames": [
+        [
+          14,
+          86,
+          262,
+          195
+        ],
+        [
+          13,
+          94,
+          263,
+          205
+        ],
+        [
+          14,
+          86,
+          262,
+          195
+        ],
+        [
+          1,
+          55,
+          261,
+          187
+        ],
+        [
+          4,
+          26,
+          260,
+          183
+        ],
+        [
+          7,
+          1,
+          258,
+          177
+        ],
+        [
+          4,
+          26,
+          260,
+          183
+        ],
+        [
+          2,
+          55,
+          262,
+          187
+        ]
+      ]
+    },
+    "6": {
+      "width": 276,
+      "height": 287,
+      "frames": [
+        [
+          6,
+          0,
+          265,
+          185
+        ],
+        [
+          5,
+          26,
+          269,
+          191
+        ],
+        [
+          4,
+          57,
+          272,
+          196
+        ],
+        [
+          3,
+          88,
+          260,
+          204
+        ],
+        [
+          1,
+          102,
+          261,
+          213
+        ],
+        [
+          2,
+          88,
+          260,
+          205
+        ],
+        [
+          4,
+          57,
+          272,
+          196
+        ],
+        [
+          5,
+          26,
+          269,
+          191
+        ]
+      ]
+    },
+    "7": {
+      "width": 282,
+      "height": 216,
+      "frames": [
+        [
+          19,
+          59,
+          266,
+          202
+        ],
+        [
+          16,
+          59,
+          265,
+          182
+        ],
+        [
+          1,
+          51,
+          263,
+          172
+        ],
+        [
+          1,
+          30,
+          262,
+          163
+        ],
+        [
+          1,
+          1,
+          261,
+          157
+        ],
+        [
+          1,
+          30,
+          262,
+          163
+        ],
+        [
+          1,
+          51,
+          263,
+          172
+        ],
+        [
+          16,
+          59,
+          265,
+          182
+        ]
+      ]
+    },
+    "8": {
+      "width": 269,
+      "height": 216,
+      "frames": [
+        [
+          3,
+          50,
+          266,
+          172
+        ],
+        [
+          5,
+          30,
+          266,
+          163
+        ],
+        [
+          6,
+          2,
+          266,
+          157
+        ],
+        [
+          5,
+          30,
+          266,
+          163
+        ],
+        [
+          4,
+          51,
+          266,
+          172
+        ],
+        [
+          2,
+          59,
+          251,
+          182
+        ],
+        [
+          1,
+          59,
+          248,
+          202
+        ],
+        [
+          2,
+          59,
+          251,
+          182
+        ]
+      ]
+    }
+  }
 });

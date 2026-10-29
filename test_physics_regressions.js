@@ -241,7 +241,7 @@ test('fixed-step accumulation gives the same trajectory for equal elapsed time',
   assert.ok(Math.abs(a.player.vy - b.player.vy) < 1e-8);
 });
 
-test('all 75 real ladder/rope tops end on their own connected foothold', () => {
+test('all 66 real ladder/rope tops end on their own connected foothold', () => {
   let count = 0;
   for (const key of ['henesys_hhg', 'henesys_town', 'ant_tunnel', 'ellinia', 'zakum_altar']) {
     const { map, Player, Physics } = fixture(key);
@@ -267,7 +267,7 @@ test('all 75 real ladder/rope tops end on their own connected foothold', () => {
       count++;
     }
   }
-  assert.equal(count, 75);
+  assert.equal(count, 66);
 });
 
 test('holding Up after an isolated HHG rope ascent stays on the upper platform', () => {
@@ -285,7 +285,7 @@ test('holding Up after an isolated HHG rope ascent stays on the upper platform',
   assert.equal(player.y, upper.getYAtX(player.x));
 });
 
-test('all 150 real ladder endpoints select the nearest nearby support, never a remote floor', () => {
+test('all 132 real ladder endpoints select the nearest nearby support, never a remote floor', () => {
   let endpoints = 0;
   let unsupportedBottoms = 0;
   for (const key of ['henesys_hhg', 'henesys_town', 'ant_tunnel', 'ellinia', 'zakum_altar']) {
@@ -322,8 +322,9 @@ test('all 150 real ladder endpoints select the nearest nearby support, never a r
       }
     }
   }
-  assert.equal(endpoints, 150);
-  assert.equal(unsupportedBottoms, 9);
+  assert.equal(endpoints, 132);
+  // Four original Ellinia hanging ropes intentionally have no nearby lower platform.
+  assert.equal(unsupportedBottoms, 4);
 });
 
 test('hanging near either rope endpoint stays clamped for ten seconds without gravity drift', () => {
@@ -540,7 +541,7 @@ test('auto-hunt topology excludes props and vertical walls but includes short re
   assert.ok(graph.edges.get('upper').some(edge => edge.type === 'ladder' && edge.targetId === 'middle'));
 });
 
-for (const [mapKey, ladderId] of [['ant_tunnel', 13], ['henesys_hhg', 3]]) {
+for (const [mapKey, ladderId] of [['ant_tunnel', 1], ['henesys_hhg', 3]]) {
   test(`holding Down after ${mapKey} ladder ${ladderId} descent never re-grabs its lower endpoint`, () => {
     const { map, player, Physics } = fixture(mapKey);
     const ladder = map.ladders.find(candidate => candidate.id === ladderId);

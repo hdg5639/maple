@@ -6,6 +6,7 @@ class SpriteRenderer {
     this.images = {};
     this.spriteFootY = new WeakMap();
     this.dustParticles = [];
+    this.levelUpGlow = this.bakeLevelUpGlow();
 
     this.initAssets();
   }
@@ -24,6 +25,35 @@ class SpriteRenderer {
     const height = sprite.naturalHeight;
     const footY = this.spriteFootY.get(sprite) ?? height;
     ctx.drawImage(sprite, -width / 2, -footY, width, height);
+  }
+
+  bakeLevelUpGlow() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 180;
+    canvas.height = 240;
+    const ctx = canvas.getContext('2d');
+    const glow = ctx.createRadialGradient(90, 170, 4, 90, 150, 100);
+    glow.addColorStop(0, 'rgba(255,250,210,0.5)');
+    glow.addColorStop(0.45, 'rgba(255,215,90,0.2)');
+    glow.addColorStop(1, 'rgba(255,215,90,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.ellipse(90, 135, 88, 105, 0, 0, Math.PI*2);
+    ctx.fill();
+    const light = ctx.createLinearGradient(0, 20, 0, 235);
+    light.addColorStop(0, 'rgba(255,250,220,0)');
+    light.addColorStop(0.65, 'rgba(255,245,180,0.45)');
+    light.addColorStop(1, 'rgba(255,230,150,0)');
+    ctx.fillStyle = light;
+    for (let ray=0;ray<7;ray++) {
+      const x=35+ray*18;
+      ctx.beginPath();
+      ctx.moveTo(84+ray*2,235);
+      ctx.quadraticCurveTo(x,120,x-5,20+ray%3*18);
+      ctx.quadraticCurveTo(x+18,140,96+ray*2,235);
+      ctx.fill();
+    }
+    return canvas;
   }
 
   initAssets() {
@@ -46,48 +76,16 @@ class SpriteRenderer {
     });
 
     // 2. Preload Monsters (Stand, Move, Hit, Die)
-    const mobs = [
-      { name: 'snail', stand: 1, move: 5, hit: 1, die: 9 },
-      { name: 'blue_snail', stand: 1, move: 4, hit: 1, die: 3 },
-      { name: 'red_snail', stand: 1, move: 4, hit: 1, die: 3 },
-      { name: 'slime', stand: 3, move: 7, hit: 1, die: 4 },
-      { name: 'ribbon_pig', stand: 3, move: 3, hit: 1, die: 3 },
-      { name: 'orange_mushroom', stand: 2, move: 3, hit: 1, die: 3 },
-      { name: 'green_mushroom', stand: 3, move: 4, hit: 1, die: 4 },
-      { name: 'mushmom', stand: 1, move: 6, hit: 1, die: 6 },
-      { name: 'zombie_mushroom', stand: 1, move: 6, hit: 1, die: 5 }
-    ];
-
     this.monsterSprites = {};
-    mobs.forEach(m => {
-      this.monsterSprites[m.name] = {
-        stand: [],
-        move: [],
-        hit1: [],
-        die1: []
-      };
-
-      for (let i = 0; i < m.stand; i++) {
-        this.monsterSprites[m.name].stand.push(
-          this.loadImage(`mob_${m.name}_stand_${i}`, `assets/monsters/${m.name}/stand_${i}.png`)
-        );
+    for (const [name, record] of Object.entries(window.MONSTER_ASSETS || {})) {
+      const frames = this.monsterSprites[name] = {};
+      for (const action of ['stand', 'move', 'hit1', 'die1']) {
+        frames[action] = [];
+        for (let index = 0; index < record.frames[action]; index++) {
+          frames[action].push(this.loadImage(`mob_${name}_${action}_${index}`, `assets/monsters/${name}/${action}_${index}.png`));
+        }
       }
-      for (let i = 0; i < m.move; i++) {
-        this.monsterSprites[m.name].move.push(
-          this.loadImage(`mob_${m.name}_move_${i}`, `assets/monsters/${m.name}/move_${i}.png`)
-        );
-      }
-      for (let i = 0; i < m.hit; i++) {
-        this.monsterSprites[m.name].hit1.push(
-          this.loadImage(`mob_${m.name}_hit1_${i}`, `assets/monsters/${m.name}/hit1_${i}.png`)
-        );
-      }
-      for (let i = 0; i < m.die; i++) {
-        this.monsterSprites[m.name].die1.push(
-          this.loadImage(`mob_${m.name}_die1_${i}`, `assets/monsters/${m.name}/die1_${i}.png`)
-        );
-      }
-    });
+    }
 
     // 3. Preload Damage Digits (Normal 0-9, Crit 0-9, Crit Star, Miss)
     this.damageSprites = {
@@ -231,7 +229,7 @@ class SpriteRenderer {
       const isRope = player.currentLadder && !player.currentLadder.isLadder;
       actionKey = isRope ? 'rope_0' : 'ladder_0';
     } else if (player.attackTimer > 0) {
-      const attackProgress = 1 - (player.attackTimer / player.attackDuration);
+      const attackProgress = 1 - (player.attackTimer / (player.attackAnimationDuration || player.attackDuration));
       const frameIdx = Math.min(2, Math.floor(attackProgress * 3));
       actionKey = `attack_${frameIdx}`;
     } else if (!player.onGround) {
@@ -392,6 +390,22 @@ class SpriteRenderer {
   }
 
   // --- DRAW MONSTER (GENUINE MAPLESTORY PIXEL SPRITE) ---
+  getSpriteHitMask(sprite) {
+    if (!this.hitMasks) this.hitMasks = new WeakMap();
+    if (!this.hitMasks.has(sprite)) {
+      const mask = document.createElement('canvas');
+      mask.width = sprite.naturalWidth;
+      mask.height = sprite.naturalHeight;
+      const maskContext = mask.getContext('2d');
+      maskContext.drawImage(sprite, 0, 0);
+      maskContext.globalCompositeOperation = 'source-in';
+      maskContext.fillStyle = '#fff';
+      maskContext.fillRect(0, 0, mask.width, mask.height);
+      this.hitMasks.set(sprite, mask);
+    }
+    return this.hitMasks.get(sprite);
+  }
+
   drawMonster(ctx, m) {
     if (!m) return;
     const mobKey = m.type || 'slime';
@@ -423,6 +437,7 @@ class SpriteRenderer {
 
     ctx.save();
     ctx.translate(Math.round(m.x), Math.round(m.y));
+    if (isDying) ctx.globalAlpha *= Math.max(0, (m.dyingTimer || 0) / (m.dyingDuration || 0.45));
 
     // Facing direction
     if (m.facing === 'right') {
@@ -430,23 +445,23 @@ class SpriteRenderer {
     }
 
     // Shadow on ground
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-    ctx.beginPath();
-    ctx.ellipse(0, 0, Math.max(12, m.width * 0.45), 4.5, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Hit Flash
-    if (m.hitFlashTimer > 0) {
-      ctx.filter = 'brightness(2.5) contrast(1.5)';
+    if (m.onGround) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, Math.max(12, m.width * 0.45), 4.5, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     // Entity y is the visible foot contact, not the GIF frame's padded bottom.
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       this.drawFootAlignedSprite(ctx, sprite);
-    } else {
-      // Fallback
-      ctx.fillStyle = '#22c55e';
-      ctx.fillRect(-m.width / 2, -m.height, m.width, m.height);
+      if (m.hitFlashTimer > 0) {
+        ctx.save();
+        ctx.globalAlpha *= Math.min(1, m.hitFlashTimer / 0.12);
+        const footY = this.spriteFootY.get(sprite) ?? sprite.naturalHeight;
+        ctx.drawImage(this.getSpriteHitMask(sprite), -sprite.naturalWidth / 2, -footY);
+        ctx.restore();
+      }
     }
 
     ctx.restore();
@@ -1251,12 +1266,11 @@ class SpriteRenderer {
       const p = fx.progress;
       const alpha = 1 - p;
 
-      const grad = ctx.createLinearGradient(0, -200, 0, 20);
-      grad.addColorStop(0, 'rgba(254, 240, 138, 0)');
-      grad.addColorStop(0.5, 'rgba(253, 224, 71, ' + 0.75 * alpha + ')');
-      grad.addColorStop(1, 'rgba(234, 179, 8, ' + 0.9 * alpha + ')');
-      ctx.fillStyle = grad;
-      ctx.fillRect(-28, -200, 56, 220);
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(this.levelUpGlow, -90, -230 - p*12);
+      ctx.restore();
 
       ctx.save();
       ctx.translate(0, -70);
@@ -1288,7 +1302,10 @@ class SpriteRenderer {
       ctx.fill();
 
       // NPC Sprite
-      ctx.drawImage(sprite, Math.round(npc.x - sw / 2), Math.round(npc.y - sh), sw, sh);
+      ctx.save();
+      ctx.translate(Math.round(npc.x), Math.round(npc.y));
+      this.drawFootAlignedSprite(ctx, sprite);
+      ctx.restore();
 
       // Name Tag (Classic Maple Brown Pill)
       ctx.font = 'bold 11px "Malgun Gothic", Dotum, sans-serif';
@@ -1408,98 +1425,85 @@ class SpriteRenderer {
 
   // --- DRAW ZAKUM BOSS (BODY & 8 INDEPENDENT ARMS) ---
   drawZakumBoss(ctx, boss) {
-    if (!boss || !boss.isAlive()) return;
+    if (!boss || (!boss.isAlive() && !boss.isDying())) return;
     ctx.save();
+    if (boss.isDying()) ctx.globalAlpha *= Math.max(0, boss.dyingTimer / boss.dyingDuration);
 
-    const t = performance.now() / 1000;
-    const bodyFrameIdx = Math.floor(t * 4) % 8;
-    const armFrameIdx = Math.floor(t * 5) % 8;
-
-    // 1. Draw 8 Arms (Arm 1-4 Left, Arm 5-8 Right)
-    if (boss.arms) {
-      boss.arms.forEach(arm => {
-        if (!arm.isAlive) return;
-
-        const armSpriteList = this.zakum.arms[arm.id];
-        if (!armSpriteList || !armSpriteList[armFrameIdx]) return;
-        const sprite = armSpriteList[armFrameIdx];
-
-        if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-          const sw = sprite.naturalWidth;
-          const sh = sprite.naturalHeight;
-          const swayY = Math.sin(t * 2.5 + arm.id) * 4;
-          const ax = Math.round(boss.x + arm.offsetX);
-          const ay = Math.round(boss.y + arm.offsetY + swayY);
-
-          ctx.save();
-          if (arm.hitTimer > 0) {
-            // Hit flash
-            ctx.filter = 'brightness(2.0)';
-          }
-          ctx.drawImage(sprite, ax - sw / 2, ay - sh / 2, sw, sh);
-          ctx.restore();
-
-          // Small HP gauge above arm if damaged
-          if (arm.hp < arm.maxHp) {
-            const barW = 40;
-            const barH = 4;
-            const barX = ax - barW / 2;
-            const barY = ay - sh / 2 - 8;
-            ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
-            ctx.fillStyle = '#ef4444';
-            ctx.fillRect(barX, barY, Math.max(0, (arm.hp / arm.maxHp) * barW), barH);
-          }
-        }
-      });
-    }
-
-    // 2. Draw Zakum Body
-    const bodySprite = this.zakum.body[bodyFrameIdx];
-    if (bodySprite && bodySprite.complete && bodySprite.naturalWidth > 0) {
-      const bw = bodySprite.naturalWidth;
-      const bh = bodySprite.naturalHeight;
-      const bx = Math.round(boss.x - bw / 2);
-      const by = Math.round(boss.y - bh / 2);
-
+    for (const arm of boss.arms) {
+      if (!arm.isAlive && arm.state !== 'dying') continue;
+      const geometry = boss.getPartGeometry('arm', arm);
+      const sprite = this.zakum.arms[arm.id]?.[geometry.frame];
+      if (!sprite?.complete || !sprite.naturalWidth) continue;
       ctx.save();
-      if (boss.hitTimer > 0) {
-        ctx.filter = 'brightness(2.2)';
+      if (arm.state === 'dying') ctx.globalAlpha *= Math.max(0, arm.dyingTimer / arm.dyingDuration);
+      ctx.drawImage(sprite, geometry.drawX, geometry.drawY, geometry.spriteWidth, geometry.spriteHeight);
+      if (arm.hitTimer > 0) {
+        ctx.save();
+        ctx.globalAlpha *= Math.min(1, arm.hitTimer / 0.15);
+        ctx.drawImage(this.getSpriteHitMask(sprite), geometry.drawX, geometry.drawY);
+        ctx.restore();
       }
-      ctx.drawImage(bodySprite, bx, by, bw, bh);
+      if (arm.isAlive && arm.hp < arm.maxHp) {
+        const x = geometry.x + geometry.width / 2 - 20;
+        const y = geometry.y - 8;
+        ctx.fillStyle = '#1c1917';
+        ctx.fillRect(x - 1, y - 1, 42, 6);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(x, y, Math.max(0, arm.hp / arm.maxHp) * 40, 4);
+      }
       ctx.restore();
     }
 
-    // 3. Draw Active Spells (Lightning / Fire Pillar)
-    if (boss.activeSpells) {
-      boss.activeSpells.forEach(spell => {
-        if (spell.type === 'fire_pillar') {
-          const progress = spell.timer / spell.duration;
-          ctx.save();
-          const fGrad = ctx.createLinearGradient(spell.x, spell.y, spell.x, spell.y - 200);
-          fGrad.addColorStop(0, 'rgba(239, 68, 68, 0.9)');
-          fGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.7)');
-          fGrad.addColorStop(1, 'rgba(253, 224, 71, 0)');
-          ctx.fillStyle = fGrad;
-          ctx.fillRect(spell.x - 30, spell.y - 200, 60, 200);
-          ctx.restore();
-        } else if (spell.type === 'lightning') {
-          ctx.save();
-          ctx.strokeStyle = 'rgba(125, 211, 252, 0.9)';
-          ctx.lineWidth = 6;
-          ctx.beginPath();
-          ctx.moveTo(spell.x, 0);
-          ctx.lineTo(spell.x - 15, spell.y * 0.4);
-          ctx.lineTo(spell.x + 20, spell.y * 0.7);
-          ctx.lineTo(spell.x, spell.y);
-          ctx.stroke();
-          ctx.restore();
-        }
-      });
+    const body = boss.getPartGeometry();
+    const sprite = this.zakum.body[body.frame];
+    if (sprite?.complete && sprite.naturalWidth) {
+      ctx.drawImage(sprite, body.drawX, body.drawY, body.spriteWidth, body.spriteHeight);
+      if (boss.hitTimer > 0 && boss.isAlive()) {
+        ctx.save();
+        ctx.globalAlpha *= Math.min(1, boss.hitTimer / 0.15);
+        ctx.drawImage(this.getSpriteHitMask(sprite), body.drawX, body.drawY);
+        ctx.restore();
+      }
     }
 
+    for (const spell of boss.activeSpells) {
+      const progress = Math.min(1, spell.timer / spell.duration);
+      ctx.save();
+      if (spell.type === 'fire_pillar') {
+        const gradient = ctx.createLinearGradient(spell.x, spell.y, spell.x, spell.y - 200);
+        gradient.addColorStop(0, 'rgba(239,68,68,0.9)');
+        gradient.addColorStop(0.5, 'rgba(249,115,22,0.7)');
+        gradient.addColorStop(1, 'rgba(253,224,71,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(spell.x - 30, spell.y - 200, 60, 200);
+      } else if (spell.type === 'lightning') {
+        ctx.strokeStyle = 'rgba(125,211,252,0.9)';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(spell.x, 0);
+        ctx.lineTo(spell.x - 15, spell.y * 0.4);
+        ctx.lineTo(spell.x + 20, spell.y * 0.7);
+        ctx.lineTo(spell.x, spell.y);
+        ctx.stroke();
+      } else if (spell.isOneToOne) {
+        ctx.strokeStyle = `rgba(216,180,254,${0.5 + progress * 0.5})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(spell.x, spell.y - 2, 55, 10, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(spell.x, spell.y - 2, Math.max(4, 55 * (1 - progress)), 8, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.font = 'bold 16px "Malgun Gothic", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#f3e8ff';
+        ctx.fillText('1 / 1', spell.x, spell.y - 35);
+      }
+      ctx.restore();
+    }
     ctx.restore();
   }
+
 
   // --- DRAW SPEECH BUBBLE ---
   drawSpeechBubble(ctx, x, y, text) {

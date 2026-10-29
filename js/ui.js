@@ -149,6 +149,7 @@ class UIManager {
           this.game.player[stat]++;
           this.game.player.ap--;
           this.game.player.calcDerivedStats();
+          this.game.player.persistProgress(this.game);
           window.audio.playButtonClick();
           this.updateStatsWindow();
         }
@@ -319,9 +320,10 @@ class UIManager {
     const expFill = document.getElementById('hud-exp-fill');
     const expText = document.getElementById('hud-exp-text');
     if (expFill && expText) {
-      const expPct = Math.max(0, Math.min(100, (player.exp / player.maxExp) * 100));
+      const atMaxLevel = player.level >= Player.MAX_LEVEL;
+      const expPct = atMaxLevel ? 100 : Math.max(0, Math.min(100, (player.exp / Math.max(1, player.maxExp)) * 100));
       expFill.style.width = `${expPct}%`;
-      expText.innerText = `${player.exp} [${expPct.toFixed(1)}%]`;
+      expText.innerText = atMaxLevel ? 'MAX LEVEL' : `${player.exp} / ${player.maxExp} [${expPct.toFixed(1)}%]`;
     }
 
     const nameEl = document.getElementById('hud-player-name');
@@ -626,7 +628,7 @@ class UIManager {
     if (!container) return;
 
     container.innerHTML = '';
-    const items = p.inventory[tabName] || [];
+    const items = (p.inventory[tabName] || []).filter(item => item.count === undefined || item.count > 0);
 
     const mesoEl = document.getElementById('inven-meso-amount');
     if (mesoEl) mesoEl.innerText = p.meso.toLocaleString();
@@ -640,9 +642,9 @@ class UIManager {
 
         if (tabName === 'equip') {
           if (item.equipped) slot.classList.add('equipped');
-          slot.title = `${item.name} [${item.equipped ? '장착 중' : '미장착'}]\n공격력: +${item.atk || 0} / 방어력: +${item.def || 0}\n남은 업그레이드 가능 횟수: ${item.upgradeSlots || 0}회\n(클릭하여 장착/해제)`;
+          slot.title = `${item.name} +${item.enhancements || 0} [${item.equipped ? '장착 중' : '미장착'}]\n공격력: +${item.atk || 0} / 방어력: +${item.def || 0}\n남은 업그레이드 가능 횟수: ${item.upgradeSlots || 0}회\n(클릭하여 장착/해제, 아래 패널에서 강화)`;
         } else if (tabName === 'use' && item.type === 'scroll') {
-          slot.title = `${item.name} x${item.count}\n성공률: ${(item.rate * 100)}%\n성공 시 공격력 +${item.bonusAtk}\n(클릭하여 장착 무기에 주문서 사용)`;
+          slot.title = `${item.name} x${item.count}\n성공률: ${(item.rate * 100)}%\n성공 시 ${item.bonusDef !== undefined ? '방어력 +' + item.bonusDef : '공격력 +' + item.bonusAtk}\n(클릭하여 아래 강화 패널에서 선택)`;
         } else {
           slot.title = `${item.name}${item.count ? ' x' + item.count : ''}`;
         }
@@ -652,9 +654,9 @@ class UIManager {
         else if (item.id === 'blue_potion') icon = '💙';
         else if (item.type === 'scroll') icon = '📜';
         else if (item.type === 'weapon') icon = '🗡️';
-        else if (item.type === 'hat') icon = '🧢';
-        else if (item.id === 'pan_lid') icon = '🍳';
         else if (item.id === 'zakum_helm') icon = '👑';
+        else if (item.id === 'pan_lid') icon = '🍳';
+        else if (item.type === 'hat') icon = '🧢';
         else if (item.id === 'snail_shell') icon = '🐚';
         else if (item.id === 'slime_liquid') icon = '💧';
         else if (item.id === 'mushroom_cap') icon = '🍄';
@@ -670,10 +672,9 @@ class UIManager {
             this.updateHUD();
           } else if (tabName === 'use') {
             if (item.type === 'scroll') {
-              p.scrollWeapon(item, this.game);
-              this.renderInventoryTab('use');
-              this.updateStatsWindow();
-              this.updateHUD();
+              this.enhancementScrollId = item.id;
+              this.renderEnhancementPanel();
+              document.getElementById('inven-enhancement-panel')?.scrollIntoView({block: 'nearest'});
             } else if (item.count > 0) {
               p.usePotion(item.id);
               this.renderInventoryTab('use');
@@ -684,6 +685,74 @@ class UIManager {
 
       container.appendChild(slot);
     }
+    this.renderEnhancementPanel();
+  }
+
+  renderEnhancementPanel() {
+    const container = document.getElementById('inven-enhancement-panel');
+    if (!container) return;
+    const player = this.game.player;
+    const equipment = player.inventory.equip.filter(item => Number.isFinite(item.upgradeSlots) && item.type !== 'star');
+    if (!equipment.includes(this.enhancementTarget)) {
+      this.enhancementTarget = equipment.find(item => item.equipped && item.type === 'weapon') || equipment[0];
+    }
+    const target = this.enhancementTarget;
+    const scrolls = player.inventory.use.filter(item => item.count > 0 && player.canUseEquipmentScroll(target, item))
+      .sort((a, b) => (b.rate ?? 0) - (a.rate ?? 0));
+    const scroll = scrolls.find(item => item.id === this.enhancementScrollId) || scrolls[0];
+    this.enhancementScrollId = scroll?.id;
+    const fee = player.getEnhancementFee(target);
+    container.innerHTML = `
+      <div style="font-size: 12px; font-weight: 800; color: #92400e; margin-bottom: 6px;">장비 강화</div>
+      <label style="font-size: 11px; display: block;">장비 <select id="enhancement-equipment" style="width: 100%; margin: 3px 0 6px; padding: 4px;"></select></label>
+      <label style="font-size: 11px; display: block;">주문서 <select id="enhancement-scroll" style="width: 100%; margin: 3px 0 6px; padding: 4px;"></select></label>
+      <div id="enhancement-info" style="font-size: 10px; line-height: 1.5; color: #713f12;"></div>
+      <button id="btn-enhance-equipment" class="btn-maple" style="width: 100%; margin-top: 6px; padding: 5px;">강화하기</button>
+      <div id="enhancement-result" role="status" style="font-size: 10px; line-height: 1.5; margin-top: 5px;"></div>
+    `;
+    const targetSelect = container.querySelector('#enhancement-equipment');
+    equipment.forEach((item, index) => {
+      const option = document.createElement('option');
+      option.value = `${index}`;
+      option.textContent = `${item.name} +${item.enhancements || 0} (남은 횟수 ${item.upgradeSlots})`;
+      option.selected = item === target;
+      targetSelect.appendChild(option);
+    });
+    targetSelect.onchange = () => {
+      this.enhancementTarget = equipment[Number(targetSelect.value)];
+      this.enhancementScrollId = null;
+      this.renderEnhancementPanel();
+    };
+    const scrollSelect = container.querySelector('#enhancement-scroll');
+    if (!scrolls.length) {
+      const option = document.createElement('option');
+      option.textContent = '사용 가능한 주문서 없음 · 상점에서 구매';
+      scrollSelect.appendChild(option);
+    }
+    scrolls.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = `${item.name} x${item.count}`;
+      option.selected = item === scroll;
+      scrollSelect.appendChild(option);
+    });
+    scrollSelect.onchange = () => { this.enhancementScrollId = scrollSelect.value; this.renderEnhancementPanel(); };
+    const info = container.querySelector('#enhancement-info');
+    info.textContent = scroll
+      ? `성공률 ${Math.round(scroll.rate * 100)}% · ${scroll.bonusDef !== undefined ? '방어력 +' + scroll.bonusDef : '공격력 +' + scroll.bonusAtk} · 수수료 ${fee.toLocaleString()} 메소. 실패해도 주문서·수수료·남은 횟수 1회가 소모됩니다.`
+      : '무기에는 공격력 주문서, 방어구에는 방어력 주문서를 사용합니다.';
+    const button = container.querySelector('#btn-enhance-equipment');
+    button.disabled = !target || !scroll || target.upgradeSlots <= 0 || player.meso < fee;
+    button.onclick = () => {
+      const result = player.enhanceEquipment(target, scroll, this.game);
+      this.enhancementFeedback = result
+        ? `${result.success ? '성공' : '실패'} · ${result.itemName}${result.success ? ' · ' + (result.stat === 'atk' ? '공격력' : '방어력') + ' +' + result.bonus : ''} · ${result.fee.toLocaleString()} 메소 사용 · 남은 횟수 ${result.remainingSlots}`
+        : (player.speechText || '강화할 수 없습니다.');
+      this.renderInventoryTab(document.querySelector('.inven-tab.active')?.dataset.tab || 'equip');
+      document.getElementById('enhancement-result')?.scrollIntoView({block: 'nearest'});
+    };
+    const feedback = container.querySelector('#enhancement-result');
+    feedback.textContent = this.enhancementFeedback || '';
   }
 
   updateSkillsWindow() {
@@ -722,6 +791,7 @@ class UIManager {
         if (p.sp > 0 && skill.level < skill.maxLevel) {
           skill.level++;
           p.sp--;
+          p.persistProgress(this.game);
           window.audio.playButtonClick();
           this.updateSkillsWindow();
         }
@@ -767,7 +837,7 @@ class UIManager {
         btn.innerText = `▶ ${dest.name} 로 이동`;
         btn.addEventListener('click', () => {
           modal.style.display = 'none';
-          this.game.changeMap(dest.map, dest.x, dest.y);
+          this.game.changeMap(dest.map);
         });
         choicesEl.appendChild(btn);
       });
@@ -785,7 +855,7 @@ class UIManager {
         btn.innerText = `▶ ${dest.name}`;
         btn.addEventListener('click', () => {
           modal.style.display = 'none';
-          this.game.changeMap(dest.map, dest.x, dest.y);
+          this.game.changeMap(dest.map);
         });
         choicesEl.appendChild(btn);
       });
@@ -793,7 +863,7 @@ class UIManager {
       textEl.innerText = '자쿰의 제단에 오신 것을 환영합니다. 제단에 불의 눈을 바쳐 고대 거신 자쿰을 깨우시겠습니까?';
       const choices = [
         { text: '🔥 자쿰 레이드 시작 (자쿰 소환)', action: () => this.game.spawnZakumBoss() },
-        { text: '헤네시스로 안전하게 귀환하기', action: () => this.game.changeMap('henesys_hhg', 1050, 1320) }
+        { text: '헤네시스로 안전하게 귀환하기', action: () => this.game.changeMap('henesys_hhg') }
       ];
 
       choices.forEach(ch => {
@@ -823,7 +893,7 @@ class UIManager {
             this.updateStatsWindow();
           }
         },
-        { text: '헤네시스 사냥터 1로 바로 가기', action: () => this.game.changeMap('henesys_hhg', 1050, 1320) }
+        { text: '헤네시스 사냥터 1로 바로 가기', action: () => this.game.changeMap('henesys_hhg') }
       ];
       choices.forEach(ch => {
         const btn = document.createElement('button');
@@ -985,11 +1055,14 @@ class UIManager {
 
       // Collect from etc
       p.inventory.etc.forEach((it, idx) => {
-        itemsToSell.push({ tab: 'etc', idx, item: it });
+        if (it.count > 0) itemsToSell.push({ tab: 'etc', idx, item: it });
       });
       // Collect from use
       p.inventory.use.forEach((it, idx) => {
-        itemsToSell.push({ tab: 'use', idx, item: it });
+        if (it.count > 0) itemsToSell.push({ tab: 'use', idx, item: it });
+      });
+      p.inventory.equip.forEach((it, idx) => {
+        itemsToSell.push({tab: 'equip', idx, item: it});
       });
 
       if (itemsToSell.length === 0) {
@@ -1009,7 +1082,7 @@ class UIManager {
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
               <span style="font-weight: 700; color: #15803d;">개당 ${unitPrice} 메소</span>
-              <button class="btn-maple shop-item-btn btn-sell" style="background: #ef4444; color: #fff;">판매</button>
+              <button class="btn-maple shop-item-btn btn-sell" ${item.equipped ? 'disabled' : ''} style="background: #ef4444; color: #fff;">${item.equipped ? '장착 중' : '판매'}</button>
             </div>
           `;
           row.querySelector('.btn-sell').addEventListener('click', () => {

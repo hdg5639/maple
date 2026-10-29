@@ -223,7 +223,7 @@ body, html {
     gap: 6px;
     top: 6px;
     left: 8px;
-    max-width: 92vw;
+    max-width: calc(100vw - 190px);
   }
   .maple-badge-btn {
     font-size: 11px;
@@ -790,7 +790,7 @@ body, html {
 /* === CLASSIC MAPLE CHAT WINDOW (BOTTOM-LEFT) === */
 #maple-chat-container {
   position: absolute;
-  bottom: 74px;
+  bottom: 10px;
   left: 14px;
   width: 380px;
   height: 160px;
@@ -904,7 +904,7 @@ body, html {
 /* === BOTTOM-RIGHT FLOATING LOOT & EXP LOG === */
 #maple-loot-log {
   position: absolute;
-  bottom: 74px;
+  bottom: 10px;
   right: 14px;
   display: flex;
   flex-direction: column-reverse;
@@ -1191,7 +1191,7 @@ body, html {
     gap: 6px;
     top: 6px;
     left: 8px;
-    max-width: 92vw;
+    max-width: calc(100vw - 190px);
   }
   .maple-badge-btn {
     font-size: 11px;
@@ -1489,3 +1489,21 @@ body, html {
   font-weight: 700;
 }
 
+
+/* Menu and boss HUD reserve the minimap's top-right area at every viewport width. */
+#boss-bar-container {
+  top: var(--game-overlay-bottom, 104px);
+  left: 10px;
+  transform: none;
+  width: min(480px, calc(100vw - 200px));
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Keep the raid floor visible; focusing chat restores the complete history panel. */
+.boss-map #maple-chat-container:not(:hover):not(:focus-within) {
+  height: 54px;
+  width: min(320px, 45vw);
+}

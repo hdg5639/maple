@@ -236,12 +236,12 @@
   </div>
 
   <!-- INVENTORY WINDOW (I) -->
-  <div id="win-inventory" class="maple-window" style="top: 70px; right: 20px;">
+  <div id="win-inventory" class="maple-window" style="top: 70px; right: 20px; width: 280px; max-width: calc(100vw - 24px);">
     <div class="maple-window-header">
       <span class="window-title">아이템 인벤토리 (Inventory)</span>
       <button class="btn-window-close">×</button>
     </div>
-    <div class="maple-window-body">
+    <div class="maple-window-body" style="max-height: calc(100vh - 230px); overflow-y: auto;">
       <div class="inven-tabs">
         <button class="inven-tab active" data-tab="use">소비</button>
         <button class="inven-tab" data-tab="equip">장비</button>
@@ -254,6 +254,7 @@
         <span>보유 메소:</span>
         <span id="inven-meso-amount">100</span>
       </div>
+      <div id="inven-enhancement-panel" style="margin-top: 10px; padding-top: 8px; border-top: 2px solid #bfa878;"></div>
     </div>
   </div>
 

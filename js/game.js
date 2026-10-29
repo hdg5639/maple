@@ -6,7 +6,7 @@ class Game {
     this.ctx = this.canvas.getContext('2d');
 
     this.map = new GameMap('henesys_hhg');
-    this.player = new Player(400, 1318);
+    this.player = new Player(this.map.defaultSpawn.x, this.map.defaultSpawn.y);
     this.monsters = [];
     this.drops = [];
     this.projectiles = [];
@@ -49,6 +49,8 @@ class Game {
     this.initInputs();
     this.initMonsters();
     this.loadProgress();
+    const initial = this.map.resolvePosition(this.player.x, this.player.y);
+    Object.assign(this.player, initial, {onGround:true, currentFoothold:this.map.findSpawnFoothold(initial.x, initial.y)});
     this.ui.updateQuickslotsForJob(this.player.job);
 
     requestAnimationFrame((t) => this.loop(t));
@@ -56,6 +58,8 @@ class Game {
   }
 
   initCanvasSize() {
+    const overlay = document.getElementById('top-bar-overlay');
+    const positionOverlay = () => document.documentElement.style.setProperty('--game-overlay-bottom', `${(overlay?.offsetHeight || 26) + 16}px`);
     const resize = () => {
       const container = document.getElementById('canvas-container');
       if (container) {
@@ -64,10 +68,12 @@ class Game {
         this.camera.width = this.canvas.width;
         this.camera.height = this.canvas.height;
       }
+      positionOverlay();
     };
     window.addEventListener('resize', resize);
     window.addEventListener('load', resize);
     resize();
+    if (overlay && typeof ResizeObserver !== 'undefined') new ResizeObserver(positionOverlay).observe(overlay);
   }
 
   isTextInput(target) {
@@ -340,6 +346,7 @@ class Game {
   // --- MULTI-MAP TRAVEL ENGINE ---
   changeMap(mapKey, spawnX = null, spawnY = null) {
     this.map.loadMap(mapKey);
+    document.getElementById('game-container')?.classList.toggle('boss-map', this.map.isBossMap);
 
     this.player.x = spawnX !== null ? spawnX : this.map.defaultSpawn.x;
     this.player.y = spawnY !== null ? spawnY : this.map.defaultSpawn.y;
@@ -356,7 +363,10 @@ class Game {
     this.resetInputs();
 
     // Immediate Foothold Grounding (ensures player never falls into void on warp)
-    const groundFh = this.map.findGroundFootholdAt(this.player.x);
+    const arrival = this.map.resolvePosition(this.player.x, this.player.y);
+    this.player.x = arrival.x;
+    this.player.y = arrival.y;
+    const groundFh = this.map.findSpawnFoothold(arrival.x, arrival.y);
     if (groundFh) {
       this.player.currentFoothold = groundFh;
       this.player.y = groundFh.getYAtX(this.player.x);
@@ -377,10 +387,14 @@ class Game {
     this.damageDigits = [];
     this.skillEffects = [];
     this.boss = null;
+    this.spawnTimer = 0;
 
     // Rebuild Auto-Hunt Topological Graph
     if (this.autoHunt) {
       this.autoHunt.graph = new FootholdGraph(this.map);
+      this.autoHunt.currentTarget = null;
+      this.autoHunt.commandQueue = [];
+      this.autoHunt.stuckTimer = 0;
     }
 
     if (this.map.isBossMap || mapKey === 'zakum_altar') {
@@ -396,180 +410,50 @@ class Game {
     this.spawnItemText(this.player.x, this.player.y - 45, `★ ${this.map.name} 도착! ★`);
     this.ui.addChatMessage('시스템', `[맵 이동] ${this.map.name} 에 입장하였습니다.`, 'system');
     this.ui.addLootLog(`[맵 이동] ${this.map.name}`, 'item');
+    this.saveProgress();
+  }
+
+  createMapMonster(site) {
+    const point = this.map.resolvePosition(site.x, site.y);
+    const fh = this.map.findSpawnFoothold(point.x, point.y);
+    if (!fh || this.map.npcs.some(n => Math.hypot(n.x-point.x,n.y-point.y)<100) ||
+        this.map.portals.some(p => Math.hypot(p.x-point.x,p.y-point.y)<100) ||
+        Math.hypot(this.map.defaultSpawn.x-point.x,this.map.defaultSpawn.y-point.y)<100 ||
+        this.monsters.some(m => m.isAlive() && Math.hypot(m.x-point.x,m.y-point.y)<40)) return null;
+    const monster = new Monster(site.type, point.x, point.y);
+    Object.assign(monster, {onGround:true, currentFoothold:fh, spawnSite:site});
+    this.monsters.push(monster);
+    return monster;
   }
 
   initMonsters() {
     this.monsters = [];
-    const key = this.map.currentKey;
-
-    if (key === 'zakum_altar') {
-      this.spawnZakumBoss();
-      return;
-    }
-
-    if (key === 'ant_tunnel') {
-      // Ant Tunnel: Dungeon depth spawns (Y >= 1000)
-      const antSpawns = [
-        { type: 'zombie_mushroom', x: 300, y: 1074 },
-        { type: 'zombie_mushroom', x: 570, y: 1005 },
-        { type: 'green_mushroom', x: 880, y: 1044 },
-        { type: 'zombie_mushroom', x: 1060, y: 1009 },
-        { type: 'green_mushroom', x: 2950, y: 1076 },
-        { type: 'zombie_mushroom', x: 1450, y: 1940 },
-        { type: 'green_mushroom', x: 1720, y: 1991 },
-        { type: 'zombie_mushroom', x: 2100, y: 1784 },
-        { type: 'zombie_mushroom', x: 2470, y: 1957 },
-        { type: 'green_mushroom', x: 2660, y: 2156 },
-        { type: 'zombie_mushroom', x: 2120, y: 2184 }
-      ];
-      antSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
-      return;
-    }
-
-    if (key === 'ellinia') {
-      // Ellinia: Giant tree platforms
-      const elliniaSpawns = [
-        // Ground floor
-        { type: 'slime', x: 600, y: 4480 },
-        { type: 'slime', x: 1000, y: 4480 },
-        { type: 'green_mushroom', x: 1900, y: 4480 },
-        { type: 'slime', x: 2300, y: 4480 },
-        // Tree branch platforms
-        { type: 'green_mushroom', x: 675, y: 4433 },
-        { type: 'slime', x: 1670, y: 4369 },
-        { type: 'green_mushroom', x: 2100, y: 4263 },
-        { type: 'slime', x: 1250, y: 4306 },
-        { type: 'green_mushroom', x: 2140, y: 4301 }
-      ];
-      elliniaSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
-      return;
-    }
-
-    if (key === 'henesys_town') {
-      // Peaceful Town: No aggressive mobs in central town! 3 beginner snails on far outskirts only
-      const townSpawns = [
-        { type: 'snail', x: 600, y: 880 },
-        { type: 'blue_snail', x: 5400, y: 880 },
-        { type: 'snail', x: 6100, y: 880 }
-      ];
-      townSpawns.forEach(sp => this.monsters.push(new Monster(sp.type, sp.x, sp.y)));
-      return;
-    }
-
-    // Default Henesys Hunting Ground 1 (21 Authentically Placed Monsters Across 4 Tiers)
-    const spawnList = [
-      // Ground Level (Y = 1320, span 0..2238) - Snails, Slimes, Ribbon Pigs
-      { type: 'snail', x: 250, y: 1320 },
-      { type: 'snail', x: 500, y: 1320 },
-      { type: 'blue_snail', x: 750, y: 1320 },
-      { type: 'blue_snail', x: 1000, y: 1320 },
-      { type: 'slime', x: 1250, y: 1320 },
-      { type: 'slime', x: 1600, y: 1320 },
-      { type: 'ribbon_pig', x: 1850, y: 1320 },
-      { type: 'ribbon_pig', x: 2100, y: 1320 },
-
-      // Tier 1 Major Platform (Y = 1020, span 360..1878) - Slimes, Red Snails, Ribbon Pigs
-      { type: 'snail', x: 450, y: 1020 },
-      { type: 'blue_snail', x: 750, y: 1020 },
-      { type: 'red_snail', x: 1100, y: 1020 },
-      { type: 'slime', x: 1450, y: 1020 },
-      { type: 'red_snail', x: 1750, y: 1020 },
-
-      // Tier 2 Major Platform (Y = 780, span 450..1788) - Slimes, Orange Mushrooms, Ribbon Pigs
-      { type: 'slime', x: 550, y: 780 },
-      { type: 'orange_mushroom', x: 950, y: 780 },
-      { type: 'orange_mushroom', x: 1350, y: 780 },
-      { type: 'ribbon_pig', x: 1650, y: 780 },
-
-      // Tier 3 Top Platform (Y = 540, span 540..1698) - Green Mushrooms, Zombie Mushrooms
-      { type: 'orange_mushroom', x: 650, y: 540 },
-      { type: 'green_mushroom', x: 1000, y: 540 },
-      { type: 'green_mushroom', x: 1350, y: 540 },
-      { type: 'zombie_mushroom', x: 1600, y: 540 }
-    ];
-
-    spawnList.forEach(sp => {
-      this.monsters.push(new Monster(sp.type, sp.x, sp.y));
-    });
+    this.maxMonsters = this.map.maxMonsters;
+    if (this.map.isBossMap) { this.spawnZakumBoss(); return; }
+    if (this.map.isTown) return;
+    for (const site of this.map.mobSpawns) this.createMapMonster(site);
   }
 
   spawnMonster() {
-    if (this.map.isBossMap || this.map.currentKey === 'zakum_altar') return;
-
-    if (this.map.currentKey === 'henesys_town') {
-      const townMobs = this.monsters.filter(m => m.isAlive());
-      if (townMobs.length >= 3) return;
-    } else {
-      if (this.monsters.filter(m => m.isAlive()).length >= this.maxMonsters) return;
-    }
-
-    if (!this.map.footholds || this.map.footholds.length === 0) return;
-
-    // Filter candidate footholds:
-    // 1. Substantial platform (length >= 75)
-    // 2. Playable area (Y >= 150, excluding phantom sky footholds)
-    // 3. For Ant Tunnel: only inside cave depths (Y >= 950, excluding safe entrance)
-    const validFhs = this.map.footholds.filter(fh => {
-      if (fh.isProp) return false;
-      const w = Math.abs(fh.x2 - fh.x1);
-      const avgY = (fh.y1 + fh.y2) / 2;
-      if (w < 75) return false;
-      if (avgY < 150) return false;
-      if (this.map.currentKey === 'ant_tunnel' && avgY < 950) return false;
-      return true;
-    });
-
-    if (validFhs.length === 0) return;
-
-    const fh = validFhs[Math.floor(Math.random() * validFhs.length)];
-    const minX = Math.min(fh.x1, fh.x2) + 25;
-    const maxX = Math.max(fh.x1, fh.x2) - 25;
-    if (maxX <= minX) return;
-
-    const x = minX + Math.random() * (maxX - minX);
-
-    // Prevent spawning within 100px of any NPC (prevents taxi/Stan clutter!)
-    if (this.map.npcs) {
-      for (const npc of this.map.npcs) {
-        if (Math.abs(x - npc.x) < 100 && Math.abs(fh.getYAtX(x) - npc.y) < 50) return;
-      }
-    }
-    const y = fh.getYAtX(x);
-    if (!y || y <= 0) return;
-
-    let type = 'snail';
-    if (this.map.currentKey === 'henesys_hhg') {
-      if (y >= 1200) {
-        const r = Math.random();
-        type = r < 0.3 ? 'snail' : (r < 0.6 ? 'blue_snail' : (r < 0.85 ? 'red_snail' : 'slime'));
-      } else if (y >= 700) {
-        const r = Math.random();
-        type = r < 0.35 ? 'slime' : (r < 0.7 ? 'orange_mushroom' : 'ribbon_pig');
-      } else {
-        const r = Math.random();
-        type = r < 0.6 ? 'green_mushroom' : 'zombie_mushroom';
-      }
-    } else if (this.map.currentKey === 'ant_tunnel') {
-      const r = Math.random();
-      type = r < 0.65 ? 'zombie_mushroom' : 'green_mushroom';
-    } else if (this.map.currentKey === 'ellinia') {
-      const r = Math.random();
-      type = r < 0.6 ? 'slime' : 'green_mushroom';
-    } else if (this.map.currentKey === 'henesys_town') {
-      type = Math.random() < 0.6 ? 'snail' : 'blue_snail';
-    }
-
-    this.monsters.push(new Monster(type, x, y));
+    if (this.map.isTown || this.map.isBossMap || !this.map.mobSpawns.length ||
+        this.monsters.filter(m => m.isAlive() || m.isDying()).length >= this.map.maxMonsters) return;
+    const sites = [...this.map.mobSpawns].sort(() => Math.random() - 0.5);
+    for (const site of sites) if (this.createMapMonster(site)) break;
   }
 
   spawnBoss() {
-    if (this.boss && this.boss.isAlive()) {
+    if (this.boss && (this.boss.isAlive() || this.boss.isDying())) {
       this.spawnItemText(this.player.x, this.player.y - 45, '이미 머쉬맘이 소환되어 있습니다!');
       return;
     }
 
+    const site = this.map.bossSpawn;
+    if (!site || site.type !== 'mushmom') return;
+    const point = this.map.resolvePosition(site.x, site.y);
     window.audio.playBossRoar();
-    this.boss = new Monster('mushmom', 1500, 542);
+    this.boss = new Monster('mushmom', point.x, point.y);
+    this.boss.onGround = true;
+    this.boss.currentFoothold = this.map.findSpawnFoothold(point.x, point.y);
     this.monsters.push(this.boss);
     this.spawnItemText(this.player.x, this.player.y - 45, '★ [BOSS] 거대 보스 머쉬맘 출현! ★');
 
@@ -580,7 +464,11 @@ class Game {
   }
 
   spawnZakumBoss() {
-    this.boss = new ZakumBoss(600, 360);
+    if (this.boss && (this.boss.isAlive() || this.boss.isDying())) return;
+    const site = this.map.bossSpawn || {x:600,y:537};
+    const ground = this.map.resolvePosition(site.x, site.y);
+    this.boss = new ZakumBoss(ground.x, ground.y);
+    this.boss.setGroundPosition(ground.x, ground.y);
     this.monsters = [this.boss];
     window.audio.playBossRoar();
     this.spawnItemText(this.player.x, this.player.y - 45, '👑 ★ 고대 거신 자쿰이 소환되었습니다! ★ 👑');
@@ -616,6 +504,14 @@ class Game {
         } else if (drop.type === 'blue_potion') {
           this.player.addItem('blue_potion', '파란 포션', drop.amount, this);
           this.ui.addLootLog(`아이템을 얻었습니다 (파란 포션 x${drop.amount})`, 'item');
+        } else if (drop.type === 'equip') {
+          if (this.player.inventory.equip.length >= 24) continue;
+          const zakum = drop.name.includes('자쿰');
+          this.player.inventory.equip.push({id:zakum ? 'zakum_helm' : 'pan_lid',
+            name:zakum ? '자쿰의 투구' : '냄비 뚜껑', type:zakum ? 'hat' : 'shield',
+            equipped:false, def:zakum ? 150 : 10, upgradeSlots:zakum ? 10 : 7,
+            str:zakum ? 15 : 0, dex:zakum ? 15 : 0, int:zakum ? 15 : 0, luk:zakum ? 15 : 0});
+          this.ui.addLootLog(`장비를 얻었습니다 (${drop.name})`, 'item');
         } else {
           this.player.addItem(drop.type, drop.name, drop.amount, this);
           this.ui.addLootLog(`아이템을 얻었습니다 (${drop.name})`, 'item');
@@ -623,6 +519,10 @@ class Game {
         this.drops.splice(i, 1);
         picked = true;
       }
+    }
+    if (picked) {
+      this.ui.renderInventoryTab('equip');
+      this.saveProgress();
     }
     return picked;
   }
@@ -749,7 +649,6 @@ class Game {
         m.update(dt, this.player, this.map, this);
         if (m.hp <= 0 && !m.isDying()) {
           m.startDying(this.player, this);
-          this.autoHunt.recordKill(m.exp, 20);
         }
       } else if (m.isDying()) {
         m.update(dt, this.player, this.map, this);
@@ -822,7 +721,7 @@ class Game {
     this.camera.width = this.canvas.width;
     this.camera.height = this.canvas.height;
     const targetX = this.player.x - this.camera.width / 2;
-    const targetY = this.player.y - this.camera.height * 0.65;
+    const targetY = this.player.y - this.camera.height * (this.map.isBossMap ? 0.88 : 0.65);
     this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, targetX));
     this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, targetY));
   }
@@ -833,7 +732,7 @@ class Game {
     }
 
     const targetX = this.player.x - this.camera.width / 2;
-    const targetY = this.player.y - this.camera.height * 0.65;
+    const targetY = this.player.y - this.camera.height * (this.map.isBossMap ? 0.88 : 0.65);
 
     this.camera.x += (targetX - this.camera.x) * 0.12;
     this.camera.y += (targetY - this.camera.y) * 0.12;
@@ -907,7 +806,7 @@ class Game {
     this.drops.forEach(d => window.sprites.drawDrop(ctx, d));
 
     // 4. Monsters & Zakum Boss
-    if (this.boss && typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss && this.boss.isAlive()) {
+    if (this.boss && typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss && (this.boss.isAlive() || this.boss.isDying())) {
       window.sprites.drawZakumBoss(ctx, this.boss);
     }
     this.monsters.forEach(m => {
@@ -1015,13 +914,13 @@ class Game {
     ctx.textAlign = 'left';
     ctx.fillText(this.map.name, mmX + 8, mmY + 14);
 
-    const mapImg = window.sprites.minimapImg;
+    const mapImg = this.map.minimapCanvas;
     const innerX = mmX + 6;
     const innerY = mmY + 20;
     const innerW = mmW - 12;
     const innerH = mmH - 26;
 
-    if (mapImg && mapImg.complete && mapImg.naturalWidth > 0) {
+    if (mapImg && mapImg.width > 0) {
       ctx.drawImage(mapImg, innerX, innerY, innerW, innerH);
     } else {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
@@ -1110,31 +1009,39 @@ class Game {
     }
   }
 
+  restorePlayerData(data) {
+    const p = this.player;
+    p.name = data.name ?? p.name;
+    p.job = data.job ?? p.job;
+    p.level = Math.max(1, Math.min(Player.MAX_LEVEL, data.level ?? p.level));
+    for (const field of ['exp','str','dex','int','luk','ap','sp','fame','meso']) {
+      if (Number.isFinite(data[field]) && data[field] >= 0) p[field] = data[field];
+    }
+    p.maxExp = Player.expRequiredForLevel(p.level);
+    if (data.inventory?.equip && data.inventory?.use && data.inventory?.etc) p.inventory = data.inventory;
+    p.initSkillsForJob(p.job);
+    for (const [id, saved] of Object.entries(data.skills || {})) {
+      if (p.skills[id] && Number.isFinite(saved.level)) p.skills[id].level = Math.max(0, Math.min(p.skills[id].maxLevel, saved.level));
+    }
+    p.syncSkillCosts();
+    if (Array.isArray(data.quickslots) && data.quickslots.length) p.quickslotBindings = data.quickslots;
+    const weapon = p.inventory.equip.find(eq => eq.equipped && eq.type === 'weapon');
+    if (weapon?.weaponType) p.weaponType = weapon.weaponType;
+    p.calcDerivedStats();
+    p.hp = Math.max(0, Math.min(p.maxHp, data.hp ?? p.maxHp));
+    p.mp = Math.max(0, Math.min(p.maxMp, data.mp ?? p.maxMp));
+    if (data.currentMap && MAP_DATABASE[data.currentMap]) this.changeMap(data.currentMap, data.x ?? null, data.y ?? null);
+    // A saved death has no live timeout after reload; resume through the normal safe-town revival.
+    if (p.hp === 0) p.revive(this);
+    this.ui.updateQuickslotsForJob(p.job);
+    this.ui.updateHUD();
+  }
+
   loadProgress() {
     try {
       if (typeof StorageManager !== 'undefined') {
         const data = StorageManager.load();
-        if (data) {
-          this.player.level = data.level || 1;
-          this.player.job = data.job || '초보자';
-          this.player.exp = data.exp || 0;
-          this.player.maxExp = data.maxExp || 15;
-          this.player.str = data.str || 12;
-          this.player.dex = data.dex || 8;
-          this.player.int = data.int || 4;
-          this.player.luk = data.luk || 4;
-          this.player.ap = data.ap || 5;
-          this.player.sp = data.sp || 3;
-          this.player.fame = data.fame || 0;
-          this.player.meso = data.meso !== undefined ? data.meso : 500;
-          if (data.inventory) this.player.inventory = data.inventory;
-          if (data.skills) this.player.skills = data.skills;
-
-          this.player.calcDerivedStats();
-          this.player.hp = Math.min(this.player.maxHp, data.hp || this.player.maxHp);
-          this.player.mp = Math.min(this.player.maxMp, data.mp || this.player.maxMp);
-          this.ui.updateQuickslotsForJob(this.player.job);
-        }
+        if (data) this.restorePlayerData(data);
       }
     } catch (e) {
       console.warn('Load failed:', e);
@@ -1142,7 +1049,7 @@ class Game {
   }
 
   resetProgress() {
-    localStorage.removeItem('openmaple_save');
+    StorageManager.clear();
     window.location.reload();
   }
 }

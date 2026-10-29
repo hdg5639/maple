@@ -160,6 +160,7 @@ class AutoHuntManager {
 
     this.currentTarget = null;
     this.targetType = null;
+    this.bossTargetPlan = null;
     this.commandQueue = []; // Array of actionable waypoint commands
 
     // Anti-Stuck Tracking (0.5s with displacement < 10px)
@@ -231,6 +232,9 @@ class AutoHuntManager {
     if (!this.currentTarget || !this.isTargetValid(this.currentTarget)) {
       this.selectTarget(player);
       this.buildWaypointPath(player);
+    } else if (this.isMultipartBoss(this.currentTarget) && !this.getBossTargetBox()) {
+      this.bossTargetPlan = this.planBossPart(player, this.currentTarget);
+      this.buildWaypointPath(player);
     }
 
     // 4. Execute Waypoint Navigation Queue
@@ -249,6 +253,19 @@ class AutoHuntManager {
   }
 
   checkAntiStuck(dt, player) {
+    if (!this.currentTarget || !this.isTargetValid(this.currentTarget) || !this.commandQueue.length) {
+      this.stuckTimer = 0;
+      this.lastRecordedX = player.x;
+      this.lastRecordedY = player.y;
+      return;
+    }
+    if (this.bossTargetPlan && !player.onLadder && player.onGround &&
+        this.canAttackBossPart(player, this.getBossTargetBox())) {
+      this.stuckTimer = 0;
+      this.lastRecordedX = player.x;
+      this.lastRecordedY = player.y;
+      return; // Holding a firing position is productive, not a navigation failure.
+    }
     const dist = Math.hypot(player.x - this.lastRecordedX, player.y - this.lastRecordedY);
     if (dist < 10) {
       this.stuckTimer += dt;
@@ -270,7 +287,7 @@ class AutoHuntManager {
 
   isTargetValid(target) {
     if (this.targetType === 'monster') {
-      return target && target.isAlive();
+      return target && target.isAlive() && (target === this.game.boss || this.game.monsters.includes(target));
     } else if (this.targetType === 'drop') {
       return this.game.drops.includes(target) && target.life > 0;
     }
@@ -278,6 +295,7 @@ class AutoHuntManager {
   }
 
   selectTarget(player) {
+    this.bossTargetPlan = null;
     // A. Priority: Nearby Drops
     if (this.config.autoLoot && this.game.drops.length > 0) {
       let closestDrop = null;
@@ -298,31 +316,99 @@ class AutoHuntManager {
 
     // B. Alive Monster with distance scoring
     let bestMonster = null;
+    let bestBossPlan = null;
     let minScore = Infinity;
 
-    for (const m of this.game.monsters) {
+    const monsters = [...new Set([this.game.boss, ...this.game.monsters])].filter(Boolean);
+    for (const m of monsters) {
       if (!m.isAlive()) continue;
+      const bossPlan = this.isMultipartBoss(m) ? this.planBossPart(player, m) : null;
+      if (this.isMultipartBoss(m) && !bossPlan) continue;
       const dx = m.x - player.x;
       const dy = m.y - player.y;
       const dist = Math.hypot(dx, dy);
 
       if (dist > this.config.searchRadius) continue;
       let score = dist + Math.abs(dy) * 2.0;
+      if (bossPlan) score = bossPlan.cost;
       if (m.type === 'mushmom') score -= 300;
 
       if (score < minScore) {
         minScore = score;
         bestMonster = m;
+        bestBossPlan = bossPlan;
       }
     }
 
     this.currentTarget = bestMonster;
     this.targetType = bestMonster ? 'monster' : null;
+    this.bossTargetPlan = bestBossPlan;
+  }
+
+  isMultipartBoss(target) {
+    return Boolean(target && Array.isArray(target.arms) && typeof target.getPartGeometry === 'function');
+  }
+
+  getAttackRange(player) {
+    return player.job === '궁수' ? 240 : (player.job === '도적' ? 210 : (player.job === '마법사' ? 160 : 56));
+  }
+
+  getBossTargetBox() {
+    const plan = this.bossTargetPlan;
+    if (!plan || this.currentTarget !== plan.boss || !plan.boss.isAlive()) return null;
+    return plan.boss.getHitBoxes().find(box => box.type === plan.type && box.target === plan.part) || null;
+  }
+
+  canAttackBossPart(player, box) {
+    if (!box) return false;
+    const range = this.getAttackRange(player);
+    const ranged = player.job === '궁수' || player.job === '도적';
+    const top = player.y - (ranged ? 28 : 48);
+    const bottom = player.y + (ranged ? -4 : 8);
+    return player.x + range > box.x && player.x - range < box.x + box.width &&
+      top < box.y + box.height && bottom > box.y;
+  }
+
+  planBossPart(player, boss) {
+    const start = this.findCurrentFoothold(player);
+    if (!start || !this.graph.nodes.has(start.id)) return null;
+    const reachable = new Map([[start.id, 0]]);
+    const queue = [{id: start.id, cost: 0}];
+    while (queue.length) {
+      queue.sort((a, b) => a.cost - b.cost);
+      const node = queue.shift();
+      if (node.cost !== reachable.get(node.id)) continue;
+      for (const edge of this.graph.edges.get(node.id) || []) {
+        const cost = node.cost + edge.cost;
+        if (cost < (reachable.get(edge.targetId) ?? Infinity)) {
+          reachable.set(edge.targetId, cost);
+          queue.push({id: edge.targetId, cost});
+        }
+      }
+    }
+    let best = null;
+    const range = this.getAttackRange(player) - 4;
+    for (const box of boss.getHitBoxes()) {
+      for (const [id, foothold] of this.graph.nodes) {
+        if (!reachable.has(id)) continue;
+        const left = Math.max(foothold.x1 + 1, box.x - range);
+        const right = Math.min(foothold.x2 - 1, box.x + box.width + range);
+        if (right < left) continue;
+        const x = Math.max(left, Math.min(right, player.x));
+        const y = foothold.getYAtX(x);
+        if (!this.canAttackBossPart({...player, x, y}, box)) continue;
+        const cost = Math.hypot(x - player.x, y - player.y) + reachable.get(id) * 3;
+        if (!best || cost < best.cost) best = {boss, part: box.target, type: box.type, foothold,
+          x, y, cost};
+      }
+    }
+    return best;
   }
 
   findCurrentFoothold(entity) {
-    if (entity.currentFoothold) return entity.currentFoothold;
+    if (entity.currentFoothold && this.graph.nodes.has(entity.currentFoothold.id)) return entity.currentFoothold;
     for (const fh of this.game.map.footholds) {
+      if (fh.isProp || fh.width === 0) continue;
       if (entity.x >= fh.x1 && entity.x <= fh.x2) {
         const sy = fh.getYAtX(entity.x);
         if (Math.abs(sy - entity.y) <= 18) {
@@ -338,7 +424,8 @@ class AutoHuntManager {
     if (!this.currentTarget) return;
 
     const startFh = this.findCurrentFoothold(player);
-    const targetFh = this.findCurrentFoothold(this.currentTarget);
+    const targetFh = this.isMultipartBoss(this.currentTarget)
+      ? this.bossTargetPlan?.foothold : this.findCurrentFoothold(this.currentTarget);
 
     if (!startFh || !targetFh) return;
 
@@ -435,6 +522,28 @@ class AutoHuntManager {
     }
 
     if (cmd.action === 'NAVIGATE_TO_TARGET') {
+      if (this.isMultipartBoss(this.currentTarget)) {
+        const box = this.getBossTargetBox();
+        const plan = this.bossTargetPlan;
+        if (!box || !plan) {
+          this.commandQueue = [];
+          return;
+        }
+        if (!player.onLadder && player.onGround && this.canAttackBossPart(player, box)) {
+          player.stopHorizontal();
+          player.facing = box.x + box.width / 2 >= player.x ? 'right' : 'left';
+          this.triggerAttack(player);
+          return;
+        }
+        const dx = plan.x - player.x;
+        if (dx > 8) player.moveRight();
+        else if (dx < -8) player.moveLeft();
+        else {
+          player.stopHorizontal();
+          if (player.onGround && player.currentFoothold?.id !== plan.foothold.id) this.buildWaypointPath(player);
+        }
+        return;
+      }
       const dx = tx - player.x;
       const dy = ty - player.y;
 
@@ -469,45 +578,20 @@ class AutoHuntManager {
   }
 
   triggerAttack(player) {
-    if (this.config.useSkills) {
-      if (player.job === '전사') {
-        if (player.skills.slash_blast?.level > 0 && player.mp >= 10 && player.hp > 25) {
-          player.useSkill('slash_blast', this.game);
-        } else if (player.skills.power_strike?.level > 0 && player.mp >= 6) {
-          player.useSkill('power_strike', this.game);
-        } else {
-          player.normalAttack(this.game);
-        }
-      } else if (player.job === '마법사') {
-        if (player.skills.magic_claw?.level > 0 && player.mp >= 12) {
-          player.useSkill('magic_claw', this.game);
-        } else if (player.skills.energy_bolt?.level > 0 && player.mp >= 6) {
-          player.useSkill('energy_bolt', this.game);
-        } else {
-          player.normalAttack(this.game);
-        }
-      } else if (player.job === '궁수') {
-        if (player.skills.double_shot?.level > 0 && player.mp >= 10) {
-          player.useSkill('double_shot', this.game);
-        } else if (player.skills.arrow_blow?.level > 0 && player.mp >= 6) {
-          player.useSkill('arrow_blow', this.game);
-        } else {
-          player.normalAttack(this.game);
-        }
-      } else if (player.job === '도적') {
-        if (player.skills.lucky_seven?.level > 0 && player.mp >= 8) {
-          player.useSkill('lucky_seven', this.game);
-        } else if (player.skills.double_stab?.level > 0 && player.mp >= 6) {
-          player.useSkill('double_stab', this.game);
-        } else {
-          player.normalAttack(this.game);
-        }
-      } else {
-        player.normalAttack(this.game);
-      }
-    } else {
-      player.normalAttack(this.game);
+    if (!this.config.useSkills) return player.normalAttack(this.game);
+    const preferences = {
+      '전사': ['slash_blast', 'power_strike'],
+      '마법사': ['magic_claw', 'energy_bolt'],
+      '궁수': ['double_shot', 'arrow_blow'],
+      '도적': player.weaponType === 'dagger' ? ['double_stab', 'lucky_seven'] : ['lucky_seven', 'double_stab']
+    };
+    for (const id of preferences[player.job] || []) {
+      if (!player.skills[id]?.level) continue;
+      if (id === 'slash_blast' && player.hp <= 25) continue;
+      const skill = SkillRegistry.get(id);
+      if (skill?.canCast(player) && player.useSkill(id, this.game)) return true;
     }
+    return player.primaryAttack(this.game);
   }
 
   drawTargetIndicator(ctx) {
@@ -515,7 +599,8 @@ class AutoHuntManager {
 
     ctx.save();
     const t = this.currentTarget;
-    ctx.translate(t.x, t.y - (t.height ? t.height / 2 : 10));
+    const box = this.getBossTargetBox();
+    ctx.translate(box ? box.x + box.width / 2 : t.x, box ? box.y + box.height / 2 : t.y - (t.height ? t.height / 2 : 10));
     ctx.strokeStyle = '#ef4444';
     ctx.lineWidth = 2.5;
 

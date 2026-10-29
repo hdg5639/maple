@@ -1,10 +1,28 @@
 // js/skills.js - Skill Strategy Pattern & SkillRegistry adhering to SOLID (SRP & OCP)
 
+const SKILL_AIM_PROFILES = {
+  three_snails: {range: 420, verticalRange: 48},
+  power_strike: {range: 100, verticalRange: 48},
+  slash_blast: {range: 90, verticalRange: 55},
+  brandish: {range: 150, verticalRange: 55},
+  energy_bolt: {range: 440, verticalRange: 48},
+  magic_claw: {range: 150, verticalRange: 55},
+  thunderbolt: {range: 260, verticalRange: 80},
+  arrow_blow: {range: 520, verticalRange: 48},
+  double_shot: {range: 520, verticalRange: 48},
+  arrow_bomb: {range: 520, verticalRange: 48},
+  hurricane: {range: 580, verticalRange: 48},
+  lucky_seven: {range: 480, verticalRange: 48},
+  double_stab: {range: 95, verticalRange: 48},
+  avenger: {range: 520, verticalRange: 48}
+};
+
 class Skill {
   constructor(config) {
     this.id = config.id;
     this.name = config.name;
-    this.mpCost = config.mpCost || 0;
+    this.baseMpCost = config.mpCost || 0;
+    this.mpCost = this.baseMpCost ? Math.max(1, Math.ceil(this.baseMpCost * 0.25)) : 0;
     this.hpCost = config.hpCost || 0;
     this.dmgMult = config.dmgMult || 1.0;
     this.icon = config.icon || '⚔️';
@@ -12,30 +30,45 @@ class Skill {
     this.isBuffOrMobility = config.isBuffOrMobility || false;
     this.maxLevel = config.maxLevel || 20;
     this.handler = config.handler;
+    this.aimProfile = SKILL_AIM_PROFILES[this.id];
   }
 
   canCast(user) {
     if (user.hp <= 0 || user.onLadder) return false;
     if (this.id === 'flash_jump' && user.weakenedTimer > 0) return false;
-    const isPrimary = Boolean(user.getPrimarySkillId && user.getPrimarySkillId() === this.id);
-    if (!isPrimary && this.mpCost > 0 && user.mp < this.mpCost) return false;
+    if (user.skillCooldowns?.[this.id] > 0) return false;
+    if (user.mp < this.getManaCost(user)) return false;
     if (this.hpCost > 0 && user.hp <= this.hpCost) return false;
     if (!this.isBuffOrMobility && user.attackTimer > 0) return false;
     return true;
   }
 
   consumeCosts(user) {
-    const isPrimary = Boolean(user.getPrimarySkillId && user.getPrimarySkillId() === this.id);
-    if (!isPrimary && this.mpCost > 0) {
-      user.mp = Math.max(0, user.mp - this.mpCost);
-    }
+    user.mp = Math.max(0, user.mp - this.getManaCost(user));
     if (this.hpCost > 0) user.hp -= this.hpCost;
+  }
+
+  getManaCost(user) {
+    return user.getPrimarySkillId?.() === this.id ? 0 : this.mpCost;
   }
 
   execute(user, game, skillInstance) {
     if (!this.canCast(user)) return false;
+    user.attackAim = this.aimProfile && typeof CombatSystem !== 'undefined'
+      ? CombatSystem.prepareAutoAim(user, game, this.aimProfile) : null;
     this.consumeCosts(user);
-    return this.handler(user, game, skillInstance, this);
+    const result = this.handler(user, game, skillInstance, this);
+    if (result !== false) {
+      const speed = user.getAttackSpeedFactor?.() || 1;
+      if (!this.isBuffOrMobility) {
+        user.attackTimer = Math.max(0.1, user.attackTimer / speed);
+        user.attackAnimationDuration = user.attackTimer;
+      }
+      if (!user.skillCooldowns) user.skillCooldowns = {};
+      user.skillCooldowns[this.id] = this.isBuffOrMobility ? Math.max(0.12, 0.3 / speed) : user.attackTimer;
+      if (skillInstance) skillInstance.mpCost = this.getManaCost(user);
+    }
+    return result;
   }
 }
 
@@ -58,6 +91,31 @@ class SkillRegistry {
     const playerSkillData = user.skills ? user.skills[skillId] : null;
     return skill.execute(user, game, playerSkillData);
   }
+
+  static schedule(user, game, delayMs, callback) {
+    const map = game.map;
+    const mapKey = map?.currentKey;
+    const monsters = game.monsters;
+    const run = () => {
+      if (user.hp <= 0 || user.onLadder || game.map !== map || game.monsters !== monsters || game.map?.currentKey !== mapKey) return;
+      callback();
+    };
+    if (delayMs === 0) run();
+    else setTimeout(run, delayMs / (user.getAttackSpeedFactor?.() || 1));
+  }
+
+  static fireProjectile(user, game, options, aim = user.attackAim, facing = user.facing) {
+    const direction = facing === 'right' ? 1 : -1;
+    const x = user.x + direction * (options.offsetX ?? 16);
+    const y = user.y + (options.offsetY ?? -16);
+    const velocity = CombatSystem.projectileVelocity(user, game, aim, x, y, options.speed, facing);
+    const projectile = new Projectile(x, y, velocity.vx, velocity.vy + (options.spreadY || 0),
+      options.type, options.damage, options.isCrit, user);
+    projectile.life = Math.min(projectile.life, (options.range || 520) / options.speed);
+    if (options.starType) projectile.starType = options.starType;
+    game.projectiles.push(projectile);
+    return projectile;
+  }
 }
 
 // === Skill Implementations adhering to OCP ===
@@ -74,9 +132,9 @@ SkillRegistry.register({
   handler: (user, game, skillData, meta) => {
     user.attackTimer = user.attackDuration;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
     const shellDmg = 40 + (skillData?.level || 1) * 20;
-    game.projectiles.push(new Projectile(user.x + dirSign * 16, user.y - 14, dirSign * 480, 0, 'snail_shell', shellDmg, true, user));
+    SkillRegistry.fireProjectile(user, game, {type: 'snail_shell', speed: 480, range: 420,
+      offsetY: -14, damage: shellDmg, isCrit: true});
     return true;
   }
 });
@@ -262,9 +320,9 @@ SkillRegistry.register({
   handler: (user, game, skillData, meta) => {
     user.attackTimer = user.attackDuration;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
     const { damage, isCrit } = user.getDamage();
-    game.projectiles.push(new Projectile(user.x + dirSign * 16, user.y - 16, dirSign * 440, 0, 'energy_bolt', Math.floor(damage * 1.4), isCrit, user));
+    SkillRegistry.fireProjectile(user, game, {type: 'energy_bolt', speed: 440, range: 440,
+      damage: Math.floor(damage * 1.4), isCrit});
     return true;
   }
 });
@@ -410,9 +468,9 @@ SkillRegistry.register({
   handler: (user, game) => {
     user.attackTimer = user.attackDuration;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
     const { damage } = user.getDamage();
-    game.projectiles.push(new Projectile(user.x + dirSign * 16, user.y - 16, dirSign * 520, 0, 'arrow', Math.floor(damage * 1.8), true, user));
+    SkillRegistry.fireProjectile(user, game, {type: 'arrow', speed: 520, range: 520,
+      damage: Math.floor(damage * 1.8), isCrit: true});
     return true;
   }
 });
@@ -428,12 +486,13 @@ SkillRegistry.register({
   handler: (user, game) => {
     user.attackTimer = user.attackDuration * 1.2;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
+    const aim = user.attackAim, facing = user.facing;
     for (let s = 0; s < 2; s++) {
-      setTimeout(() => {
+      SkillRegistry.schedule(user, game, s * 140, () => {
         const { damage, isCrit } = user.getDamage();
-        game.projectiles.push(new Projectile(user.x + dirSign * 16, user.y - 16, dirSign * 500, 0, 'arrow', Math.floor(damage * 1.25), isCrit, user));
-      }, s * 140);
+        SkillRegistry.fireProjectile(user, game, {type: 'arrow', speed: 500, range: 520,
+          damage: Math.floor(damage * 1.25), isCrit}, aim, facing);
+      });
     }
     return true;
   }
@@ -487,9 +546,9 @@ SkillRegistry.register({
   handler: (user, game) => {
     user.attackTimer = user.attackDuration * 1.1;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
     const { damage } = user.getDamage();
-    game.projectiles.push(new Projectile(user.x + dirSign * 16, user.y - 16, dirSign * 520, 0, 'arrow_bomb', Math.floor(damage * 1.8), true, user));
+    SkillRegistry.fireProjectile(user, game, {type: 'arrow_bomb', speed: 520, range: 520,
+      damage: Math.floor(damage * 1.8), isCrit: true});
     return true;
   }
 });
@@ -505,12 +564,13 @@ SkillRegistry.register({
   handler: (user, game) => {
     user.attackTimer = user.attackDuration * 0.8;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
+    const aim = user.attackAim, facing = user.facing;
     for (let s = 0; s < 4; s++) {
-      setTimeout(() => {
+      SkillRegistry.schedule(user, game, s * 70, () => {
         const { damage, isCrit } = user.getDamage();
-        game.projectiles.push(new Projectile(user.x + dirSign * 18, user.y - 16 + (s * 4 - 6), dirSign * 580, 0, 'arrow', Math.floor(damage * 1.3), isCrit, user));
-      }, s * 70);
+        SkillRegistry.fireProjectile(user, game, {type: 'arrow', speed: 580, range: 580,
+          offsetX: 18, offsetY: -16 + (s * 4 - 6), damage: Math.floor(damage * 1.3), isCrit}, aim, facing);
+      });
     }
     return true;
   }
@@ -528,16 +588,16 @@ SkillRegistry.register({
   handler: (user, game) => {
     user.attackTimer = user.attackDuration * 1.1;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
+    const aim = user.attackAim, facing = user.facing;
     const activeStar = user.activeStar || 'steely';
     for (let s = 0; s < 2; s++) {
-      setTimeout(() => {
+      SkillRegistry.schedule(user, game, s * 100, () => {
         const { damage } = user.getDamage();
         const starDmg = Math.floor(damage * 1.7);
-        const proj = new Projectile(user.x + dirSign * 16, user.y - 16 + (s * 8 - 4), dirSign * 560, (s * 40 - 20), 'shuriken', starDmg, true, user);
-        proj.starType = activeStar;
-        game.projectiles.push(proj);
-      }, s * 100);
+        SkillRegistry.fireProjectile(user, game, {type: 'shuriken', speed: 560, range: 480,
+          offsetY: -16 + (s * 8 - 4), spreadY: s * 40 - 20, damage: starDmg, isCrit: true,
+          starType: activeStar}, aim, facing);
+      });
     }
     return true;
   }
@@ -631,12 +691,10 @@ SkillRegistry.register({
   handler: (user, game) => {
     user.attackTimer = user.attackDuration * 1.15;
     window.audio.playAttack();
-    const dirSign = user.facing === 'right' ? 1 : -1;
     const { damage } = user.getDamage();
     const activeStar = user.activeStar || 'steely';
-    const proj = new Projectile(user.x + dirSign * 20, user.y - 16, dirSign * 500, 0, 'avenger_star', Math.floor(damage * 1.9), true, user);
-    proj.starType = activeStar;
-    game.projectiles.push(proj);
+    SkillRegistry.fireProjectile(user, game, {type: 'avenger_star', speed: 500, range: 520,
+      offsetX: 20, damage: Math.floor(damage * 1.9), isCrit: true, starType: activeStar});
     return true;
   }
 });
