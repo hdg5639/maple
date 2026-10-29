@@ -88,7 +88,10 @@ class GameMap {
         Math.abs(f.y1 - 956) <= 6 || Math.abs(f.y1 - 1255) <= 6
       ));
       const type = isDecorativeProp ? 'prop' : (canDrop ? 'platform' : 'ground');
-      return new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, canDrop, type);
+      const foothold = new Foothold(f.id, f.x1, f.y1, f.x2, f.y2, canDrop, type);
+      foothold.sourceLayer = f.sourceLayer;
+      foothold.sourceGroup = f.sourceGroup;
+      return foothold;
     });
     // Ladders and Ropes
     this.ladders = (data.ladders || []).map(l => ({
@@ -113,22 +116,25 @@ class GameMap {
       }
     }
 
-    // Optional web raid towers: geometry and renderer share these exact footholds.
+    // The complete native render already contains six raid platforms. Never add
+    // overlapping scaffold collision/slabs; connect the actual authored surfaces.
+    this.raidPlatforms = [];
     if (key === 'zakum_altar') {
-      const floor = this.findSpawnFoothold(600, this.bossSpawn?.y ?? 537)?.getYAtX(600) ?? 537;
-      this.raidPlatforms = [];
-      for (const side of ['l', 'r']) {
-        for (let tier = 1; tier <= 3; tier++) {
-          const x1 = side === 'l' ? 180 + (tier - 1) * 20 : 820 - (tier - 1) * 20;
-          const y = floor - tier * 90;
-          const fh = new Foothold(`zk_fh_${side}${tier}`, x1, y, x1 + 200, y, true, 'platform');
-          this.footholds.push(fh);
-          this.raidPlatforms.push({id: fh.id, x1, x2: x1 + 200, y});
-          const x = side === 'l' ? 260 + (tier - 1) * 20 : 940 - (tier - 1) * 20;
-          const lower = this.findSpawnFoothold(x, y + 90);
-          this.ladders.push({id: `zk_lad_${side}${tier}`, x, top: y,
-            bottom: lower ? lower.getYAtX(x) : y + 90, isLadder: false, type: 'rope'});
-        }
+      const support = (x, layer, group) => this.footholds.find(f =>
+        f.sourceLayer === layer && f.sourceGroup === group && x >= f.x1 && x <= f.x2);
+      const routes = [
+        {id:'zk_rope_left_middle', x:240, upper:[4,9], lower:[5,7]},
+        {id:'zk_rope_left_top', x:210, upper:[3,12], lower:[4,9]},
+        {id:'zk_rope_right_ground', x:1040, upper:[5,4], lower:[5,0]},
+        {id:'zk_rope_right_middle', x:1060, upper:[4,5], lower:[5,4]},
+        {id:'zk_rope_right_top', x:1060, upper:[3,11], lower:[4,5]}
+      ];
+      for (const route of routes) {
+        const upper = support(route.x, ...route.upper);
+        const lower = support(route.x, ...route.lower);
+        if (!upper || !lower) throw new Error(`Missing native raid support: ${route.id}`);
+        this.ladders.push({id:route.id, x:route.x, top:upper.getYAtX(route.x), bottom:lower.getYAtX(route.x),
+          isLadder:false, type:'rope', adaptation:true, upperFootholdId:upper.id, lowerFootholdId:lower.id});
       }
     }
 
@@ -229,7 +235,8 @@ class GameMap {
     ctx.scale(canvas.width / this.width, canvas.height / this.height);
     ctx.drawImage(this.terrainImg, this.terrainOffset.x, this.terrainOffset.y);
     for (const patch of this.terrainExtensions) ctx.drawImage(patch.canvas, patch.x, patch.y);
-    if (this.currentKey === 'zakum_altar') this.drawZakumAltarPlatforms(ctx, {x:0,y:0,width:this.width,height:this.height});
+    this.drawLaddersAndRopes(ctx);
+
     this.minimapCanvas = canvas;
   }
 
@@ -349,10 +356,7 @@ class GameMap {
       this.drawElliniaProceduralTerrain(ctx, camera);
     }
 
-    // 2.6 Zakum Altar Ancient Basalt Platforms
-    if (this.currentKey === 'zakum_altar') {
-      this.drawZakumAltarPlatforms(ctx, camera);
-    }
+
 
     // 3. Render Pixel-Art Ladders & Ropes connecting platforms
     this.drawLaddersAndRopes(ctx);
@@ -595,82 +599,6 @@ class GameMap {
     ctx.restore();
   }
 
-
-  drawZakumAltarPlatforms(ctx, camera) {
-    const viewLeft = camera.x - 60;
-    const viewRight = camera.x + camera.width + 60;
-    const viewTop = camera.y - 60;
-    const viewBottom = camera.y + camera.height + 60;
-
-    const sidePlatforms = this.raidPlatforms || [];
-
-    ctx.save();
-    for (const plat of sidePlatforms) {
-      if (plat.x2 < viewLeft || plat.x1 > viewRight) continue;
-      if (plat.y < viewTop || plat.y > viewBottom) continue;
-
-      const w = plat.x2 - plat.x1;
-      const h = 18;
-      const y = plat.y;
-
-      const slabGrad = ctx.createLinearGradient(0, y, 0, y + h);
-      slabGrad.addColorStop(0, '#2d2529');
-      slabGrad.addColorStop(0.3, '#221a1d');
-      slabGrad.addColorStop(0.7, '#151113');
-      slabGrad.addColorStop(1, '#0c090a');
-
-      ctx.fillStyle = slabGrad;
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(plat.x1, y, w, h, [0, 0, 8, 8]);
-      } else {
-        ctx.rect(plat.x1, y, w, h);
-      }
-      ctx.fill();
-
-      ctx.fillStyle = '#3e343a';
-      ctx.fillRect(plat.x1, y, w, 3);
-
-      ctx.strokeStyle = 'rgba(255, 87, 34, 0.85)';
-      ctx.lineWidth = 1.8;
-      ctx.beginPath();
-      ctx.moveTo(plat.x1 + 18, y + 2);
-      ctx.lineTo(plat.x1 + 42, y + 4);
-      ctx.lineTo(plat.x1 + 65, y + 2);
-      ctx.moveTo(plat.x1 + 110, y + 3);
-      ctx.lineTo(plat.x1 + 135, y + 1);
-      ctx.lineTo(plat.x1 + 160, y + 4);
-      ctx.stroke();
-
-      ctx.strokeStyle = 'rgba(255, 193, 7, 0.9)';
-      ctx.lineWidth = 1.0;
-      ctx.beginPath();
-      ctx.moveTo(plat.x1 + 22, y + 2);
-      ctx.lineTo(plat.x1 + 40, y + 3);
-      ctx.moveTo(plat.x1 + 115, y + 2);
-      ctx.lineTo(plat.x1 + 140, y + 2);
-      ctx.stroke();
-
-      ctx.strokeStyle = 'rgba(20, 20, 20, 0.9)';
-      ctx.lineWidth = 2.0;
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(plat.x1, y, w, h, [0, 0, 8, 8]);
-      } else {
-        ctx.rect(plat.x1, y, w, h);
-      }
-      ctx.stroke();
-
-      ctx.fillStyle = '#4a4448';
-      ctx.fillRect(plat.x1 + 12, y + h, 8, 6);
-      ctx.fillRect(plat.x2 - 20, y + h, 8, 6);
-      ctx.strokeStyle = '#1a1618';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(plat.x1 + 12, y + h, 8, 6);
-      ctx.strokeRect(plat.x2 - 20, y + h, 8, 6);
-    }
-    ctx.restore();
-  }
 
   drawLaddersAndRopes(ctx) {
     this.ladders.forEach(l => {

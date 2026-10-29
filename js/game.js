@@ -30,8 +30,8 @@ class Game {
     // Click canvas to interact with other players
     this.canvas.addEventListener('click', (e) => {
       const rect = this.canvas.getBoundingClientRect();
-      const clickX = e.clientX - rect.left + this.camera.x;
-      const clickY = e.clientY - rect.top + this.camera.y;
+      const clickX = (e.clientX - rect.left) * this.canvas.width / rect.width / (this.camera.zoom || 1) + this.camera.x;
+      const clickY = (e.clientY - rect.top) * this.canvas.height / rect.height / (this.camera.zoom || 1) + this.camera.y;
 
       for (const rp of this.network.remotePlayers.values()) {
         if (Math.hypot(rp.x - clickX, rp.y - clickY) < 40) {
@@ -43,7 +43,6 @@ class Game {
 
     this.maxMonsters = 24;
     this.spawnTimer = 0;
-    this.ambientChatTimer = 10.0;
 
     this.initCanvasSize();
     this.initInputs();
@@ -63,10 +62,10 @@ class Game {
     const resize = () => {
       const container = document.getElementById('canvas-container');
       if (container) {
-        this.canvas.width = Math.max(300, container.clientWidth || window.innerWidth);
-        this.canvas.height = Math.max(300, container.clientHeight || window.innerHeight - 64);
-        this.camera.width = this.canvas.width;
-        this.camera.height = this.canvas.height;
+        this.canvas.width = Math.max(1, container.clientWidth);
+        this.canvas.height = Math.max(1, container.clientHeight);
+        this.ctx.imageSmoothingEnabled = false;
+        this.snapCameraToPlayer();
       }
       positionOverlay();
     };
@@ -74,6 +73,8 @@ class Game {
     window.addEventListener('load', resize);
     resize();
     if (overlay && typeof ResizeObserver !== 'undefined') new ResizeObserver(positionOverlay).observe(overlay);
+    const container = document.getElementById('canvas-container');
+    if (container && typeof ResizeObserver !== 'undefined') new ResizeObserver(resize).observe(container);
   }
 
   isTextInput(target) {
@@ -114,13 +115,14 @@ class Game {
     this.horizontalKeyOrder = [];
 
     window.addEventListener('keydown', (e) => {
+      if (e.defaultPrevented || ([' ', 'Enter'].includes(e.key) && e.target.closest?.('button, summary'))) return;
       if (this.isTextInput(e.target) || this.isTextInput(document.activeElement)) return;
       const wasPressed = this.keys[e.code];
       this.keys[e.code] = true;
 
       const action = this.keyConfig ? this.keyConfig.getAction(e.code) : null;
 
-      if (action || e.code === 'Tab') {
+      if (action) {
         e.preventDefault();
       }
       if (e.repeat && ['jump', 'interact', 'climbUp'].includes(action)) return;
@@ -346,7 +348,9 @@ class Game {
   // --- MULTI-MAP TRAVEL ENGINE ---
   changeMap(mapKey, spawnX = null, spawnY = null) {
     this.map.loadMap(mapKey);
+    this.raidViewBounds = null;
     document.getElementById('game-container')?.classList.toggle('boss-map', this.map.isBossMap);
+    if (this.map.isBossMap) this.ui?.setChatCollapsed?.(true);
 
     this.player.x = spawnX !== null ? spawnX : this.map.defaultSpawn.x;
     this.player.y = spawnY !== null ? spawnY : this.map.defaultSpawn.y;
@@ -469,6 +473,10 @@ class Game {
     const ground = this.map.resolvePosition(site.x, site.y);
     this.boss = new ZakumBoss(ground.x, ground.y);
     this.boss.setGroundPosition(ground.x, ground.y);
+    const parts = [this.boss.getPartGeometry(), ...this.boss.arms.map(arm => this.boss.getPartGeometry('arm', arm))];
+    this.raidViewBounds = {x:0, y:Math.min(140, ...parts.map(p => p.y)) - 16,
+      width:this.map.width, bottom:Math.max(...this.map.footholds.map(f => Math.max(f.y1,f.y2))) + 20};
+    if (this.canvas) this.snapCameraToPlayer();
     this.monsters = [this.boss];
     window.audio.playBossRoar();
     this.spawnItemText(this.player.x, this.player.y - 45, '👑 ★ 고대 거신 자쿰이 소환되었습니다! ★ 👑');
@@ -611,22 +619,6 @@ class Game {
       this.network.sendMove(this.player, this.map.currentKey);
     }
 
-    // Ambient chatter ticker (Classic MMO chatter atmosphere)
-    this.ambientChatTimer -= dt;
-    if (this.ambientChatTimer <= 0) {
-      this.ambientChatTimer = 12 + Math.random() * 8;
-      const quotes = [
-        { sender: 'CWPlayer18', text: 'drop game anyone' },
-        { sender: 'CWPlayer23', text: 'r>party for mushmom' },
-        { sender: '마정', text: '냄뚜 팝니다 @@@ 10만 메소' },
-        { sender: '단풍길드', text: '초보자 길드원 상시 모집중 매너필수' },
-        { sender: '제네트', text: '개미굴 좀비버섯 파티 구합니다 2/6' },
-        { sender: '신대륙모험가', text: '엘리니아 배 언제 출발해요?' }
-      ];
-      const q = quotes[Math.floor(Math.random() * quotes.length)];
-      this.ui.addChatMessage(q.sender, q.text, 'mock');
-    }
-
     // Update Projectiles
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const p = this.projectiles[i];
@@ -717,13 +709,29 @@ class Game {
     this.ui.updateHud();
   }
 
+  getCameraTarget() {
+    const screenWidth = this.canvas.width;
+    const screenHeight = this.canvas.height;
+    if (this.map.isBossMap && this.raidViewBounds) {
+      const bounds = this.raidViewBounds;
+      const topInset = Math.min(140, screenHeight * 0.24);
+      const bottomInset = Math.min(76, screenHeight * 0.16);
+      const contentHeight = bounds.bottom - bounds.y;
+      const zoom = Math.max(0.1, Math.min(1, (screenWidth - 20) / bounds.width,
+        (screenHeight - topInset - bottomInset) / contentHeight));
+      const spare = Math.max(0, screenHeight - topInset - bottomInset - contentHeight * zoom);
+      return {zoom, width:screenWidth / zoom, height:screenHeight / zoom,
+        x:bounds.x + bounds.width / 2 - screenWidth / zoom / 2,
+        y:bounds.y - (topInset + spare / 2) / zoom};
+    }
+    const width = screenWidth, height = screenHeight;
+    return {zoom:1, width, height,
+      x:Math.max(0, Math.min(this.map.width - width, this.player.x - width / 2)),
+      y:Math.max(0, Math.min(this.map.height - height, this.player.y - height * 0.65))};
+  }
+
   snapCameraToPlayer() {
-    this.camera.width = this.canvas.width;
-    this.camera.height = this.canvas.height;
-    const targetX = this.player.x - this.camera.width / 2;
-    const targetY = this.player.y - this.camera.height * (this.map.isBossMap ? 0.88 : 0.65);
-    this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, targetX));
-    this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, targetY));
+    Object.assign(this.camera, this.getCameraTarget());
   }
 
   updateCamera(dt = 0.016) {
@@ -731,19 +739,22 @@ class Game {
       this.shakeTimer -= dt;
     }
 
-    const targetX = this.player.x - this.camera.width / 2;
-    const targetY = this.player.y - this.camera.height * (this.map.isBossMap ? 0.88 : 0.65);
-
-    this.camera.x += (targetX - this.camera.x) * 0.12;
-    this.camera.y += (targetY - this.camera.y) * 0.12;
+    const target = this.getCameraTarget();
+    this.camera.zoom = target.zoom;
+    this.camera.width = target.width;
+    this.camera.height = target.height;
+    this.camera.x += (target.x - this.camera.x) * 0.12;
+    this.camera.y += (target.y - this.camera.y) * 0.12;
 
     if (this.shakeTimer > 0) {
       this.camera.x += (Math.random() - 0.5) * this.shakeMagnitude * 2;
       this.camera.y += (Math.random() - 0.5) * this.shakeMagnitude * 2;
     }
 
-    this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, this.camera.x));
-    this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, this.camera.y));
+    if (!this.map.isBossMap) {
+      this.camera.x = Math.max(0, Math.min(this.map.width - this.camera.width, this.camera.x));
+      this.camera.y = Math.max(0, Math.min(this.map.height - this.camera.height, this.camera.y));
+    }
   }
 
   updateBossBar() {
@@ -757,9 +768,13 @@ class Game {
 
     if (this.boss && this.boss.isAlive()) {
       if (bBar) bBar.style.display = 'block';
-      const pct = Math.max(0, (this.boss.hp / this.boss.maxHp) * 100);
+      const liveArms = this.boss.arms?.filter(arm => arm.isAlive) || [];
+      const armPhase = liveArms.length > 0;
+      const currentHp = armPhase ? this.boss.arms.reduce((sum,arm) => sum+Math.max(0,arm.hp),0) : this.boss.hp;
+      const maximumHp = armPhase ? this.boss.arms.reduce((sum,arm) => sum+arm.maxHp,0) : this.boss.maxHp;
+      const pct = Math.max(0, currentHp / maximumHp * 100);
       if (bFill) bFill.style.width = `${pct}%`;
-      if (bText) bText.innerText = `${this.boss.name} (${this.boss.hp.toLocaleString()} / ${this.boss.maxHp.toLocaleString()})`;
+      if (bText) bText.innerText = `${this.boss.arms ? (armPhase ? '자쿰 · 팔' : '자쿰 · 본체') : this.boss.name} ${currentHp.toLocaleString()}/${maximumHp.toLocaleString()}`;
       if (pImg) {
         pImg.src = (typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss)
           ? 'assets/monsters/zakum/stand_0.png'
@@ -773,7 +788,7 @@ class Game {
         armsPips.innerHTML = this.boss.arms.map(a => {
           const color = a.isAlive ? (a.hp < a.maxHp * 0.4 ? '#ef4444' : '#22c55e') : '#4b5563';
           const title = `${a.name}: ${a.isAlive ? a.hp + '/' + a.maxHp : '파괴됨'}`;
-          return `<div title="${title}" style="width: 12px; height: 7px; background: ${color}; border-radius: 2px; border: 1px solid #1c1917;"></div>`;
+          return `<div title="${title}" role="meter" aria-label="${a.name}" aria-valuemin="0" aria-valuemax="${a.maxHp}" aria-valuenow="${a.hp}" style="width: 16px; height: 7px; background: #292524; border-radius: 2px; border: 1px solid #1c1917; overflow: hidden;"><div style="height:100%;width:${Math.max(0,a.hp/a.maxHp*100)}%;background:${color}"></div></div>`;
         }).join('');
       } else if (armsCont) {
         armsCont.style.display = 'none';
@@ -789,6 +804,7 @@ class Game {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     ctx.save();
+    ctx.scale(this.camera.zoom || 1, this.camera.zoom || 1);
     ctx.translate(-Math.round(this.camera.x), -Math.round(this.camera.y));
 
     // 1. Map & Scenery & Portals
@@ -934,10 +950,10 @@ class Game {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.lineWidth = 1;
     ctx.strokeRect(
-      innerX + this.camera.x * scaleX,
-      innerY + this.camera.y * scaleY,
-      this.camera.width * scaleX,
-      this.camera.height * scaleY
+      innerX + Math.max(0,this.camera.x) * scaleX,
+      innerY + Math.max(0,this.camera.y) * scaleY,
+      Math.max(0, Math.min(this.map.width, this.camera.x+this.camera.width)-Math.max(0,this.camera.x)) * scaleX,
+      Math.max(0, Math.min(this.map.height, this.camera.y+this.camera.height)-Math.max(0,this.camera.y)) * scaleY
     );
 
     // Portal dots (cyan)

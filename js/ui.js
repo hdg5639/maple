@@ -6,6 +6,7 @@ class UIManager {
     this.initWindows();
     this.initHotkeys();
     this.initDraggableWindows();
+    this.initResponsiveControls();
     if (this.game.player) {
       this.updateQuickslotsForJob(this.game.player.job);
     }
@@ -213,7 +214,7 @@ class UIManager {
       el.addEventListener('touchstart', trigger, { passive: false });
     };
 
-    addQuickslotAction('quick-slot-attack', () => this.game.player.normalAttack(this.game));
+    addQuickslotAction('quick-slot-attack', () => this.game.player.primaryAttack(this.game));
     for (let slot = 1; slot <= 8; slot++) {
       addQuickslotAction(`quick-slot-${slot}`, () => {
         const skillId = this.game.getQuickslotSkill(slot - 1);
@@ -240,7 +241,56 @@ class UIManager {
       if (id === 'win-skills') this.updateSkillsWindow();
       if (id === 'win-keyconfig') this.renderKeyConfigWindow();
       if (id === 'win-armory') this.renderArmoryWindow('swords');
+      this.constrainWindow(el);
     }
+  }
+
+  constrainWindow(el) {
+    const rect = el.getBoundingClientRect();
+    el.style.right = 'auto';
+    el.style.bottom = 'auto';
+    el.style.left = `${Math.max(8, Math.min(rect.left, window.innerWidth - rect.width - 8))}px`;
+    el.style.top = `${Math.max(8, Math.min(rect.top, window.innerHeight - rect.height - 8))}px`;
+  }
+
+  initResponsiveControls() {
+    const menu = document.getElementById('game-menu');
+    menu?.addEventListener('click', (event) => {
+      if (event.target.closest('button')) menu.open = false;
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (menu?.open && !menu.contains(event.target)) menu.open = false;
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu) menu.open = false;
+      if (event.key === 'Escape' && chat?.contains(document.activeElement)) {
+        document.activeElement.blur();
+        setChatCollapsed(true);
+      }
+      if (event.key === 'Enter' && !event.defaultPrevented && !this.game.isTextInput(event.target) && !this.game.isTextInput(document.activeElement) &&
+          !this.game.keyConfig?.getAction(event.code) && !event.target.closest?.('button, summary')) {
+        event.preventDefault();
+        setChatCollapsed(false);
+        document.getElementById('chat-input')?.focus();
+      }
+    });
+    const chat = document.getElementById('maple-chat-container');
+    const toggle = document.getElementById('btn-chat-toggle');
+    const setChatCollapsed = (collapsed) => {
+      chat?.classList.toggle('chat-collapsed', collapsed);
+      toggle?.setAttribute('aria-expanded', String(!collapsed));
+      if (toggle) toggle.textContent = collapsed ? '대화 펼치기' : '대화 접기';
+    };
+    this.setChatCollapsed = setChatCollapsed;
+    setChatCollapsed(window.innerWidth < 740 || this.game.map.isBossMap);
+    window.matchMedia('(max-width: 739px)').addEventListener('change', event => setChatCollapsed(event.matches || this.game.map.isBossMap));
+    toggle?.addEventListener('click', () => setChatCollapsed(!chat.classList.contains('chat-collapsed')));
+    document.getElementById('chat-input')?.addEventListener('focus', () => setChatCollapsed(false));
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.maple-window').forEach(el => {
+        if (el.style.display === 'block') this.constrainWindow(el);
+      });
+    });
   }
 
   toggleAudio() {
@@ -268,14 +318,15 @@ class UIManager {
 
     window.addEventListener('mousemove', (e) => {
       if (activeWin) {
-        activeWin.style.left = `${Math.max(10, e.clientX - offset.x)}px`;
-        activeWin.style.top = `${Math.max(10, e.clientY - offset.y)}px`;
+        activeWin.style.left = `${Math.max(8, Math.min(e.clientX - offset.x, innerWidth - activeWin.offsetWidth - 8))}px`;
+        activeWin.style.top = `${Math.max(8, Math.min(e.clientY - offset.y, innerHeight - activeWin.offsetHeight - 8))}px`;
+        activeWin.style.right = 'auto';
       }
     });
 
     window.addEventListener('mouseup', () => {
       if (activeWin) {
-        activeWin.style.zIndex = '100';
+        activeWin.style.zIndex = '200';
         activeWin = null;
       }
     });
@@ -1123,6 +1174,7 @@ class UIManager {
       btnWhisper.onclick = () => {
         const chatInput = document.getElementById('chat-input');
         if (chatInput) {
+          this.setChatCollapsed(false);
           chatInput.value = `/w ${peer.name} `;
           chatInput.focus();
         }

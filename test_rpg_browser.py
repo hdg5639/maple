@@ -34,6 +34,9 @@ async def main():
                 return result.get('result', {}).get('value')
 
             async def click(selector):
+                needs_menu = await evaluate(f"Boolean(document.querySelector({json.dumps(selector)})?.closest('#game-menu:not([open])'))")
+                if needs_menu and selector != '#game-menu > summary':
+                    await click('#game-menu > summary')
                 point = await evaluate(f"""(() => {{
                   const element = document.querySelector({json.dumps(selector)});
                   if (!element || element.disabled) throw new Error('Missing or disabled control: ' + {json.dumps(selector)});

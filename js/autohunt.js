@@ -52,6 +52,33 @@ class FootholdGraph {
       }
     });
 
+    // Low native ledges are reached by an ordinary vertical jump, not a rope.
+    // Validate the first descending landing so intervening platforms cannot
+    // create an imaginary connection to a higher layer.
+    for (const lower of walkable) for (const upper of walkable) {
+      if (upper.width < 20 || lower === upper) continue;
+      const left = Math.max(lower.x1, upper.x1) + 1;
+      const right = Math.min(lower.x2, upper.x2) - 1;
+      if (right - left < 6) continue;
+      const x = (left + right) / 2, y = lower.getYAtX(x);
+      const rise = y - upper.getYAtX(x);
+      if (rise < 12 || rise > 90) continue;
+      let footY = y, velocity = Physics.JUMP_VELOCITY, landed = null;
+      for (let tick = 0; tick < 60 && !landed; tick++) {
+        const previousY = footY;
+        velocity += Physics.GRAVITY;
+        footY += velocity;
+        if (velocity < 0) continue;
+        let earliest = Infinity;
+        for (const foothold of walkable) {
+          const time = Physics.landingTime(x, previousY, x, footY, foothold);
+          if (time !== null && time < earliest) {earliest = time; landed = foothold;}
+        }
+      }
+      if (landed?.id === upper.id) this.edges.get(lower.id).push({targetId: upper.id,
+        type: 'jump', launchX: x, cost: 60 + rise * .5});
+    }
+
     // Drop edges must stop at the first lower surface, exactly as collision does.
     for (const upper of walkable) {
       if (!upper.canDropThrough) continue;
@@ -350,7 +377,11 @@ class AutoHuntManager {
   }
 
   getAttackRange(player) {
-    return player.job === '궁수' ? 240 : (player.job === '도적' ? 210 : (player.job === '마법사' ? 160 : 56));
+    if (!this.config.useSkills) return 75;
+    const skill = SkillRegistry.get(player.getPrimarySkillId());
+    if (skill?.id === 'power_strike') return 95;
+    if (skill?.id === 'magic_claw') return 130;
+    return skill?.aimProfile?.range || 75;
   }
 
   getBossTargetBox() {
@@ -362,11 +393,14 @@ class AutoHuntManager {
   canAttackBossPart(player, box) {
     if (!box) return false;
     const range = this.getAttackRange(player);
-    const ranged = player.job === '궁수' || player.job === '도적';
-    const top = player.y - (ranged ? 28 : 48);
-    const bottom = player.y + (ranged ? -4 : 8);
-    return player.x + range > box.x && player.x - range < box.x + box.width &&
-      top < box.y + box.height && bottom > box.y;
+    const skillId = this.config.useSkills ? player.getPrimarySkillId() : null;
+    const ranged = ['three_snails', 'arrow_blow', 'double_shot', 'lucky_seven', 'energy_bolt'].includes(skillId);
+    const top = player.y - (ranged ? 64 : (skillId ? 55 : 48));
+    const bottom = player.y + (ranged ? 32 : 8);
+    const clip = {x: player.x - range, y: top, width: range * 2, height: bottom - top};
+    if (!CombatSystem.checkAABB(clip, box)) return false;
+    return Boolean(CombatSystem.closestTargetPoint(box, player.x, player.y - 16,
+      {clip, range: ranged ? range : Infinity, map: this.game.map}));
   }
 
   planBossPart(player, boss) {
@@ -394,12 +428,38 @@ class AutoHuntManager {
         const left = Math.max(foothold.x1 + 1, box.x - range);
         const right = Math.min(foothold.x2 - 1, box.x + box.width + range);
         if (right < left) continue;
-        const x = Math.max(left, Math.min(right, player.x));
+        const candidates = [Math.max(left, Math.min(right, player.x)), left, right];
+        for (let x = left + 16; x < right; x += 16) candidates.push(x);
+        for (const x of candidates) {
+          const y = foothold.getYAtX(x);
+          if (!this.canAttackBossPart(Object.assign(Object.create(player), {x, y}), box)) continue;
+          const cost = Math.hypot(x - player.x, y - player.y) + reachable.get(id) * 3;
+          if (!best || cost < best.cost) best = {boss, part: box.target, type: box.type, foothold,
+            x, y, cost};
+        }
+      }
+    }
+    // Native Zakum platforms leave a gap to the upper hands. Simulate a real
+    // running jump, rather than inventing a foothold or attacking empty padding.
+    if (!best) for (const box of boss.getHitBoxes()) {
+      for (const [id, foothold] of this.graph.nodes) {
+        if (!reachable.has(id) || foothold.width < 20) continue;
+        const direction = box.x + box.width / 2 > (foothold.x1 + foothold.x2) / 2 ? 1 : -1;
+        const x = direction > 0 ? foothold.x2 - 5 : foothold.x1 + 5;
         const y = foothold.getYAtX(x);
-        if (!this.canAttackBossPart({...player, x, y}, box)) continue;
-        const cost = Math.hypot(x - player.x, y - player.y) + reachable.get(id) * 3;
-        if (!best || cost < best.cost) best = {boss, part: box.target, type: box.type, foothold,
-          x, y, cost};
+        if (Math.abs(y - box.y) > 200) continue;
+        const probe = Object.assign(Object.create(player), {x, y, vx: direction * player.walkSpeed,
+          vy: player.jumpForce, onGround: false, onLadder: false, currentFoothold: null,
+          currentLadder: null, horizontalInput: direction, onLand: null, dropThroughTimer: 0});
+        for (let tick = 1; tick <= 60; tick++) {
+          Physics.stepFixed(probe, this.game.map);
+          if (probe.onGround) break;
+          if (!this.canAttackBossPart(probe, box)) continue;
+          const cost = Math.hypot(x - player.x, y - player.y) + reachable.get(id) * 3 + tick * 4 + 100;
+          if (!best || cost < best.cost) best = {boss, part: box.target, type: box.type, foothold,
+            x, y, cost, jump: {direction, attackX: probe.x, started: false}};
+          break;
+        }
       }
     }
     return best;
@@ -451,9 +511,12 @@ class AutoHuntManager {
       } else if (edge.type === 'drop') {
         this.commandQueue.push({ action: 'MOVE_TO_X', x: edge.dropX });
         this.commandQueue.push({ action: 'DROP_THROUGH', targetId: edge.targetId });
+      } else if (edge.type === 'jump') {
+        this.commandQueue.push({action: 'JUMP_TO_FOOTHOLD', targetId: edge.targetId, launchX: edge.launchX});
       } else if (edge.type === 'walk') {
-        const nextFh = this.graph.nodes.get(edge.targetId);
-        this.commandQueue.push({ action: 'MOVE_TO_X', x: (nextFh.x1 + nextFh.x2) / 2 });
+        // Connected WZ floors can contain dozens of 1–10px segments. Their
+        // centers are not waypoints: the next ladder/drop/final target already
+        // supplies the destination on this continuous walking surface.
       }
     }
 
@@ -496,7 +559,8 @@ class AutoHuntManager {
       }
       if (!player.onLadder) {
         if (Math.abs(player.x - cmd.ladder.x) > 10) {
-          player.x = cmd.ladder.x;
+          player.setHorizontalInput(Math.sign(cmd.ladder.x - player.x));
+          return;
         }
         if (cmd.dir === 'up') player.climbUp(map);
         else player.climbDown(map);
@@ -521,6 +585,22 @@ class AutoHuntManager {
       return;
     }
 
+    if (cmd.action === 'JUMP_TO_FOOTHOLD') {
+      if (!cmd.started) {
+        const dx = cmd.launchX - player.x;
+        const brakingDistance = Math.abs(player.vx) * Physics.FRICTION / (1 - Physics.FRICTION);
+        if (Math.abs(dx) > 2 && !(Math.sign(dx) === Math.sign(player.vx) && Math.abs(dx) <= brakingDistance + 1)) {
+          player.setHorizontalInput(Math.sign(dx));
+        } else player.stopHorizontal();
+        if (player.onGround && Math.abs(dx) <= 3 && Math.abs(player.vx) < .25) cmd.started = player.jump();
+      }
+      else if (cmd.started && player.onGround) {
+        if (player.currentFoothold?.id === cmd.targetId) this.commandQueue.shift();
+        else this.commandQueue = [];
+      }
+      return;
+    }
+
     if (cmd.action === 'NAVIGATE_TO_TARGET') {
       if (this.isMultipartBoss(this.currentTarget)) {
         const box = this.getBossTargetBox();
@@ -529,10 +609,22 @@ class AutoHuntManager {
           this.commandQueue = [];
           return;
         }
-        if (!player.onLadder && player.onGround && this.canAttackBossPart(player, box)) {
+        if (plan.jump?.started && player.onGround) {
+          this.bossTargetPlan = this.planBossPart(player, this.currentTarget);
+          this.buildWaypointPath(player);
+          return;
+        }
+        if (!player.onLadder && this.canAttackBossPart(player, box)) {
           player.stopHorizontal();
-          player.facing = box.x + box.width / 2 >= player.x ? 'right' : 'left';
+          const point = CombatSystem.closestTargetPoint(box, player.x, player.y - 16);
+          player.facing = point.x >= player.x ? 'right' : 'left';
           this.triggerAttack(player);
+          if (!plan.jump?.started) return;
+        }
+        if (plan.jump?.started) {
+          const direction = (player.x - plan.jump.attackX) * plan.jump.direction >= 0
+            ? -plan.jump.direction : plan.jump.direction;
+          player.setHorizontalInput(direction);
           return;
         }
         const dx = plan.x - player.x;
@@ -541,6 +633,10 @@ class AutoHuntManager {
         else {
           player.stopHorizontal();
           if (player.onGround && player.currentFoothold?.id !== plan.foothold.id) this.buildWaypointPath(player);
+          else if (plan.jump && player.onGround && player.attackTimer <= 0) {
+            player.setHorizontalInput(plan.jump.direction);
+            if (player.jump()) plan.jump.started = true;
+          }
         }
         return;
       }
@@ -579,6 +675,7 @@ class AutoHuntManager {
 
   triggerAttack(player) {
     if (!this.config.useSkills) return player.normalAttack(this.game);
+    if (this.isMultipartBoss?.(this.currentTarget)) return player.primaryAttack(this.game);
     const preferences = {
       '전사': ['slash_blast', 'power_strike'],
       '마법사': ['magic_claw', 'energy_bolt'],

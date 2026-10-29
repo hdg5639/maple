@@ -165,6 +165,7 @@ test('a delayed multi-hit strike cannot damage or show damage on an arm destroye
   const {boss, player, game, CombatSystem, delayed, damageTexts} = fixture();
   player.minAtk = player.maxAtk = 1;
   const firstArmBox = boss.getHitBoxes()[0];
+  boss.getHitBoxes = () => [firstArmBox]; // Isolate the lifecycle contract from overlapping neighboring arms.
   CombatSystem.executeMeleeAttack(player, firstArmBox, 1, game, {hitsPerTarget: 2, hitDelay: 100});
   assert.equal(damageTexts.length, 1);
   assert.equal(delayed.length, 1);

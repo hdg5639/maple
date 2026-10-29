@@ -241,7 +241,7 @@ test('fixed-step accumulation gives the same trajectory for equal elapsed time',
   assert.ok(Math.abs(a.player.vy - b.player.vy) < 1e-8);
 });
 
-test('all 66 real ladder/rope tops end on their own connected foothold', () => {
+test('all native and added ladder/rope tops end on their own connected foothold', () => {
   let count = 0;
   for (const key of ['henesys_hhg', 'henesys_town', 'ant_tunnel', 'ellinia', 'zakum_altar']) {
     const { map, Player, Physics } = fixture(key);
@@ -267,7 +267,7 @@ test('all 66 real ladder/rope tops end on their own connected foothold', () => {
       count++;
     }
   }
-  assert.equal(count, 66);
+  assert.equal(count, 65);
 });
 
 test('holding Up after an isolated HHG rope ascent stays on the upper platform', () => {
@@ -285,7 +285,7 @@ test('holding Up after an isolated HHG rope ascent stays on the upper platform',
   assert.equal(player.y, upper.getYAtX(player.x));
 });
 
-test('all 132 real ladder endpoints select the nearest nearby support, never a remote floor', () => {
+test('all native and added ladder endpoints select the nearest nearby support, never a remote floor', () => {
   let endpoints = 0;
   let unsupportedBottoms = 0;
   for (const key of ['henesys_hhg', 'henesys_town', 'ant_tunnel', 'ellinia', 'zakum_altar']) {
@@ -322,7 +322,7 @@ test('all 132 real ladder endpoints select the nearest nearby support, never a r
       }
     }
   }
-  assert.equal(endpoints, 132);
+  assert.equal(endpoints, 130);
   // Four original Ellinia hanging ropes intentionally have no nearby lower platform.
   assert.equal(unsupportedBottoms, 4);
 });
@@ -661,7 +661,13 @@ test('auto-hunt discards the remaining route after inertia lands on an unexpecte
   }
   assert.equal(replanning, true, 'unexpected landing retained the stale waypoint route');
   manager.executeWaypoints(1 / 60, player, map);
-  assert.ok(manager.commandQueue.some(command => command.action === 'MOVE_TO_X' && command.x === 150),
-    'the next execution did not build a route from the actual landed segment');
   assert.equal(manager.commandQueue.some(command => command.stale), false);
+  let attacked = false;
+  manager.triggerAttack = () => {attacked = true;};
+  for (let i = 0; i < 120 && !attacked; i++) {
+    manager.executeWaypoints(1 / 60, player, map);
+    tick(player, map);
+  }
+  assert.equal(attacked, true, 'the replanned route never reached the target from the actual landing');
+  assert.ok(Math.abs(player.x - 150) <= 56);
 });

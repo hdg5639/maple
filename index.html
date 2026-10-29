@@ -14,11 +14,14 @@
 
     <!-- Top Bar Controls -->
     <div id="top-bar-overlay">
+      <button id="btn-auto-hunt" class="maple-badge-btn btn-auto-hunt">⚔️ 자동사냥 시작 (R)</button>
+      <details id="game-menu">
+      <summary class="maple-badge-btn">☰ 메뉴</summary>
+      <div class="game-menu-content">
       <div id="net-status-badge" class="net-badge-offline" title="서버 연결 상태">⚪ 로컬 오프라인</div>
       <div id="hud-online-count" class="maple-online-badge">👥 접속자: 1명</div>
       <button id="btn-login-open" class="maple-badge-btn btn-login-btn">🔑 로그인 / 계정</button>
       <button id="btn-shop-open" class="maple-badge-btn btn-shop-btn">🛒 헤네시스 상점</button>
-      <button id="btn-auto-hunt" class="maple-badge-btn btn-auto-hunt">⚔️ 자동사냥 시작 (R)</button>
       <div id="auto-hunt-badge">⚡ AUTO HUNTING...</div>
       <button id="btn-armory-open" class="maple-badge-btn" style="background: linear-gradient(to bottom, #d97706, #b45309); border-color: #fef08a;">🗡️ 무기&표창 보급</button>
       <button id="btn-map-travel-open" class="maple-badge-btn">🗺️ 월드 이동 / 택시</button>
@@ -26,7 +29,6 @@
       <button id="btn-job-select-open" class="maple-badge-btn">🛡️ 직업 선택/변경</button>
       <button id="btn-boss-spawn" class="maple-badge-btn">👑 머쉬맘 소환 (B)</button>
       <button id="btn-sound-toggle" class="maple-badge-btn">🎵 BGM 토글</button>
-    </div>
 
     <!-- Auto-Hunt Analytics Dashboard -->
     <div id="auto-stats-panel">
@@ -47,6 +49,9 @@
         <span class="stat-label">분당 메소</span>
         <span id="stat-hunt-meso-min" class="stat-val">0 메소/분</span>
       </div>
+    </div>
+      </div>
+      </details>
     </div>
 
     <!-- Boss HP Bar (Full Width Top Bar) -->
@@ -73,17 +78,14 @@
       <!-- Bottom-Left Classic Maple Chat Window -->
       <div id="maple-chat-container">
         <div class="chat-tab-bar">
-          <span class="chat-tab active">ALL</span>
-          <span class="chat-tab">파티</span>
-          <span class="chat-tab">길드</span>
+          <button id="btn-chat-toggle" type="button" aria-expanded="true" aria-controls="chat-messages-container chat-input-bar">대화 접기</button>
+          <span class="chat-tab active">전체</span>
         </div>
         <div id="chat-messages-container">
           <div class="chat-msg system">[안내] 클래식 메이플스토리 엔진에 오신 것을 환영합니다!</div>
           <div class="chat-msg system">[안내] NPC 택시와 포탈을 이용해 빅토리아 아일랜드를 탐험하세요.</div>
-          <div class="chat-msg mock"><span class="chat-sender">CWPlayer18</span> : drop game anyone</div>
-          <div class="chat-msg mock"><span class="chat-sender">CWPlayer23</span> : r>party for mushmom</div>
         </div>
-        <div class="chat-input-bar">
+        <div class="chat-input-bar" id="chat-input-bar">
           <input type="text" id="chat-input" placeholder="엔터를 눌러 대화하세요... (Enter)" maxlength="60">
           <button id="btn-chat-send">전송</button>
         </div>
@@ -122,66 +124,66 @@
       <!-- Quickslots: Authentic Maple 2-Row Grid (7x2 = 14 slots) -->
       <div class="hud-quickslots">
         <!-- Row 1: Attack & Skills 1 to 6 -->
-        <div id="quick-slot-attack" class="quickslot" title="일반 공격 [Ctrl]">
+        <button type="button" id="quick-slot-attack" class="quickslot" title="일반 공격 [Ctrl]">
           <span class="slot-key">Ctrl</span>
           <span class="slot-icon">🗡️</span>
-        </div>
-        <div id="quick-slot-1" class="quickslot" title="스킬 1 [Shift]">
+        </button>
+        <button type="button" id="quick-slot-1" class="quickslot" title="스킬 1 [Shift]">
           <span class="slot-key">Shift</span>
           <span class="slot-icon">⚔️</span>
-        </div>
-        <div id="quick-slot-2" class="quickslot" title="스킬 2 [Q]">
+        </button>
+        <button type="button" id="quick-slot-2" class="quickslot" title="스킬 2 [Q]">
           <span class="slot-key">Q</span>
           <span class="slot-icon">🌀</span>
-        </div>
-        <div id="quick-slot-3" class="quickslot" title="스킬 3 [W]">
+        </button>
+        <button type="button" id="quick-slot-3" class="quickslot" title="스킬 3 [W]">
           <span class="slot-key">W</span>
           <span class="slot-icon">🛡️</span>
-        </div>
-        <div id="quick-slot-4" class="quickslot" title="스킬 4 [E]">
+        </button>
+        <button type="button" id="quick-slot-4" class="quickslot" title="스킬 4 [E]">
           <span class="slot-key">E</span>
           <span class="slot-icon">🔥</span>
-        </div>
-        <div id="quick-slot-5" class="quickslot" title="스킬 5 [A]">
+        </button>
+        <button type="button" id="quick-slot-5" class="quickslot" title="스킬 5 [A]">
           <span class="slot-key">A</span>
           <span class="slot-icon">🔮</span>
-        </div>
-        <div id="quick-slot-6" class="quickslot" title="스킬 6 [S]">
+        </button>
+        <button type="button" id="quick-slot-6" class="quickslot" title="스킬 6 [S]">
           <span class="slot-key">S</span>
           <span class="slot-icon">⚡</span>
-        </div>
+        </button>
 
         <!-- Row 2: Jump, Loot, Skills 7 & 8, Potions & Auto-Hunt -->
-        <div id="quick-slot-jump" class="quickslot" title="점프 [Alt]">
+        <button type="button" id="quick-slot-jump" class="quickslot" title="점프 [Alt]">
           <span class="slot-key">Alt</span>
           <span class="slot-icon">🦘</span>
-        </div>
-        <div id="quick-slot-loot" class="quickslot" title="아이템 줍기 [Z]">
+        </button>
+        <button type="button" id="quick-slot-loot" class="quickslot" title="아이템 줍기 [Z]">
           <span class="slot-key">Z</span>
           <span class="slot-icon">🤲</span>
-        </div>
-        <div id="quick-slot-7" class="quickslot" title="스킬 7 [D]">
+        </button>
+        <button type="button" id="quick-slot-7" class="quickslot" title="스킬 7 [D]">
           <span class="slot-key">D</span>
           <span class="slot-icon">✨</span>
-        </div>
-        <div id="quick-slot-8" class="quickslot" title="스킬 8 [F]">
+        </button>
+        <button type="button" id="quick-slot-8" class="quickslot" title="스킬 8 [F]">
           <span class="slot-key">F</span>
           <span class="slot-icon">💨</span>
-        </div>
-        <div id="quick-slot-potion-red" class="quickslot" title="빨간 포션 [1]">
+        </button>
+        <button type="button" id="quick-slot-potion-red" class="quickslot" title="빨간 포션 [1]">
           <span class="slot-key">1</span>
           <span class="slot-icon">🧪</span>
           <span id="quick-red-count" class="slot-badge">15</span>
-        </div>
-        <div id="quick-slot-potion-blue" class="quickslot" title="파란 포션 [2]">
+        </button>
+        <button type="button" id="quick-slot-potion-blue" class="quickslot" title="파란 포션 [2]">
           <span class="slot-key">2</span>
           <span class="slot-icon">💙</span>
           <span id="quick-blue-count" class="slot-badge">10</span>
-        </div>
-        <div id="quick-slot-autohunt" class="quickslot" title="자동사냥 토글 [R]">
+        </button>
+        <button type="button" id="quick-slot-autohunt" class="quickslot" title="자동사냥 토글 [R]">
           <span class="slot-key">R</span>
           <span class="slot-icon">🤖</span>
-        </div>
+        </button>
       </div>
 
       <!-- Menu Windows Toggle Buttons -->
@@ -489,6 +491,7 @@
   <!-- JOB ADVANCEMENT MODAL (Lv.10+) -->
   <div id="modal-job-advance">
     <div class="job-modal-box">
+      <button type="button" class="btn-window-close job-modal-close" aria-label="직업 선택 닫기">×</button>
       <h2>🎉 1차 전직을 환영합니다!</h2>
       <p>Lv.10을 달성하여 진정한 모험가로 거듭날 때가 되었습니다. 원하는 직업을 선택하세요!</p>
       <div class="job-grid">

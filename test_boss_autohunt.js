@@ -35,12 +35,12 @@ test('the nearest reachable live arm is selected instead of the protected body c
   assert.equal(ai.currentTarget, boss);
   assert.equal(ai.bossTargetPlan.type, 'arm');
   assert.equal(ai.bossTargetPlan.part.isAlive, true);
-  assert.ok(ai.bossTargetPlan.part.offsetX < 0, 'player enters from the left');
+  assert.equal(ai.bossTargetPlan.part.id % 2, 1, 'original odd-numbered arms are on the entry side');
   assert.equal(ai.getBossTargetBox().type, 'arm');
   assert.equal(ai.canAttackBossPart({...player, x: ai.bossTargetPlan.x, y: ai.bossTargetPlan.y}, ai.getBossTargetBox()), true);
 });
 
-test('an upper arm generates a real ladder route and can be hit after simulating that route', () => {
+test('an isolated upper arm generates a ladder and running-jump route to visible pixels', () => {
   const {ai, player, boss, game, map} = fixture();
   const arm = boss.arms[0];
   for (const other of boss.arms) if (other !== arm) {other.isAlive = false; other.hp = 0;}
@@ -57,6 +57,55 @@ test('an upper arm generates a real ladder route and can be hit after simulating
   assert.ok(arm.hp < arm.maxHp, `upper arm never received damage after ${steps} steps`);
   assert.equal(player.onLadder, false);
   assert.equal(game.boss, boss);
+});
+
+for (const job of ['전사', '마법사', '궁수', '도적', '초보자']) {
+  test(`normal arena entry reaches all eight real arm silhouettes with ${job} attacks (accelerated damage fixture)`, () => {
+    const {ai, player, boss, game, map} = fixture();
+    ai.config.useSkills = true;
+    player.setJob(job);
+    player.level = 200;
+    // This is a deterministic route/combat diagnostic, not a balance test.
+    // Keep every boss HP, spawn and collision surface intact; accelerate damage only.
+    for (const stat of ['minAtk', 'maxAtk']) Object.defineProperty(player, stat, {get: () => 100000, set() {}});
+    const hitArms = new Set();
+    const damage = boss.takeDamage.bind(boss);
+    boss.takeDamage = (amount, critical, facing, currentGame, box) => {
+      const before = box?.target?.hp;
+      const shielded = boss.phase === 'arms', bodyHp = boss.hp;
+      const result = damage(amount, critical, facing, currentGame, box);
+      if (shielded) assert.equal(boss.hp, bodyHp, 'an arms-phase attack damaged the shielded body');
+      if (result && box?.type === 'arm' && box.target.hp < before) hitArms.add(box.target.id);
+      return result;
+    };
+    let steps = 0;
+    while (boss.phase === 'arms' && steps++ < 4000) {
+      ai.update(1 / 60);
+      player.update(1 / 60, map);
+      boss.animationTime += 1 / 60;
+      for (const shot of game.projectiles) if (!shot.hit && shot.life > 0) {
+        // Three Snails has fixed skill damage, so the accelerated test fixture
+        // must also scale its outgoing projectile rather than altering boss HP.
+        if (job === '초보자') shot.damage = 100000;
+        shot.update(1 / 60, game);
+      }
+      game.projectiles = game.projectiles.filter(shot => !shot.hit && shot.life > 0);
+    }
+    assert.deepEqual([...hitArms].sort(), [1, 2, 3, 4, 5, 6, 7, 8], `route stalled after ${steps} steps at ${player.x},${player.y}`);
+    assert.ok(['body', 'dying'].includes(boss.phase), 'last arm did not release the body phase');
+  });
+}
+
+test('native right ledges have a physically validated jump connection from the arena floor', () => {
+  const {ai, player} = fixture();
+  const queue = [player.currentFoothold.id], reached = new Set(queue);
+  let jumps = 0;
+  while (queue.length) for (const edge of ai.graph.edges.get(queue.shift()) || []) {
+    if (edge.type === 'jump') jumps++;
+    if (!reached.has(edge.targetId)) {reached.add(edge.targetId); queue.push(edge.targetId);}
+  }
+  assert.ok(jumps > 0);
+  assert.equal(reached.has(152), true, 'original upper-right platform is unreachable');
 });
 
 test('destroying the chosen arm causes a new live part to be selected', () => {

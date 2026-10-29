@@ -185,3 +185,59 @@ test('restoring progress preserves zero resources and rebuilds skills with curre
   assert.notEqual(game.player.skills.energy_bolt.mpCost,999999);
   assert.ok(game.player.skills.thunderbolt);
 });
+
+test('Zakum uses only native platforms and every added rope ends on those surfaces', () => {
+  const {newMap,data} = fixture();
+  const map = newMap('zakum_altar');
+  assert.equal(map.footholds.length,data.zakum_altar.footholds.length,'duplicate scaffold physics was injected');
+  assert.equal(map.footholds.some(f=>String(f.id).startsWith('zk_fh_')),false);
+  assert.equal(map.raidPlatforms.length,0,'duplicate scaffold artwork was injected');
+  const added = map.ladders.filter(l=>l.adaptation);
+  assert.equal(added.length,5);
+  for (const rope of added) {
+    const top=map.findFootholdNear(rope.x,rope.top,0.001);
+    const bottom=map.findFootholdNear(rope.x,rope.bottom,0.001);
+    assert.ok(top && bottom,`${rope.id}: disconnected native route`);
+    assert.equal(top.id,rope.upperFootholdId);
+    assert.equal(bottom.id,rope.lowerFootholdId);
+  }
+});
+
+test('raid camera contains the entire assembled boss and native arena at each real viewport', () => {
+  const {game}=fixture();
+  game.changeMap('zakum_altar');
+  const boxes=[game.boss.getPartGeometry(),...game.boss.arms.map(a=>game.boss.getPartGeometry('arm',a))];
+  for (const [width,height] of [[390,620],[678,620],[908,700],[1280,700]]) {
+    game.canvas={width,height};
+    const camera=game.getCameraTarget();
+    assert.ok(camera.zoom>0 && camera.zoom<=1);
+    for (const box of boxes) {
+      const x=(box.x-camera.x)*camera.zoom,y=(box.y-camera.y)*camera.zoom;
+      assert.ok(x>=0 && x+box.width*camera.zoom<=width,`${width}: arm clipped horizontally`);
+      assert.ok(y>=Math.min(140,height*.24)-1 && y+box.height*camera.zoom<=height-60,`${width}: arm obscured by HUD`);
+    }
+    for (const x of [0,game.map.width]) assert.ok((x-camera.x)*camera.zoom>=0 && (x-camera.x)*camera.zoom<=width);
+  }
+});
+
+test('the boss HUD decreases with real arm HP before switching to body HP', () => {
+  const {game,context}=fixture();
+  game.changeMap('zakum_altar');
+  const elements=new Map();
+  context.document.getElementById=id=>{
+    if (!elements.has(id)) elements.set(id,{style:{},innerText:'',innerHTML:''});
+    return elements.get(id);
+  };
+  game.updateBossBar();
+  assert.ok(elements.get('boss-hp-text').innerText.includes('120,000/120,000'));
+  const arm=game.boss.arms[0];
+  assert.equal(game.boss.takeDamage(3000,false,'right',game,{type:'arm',target:arm}),true);
+  game.updateBossBar();
+  assert.equal(elements.get('boss-hp-fill').style.width,'97.5%');
+  assert.ok(elements.get('boss-hp-text').innerText.includes('117,000/120,000'));
+  assert.ok(elements.get('boss-arms-pips').innerHTML.includes('aria-valuenow="12000"'));
+  for (const part of game.boss.arms) {part.hp=0;part.isAlive=false;}
+  game.updateBossBar();
+  assert.ok(elements.get('boss-hp-text').innerText.includes('본체'));
+  assert.ok(elements.get('boss-hp-text').innerText.includes('100,000/100,000'));
+});

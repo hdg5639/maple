@@ -44,6 +44,7 @@ async def main():
             (output/f'{key}.png').write_bytes(base64.b64decode(screenshot['result']['data']))
 
         await verify('game.boss.arms.length===8 && game.boss.getHitBoxes().length===8 && game.boss.hp===100000', 'Zakum: eight attackable arms guard the body')
+        await verify("document.getElementById('maple-chat-container').classList.contains('chat-collapsed')", 'Zakum: normal entry collapses chat so it cannot cover the player')
         await verify('Math.abs(game.boss.getGroundY()-game.map.resolvePosition(600,537).y)<0.01', 'Zakum: body ground matches actual altar surface')
         await suite.evaluate("game.boss.arms.forEach(a=>{a.hp=0;a.isAlive=false}); game.boss.takeDamage(100000,false,1,game)")
         await verify("game.boss.isDying() && game.boss.getHitBoxes().length===0", 'Zakum: death enters non-damageable fade')

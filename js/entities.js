@@ -1428,16 +1428,11 @@ class ZakumBoss {
     this.dyingDuration = 0.9;
     this.dyingTimer = 0;
     this.rewardsGranted = false;
-    this.arms = [
-      { id: 1, name: '자쿰의 1번째 팔', offsetX: -160, offsetY: -160 },
-      { id: 2, name: '자쿰의 2번째 팔', offsetX: -170, offsetY: -80 },
-      { id: 3, name: '자쿰의 3번째 팔', offsetX: -160, offsetY: 10 },
-      { id: 4, name: '자쿰의 4번째 팔', offsetX: -140, offsetY: 90 },
-      { id: 5, name: '자쿰의 5번째 팔', offsetX: 160, offsetY: -160 },
-      { id: 6, name: '자쿰의 6번째 팔', offsetX: 170, offsetY: -80 },
-      { id: 7, name: '자쿰의 7번째 팔', offsetX: 160, offsetY: 10 },
-      { id: 8, name: '자쿰의 8번째 팔', offsetX: 140, offsetY: 90 }
-    ].map(arm => ({...arm, maxHp: 15000, hp: 15000, isAlive: true,
+    // WZ mob 8800003..8800010 alternate left/right. Every part shares the
+    // same WZ origin; its exported PNG padding is resolved by baked metadata.
+    this.arms = Array.from({length: 8}, (_, index) => ({
+      id: index + 1, name: `자쿰의 ${index + 1}번째 팔`, sourceMobId: 8800003 + index
+    })).map(arm => ({...arm, maxHp: 15000, hp: 15000, isAlive: true,
       hitTimer: 0, state: 'alive', dyingTimer: 0, dyingDuration: 0.35}));
     this.activeSpells = [];
     this.spellCooldown = 3.5;
@@ -1458,11 +1453,20 @@ class ZakumBoss {
     const spriteWidth = metadata?.width || sprite?.naturalWidth || (isArm ? 100 : this.width);
     const spriteHeight = metadata?.height || sprite?.naturalHeight || (isArm ? 100 : this.height);
     const bounds = metadata?.frames?.[frame] || [0, 0, spriteWidth, spriteHeight];
-    const centerX = this.x + (isArm ? arm.offsetX : 0);
-    const centerY = this.y + (isArm ? arm.offsetY + Math.sin(this.animationTime * 2.5 + arm.id) * 4 : 0);
-    const drawX = Math.round(centerX - spriteWidth / 2);
-    const drawY = Math.round(centerY - spriteHeight / 2);
+    const bodyMetadata = window.BOSS_SPRITE_GEOMETRY?.body;
+    const bodyHeight = bodyMetadata?.height || this.height;
+    const bodyOrigin = bodyMetadata?.origins?.[0] || [this.width / 2, bodyHeight / 2];
+    const origin = metadata?.origins?.[frame] || [spriteWidth / 2, spriteHeight / 2];
+    // Keep this.y's body-center contract for camera/spells, while assembling
+    // all nine sprites at the original shared WZ origin. The PNGs already
+    // contain their limb animation: an extra per-arm bob detaches the joints.
+    const originX = this.x;
+    const originY = this.y + bodyOrigin[1] - bodyHeight / 2;
+    const drawX = Math.round(originX - origin[0]);
+    const drawY = Math.round(originY - origin[1]);
     return {frame, drawX, drawY, spriteWidth, spriteHeight,
+      sourceWidth: spriteWidth, sourceHeight: spriteHeight,
+      originX, originY, maskRects: metadata?.maskRects?.[frame],
       x: drawX + bounds[0], y: drawY + bounds[1],
       width: bounds[2] - bounds[0], height: bounds[3] - bounds[1]};
   }
@@ -1485,7 +1489,9 @@ class ZakumBoss {
     if (!this.isAlive()) return [];
     const aliveArms = this.arms.filter(arm => arm.isAlive);
     if (aliveArms.length) {
-      return aliveArms.map(arm => ({...this.getPartGeometry('arm', arm), type: 'arm', target: arm}));
+      const occluder = this.getPartGeometry(); // The statue is drawn in front of its shoulders.
+      return aliveArms.map(arm => ({...this.getPartGeometry('arm', arm),
+        type: 'arm', target: arm, occluder}));
     }
     return [{...this.getPartGeometry(), type: 'body', target: this}];
   }

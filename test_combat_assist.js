@@ -42,6 +42,41 @@ test('nearby melee targets automatically correct facing and receive the attack',
   assert.ok(target.hp < target.maxHp);
 });
 
+test('sprite padding and body-covered arm roots cannot receive attacks or steal aiming', () => {
+  const {player, game, CombatSystem, hits} = fixture();
+  const arm = {hp: 100};
+  const box = {x: 210, y: 150, width: 100, height: 50, drawX: 210, drawY: 150,
+    maskRects: [[80, 30, 20, 20]], type: 'arm', target: arm};
+  const boss = {hp: 1000, isAlive: () => true, getHitBoxes: () => [box],
+    takeDamage: damage => {arm.hp -= damage; return true;}};
+  game.boss = boss;
+  assert.equal(CombatSystem.findAutoAimTarget(player, game, {range: 75}), null);
+  assert.equal(CombatSystem.executeMeleeAttack(player, {x: 200, y: 150, width: 60, height: 50}, 1, game), false);
+  const shot = {prevX: 200, prevY: 155, x: 325, y: 155, damage: 10, vx: 500};
+  assert.equal(CombatSystem.resolveProjectileCollision(shot, game), false, 'horizontal shot crosses only transparent padding');
+  assert.equal(arm.hp, 100);
+  assert.equal(hits.length, 0);
+  assert.equal(CombatSystem.findAutoAimTarget(player, game, {range: 120}).part, arm);
+  box.occluder = {drawX: 290, drawY: 180, maskRects: [[0, 0, 20, 20]]};
+  assert.equal(CombatSystem.findAutoAimTarget(player, game, {range: 200}), null, 'body covers the entire arm silhouette');
+  assert.equal(CombatSystem.getTargetHitTime(200, 185, 325, 185, box), null);
+});
+
+test('partially covered limbs retain their exposed hand as the real hit and font position', () => {
+  const {player, game, CombatSystem, hits} = fixture();
+  const arm = {hp: 100};
+  const box = {x: 230, y: 180, width: 60, height: 10, drawX: 230, drawY: 180,
+    maskRects: [[0, 0, 60, 10]], occluder: {drawX: 230, drawY: 180, maskRects: [[0, 0, 40, 10]]},
+    type: 'arm', target: arm};
+  game.boss = {hp: 1000, isAlive: () => true, getHitBoxes: () => [box],
+    takeDamage: damage => {arm.hp -= damage; return true;}};
+  const point = CombatSystem.findAutoAimTarget(player, game, {range: 100});
+  assert.ok(point.x >= 270, 'aim skipped the invisible shoulder');
+  assert.equal(CombatSystem.resolveProjectileCollision({prevX: 200, prevY: 185, x: 300, y: 185, vx: 500, damage: 10}, game), true);
+  assert.equal(arm.hp, 90);
+  assert.ok(hits[0][0] >= 270 && hits[0][0] <= 290, 'damage font remains on the exposed hand');
+});
+
 test('auto aim chooses the closest reachable rectangle, not the first stored enemy', () => {
   const {player, monster, game, CombatSystem} = fixture();
   monster(260);
@@ -195,4 +230,25 @@ test('a terrain hit at the exact end of a simulation step is not skipped', () =>
   shot.update(1 / 60, game);
   assert.equal(shot.x, 230);
   assert.equal(shot.hit, true);
+});
+
+test('melee and projectiles never show successful digits when the contacted target rejects damage', () => {
+  for (const projectile of [false, true]) {
+    const {player, game, monster, Projectile, hits} = fixture();
+    const target = monster(250);
+    target.takeDamage = () => false;
+    if (projectile) new Projectile(216, 184, 600, 0, 'arrow', 100, false, player).update(0.1, game);
+    else player.normalAttack(game);
+    assert.equal(target.hp, target.maxHp);
+    assert.equal(hits.length, 0);
+  }
+});
+
+test('unchanged HP suppresses ghost digits even if a target forgets to return rejection', () => {
+  const {player, game, monster, Projectile, hits} = fixture();
+  const target = monster(250);
+  target.takeDamage = () => {};
+  new Projectile(216, 184, 600, 0, 'arrow', 100, false, player).update(0.1, game);
+  assert.equal(target.hp, target.maxHp);
+  assert.equal(hits.length, 0);
 });

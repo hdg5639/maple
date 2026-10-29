@@ -9,6 +9,9 @@ import sys
 import time
 from pathlib import Path
 
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf8', errors='replace')
+
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / 'scratch_scripts/verification'
 
@@ -19,7 +22,7 @@ def main():
     commands += [[sys.executable, name] for name in (
         'run_qa.py', 'game_qa_suite.py', 'test_multi_tier_pipeline.py',
         'test_input_regressions.py', 'test_sprite_grounding.py', 'test_ladder_browser.py',
-        'test_world_browser.py', 'test_rpg_browser.py')]
+        'test_world_browser.py', 'test_rpg_browser.py', 'test_zakum_assembly.py', 'test_responsive_ui.py', 'test_zakum_playability.py')]
     for command in commands:
         if command[-1].endswith('.py') and not (ROOT / command[-1]).exists():
             raise FileNotFoundError(command[-1])
