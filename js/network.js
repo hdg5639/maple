@@ -115,7 +115,10 @@ class NetworkManager {
     const host = window.location.hostname || 'localhost';
     const locPort = parseInt(window.location.port);
     const wsPort = locPort ? (locPort + 1) : 8001;
-    const wsUrl = `ws://${host}:${wsPort}`;
+    // HTTPS(터널/리버스 프록시) 환경에서는 같은 도메인의 /ws 경로로 접속
+    const wsUrl = window.location.protocol === 'https:'
+      ? `wss://${window.location.host}/ws`
+      : `ws://${host}:${wsPort}`;
 
     try {
       this.ws = new WebSocket(wsUrl);
