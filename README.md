@@ -202,6 +202,18 @@ node --test test_world_layout.js test_boss_lifecycle.js test_boss_autohunt.js te
 
 ---
 
+## 📚 기술 문서 허브 (Documentation)
+
+OpenMaple의 모든 공식 기획, 아키텍처 및 품질 보증 문서는 [`docs/` 디렉토리](docs/index.md)에서 단일 진실 공급원(SSOT)으로 관리됩니다:
+- [정통 클래식 게임플레이 명세서](docs/spec/classic_gameplay_spec.md)
+- [웹 클라이언트 아키텍처 명세서](docs/architecture/engine_architecture.md)
+- [자동화 QA 헌장 및 무결점 스위트](docs/qa/qa_research_and_standards.md)
+- [맵 및 몬스터 생태계 개선 계획](docs/planning/map_and_monster_plan.md)
+- [클래식 메이플 완전 아카이브](docs/planning/classic_archive/CLASSIC_MAPLE_COMPLETE_ARCHIVE.md)
+- [프로젝트 최상위 에이전트 헌장](AGENTS.md)
+
+---
+
 ## 📜 라이선스 및 저작권 (License & Disclaimer)
 
 본 프로젝트는 비영리 팬메이드 및 학술적/아키텍처 연구 목적으로 제작되었습니다.  

@@ -1,0 +1,422 @@
+{
+  "version": "1.0.0",
+  "cmpi_total_score": 100.0,
+  "tier": "S",
+  "tier_title": "Masterpiece Parity (상용 원작 초월 수준)",
+  "total_kpis": 62,
+  "passed_kpis": 62,
+  "partial_kpis": 0,
+  "failed_kpis": 0,
+  "domains": {
+    "D1_PHY": {
+      "title": "물리 & 지형 토폴로지 (Physics & Foothold)",
+      "weight": 0.12,
+      "kpi_count": 8,
+      "achieved_points": 8.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 12.0,
+      "kpis": {
+        "PHY-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Foothold class and linear slope interpolation equation found in physics.js"
+        },
+        "PHY-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "60Hz fixed timestep accumulator loop confirmed in physics.js"
+        },
+        "PHY-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "100% match on canonical physics constants (GRAVITY=0.52, JUMP=-9.8, AIR=0.18, FRICTION=0.82)"
+        },
+        "PHY-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Down-jump (↓+Jump) and one-way platform drop-through verified"
+        },
+        "PHY-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Ladder center snap (±14px) and climbing state physics verified"
+        },
+        "PHY-06": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Ladder top ledge clamber snap verified (no hovering at ladder ends)"
+        },
+        "PHY-07": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Ladder jump escape and 0.25s re-attachment cooldown confirmed"
+        },
+        "PHY-08": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Wizard Jump-Teleport (점텔) aerial momentum and snap landing verified"
+        }
+      }
+    },
+    "D2_ART": {
+      "title": "2등신 페이퍼돌 & 비주얼 아트 (Art & Paperdoll)",
+      "weight": 0.1,
+      "kpi_count": 8,
+      "achieved_points": 8.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 10.0,
+      "kpis": {
+        "ART-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "2-Head Chibi SD body-to-head proportion verified in PlayerRenderer"
+        },
+        "ART-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Layered paperdoll verified with 5 separate visual layers (body, head, face, arm, weapon)"
+        },
+        "ART-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "1.5~2px dark outline enforcement verified across sprites and assets"
+        },
+        "ART-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "2-step cel-shading with tone separation verified"
+        },
+        "ART-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Classic face expression with double reflection highlight & pink blush verified"
+        },
+        "ART-06": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Math.sin idle breathing bounce and walking forward body tilt verified"
+        },
+        "ART-07": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "3-layer depth parallax scrolling (far: 0.1, mid: 0.4, near: 1.0) verified"
+        },
+        "ART-08": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Offscreen canvas rasterization (Bake & Blit) optimization verified"
+        }
+      }
+    },
+    "D3_CBT": {
+      "title": "전투 타격감 & 투사체 주스 (Combat & Juice)",
+      "weight": 0.12,
+      "kpi_count": 8,
+      "achieved_points": 8.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 12.0,
+      "kpis": {
+        "CBT-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "DamageDigit staggered per-digit delay (0.04s) and arc trajectory verified"
+        },
+        "CBT-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Canonical orange/yellow gradient damage skin with critical magnification verified"
+        },
+        "CBT-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "0.08s Monster hitstop impact freeze verified"
+        },
+        "CBT-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "White silhouette mask offscreen hit flash (0.12s) verified"
+        },
+        "CBT-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Parabolic knockback trajectory and damage threshold verified"
+        },
+        "CBT-06": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Player contact damage, 1.2s i-Frame, and opacity blinking verified"
+        },
+        "CBT-07": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Shuriken & arrow 3~5 step motion trail buffer with glow verified"
+        },
+        "CBT-08": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Impact dust particles on landing and direction turn skid verified"
+        }
+      }
+    },
+    "D4_CLS": {
+      "title": "직업 체계 & 스킬 완성도 (Classes & Skills)",
+      "weight": 0.12,
+      "kpi_count": 8,
+      "achieved_points": 8.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 12.0,
+      "kpis": {
+        "CLS-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Beginner and all 4 first-job classes implemented (초보자, 전사, 마법사, 궁수, 도적)"
+        },
+        "CLS-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Canonical job specialization hierarchy verified (found: 파이터, 위자드, 헌터, 어쌔신, 크루세이더, 히어로, 나이트로드, 보우마스터)"
+        },
+        "CLS-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Warrior skills complete (6/6: power_strike, slash_blast, iron_body, rage, combo_attack, brandish)"
+        },
+        "CLS-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Magician skills complete (8/8: energy_bolt, magic_claw, teleport, magic_guard, thunderbolt, heal, holy_symbol, genesis)"
+        },
+        "CLS-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Bowman skills complete (7/7: arrow_blow, double_shot, focus, soul_arrow, arrow_bomb, strafe, hurricane)"
+        },
+        "CLS-06": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Thief skills complete (7/7: lucky_seven, double_stab, savage_blow, haste, dark_site, shadow_partner, avenger)"
+        },
+        "CLS-07": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Permanent passive buff standard verified (no recurring buff timer expiration)"
+        },
+        "CLS-08": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Projectile launch offset and proper rendering Z-Index sequence verified"
+        }
+      }
+    },
+    "D5_WLD": {
+      "title": "월드 구성 & 맵 토폴로지 (World & Infrastructure)",
+      "weight": 0.1,
+      "kpi_count": 5,
+      "achieved_points": 5.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 10.0,
+      "kpis": {
+        "WLD-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Victoria Island towns complete (4 towns found: henesys, ellinia, perion, kerning)"
+        },
+        "WLD-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Classic hunting grounds & boss lairs complete (7 areas found)"
+        },
+        "WLD-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Portal graph topology fully mapped across 12 destination maps (perion_boar, henesys_town, ludi_clocktower, sleepy_dungeon, ship_orbis, ellinia)"
+        },
+        "WLD-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Classic BGM system and canonical SFX audio triggers verified"
+        },
+        "WLD-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Minimap HUD rendering with real-time player/portal blips verified"
+        }
+      }
+    },
+    "D6_MON": {
+      "title": "몬스터 생태계 & 보스 레이드 (Monsters & Bosses)",
+      "weight": 0.1,
+      "kpi_count": 5,
+      "achieved_points": 5.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 10.0,
+      "kpis": {
+        "MON-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Canonical monster ecosystem verified (7 archetypes found: snail, slime, mushroom, pig, boar, zombie, wraith)"
+        },
+        "MON-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Multi-part Zakum raid (Body + 8 independent arms with individual hitboxes) verified"
+        },
+        "MON-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Field boss ecosystem verified (Mushmom jump quake pattern & trophies)"
+        },
+        "MON-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "WZ drop table parser, mesos, and quest item drops verified"
+        },
+        "MON-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Platform-bound patrol AI, player aggro, and collision logic verified"
+        }
+      }
+    },
+    "D7_ITM": {
+      "title": "아이템, 코디 & 인챈트 (Itemization & Coordi)",
+      "weight": 0.1,
+      "kpi_count": 5,
+      "achieved_points": 5.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 10.0,
+      "kpis": {
+        "ITM-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "5 classic inventory tabs (Equip, Use, Etc, Setup, Cash) fully isolated"
+        },
+        "ITM-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Unique item UUID tracking and canonical equipment stat rolling verified"
+        },
+        "ITM-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Classic 7-slot scroll enchanting with success/destruction odds verified"
+        },
+        "ITM-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "100% decoupled stat-vs-cosmetic Coordi system with paperdoll mirroring verified"
+        },
+        "ITM-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Town merchant shop buying/selling and meso balance verified"
+        }
+      }
+    },
+    "D8_UX": {
+      "title": "클래식 진입 흐름 & UX (Lobby & UI/UX)",
+      "weight": 0.08,
+      "kpi_count": 5,
+      "achieved_points": 5.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 8.0,
+      "kpis": {
+        "UX-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Canonical entry flow: Title -> Auth -> Multi-char Lobby -> Dice -> Ingame verified"
+        },
+        "UX-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Classic 4/4 starting stat dice roll (sum 25 random distribution) verified"
+        },
+        "UX-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Classic HUD with HP/MP/EXP gauges, level badges, and quickslots verified"
+        },
+        "UX-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Customizable KeyConfig modal for full keyboard remapping verified"
+        },
+        "UX-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Social Fame (인기도) up/down system with cooldowns verified"
+        }
+      }
+    },
+    "D9_SEC": {
+      "title": "데이터 영속성 & 무결성 (Zero-Loss Persistence)",
+      "weight": 0.08,
+      "kpi_count": 5,
+      "achieved_points": 5.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 8.0,
+      "kpis": {
+        "SEC-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "SQLite WAL journaling confirmed (Code: True, Live DB: True)"
+        },
+        "SEC-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Tier 1 zero-delay immediate persistence on levelup/stat/inventory verified"
+        },
+        "SEC-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Server graceful shutdown signal handler with session flush verified"
+        },
+        "SEC-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "beforeunload navigator.sendBeacon client flush guard verified"
+        },
+        "SEC-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Safe portal respawn and initial 3.0s i-Frame guard verified"
+        }
+      }
+    },
+    "D10_AUT": {
+      "title": "지능형 자동사냥 & A* (Autonomous Hunt & Graph)",
+      "weight": 0.08,
+      "kpi_count": 5,
+      "achieved_points": 5.0,
+      "domain_score": 100.0,
+      "weighted_contribution": 8.0,
+      "kpis": {
+        "AUT-01": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Foothold-ladder topological graph builder verified"
+        },
+        "AUT-02": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Dynamic graph invalidation and rebuild on map transition verified"
+        },
+        "AUT-03": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "A* heuristic shortest path algorithm across footholds and ladders verified"
+        },
+        "AUT-04": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Execution of deterministic action queue (Move, Climb, Drop) verified"
+        },
+        "AUT-05": {
+          "score": 1.0,
+          "status": "PASS",
+          "reason": "Anti-Stuck displacement monitor (0.5s / 10px stationary escape jump) verified"
+        }
+      }
+    }
+  }
+}

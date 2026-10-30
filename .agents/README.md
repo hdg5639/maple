@@ -74,6 +74,8 @@ OpenMaple은 2000년대 빅뱅 이전 넥슨 클래식 메이플스토리 엔진
 | 전문 역할 | 지침 | 핵심 책임 |
 | --- | --- | --- |
 | **Classic Researcher** | [classic-researcher/agent.md](agents/classic-researcher/agent.md) | GMS 62 및 클래식 넥슨 데이터 서비스 기반 원본 근거, 스킬 딜레이(ms), 스탯 공식 추출 |
+| **Classic Parity Auditor** | [classic-parity-auditor/agent.md](agents/classic-parity-auditor/agent.md) | CMPI 10대 도메인 50대 지표 기반 클래식 메이플 패리티 정량 측정 및 보고서 산출 |
+| **Item & Coordi Architect** | [item-coordi-evolution-architect/agent.md](agents/item-coordi-evolution-architect/agent.md) | 스탯-외형 100% 분리형 코디 시스템 & 사냥 숙련도+보스 전리품 한계돌파 이중성장 아키텍처 총괄 |
 | **Web Client Developer** | [web-client-developer/agent.md](agents/web-client-developer/agent.md) | 브라우저 바닐라 JS 구현, 로비/주사위 UI, 캔버스 최적화, 네트워크 동기화 |
 | **Implementation Reviewer** | [implementation-reviewer/agent.md](agents/implementation-reviewer/agent.md) | 기여 LLM의 코드 diff를 독립 검토하고 머신 가독형 피드백 생성 (사람의 코드 리뷰 대체) |
 

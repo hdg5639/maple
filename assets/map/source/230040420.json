@@ -1,0 +1,776 @@
+{
+  "backgroundMusic": "Bgm12/AquaCave",
+  "isReturnMap": false,
+  "returnMap": 230000000,
+  "portals": [
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": -8,
+      "y": 53,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": -8,
+        "y": 53,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -8,
+          "y": 53,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 53,
+        "right": -7,
+        "bottom": 54,
+        "left": -8
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": 182,
+      "y": 37,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": 182,
+        "y": 37,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 182,
+          "y": 37,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 37,
+        "right": 183,
+        "bottom": 38,
+        "left": 182
+      }
+    },
+    {
+      "portalName": "out00",
+      "toName": "boss00",
+      "type": 2,
+      "toMap": 230040410,
+      "x": 89,
+      "y": 18,
+      "linkToMap": "/map/230040410",
+      "toMapName": {
+        "name": "The Dangerous Cave",
+        "streetName": "Aqua Road",
+        "id": 230040410
+      },
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": false,
+      "bounds": {
+        "x": 89,
+        "y": 18,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 89,
+          "y": 18,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 18,
+        "right": 90,
+        "bottom": 19,
+        "left": 89
+      }
+    }
+  ],
+  "npcs": [],
+  "mobs": [
+    {
+      "x": 568,
+      "y": 138,
+      "walkAreaX1": 527,
+      "walkAreaX2": 733,
+      "id": 8510000,
+      "footholdId": 10,
+      "foothold": {
+        "id": 10,
+        "next": 11,
+        "prev": 9,
+        "piece": 0,
+        "x1": 507,
+        "x2": 573,
+        "y1": 138,
+        "y2": 138,
+        "layerId": 3,
+        "groupId": 6
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/8510000",
+      "index": 0,
+      "name": "Pianus",
+      "position": {},
+      "bounds": {
+        "x": 568,
+        "y": 138,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 568,
+          "y": 138,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 138,
+        "right": 569,
+        "bottom": 139,
+        "left": 568
+      },
+      "flip": false
+    },
+    {
+      "x": -459,
+      "y": 138,
+      "walkAreaX1": -643,
+      "walkAreaX2": -437,
+      "id": 8520000,
+      "footholdId": 6,
+      "foothold": {
+        "id": 6,
+        "next": 7,
+        "prev": 3,
+        "piece": 0,
+        "x1": -483,
+        "x2": -450,
+        "y1": 138,
+        "y2": 138,
+        "layerId": 3,
+        "groupId": 5
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/8520000",
+      "index": 1,
+      "name": "Pianus",
+      "position": {},
+      "bounds": {
+        "x": -459,
+        "y": 138,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -459,
+          "y": 138,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 138,
+        "right": -458,
+        "bottom": 139,
+        "left": -459
+      },
+      "flip": false
+    }
+  ],
+  "mobRate": 1,
+  "isTown": false,
+  "isSwim": false,
+  "mapMark": "AquaRoad",
+  "miniMap": {
+    "centerX": 731,
+    "centerY": 470,
+    "height": 894,
+    "width": 1546,
+    "magnification": 4,
+    "canvas": "iVBORw0KGgoAAAANSUhEUgAAAGAAAAA3CAYAAADzE093AAAACXBIWXMAAA7EAAAOxAGVKw4bAAALVUlEQVR4nO1a/3nbug7lH28BrMCOwI6gO4LeCM4IzgjxCNYI1QjhCI8jlCtghYeDH7ST2Pna29zrOJ\u002BYtHEkigRxDg5AKv9JW7tp2wC4cdsAuHHbALhx2wC4cdsAuHHbALhx2wC4cdsAuHHbALhx\u002BzIA5Fz2uZR9733trT6kO2lfBgDm3nLeUWee5ddHXEp30L4QAFzruhzkJxx/F85H\u002BzIAoPXeHtOdtS8FwD22DYAbtw2Af7CRVAW5THtubRF5PFzq8y4A91rafZrGiUvOuTLvU29LulAcvAvAvZZ2n6WJ/9Za68K9X63MLgNAVIgoy4PrPZZ2n6m5cog7aUKp/Pr\u002BRQCmaT6KfpUm\u002BPVe/0pb\u002B6NWxJ/izrn11npdv5/fuwiA7Ggepnn3LCHU09b\u002BuDXxZ96ViftbEbksQcytLodvaZOdj2q8Lo/fLt14Lwlvzv/Y9htJeGv/WtsAuHHbALhx2wC4cdsAuHHbALhx\u002BzIAYK8vP3LSl2N8NxvIrwIA5TL9JEeBdTO/3MURytcAACeHuRDj/Be/s0bCXbQ3AAiD8n4qz515WVq/\u002BBLh0zXxutibcibojx6jp0/YnsSvtfdWO493128AKETHjHcxRLslpU8HALhO8oXP3OULB4aUID3ykeU2pdrq4\u002BhdAEsiTQz9dsCIX6eMg2b5WRPj5YzmqbcRQAkG424WxH481vbf131kILzoKYLmkv7lJv7/If8XeJxKYqHTNz08XA/fxNvH1MR0T8LSd4\u002BARlhrdug4CuZ/DASoB9uZD7\u002B6TvsCu80O\u002BK9fAUB0NOV\u002BenC6MEnZlfw/zCArWSG/Scl4sfKg9MGHeuJkTbUuN9Rbyy45\u002BPHitamQJMM8AcLNmHY4Gv5IezCBrJ33RcBPPDeQofP3V30Kmy9S64zfd/LMit9fAxDoaWcljjhcPSgP5TzNmVRjFcmplH1OMrcsUCLlu4OgKiGqUHbET2vnv2DURy0YUqMRKgsRRemv9F4LIfb5oDoqQLIk6ZparX9LUqHdq0wlqz5g9cnfEB7n6RkklVzZNCLlS9Zapnn3U\u002BbC9JDCNpe8Jx/LC4VB1ktVEORShxNFTWWen0vJVHKR2q4Jgl0RAqeKAMCtqT1SBh7FIwS6zfOEV3GIC/Rmfb35B7U5EBVzEN6ka1fBR7BzJWMX2C4kLGW329Hh8fCIOtR1nyUvgC9qEMabd/ujAFOw1o53VOtyFRh5VqSWV3HisYszcG1dV5YhO\u002BwC/hjLJE6ci4hLnHf7Hex7bk0gERJ0TVUGkvQarybfSBCWe\u002BhG/Wma4GiCM/FgkTTSDhBZcrTVOdKH5V4p1LNOVKuNj\u002BCfS3nmnNu6LAj9vyFHeJs6/dA/EMCC5UpbVcuV7njdh07CTxLHoBxN0zwfwTMwvuGvEWDkGQEEk6m1DliSS\u002BjhyswC6XSUVENNOClyZ\u002BuSpSIHMtKNjCEQu9bCcVl9M08lPTw8gqTEYlOToFQ/skrSfFGCYFDZ7ZNSg81XWZFQ4MWxhoyEmE5X2Pqt4nR4RiIFTBzjCbVgLKQ475\u002BOk8p0tyBEIUN0mtvKR7MhtlMmMz1JRGnAWeAzcs8P7xd7L5mfBIIckSHPzMdpmvEnNUlYCEf42ApdhiRBnlBTlfL004wQdgt5sAb/hwHVBk1\u002B6E\u002BkdmINa8Oa5zRFpiuTGolKbJWb824XnlWgZCa1IyG3HqxQewEAjG/NDE7uCEt2bp0H0SpSFE4iN6h1c1gAqUonE0qPZE43\u002Bdb3orgvv0l06ojNmaXzCYheWQ7jsZgcYyaNdINZx\u002BgpTNGhfU/Aluw0YjQAfDzYQi5hraewOYfNcFLyNVV0SDaWlocAyOez/kllmcJHAIvNdqwjVY4lmL/OwIv2JgfgQR3QmQpDVWac2ZgwO3WNIKzPmCNIn1XjXMbCsWaHfE3Q0Kphq3NZ9jICdIsCjBvPNAdbnZOcFBOiC7JodlkIoHNXO3TcIAKHA07R9cZmt5sdHIuRrA61KgokWF/YrGPIPTicTVak7MgSAcUk2NcRzh5/2JNP1LoIgIZb0lyKjDcKSXMOu1HGnHAWnAT5Oa86I3I4kOiqmCP/YyG92\u002B4VYWmOoxdjmEPI50uefK2CLpKf9I82wGRfnZqbA\u002ByXCUdzlkSaLt8jQGfL2cexSFGSwdlC950UE0Zs1vnMju7P0lhHgGxIs\u002BbOkC0zwj84EeCvqwDEwKGbKgfBYDgLssIndoGJMGgWLazNogMSgIQFQ5CU8BlDgDGsWlp8EQZqSAzCX51ElvCCDIWKM47USZJYjRzmdrePUqQfvzXG0PFM/FPyslTXpsTqYy2wB4SCs3dz0c\u002BHZdUxtH/4yMfC9QxNt\u002BpbowH2owq0NRj5eq8midmi7jz5vS1D1ZiOre4I1TDUHG\u002BsT6FlHo7Lsliiy75QIk1omOp43I/oggFmOLyVXeLiXtPF53AYWbWlDMTYyc985DOcmzWxuo6fJfE4E6JgpaNiTjfQu//JE0hPHm1AECTC2hEZGLdKhap8Vxmm4TyMMYmjlTAhg06GdbEqcN5NTgT3azKlRP\u002BIgUuHcclLBTMs8ohXAJp0Eg9Hc7BpJOTIG2SVxJngLYeDOc\u002BzJakomQajxPWDND3MBEAhU7E4Bd5zEzndIzI45EGTbxlMnWevjEbRkCwhu7w2iT7U7NNkMtg1Ofc0sam31Ln\u002BkgEEtBKze6UzQPT1dUv8CWUROeEQ9UHMyGfv5oDkOzrTMIqITd2jwBKLIaN7A\u002Bh3jarJJ83OFu\u002BnjFMdnbF7Nd3HoVk9VRQW5lmrqXBe94rDKxodF/qcXHIGy7Pvj4c0do8cdUty0X8pIe5U2IOk\u002BfT0pP3F3xpdKBTQihKmj6ixwqOP\u002BVVWzwgSQbeKdGlkFFMMqMEUEfgeAGBBOHromEcFub6rRBgiZ6GcLVH6wlVbswGIMMUirbIyg2JRZjoPqbFNOGukoQ\u002BYafP6Bm/sE8ifN2aFHdiIOfLDKa2dNuFwnuwPbEfPSfc0son0osKSsSZ4d3JsKsnBiJKZvYBgL1Ot6gqJzCpP7HmijdOLNPpfj4AzXZcdp2X/sCBZnZ08kepwa4S3dVGZ8Ac0pM1VaVRWozAjT2BekSj7uzuQh7TAuaq3YkfzqscSWxvOLuVMZqKqjTK2OdC\u002B8UPpWn1nH88ogNmiBhFIfCpXo2AIqzEn5g6yjE1ejvFt3XkQRVG3KLCNqZHiGgCxqY6KZ4zRo55lXQR7mTVqa38mckA4NmdLYKaJVldzbPQcTPbDMhqyFUSw0rCc7Tss8qyiyl67WwWUT1tFH8cPpfU7e12f9Bmv3bM5Lmw\u002B5S/3BYXN8gyA9MNmtSP57liiJ/sOvA8f4YiiWK6k08lbOP/8WOziK0kLSd\u002BNniVhS7ppGJo9B4zzvbHxs6RI8bkHoDQkKHaOapiWp4GGH1V4klUJdEdriVjotIFSxnq5GwTyo2d21ulojcc1crBGFTfi8ddttuIiDzlOnqfCRxQ0jjFKPpHYyXkNACFnkyzHRYzNRmI1/CALnvVcRz7UuvZke6Nur2ORulS3WTo0XaieAOXScFE3DLzgoLQAXa0\u002B1ubaxOgnYxRxtnyrYFetP3DAJw1Hu4iEFbWu7KVFX4sdmzR9y7Wui54LZXkCp5/aWj00okkuTaQyU7uWfyLq6ClmTKCxJHUwreuh0i/ajANgXfZk80G3JHEv1GnSMeS/iiQGb1dedYzJxhAZwtH19eNo7vWhXjg4FnMWPWJ\u002BtclkZWkd10a\u002Ba/r9sm/rL8fwO2Bxq\u002BvrzSvq6ajYzq8f1sNLO\u002BJma/VlfMv2pC7tNEY7fRDYzrbcYfyv26xj9BqVQAxzeGeMk73vRMCvNP7Fa797/XfGvXzv8juHj7Dt2nx/ur70f5C55zfFmj8PAAAAAElFTkSuQmCC"
+  },
+  "footholds": {
+    "23": {
+      "id": 23,
+      "next": 24,
+      "prev": 22,
+      "piece": 0,
+      "x1": 147,
+      "x2": 213,
+      "y1": 78,
+      "y2": 78,
+      "layerId": 3,
+      "groupId": 12
+    },
+    "2": {
+      "id": 2,
+      "next": 4,
+      "prev": 1,
+      "piece": 0,
+      "x1": -663,
+      "x2": -597,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "34": {
+      "id": 34,
+      "next": 36,
+      "prev": 35,
+      "piece": 0,
+      "x1": -225,
+      "x2": -135,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "19": {
+      "id": 19,
+      "next": 20,
+      "prev": 0,
+      "piece": 0,
+      "x1": 57,
+      "x2": 57,
+      "y1": 60,
+      "y2": 18,
+      "layerId": 3,
+      "groupId": 14
+    },
+    "10": {
+      "id": 10,
+      "next": 11,
+      "prev": 9,
+      "piece": 0,
+      "x1": 507,
+      "x2": 573,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "21": {
+      "id": 21,
+      "next": 0,
+      "prev": 20,
+      "piece": 0,
+      "x1": 123,
+      "x2": 123,
+      "y1": 18,
+      "y2": 60,
+      "layerId": 3,
+      "groupId": 14
+    },
+    "32": {
+      "id": 32,
+      "next": 33,
+      "prev": 31,
+      "piece": 0,
+      "x1": 315,
+      "x2": 405,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "43": {
+      "id": 43,
+      "next": 0,
+      "prev": 38,
+      "piece": 0,
+      "x1": 675,
+      "x2": 765,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "4": {
+      "id": 4,
+      "next": 3,
+      "prev": 2,
+      "piece": 0,
+      "x1": -597,
+      "x2": -540,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "30": {
+      "id": 30,
+      "next": 31,
+      "prev": 29,
+      "piece": 0,
+      "x1": 135,
+      "x2": 225,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "41": {
+      "id": 41,
+      "next": 40,
+      "prev": 42,
+      "piece": 0,
+      "x1": -585,
+      "x2": -495,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "6": {
+      "id": 6,
+      "next": 7,
+      "prev": 3,
+      "piece": 0,
+      "x1": -483,
+      "x2": -450,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "16": {
+      "id": 16,
+      "next": 17,
+      "prev": 0,
+      "piece": 0,
+      "x1": -33,
+      "x2": -33,
+      "y1": 120,
+      "y2": 78,
+      "layerId": 3,
+      "groupId": 11
+    },
+    "27": {
+      "id": 27,
+      "next": 0,
+      "prev": 26,
+      "piece": 0,
+      "x1": 303,
+      "x2": 303,
+      "y1": 138,
+      "y2": 180,
+      "layerId": 3,
+      "groupId": 8
+    },
+    "14": {
+      "id": 14,
+      "next": 0,
+      "prev": 13,
+      "piece": 0,
+      "x1": 753,
+      "x2": 753,
+      "y1": 180,
+      "y2": 240,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "18": {
+      "id": 18,
+      "next": 0,
+      "prev": 17,
+      "piece": 0,
+      "x1": 33,
+      "x2": 33,
+      "y1": 78,
+      "y2": 120,
+      "layerId": 3,
+      "groupId": 11
+    },
+    "25": {
+      "id": 25,
+      "next": 26,
+      "prev": 0,
+      "piece": 0,
+      "x1": 237,
+      "x2": 237,
+      "y1": 180,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 8
+    },
+    "29": {
+      "id": 29,
+      "next": 30,
+      "prev": 28,
+      "piece": 0,
+      "x1": 45,
+      "x2": 135,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "5": {
+      "id": 5,
+      "next": 1,
+      "prev": 0,
+      "piece": 0,
+      "x1": -663,
+      "x2": -663,
+      "y1": 240,
+      "y2": 180,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "12": {
+      "id": 12,
+      "next": 13,
+      "prev": 15,
+      "piece": 0,
+      "x1": 687,
+      "x2": 753,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "38": {
+      "id": 38,
+      "next": 43,
+      "prev": 37,
+      "piece": 0,
+      "x1": 585,
+      "x2": 675,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "7": {
+      "id": 7,
+      "next": 8,
+      "prev": 6,
+      "piece": 0,
+      "x1": -450,
+      "x2": -417,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "17": {
+      "id": 17,
+      "next": 18,
+      "prev": 16,
+      "piece": 0,
+      "x1": -33,
+      "x2": 33,
+      "y1": 78,
+      "y2": 78,
+      "layerId": 3,
+      "groupId": 11
+    },
+    "15": {
+      "id": 15,
+      "next": 12,
+      "prev": 11,
+      "piece": 0,
+      "x1": 630,
+      "x2": 687,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "26": {
+      "id": 26,
+      "next": 27,
+      "prev": 25,
+      "piece": 0,
+      "x1": 237,
+      "x2": 303,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 8
+    },
+    "37": {
+      "id": 37,
+      "next": 38,
+      "prev": 33,
+      "piece": 0,
+      "x1": 495,
+      "x2": 585,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "13": {
+      "id": 13,
+      "next": 14,
+      "prev": 12,
+      "piece": 0,
+      "x1": 753,
+      "x2": 753,
+      "y1": 138,
+      "y2": 180,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "1": {
+      "id": 1,
+      "next": 2,
+      "prev": 5,
+      "piece": 0,
+      "x1": -663,
+      "x2": -663,
+      "y1": 180,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "24": {
+      "id": 24,
+      "next": 0,
+      "prev": 23,
+      "piece": 0,
+      "x1": 213,
+      "x2": 213,
+      "y1": 78,
+      "y2": 120,
+      "layerId": 3,
+      "groupId": 12
+    },
+    "35": {
+      "id": 35,
+      "next": 34,
+      "prev": 39,
+      "piece": 0,
+      "x1": -315,
+      "x2": -225,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "28": {
+      "id": 28,
+      "next": 29,
+      "prev": 36,
+      "piece": 0,
+      "x1": -45,
+      "x2": 45,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "39": {
+      "id": 39,
+      "next": 35,
+      "prev": 40,
+      "piece": 0,
+      "x1": -405,
+      "x2": -315,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "9": {
+      "id": 9,
+      "next": 10,
+      "prev": 0,
+      "piece": 0,
+      "x1": 507,
+      "x2": 507,
+      "y1": 180,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "11": {
+      "id": 11,
+      "next": 15,
+      "prev": 10,
+      "piece": 0,
+      "x1": 573,
+      "x2": 630,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 6
+    },
+    "22": {
+      "id": 22,
+      "next": 23,
+      "prev": 0,
+      "piece": 0,
+      "x1": 147,
+      "x2": 147,
+      "y1": 120,
+      "y2": 78,
+      "layerId": 3,
+      "groupId": 12
+    },
+    "33": {
+      "id": 33,
+      "next": 37,
+      "prev": 32,
+      "piece": 0,
+      "x1": 405,
+      "x2": 495,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "3": {
+      "id": 3,
+      "next": 6,
+      "prev": 4,
+      "piece": 0,
+      "x1": -540,
+      "x2": -483,
+      "y1": 138,
+      "y2": 138,
+      "layerId": 3,
+      "groupId": 5
+    },
+    "20": {
+      "id": 20,
+      "next": 21,
+      "prev": 19,
+      "piece": 0,
+      "x1": 57,
+      "x2": 123,
+      "y1": 18,
+      "y2": 18,
+      "layerId": 3,
+      "groupId": 14
+    },
+    "31": {
+      "id": 31,
+      "next": 32,
+      "prev": 30,
+      "piece": 0,
+      "x1": 225,
+      "x2": 315,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "42": {
+      "id": 42,
+      "next": 41,
+      "prev": 0,
+      "piece": 0,
+      "x1": -675,
+      "x2": -585,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "40": {
+      "id": 40,
+      "next": 39,
+      "prev": 41,
+      "piece": 0,
+      "x1": -495,
+      "x2": -405,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "36": {
+      "id": 36,
+      "next": 28,
+      "prev": 34,
+      "piece": 0,
+      "x1": -135,
+      "x2": -45,
+      "y1": 168,
+      "y2": 168,
+      "layerId": 4,
+      "groupId": 0
+    },
+    "8": {
+      "id": 8,
+      "next": 0,
+      "prev": 7,
+      "piece": 0,
+      "x1": -417,
+      "x2": -417,
+      "y1": 138,
+      "y2": 180,
+      "layerId": 3,
+      "groupId": 5
+    }
+  },
+  "minimumLevel": 15,
+  "vrBounds": {
+    "x": -675,
+    "y": -400,
+    "width": 1440,
+    "height": 800,
+    "location": {
+      "x": -675,
+      "y": -400,
+      "isEmpty": false
+    },
+    "size": {
+      "width": 1440,
+      "height": 800,
+      "isEmpty": false
+    },
+    "isEmpty": false,
+    "top": -400,
+    "right": 765,
+    "bottom": 400,
+    "left": -675
+  },
+  "returnMapName": {
+    "name": "Aquarium",
+    "streetName": "Aquarium",
+    "id": 230000000
+  },
+  "ladderRopes": [
+    {
+      "x": 93,
+      "y1": 20,
+      "y2": 155,
+      "isLadder": false
+    }
+  ],
+  "name": "The Cave of Pianus",
+  "streetName": "Aqua Road",
+  "id": 230040420
+}

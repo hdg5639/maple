@@ -35,6 +35,7 @@ _GLOBAL_SERVER_INSTANCE = None
 # ==============================================================================
 def get_db():
     conn = sqlite3.connect(DB_PATH, timeout=10.0)
+    conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode = WAL;")
     conn.execute("PRAGMA synchronous = NORMAL;")
     return conn
@@ -78,6 +79,23 @@ def init_db():
             quickslots TEXT DEFAULT '[]',
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(account_id) REFERENCES accounts(id)
+        )
+    ''')
+    try:
+        cur.execute('ALTER TABLE characters ADD COLUMN job_tier INTEGER DEFAULT 0')
+    except Exception:
+        pass
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS snail_race_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            round_id TEXT NOT NULL,
+            server_seed TEXT NOT NULL,
+            server_seed_hash TEXT NOT NULL,
+            client_seed TEXT NOT NULL,
+            winner_index INTEGER NOT NULL,
+            bet_amount INTEGER NOT NULL,
+            payout INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     conn.commit()
@@ -132,11 +150,42 @@ def make_starter_inventory():
     }
 
 def parse_character_row(char_row):
+    # Support both sqlite3.Row dict-like access and tuple index fallback
+    if hasattr(char_row, 'keys'):
+        k = char_row.keys()
+        return {
+            "charId": char_row["id"],
+            "accountId": char_row["account_id"],
+            "name": char_row["name"],
+            "job": char_row["job"],
+            "jobTier": char_row["job_tier"] if "job_tier" in k and char_row["job_tier"] is not None else 0,
+            "level": char_row["level"],
+            "exp": char_row["exp"],
+            "hp": char_row["hp"],
+            "maxHp": char_row["max_hp"],
+            "mp": char_row["mp"],
+            "maxMp": char_row["max_mp"],
+            "str": char_row["str"],
+            "dex": char_row["dex"],
+            "int": char_row["int_stat"],
+            "luk": char_row["luk"],
+            "ap": char_row["ap"],
+            "sp": char_row["sp"],
+            "fame": char_row["fame"],
+            "meso": char_row["meso"],
+            "currentMap": char_row["current_map"],
+            "x": char_row["x"],
+            "y": char_row["y"],
+            "inventory": json.loads(char_row["inventory"]) if char_row["inventory"] else make_starter_inventory(),
+            "skills": json.loads(char_row["skills"]) if char_row["skills"] else {},
+            "quickslots": json.loads(char_row["quickslots"]) if char_row["quickslots"] else []
+        }
     return {
         "charId": char_row[0],
         "accountId": char_row[1],
         "name": char_row[2],
         "job": char_row[3],
+        "jobTier": char_row[25] if len(char_row) > 25 and char_row[25] is not None else 0,
         "level": char_row[4],
         "exp": char_row[5],
         "hp": char_row[6],
@@ -269,12 +318,14 @@ def db_save_character(char_data):
         cur = conn.cursor()
         cur.execute('''
             UPDATE characters SET
-                level = ?, exp = ?, hp = ?, max_hp = ?, mp = ?, max_mp = ?,
+                job = ?, job_tier = ?, level = ?, exp = ?, hp = ?, max_hp = ?, mp = ?, max_mp = ?,
                 str = ?, dex = ?, int_stat = ?, luk = ?, ap = ?, sp = ?, fame = ?, meso = ?,
                 current_map = ?, x = ?, y = ?,
                 inventory = ?, skills = ?, quickslots = ?, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
         ''', (
+            char_data.get('job', '초보자'),
+            char_data.get('jobTier', 0),
             char_data.get('level', 1),
             char_data.get('exp', 0),
             char_data.get('hp', 100),

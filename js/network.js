@@ -347,6 +347,10 @@ class NetworkManager {
     const p = this.game.player;
     const charData = {
       charId: this.currentAccount.charId,
+      name: p.name,
+      job: p.job,
+      jobTier: p.jobTier || 0,
+      selectedMobility: p.selectedMobility || 'flash_jump',
       level: p.level,
       exp: p.exp,
       hp: p.hp,
@@ -407,6 +411,10 @@ class NetworkManager {
     const p = this.game.player;
     const charData = {
       charId: this.currentAccount.charId,
+      name: p.name,
+      job: p.job,
+      jobTier: p.jobTier || 0,
+      selectedMobility: p.selectedMobility || 'flash_jump',
       level: p.level,
       exp: p.exp,
       hp: p.hp,

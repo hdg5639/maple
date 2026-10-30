@@ -15,6 +15,13 @@ class SpriteRenderer {
     const img = new Image();
     const footY = window.SPRITE_FOOT_Y?.[path];
     if (footY !== undefined) this.spriteFootY.set(img, footY);
+    let retries = 0;
+    img.onerror = () => {
+      if (retries < 3) {
+        retries++;
+        setTimeout(() => { img.src = path; }, 40 * retries);
+      }
+    };
     img.src = path;
     this.images[key] = img;
     return img;
@@ -77,14 +84,18 @@ class SpriteRenderer {
 
     // 2. Preload Monsters (Stand, Move, Hit, Die)
     this.monsterSprites = {};
+    this.mobs = this.monsterSprites;
+    this.bakedMobCanvases = new Map();
     for (const [name, record] of Object.entries(window.MONSTER_ASSETS || {})) {
       const frames = this.monsterSprites[name] = {};
       for (const action of ['stand', 'move', 'hit1', 'die1']) {
         frames[action] = [];
-        for (let index = 0; index < record.frames[action]; index++) {
+        const count = record.frames[action] || 0;
+        for (let index = 0; index < count; index++) {
           frames[action].push(this.loadImage(`mob_${name}_${action}_${index}`, `assets/monsters/${name}/${action}_${index}.png`));
         }
       }
+      frames.bake = (facing = 'left') => this.bakeMonster(name, facing);
     }
 
     // 3. Preload Damage Digits (Normal 0-9, Crit 0-9, Crit Star, Miss)
@@ -99,14 +110,25 @@ class SpriteRenderer {
     this.critStar = this.loadImage('dmg_crit_star', 'assets/ui/damage/crit_star.png');
     this.missImg = this.loadImage('dmg_miss', 'assets/ui/damage/miss.png');
 
-    // 4. Preload Projectiles
+    // 4. Preload Projectiles & Authentic Classic Throwing Stars
     this.projectiles = {
       arrow: this.loadImage('proj_arrow', 'assets/projectiles/arrow.png'),
       shuriken: this.loadImage('proj_shuriken', 'assets/projectiles/shuriken.png'),
       energy_bolt: this.loadImage('proj_energy_bolt', 'assets/projectiles/energy_bolt.png')
     };
+    this.starSprites = {
+      subi: [this.loadImage('star_subi_0', 'assets/projectiles/stars/subi_0.png'), this.loadImage('star_subi_1', 'assets/projectiles/stars/subi_1.png')],
+      mokbi: [this.loadImage('star_mokbi_0', 'assets/projectiles/stars/mokbi_0.png'), this.loadImage('star_mokbi_1', 'assets/projectiles/stars/mokbi_1.png')],
+      kumbi: [this.loadImage('star_kumbi_0', 'assets/projectiles/stars/kumbi_0.png'), this.loadImage('star_kumbi_1', 'assets/projectiles/stars/kumbi_1.png')],
+      tobi: [this.loadImage('star_tobi_0', 'assets/projectiles/stars/tobi_0.png'), this.loadImage('star_tobi_1', 'assets/projectiles/stars/tobi_1.png')],
+      steely: [this.loadImage('star_steely_0', 'assets/projectiles/stars/steely_0.png'), this.loadImage('star_steely_1', 'assets/projectiles/stars/steely_1.png')],
+      ilbi: [this.loadImage('star_ilbi_0', 'assets/projectiles/stars/ilbi_0.png'), this.loadImage('star_ilbi_1', 'assets/projectiles/stars/ilbi_1.png')],
+      hwabi: [this.loadImage('star_hwabi_0', 'assets/projectiles/stars/hwabi_0.png'), this.loadImage('star_hwabi_1', 'assets/projectiles/stars/hwabi_1.png')],
+      ultimate: [this.loadImage('star_ultimate_0', 'assets/projectiles/stars/ultimate_0.png'), this.loadImage('star_ultimate_1', 'assets/projectiles/stars/ultimate_1.png')]
+    };
 
     // 5. Preload Drops (Meso coins & Item loot)
+    const ribbonImg = this.loadImage('item_ribbon', 'assets/items/ribbon.png');
     this.drops = {
       meso_bronze: this.loadImage('drop_meso_b', 'assets/ui/drops/meso_bronze.png'),
       meso_silver: this.loadImage('drop_meso_s', 'assets/ui/drops/meso_silver.png'),
@@ -119,7 +141,26 @@ class SpriteRenderer {
       red_snail_shell: this.loadImage('item_r_shell', 'assets/items/red_snail_shell.png'),
       mushroom_cap: this.loadImage('item_mush_cap', 'assets/items/mushroom_cap.png'),
       slime_liquid: this.loadImage('item_slime_liq', 'assets/items/slime_liquid.png'),
-      ribbon: this.loadImage('item_ribbon', 'assets/items/ribbon.png')
+      ribbon: ribbonImg,
+      pig_ribbon: ribbonImg,
+      subi_star: this.loadImage('icon_subi', 'assets/projectiles/stars/subi_icon.png'),
+      mokbi_star: this.loadImage('icon_mokbi', 'assets/projectiles/stars/mokbi_icon.png'),
+      kumbi_star: this.loadImage('icon_kumbi', 'assets/projectiles/stars/kumbi_icon.png'),
+      tobi_star: this.loadImage('icon_tobi', 'assets/projectiles/stars/tobi_icon.png'),
+      steely_star: this.loadImage('icon_steely', 'assets/projectiles/stars/steely_icon.png'),
+      ilbi_star: this.loadImage('icon_ilbi', 'assets/projectiles/stars/ilbi_icon.png'),
+      hwabi_star: this.loadImage('icon_hwabi', 'assets/projectiles/stars/hwabi_icon.png'),
+      ultimate_star: this.loadImage('icon_ultimate', 'assets/projectiles/stars/ultimate_icon.png'),
+      trophy_king_slime: this.loadImage('trophy_kslime', 'assets/monsters/king_slime/stand_0.png'),
+      trophy_mushmom: this.loadImage('trophy_mushmom', 'assets/monsters/mushmom/stand_0.png'),
+      trophy_zombie_mushmom: this.loadImage('trophy_zmush', 'assets/monsters/zombie_mushroom/stand_0.png'),
+      trophy_jr_balrog: this.loadImage('trophy_jrbalrog', 'assets/monsters/jr_balrog/stand_0.png'),
+      trophy_zakum: this.loadImage('trophy_zakum', 'assets/monsters/zakum/stand_0.png'),
+      trophy_horntail: this.loadImage('trophy_horntail', 'assets/monsters/horntail/stand_0.png'),
+      trophy_pianus: this.loadImage('trophy_pianus', 'assets/monsters/pianus/stand_0.png'),
+      trophy_alishar: this.loadImage('trophy_alishar', 'assets/monsters/alishar/stand_0.png'),
+      trophy_griffey: this.loadImage('trophy_griffey', 'assets/monsters/griffey/stand_0.png'),
+      trophy_timer: this.loadImage('trophy_timer', 'assets/monsters/timer/stand_0.png')
     };
 
     // 6. Preload Minimap
@@ -190,13 +231,103 @@ class SpriteRenderer {
     });
   }
 
+  // --- DRAW SHADOW PARTNER CLONE AVATAR ---
+  drawShadowPartnerAvatar(ctx, player) {
+    if (!player || player.hp <= 0 || player.onLadder) return;
+
+    // Use delayed pose history if available, else offset 16px behind player
+    let shadowX = player.facing === 'right' ? player.x - 16 : player.x + 16;
+    let shadowY = player.y;
+    let shadowFacing = player.facing;
+
+    if (player.poseHistory && player.poseHistory.length >= 6) {
+      const pastPose = player.poseHistory[Math.min(6, player.poseHistory.length - 1)];
+      if (pastPose && Math.hypot(pastPose.x - player.x, pastPose.y - player.y) < 120) {
+        shadowX = pastPose.x;
+        shadowY = pastPose.y;
+        shadowFacing = pastPose.facing;
+      }
+    }
+
+    ctx.save();
+    ctx.translate(Math.round(shadowX), Math.round(shadowY));
+    if (shadowFacing === 'right') {
+      ctx.scale(-1, 1);
+    }
+
+    // Shadow Partner Crimson Aura & Transparency (No expensive ctx.filter for 60 FPS guarantee)
+    ctx.fillStyle = 'rgba(220, 38, 38, 0.24)';
+    ctx.beginPath();
+    ctx.ellipse(0, -18, 16, 22, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 0.55;
+
+    // Crimson Ground Shadow
+    ctx.fillStyle = 'rgba(185, 28, 28, 0.35)';
+    ctx.beginPath();
+    ctx.ellipse(0, 1, 14, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Determine Action Frame for clone
+    const cloneWarriorJobs = ['전사', '검사', '파이터', '크루세이더', '히어로'];
+    const cloneMagicianJobs = ['마법사', '매지션', '위자드', '메이지', '아크메이지'];
+    const cloneBowmanJobs = ['궁수', '아처', '헌터', '레인저', '보우마스터'];
+    const cloneThiefJobs = ['도적', '로그', '어쌔신', '허밋', '나이트로드', '시프', '시프마스터', '섀도어'];
+    let jobKey = 'beginner';
+    if (cloneWarriorJobs.includes(player.job)) jobKey = 'warrior';
+    else if (cloneMagicianJobs.includes(player.job)) jobKey = 'magician';
+    else if (cloneBowmanJobs.includes(player.job)) jobKey = 'bowman';
+    else if (cloneThiefJobs.includes(player.job)) jobKey = 'thief';
+    const jobSprites = this.playerSprites[jobKey] || this.playerSprites['beginner'];
+    const now = performance.now();
+    let actionKey = 'stand_0';
+
+    if (player.attackTimer > 0) {
+      const attackProgress = 1 - (player.attackTimer / (player.attackAnimationDuration || player.attackDuration));
+      const frameIdx = Math.min(2, Math.floor(attackProgress * 3));
+      actionKey = `attack_${frameIdx}`;
+    } else if (!player.onGround) {
+      actionKey = 'jump_0';
+    } else if (player.vx !== 0) {
+      const walkFrame = Math.floor(now / 140) % 4;
+      actionKey = `walk_${walkFrame}`;
+    } else {
+      const standFrame = Math.floor(now / 400) % 3;
+      actionKey = `stand_${standFrame}`;
+    }
+
+    const sprite = jobSprites[actionKey] || jobSprites['stand_0'];
+    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      this.drawFootAlignedSprite(ctx, sprite);
+    }
+
+    // Draw weapon on clone in crimson
+    this.drawEquippedWeapon(ctx, player, actionKey);
+
+    // Classic Maple Warrior: Combo Attack Glowing Orbs
+    if (player.comboCount && player.comboCount > 0) {
+      this.drawComboOrbs(ctx, player);
+    }
+
+    ctx.restore();
+  }
+
   // --- DRAW PLAYER (GENUINE MAPLESTORY PIXEL SPRITE) ---
   drawPlayer(ctx, player) {
+    // 1. Draw Shadow Partner Avatar behind player if buff is active
+    if (player.hasShadowPartner && player.hasShadowPartner()) {
+      this.drawShadowPartnerAvatar(ctx, player);
+    }
+
     ctx.save();
     ctx.translate(Math.round(player.x), Math.round(player.y));
 
-    // Facing direction
-    if (player.facing === 'right') {
+    // Facing direction / Ladder alternating climb animation
+    if (player.onLadder) {
+      if (player.vy !== 0 && Math.floor((player.climbAnimTimer || 0) * 7) % 2 === 1) {
+        ctx.scale(-1, 1);
+      }
+    } else if (player.facing === 'right') {
       ctx.scale(-1, 1);
     }
 
@@ -212,12 +343,19 @@ class SpriteRenderer {
       return;
     }
 
-    // Determine Job Key
+    // Determine Job Key (Supports all 1~4th Job Advancement Tiers)
     let jobKey = 'beginner';
-    if (player.job === '전사') jobKey = 'warrior';
-    else if (player.job === '마법사') jobKey = 'magician';
-    else if (player.job === '궁수') jobKey = 'bowman';
-    else if (player.job === '도적') jobKey = 'thief';
+    const warriorJobs = ['전사', '파이터', '크루세이더', '히어로'];
+    const magicianJobs = ['마법사', '위자드', '메이지', '아크메이지'];
+    const bowmanJobs = ['궁수', '헌터', '레인저', '보우마스터'];
+    const thiefJobs = ['도적', '어쌔신', '허밋', '나이트로드', '시프'];
+    const pirateJobs = ['해적', '인파이터', '바이퍼', '건슬링거', '캡틴'];
+
+    if (warriorJobs.includes(player.job)) jobKey = 'warrior';
+    else if (magicianJobs.includes(player.job)) jobKey = 'magician';
+    else if (bowmanJobs.includes(player.job)) jobKey = 'bowman';
+    else if (thiefJobs.includes(player.job)) jobKey = 'thief';
+    else if (pirateJobs.includes(player.job)) jobKey = 'thief';
 
     const jobSprites = this.playerSprites[jobKey] || this.playerSprites['beginner'];
 
@@ -252,6 +390,9 @@ class SpriteRenderer {
       ctx.fill();
     }
 
+    // Back Coordi Layer (Capes, Wings & Awakened Weapon Aura)
+    this.drawCoordiBack(ctx, player, actionKey);
+
     // Draw Character Sprite (aligned to feet at y=0)
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       this.drawFootAlignedSprite(ctx, sprite);
@@ -261,13 +402,182 @@ class SpriteRenderer {
       ctx.fillRect(-12, -40, 24, 40);
     }
 
-    // Draw Equipped Weapon on Player's Hands
+    // Front Coordi Layer (Clothes, Hats, Glasses, Blush/Leaf)
+    this.drawCoordiFront(ctx, player, actionKey);
+
+    // Draw Equipped Weapon / Coordi Weapon Skin on Player's Hands
     this.drawEquippedWeapon(ctx, player, actionKey);
 
     ctx.restore();
 
     // Draw Character Name Tag (Never mirrored!)
     this.drawPlayerNameTag(ctx, player);
+  }
+
+  drawCoordiBack(ctx, player, actionKey) {
+    const coordi = player?.coordi;
+    const wp = player?.inventory?.equip?.find(eq => eq.type === 'weapon' && eq.equipped);
+    const now = performance.now();
+    const bob = Math.sin(now / 260) * 1.5;
+
+    // Awakened Weapon Breakthrough Aura Ring
+    if (wp && (wp.breakthroughTier || 0) > 0) {
+      ctx.save();
+      const auraColor = wp.auraColor || '#facc15';
+      ctx.strokeStyle = auraColor;
+      ctx.lineWidth = 1.6;
+      ctx.globalAlpha = 0.55;
+      ctx.beginPath();
+      ctx.ellipse(0, -18 + bob * 0.5, 18 + wp.breakthroughTier * 1.5, 24 + wp.breakthroughTier, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (!coordi || !coordi.cape) return;
+    ctx.save();
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+
+    if (coordi.cape === 'cape_angel_wings') {
+      const flap = Math.sin(now / 180) * 2.2;
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.ellipse(10, -24 + flap, 11, 6, -0.35, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#e0f2fe';
+      ctx.beginPath();
+      ctx.ellipse(12, -18 + flap * 0.8, 8, 4.5, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else if (coordi.cape === 'cape_icarus') {
+      const wave = Math.sin(now / 200) * 2;
+      ctx.fillStyle = '#0284c7';
+      ctx.beginPath();
+      ctx.moveTo(4, -28);
+      ctx.quadraticCurveTo(18, -22 + wave, 16, -6);
+      ctx.lineTo(5, -8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else if (coordi.cape === 'cape_balrog_wings') {
+      const flap = Math.sin(now / 170) * 2.5;
+      ctx.fillStyle = '#7f1d1d';
+      ctx.beginPath();
+      ctx.moveTo(4, -24);
+      ctx.lineTo(20, -34 + flap);
+      ctx.lineTo(16, -16 + flap);
+      ctx.lineTo(9, -20);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  drawCoordiFront(ctx, player, actionKey) {
+    const coordi = player?.coordi;
+    if (!coordi) return;
+    const now = performance.now();
+    const headBob = actionKey.startsWith('walk') ? Math.sin(now / 120) * 1.2 : Math.sin(now / 360) * 0.8;
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+    ctx.lineWidth = 1.5;
+
+    // 1. Coordi Clothes Overlay (Torso)
+    if (coordi.clothes === 'clothes_hoodie') {
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(-7, -21, 14, 11);
+      ctx.strokeRect(-7, -21, 14, 11);
+    } else if (coordi.clothes === 'clothes_royal') {
+      ctx.fillStyle = '#1d4ed8';
+      ctx.fillRect(-7, -21, 14, 12);
+      ctx.strokeRect(-7, -21, 14, 12);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(-2, -21, 4, 12);
+    } else if (coordi.clothes === 'clothes_school') {
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(-7, -21, 14, 11);
+      ctx.strokeRect(-7, -21, 14, 11);
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(-2, -20, 3, 6);
+    }
+
+    // 2. Coordi Face & Eye Accessories
+    if (coordi.faceAcc === 'face_blush') {
+      ctx.fillStyle = 'rgba(244, 114, 182, 0.65)';
+      ctx.beginPath();
+      ctx.ellipse(-6, -29 + headBob, 3, 1.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(2, -29 + headBob, 3, 1.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (coordi.faceAcc === 'face_leaf') {
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.ellipse(-9, -27 + headBob, 4, 2.2, -0.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    if (coordi.eyeAcc === 'eye_sunglasses') {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-10, -35 + headBob, 7, 4.5);
+      ctx.fillRect(-1, -35 + headBob, 6, 4.5);
+      ctx.strokeRect(-10, -35 + headBob, 7, 4.5);
+      ctx.strokeRect(-1, -35 + headBob, 6, 4.5);
+    } else if (coordi.eyeAcc === 'eye_star_patch') {
+      ctx.fillStyle = '#facc15';
+      ctx.beginPath();
+      ctx.arc(-6, -33 + headBob, 3.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // 3. Coordi Hat Overlay (Crown, Mushroom Cap, Bandana, Ribbon)
+    if (coordi.hat && coordi.hat !== 'hat_transparent') {
+      if (coordi.hat === 'hat_crown') {
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.moveTo(-10, -43 + headBob);
+        ctx.lineTo(-8, -52 + headBob);
+        ctx.lineTo(-3, -46 + headBob);
+        ctx.lineTo(0, -54 + headBob);
+        ctx.lineTo(3, -46 + headBob);
+        ctx.lineTo(8, -52 + headBob);
+        ctx.lineTo(10, -43 + headBob);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(0, -46 + headBob, 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (coordi.hat === 'hat_mushcap') {
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath();
+        ctx.arc(0, -44 + headBob, 13, Math.PI, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(-5, -49 + headBob, 2.8, 0, Math.PI * 2);
+        ctx.arc(5, -48 + headBob, 2.4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (coordi.hat === 'hat_bandana') {
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(-12, -42 + headBob, 24, 5);
+        ctx.strokeRect(-12, -42 + headBob, 24, 5);
+      } else if (coordi.hat === 'hat_star_ribbon') {
+        ctx.fillStyle = '#ec4899';
+        ctx.beginPath();
+        ctx.ellipse(6, -44 + headBob, 5, 3, -0.3, 0, Math.PI * 2);
+        ctx.ellipse(12, -42 + headBob, 5, 3, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
   }
 
   drawPlayerNameTag(ctx, player) {
@@ -390,6 +700,37 @@ class SpriteRenderer {
   }
 
   // --- DRAW MONSTER (GENUINE MAPLESTORY PIXEL SPRITE) ---
+  getBakedMobFrame(mobKey, action, index) {
+    if (!this.bakedMobCanvases) this.bakedMobCanvases = new Map();
+    const cacheKey = `${mobKey}_${action}_${index}`;
+    if (this.bakedMobCanvases.has(cacheKey)) {
+      return this.bakedMobCanvases.get(cacheKey);
+    }
+    const frames = this.monsterSprites?.[mobKey]?.[action];
+    const img = frames?.[index];
+    if (!img || !img.complete || img.naturalWidth === 0) return null;
+
+    const offscreen = document.createElement('canvas');
+    offscreen.width = img.naturalWidth;
+    offscreen.height = img.naturalHeight;
+    const octx = offscreen.getContext('2d');
+    octx.imageSmoothingEnabled = false;
+    octx.drawImage(img, 0, 0);
+    this.bakedMobCanvases.set(cacheKey, offscreen);
+    return offscreen;
+  }
+
+  bakeMonster(mobKey) {
+    const mob = this.monsterSprites?.[mobKey];
+    if (!mob) return;
+    for (const action of ['stand', 'move', 'hit1', 'die1']) {
+      const frames = mob[action] || [];
+      for (let i = 0; i < frames.length; i++) {
+        this.getBakedMobFrame(mobKey, action, i);
+      }
+    }
+  }
+
   getSpriteHitMask(sprite) {
     if (!this.hitMasks) this.hitMasks = new WeakMap();
     if (!this.hitMasks.has(sprite)) {
@@ -412,23 +753,28 @@ class SpriteRenderer {
     const mobData = this.monsterSprites[mobKey] || this.monsterSprites['slime'];
 
     const now = performance.now();
+    let actionKey = 'stand';
     let frameList = mobData.stand;
     let frameIdx = 0;
 
     const isDying = Boolean((m.isDying && m.isDying()) || (!m.isAlive() && m.state === 'dying'));
     if (isDying) {
+      actionKey = 'die1';
       frameList = (mobData.die1 && mobData.die1.length > 0) ? mobData.die1 : mobData.stand;
       const dTimer = (m.dyingTimer !== undefined ? m.dyingTimer : (m.deathTimer || 0));
       const dDur = m.dyingDuration || 0.45;
       const progress = Math.max(0, Math.min(1, 1 - (dTimer / dDur)));
       frameIdx = Math.min(frameList.length - 1, Math.floor(progress * frameList.length));
     } else if (m.hitstopTimer > 0) {
+      actionKey = 'hit1';
       frameList = mobData.hit1.length > 0 ? mobData.hit1 : mobData.stand;
       frameIdx = 0;
     } else if (m.vx !== 0) {
+      actionKey = 'move';
       frameList = mobData.move.length > 0 ? mobData.move : mobData.stand;
       frameIdx = Math.floor(now / 150) % frameList.length;
     } else {
+      actionKey = 'stand';
       frameList = mobData.stand;
       frameIdx = Math.floor(now / 350) % frameList.length;
     }
@@ -452,9 +798,27 @@ class SpriteRenderer {
       ctx.fill();
     }
 
+    // Enraged Boss Crimson Aura
+    if (m.enraged && m.onGround) {
+      ctx.save();
+      const pulse = 0.55 + Math.sin(now / 120) * 0.25;
+      ctx.strokeStyle = `rgba(239, 68, 68, ${pulse})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(0, -m.height * 0.48, m.width * 0.62, m.height * 0.44, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
     // Entity y is the visible foot contact, not the GIF frame's padded bottom.
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-      this.drawFootAlignedSprite(ctx, sprite);
+      const baked = this.getBakedMobFrame(mobKey, actionKey, frameIdx);
+      if (baked) {
+        const footY = this.spriteFootY.get(sprite) ?? sprite.naturalHeight;
+        ctx.drawImage(baked, -sprite.naturalWidth / 2, -footY);
+      } else {
+        this.drawFootAlignedSprite(ctx, sprite);
+      }
       if (m.hitFlashTimer > 0) {
         ctx.save();
         ctx.globalAlpha *= Math.min(1, m.hitFlashTimer / 0.12);
@@ -466,9 +830,96 @@ class SpriteRenderer {
 
     ctx.restore();
 
+    // Draw Boss Pattern Spells (Telegraphs & Explosions)
+    if (m.activeBossSpells && m.activeBossSpells.length > 0) {
+      this.drawBossSpells(ctx, m);
+    }
+
     // Draw Monster Name & HP Bar (Never mirrored!)
     if (m.isAlive() && !isDying) {
       this.drawMonsterUI(ctx, m);
+    }
+  }
+
+  drawBossSpells(ctx, m) {
+    if (!m.activeBossSpells || !m.activeBossSpells.length) return;
+    for (const spell of m.activeBossSpells) {
+      const progress = Math.min(1, (spell.timer || 0) / Math.max(0.1, spell.duration || 0.8));
+      const color = spell.color || '#ef4444';
+      ctx.save();
+      if (!spell.triggered) {
+        // Telegraph Warning Phase
+        const alpha = 0.35 + Math.sin(performance.now() / 65) * 0.25;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2.5;
+        if (spell.type === 'shockwave') {
+          const r = spell.radius || 220;
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          ctx.ellipse(spell.x, spell.y - 4, r * progress, 10, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.ellipse(spell.x, spell.y - 4, r, 10, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        } else {
+          const w = spell.width || 64;
+          const h = spell.height || 180;
+          ctx.globalAlpha = alpha * 0.45;
+          ctx.fillRect(spell.x - w / 2, spell.y - h, w, h);
+          ctx.globalAlpha = 0.85;
+          ctx.strokeRect(spell.x - w / 2, spell.y - h, w, h);
+        }
+        if (spell.label) {
+          ctx.globalAlpha = 0.95;
+          ctx.font = 'bold 11px "Malgun Gothic", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.strokeStyle = '#000000';
+          ctx.lineWidth = 3;
+          ctx.strokeText(`⚠️ ${spell.label}`, spell.x, spell.y - 24);
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(`⚠️ ${spell.label}`, spell.x, spell.y - 24);
+        }
+      } else {
+        // Triggered Impact Phase
+        const fade = Math.max(0, Math.min(1, (spell.lingerTimer || 0.2) / 0.45));
+        ctx.globalAlpha = fade;
+        if (spell.type === 'shockwave') {
+          const r = spell.radius || 220;
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.ellipse(spell.x, spell.y - 6, r, 16, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        } else if (spell.type === 'lightning') {
+          ctx.strokeStyle = '#7dd3fc';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.moveTo(spell.x, spell.y - (spell.height || 220));
+          ctx.lineTo(spell.x - 16, spell.y - 140);
+          ctx.lineTo(spell.x + 18, spell.y - 70);
+          ctx.lineTo(spell.x, spell.y);
+          ctx.stroke();
+        } else if (spell.type === 'poison_cloud' || spell.type === 'time_bomb') {
+          const w = spell.width || 85;
+          const h = spell.height || 85;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.ellipse(spell.x, spell.y - h * 0.45, w * 0.55, h * 0.45, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // fire_pillar or dragon_breath
+          const w = spell.width || 68;
+          const h = spell.height || 200;
+          const grad = ctx.createLinearGradient(spell.x, spell.y, spell.x, spell.y - h);
+          grad.addColorStop(0, color);
+          grad.addColorStop(0.6, '#fb923c');
+          grad.addColorStop(1, 'rgba(254, 240, 138, 0.1)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(spell.x - w / 2, spell.y - h, w, h);
+        }
+      }
+      ctx.restore();
     }
   }
 
@@ -487,11 +938,11 @@ class SpriteRenderer {
     ctx.lineWidth = 2.5;
     const label = `Lv.${m.level || 1} ${m.name}`;
     ctx.strokeText(label, 0, -6);
-    ctx.fillStyle = m.type === 'mushmom' ? '#fde047' : '#ffffff';
+    ctx.fillStyle = m.enraged ? '#fca5a5' : (m.isBoss ? '#fde047' : '#ffffff');
     ctx.fillText(label, 0, -6);
 
     // HP Bar
-    if (m.hp < m.maxHp && m.type !== 'mushmom') {
+    if (m.hp < m.maxHp) {
       const barW = Math.max(34, m.width * 0.9);
       const barH = 5;
       const bx = -barW / 2;
@@ -556,8 +1007,62 @@ class SpriteRenderer {
 
   // --- DRAW PROJECTILE (ARROW, SHURIKEN, ENERGY BOLT) ---
   drawProjectile(ctx, p) {
+    // ★ 1. Star Trail 궤적 잔상 일루전 렌더링 (불변 규격 INV-4, Zero-Blur Hardware Fast Path)
+    if (p.type === 'shuriken' && p.trailHistory && p.trailHistory.length > 1) {
+      ctx.save();
+      const len = p.trailHistory.length;
+      for (let i = 1; i < len; i++) {
+        const pt = p.trailHistory[i];
+        const ratio = 1 - (i / len);
+        const alpha = Math.max(0, ratio * 0.65);
+        const radius = Math.max(2, ratio * 8.5);
+        ctx.fillStyle = p.isShadow ? `rgba(239, 68, 68, ${alpha})` : (p.starType === 'ilbi' ? `rgba(220, 38, 38, ${alpha})` : `rgba(56, 189, 248, ${alpha})`);
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Connecting golden/neon light beam
+        const prevPt = p.trailHistory[i - 1];
+        ctx.strokeStyle = p.isShadow ? `rgba(248, 113, 113, ${alpha * 0.8})` : `rgba(254, 240, 138, ${alpha * 0.8})`;
+        ctx.lineWidth = Math.max(1, ratio * 3.5);
+        ctx.beginPath();
+        ctx.moveTo(prevPt.x, prevPt.y);
+        ctx.lineTo(pt.x, pt.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
     ctx.save();
     ctx.translate(Math.round(p.x), Math.round(p.y));
+
+    // Shrapnel impact explosion if hit (0.08s linger)
+    if (p.hit) {
+      ctx.save();
+      const progress = Math.min(1, (p.hitTimer || 0) / 0.08);
+      ctx.strokeStyle = '#fef08a';
+      ctx.lineWidth = 2.5 * (1 - progress);
+      ctx.shadowColor = '#f59e0b';
+      ctx.shadowBlur = 12;
+      for (let k = 0; k < 6; k++) {
+        const ang = (k * Math.PI) / 3;
+        const dist = 6 + progress * 24;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(ang) * (dist * 0.4), Math.sin(ang) * (dist * 0.4));
+        ctx.lineTo(Math.cos(ang) * dist, Math.sin(ang) * dist);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Shadow Partner Clone Projectile Crimson Effect (Hardware-accelerated aura without slow CSS filter)
+    if (p.isShadow) {
+      ctx.globalAlpha = 0.72;
+      ctx.fillStyle = 'rgba(220, 38, 38, 0.35)';
+      ctx.beginPath();
+      ctx.arc(0, 0, 13, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     if (p.type === 'arrow') {
       const angle = Math.atan2(p.vy, p.vx);
@@ -568,9 +1073,19 @@ class SpriteRenderer {
       }
     } else if (p.type === 'shuriken') {
       // Fast rotation
-      const spin = (performance.now() * 0.02) % (Math.PI * 2);
+      const spin = (performance.now() * 0.025) % (Math.PI * 2);
       ctx.rotate(spin);
-      this.drawThrowingStar(ctx, p.starType || 'steely', 18);
+      if (p.starType === 'ultimate') {
+        ctx.save();
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.35)';
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 16;
+        ctx.beginPath();
+        ctx.arc(0, 0, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      this.drawThrowingStar(ctx, p.starType || 'subi', p.starType === 'ultimate' ? 28 : 24);
     } else if (p.type === 'energy_bolt') {
       const sprite = this.projectiles.energy_bolt;
       if (sprite && sprite.complete) {
@@ -606,41 +1121,181 @@ class SpriteRenderer {
     } else if (p.type === 'avenger_star') {
       const spin = (performance.now() * 0.035 * Math.sign(p.vx || 1)) % (Math.PI * 2);
       ctx.rotate(spin);
-      ctx.shadowColor = '#a855f7';
-      ctx.shadowBlur = 18;
-      this.drawThrowingStar(ctx, p.starType || 'steely', 38);
+      ctx.shadowColor = p.isShadow ? '#ef4444' : '#a855f7';
+      ctx.shadowBlur = p.isShadow ? 24 : 18;
+      this.drawThrowingStar(ctx, p.starType || 'steely', p.isShadow ? 34 : 38);
+    } else if (p.type === 'iron_arrow') {
+      const angle = Math.atan2(p.vy, p.vx);
+      ctx.rotate(angle);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(18, 0); ctx.stroke();
+      ctx.fillStyle = '#475569';
+      ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(10, -5); ctx.lineTo(10, 5); ctx.fill();
+    } else if (p.type === 'piercing_arrow') {
+      const angle = Math.atan2(p.vy, p.vx);
+      ctx.rotate(angle);
+      ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 18;
+      ctx.strokeStyle = '#e879f9'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(-24, 0); ctx.lineTo(24, 0); ctx.stroke();
+      ctx.fillStyle = '#fbcfe8';
+      ctx.beginPath(); ctx.moveTo(26, 0); ctx.lineTo(14, -7); ctx.lineTo(14, 7); ctx.fill();
+    } else if (p.type === 'sniper_bullet') {
+      const angle = Math.atan2(p.vy, p.vx);
+      ctx.rotate(angle);
+      ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 20;
+      ctx.fillStyle = '#fee2e2';
+      ctx.fillRect(-15, -2, 30, 4);
+    } else if (p.type === 'bullet') {
+      const angle = Math.atan2(p.vy, p.vx);
+      ctx.rotate(angle);
+      ctx.fillStyle = '#fbbf24'; ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 8;
+      ctx.fillRect(-8, -2, 16, 4);
+    } else if (p.type === 'cannonball') {
+      ctx.fillStyle = '#1e293b'; ctx.shadowColor = '#f97316'; ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI * 2); ctx.fill();
+    } else if (p.type === 'energy_blast') {
+      ctx.fillStyle = '#38bdf8'; ctx.shadowColor = '#0ea5e9'; ctx.shadowBlur = 18;
+      ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.fill();
     }
 
     ctx.restore();
   }
 
   // --- AUTHENTIC THROWING STARS ENGINE (뇌전수리검, 일비, 토비, 금비, 화비, 목비, 수비) ---
-  drawThrowingStar(ctx, starType = 'steely', size = 18) {
+  drawThrowingStar(ctx, starType = 'steely', size = 20) {
     const r = size / 2;
     ctx.save();
 
-    if (starType === 'steely') {
-      // ⚡ 뇌전수리검: 번개 궤적, 4각 샤프 다이아몬드 날, 전기 스파크 아크
-      ctx.shadowColor = '#00f5ff';
-      ctx.shadowBlur = 12;
+    // 1. Authentic Official Pixel Sprite Render (with animation frame toggle)
+    const frames = this.starSprites?.[starType] || this.starSprites?.['subi'];
+    const now = performance.now();
+    const frameIdx = Math.floor(now * 0.015) % 2;
+    const sprite = frames ? frames[frameIdx] : null;
 
-      ctx.fillStyle = '#00f5ff';
-      ctx.strokeStyle = '#0284c7';
+    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      if (starType === 'ultimate') {
+        ctx.save();
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 20;
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      } else if (starType === 'steely') {
+        ctx.save();
+        ctx.shadowColor = '#00f5ff';
+        ctx.shadowBlur = 14;
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      } else if (starType === 'ilbi') {
+        ctx.save();
+        ctx.shadowColor = '#dc2626';
+        ctx.shadowBlur = 12;
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      } else if (starType === 'hwabi') {
+        ctx.save();
+        ctx.shadowColor = '#ea580c';
+        ctx.shadowBlur = 14;
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      } else {
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+      }
+      ctx.restore();
+      return;
+    }
+
+    if (starType === 'ilbi') {
+      // ⭐ 일비표창: 원작 메이플의 진정한 로망! 3단 흑요석 유선형 곡면 날개 + 붉은 루비 코어
+      ctx.shadowColor = '#dc2626';
+      ctx.shadowBlur = 10;
+
+      // 3 Obsidian curved blades with cel-shading & silver edge
+      for (let i = 0; i < 3; i++) {
+        ctx.save();
+        ctx.rotate((i * Math.PI * 2) / 3);
+
+        // Blade base dark shadow
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = '#020617';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(r * 0.45, r * 0.25, r * 1.15, 0);
+        ctx.quadraticCurveTo(r * 0.35, -r * 0.65, 0, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Cel-shaded metallic blade body
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.moveTo(r * 0.15, -r * 0.1);
+        ctx.quadraticCurveTo(r * 0.45, r * 0.15, r * 1.05, 0);
+        ctx.quadraticCurveTo(r * 0.4, -r * 0.45, r * 0.15, -r * 0.1);
+        ctx.fill();
+
+        // Silver razor-sharp highlight line
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(r * 0.4, r * 0.18);
+        ctx.lineTo(r * 1.12, 0);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // Central glowing red ruby gemstone core
+      ctx.fillStyle = '#ef4444';
+      ctx.strokeStyle = '#7f1d1d';
       ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.32, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Ruby sparkle reflection
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-r * 0.1, -r * 0.1, r * 0.1, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'steely') {
+      // ⚡ 뇌전수리검: 푸른 번개 4각 샤프 다이아몬드 날 + 파지직 전기 스파크 아크
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 14;
+
+      // 4 Diamond lightning blades
+      ctx.fillStyle = '#0284c7';
+      ctx.strokeStyle = '#082f49';
+      ctx.lineWidth = 1.8;
       ctx.beginPath();
       for (let i = 0; i < 4; i++) {
         const a = (i * Math.PI) / 2;
-        const cos = Math.cos(a);
-        const sin = Math.sin(a);
-        const pCos = Math.cos(a + Math.PI / 4);
-        const pSin = Math.sin(a + Math.PI / 4);
-        if (i === 0) ctx.moveTo(cos * r, sin * r);
-        else ctx.lineTo(cos * r, sin * r);
-        ctx.lineTo(pCos * (r * 0.32), pSin * (r * 0.32));
+        const cos = Math.cos(a), sin = Math.sin(a);
+        const pCos = Math.cos(a + Math.PI / 4), pSin = Math.sin(a + Math.PI / 4);
+        if (i === 0) ctx.moveTo(cos * r * 1.1, sin * r * 1.1);
+        else ctx.lineTo(cos * r * 1.1, sin * r * 1.1);
+        ctx.lineTo(pCos * (r * 0.35), pSin * (r * 0.35));
       }
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
+
+      // Cyan cel-shaded inner blade
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        const cos = Math.cos(a), sin = Math.sin(a);
+        const pCos = Math.cos(a + Math.PI / 4), pSin = Math.sin(a + Math.PI / 4);
+        if (i === 0) ctx.moveTo(cos * r * 0.85, sin * r * 0.85);
+        else ctx.lineTo(cos * r * 0.85, sin * r * 0.85);
+        ctx.lineTo(pCos * (r * 0.25), pSin * (r * 0.25));
+      }
+      ctx.closePath();
+      ctx.fill();
 
       // Electric core diamond
       ctx.fillStyle = '#ffffff';
@@ -656,71 +1311,23 @@ class SpriteRenderer {
       ctx.strokeStyle = '#e0f2fe';
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      const sparkSeed = performance.now() * 0.01;
-      for (let s = 0; s < 3; s++) {
-        const sa = sparkSeed + s * 2.1;
+      const sparkSeed = performance.now() * 0.012;
+      for (let s = 0; s < 4; s++) {
+        const sa = sparkSeed + s * 1.57;
         ctx.moveTo(0, 0);
         ctx.lineTo(Math.cos(sa) * (r * 0.5), Math.sin(sa) * (r * 0.5));
-        ctx.lineTo(Math.cos(sa + 0.3) * (r * 1.15), Math.sin(sa + 0.3) * (r * 1.15));
+        ctx.lineTo(Math.cos(sa + 0.25) * (r * 1.2), Math.sin(sa + 0.25) * (r * 1.2));
       }
       ctx.stroke();
-
-    } else if (starType === 'ilbi') {
-      // ⭐ 일비표창: 전설의 3단 곡선 흑요석 날 + 붉은 루비 코어
-      ctx.shadowColor = '#dc2626';
-      ctx.shadowBlur = 9;
-
-      for (let i = 0; i < 3; i++) {
-        ctx.save();
-        ctx.rotate((i * Math.PI * 2) / 3);
-
-        ctx.fillStyle = '#0f172a';
-        ctx.strokeStyle = '#94a3b8';
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(r * 0.5, r * 0.2, r * 1.05, 0);
-        ctx.quadraticCurveTo(r * 0.4, -r * 0.55, 0, 0);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.strokeStyle = '#f1f5f9';
-        ctx.lineWidth = 1.0;
-        ctx.beginPath();
-        ctx.moveTo(r * 0.4, r * 0.15);
-        ctx.lineTo(r * 1.05, 0);
-        ctx.stroke();
-
-        ctx.restore();
-      }
-
-      ctx.fillStyle = '#ef4444';
-      ctx.strokeStyle = '#7f1d1d';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(-r * 0.08, -r * 0.08, r * 0.08, 0, Math.PI * 2);
-      ctx.fill();
 
     } else if (starType === 'tobi') {
-      // 💫 토비표창: 코발트 블루 4곡선 날 + 바람 소용돌이 링
-      ctx.shadowColor = '#3b82f6';
+      // 💫 토비표창: 코발트 블루 4곡선 날 + 바람 소용돌이
+      ctx.shadowColor = '#2563eb';
       ctx.shadowBlur = 10;
 
-      ctx.strokeStyle = 'rgba(191, 219, 254, 0.7)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.75, 0, Math.PI * 1.6);
-      ctx.stroke();
-
-      ctx.fillStyle = '#2563eb';
-      ctx.strokeStyle = '#1e3a8a';
-      ctx.lineWidth = 1.2;
+      ctx.fillStyle = '#1e40af';
+      ctx.strokeStyle = '#172554';
+      ctx.lineWidth = 1.8;
       ctx.beginPath();
       for (let i = 0; i < 4; i++) {
         const a = (i * Math.PI) / 2;
@@ -732,85 +1339,25 @@ class SpriteRenderer {
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#93c5fd';
+      // Light cyan blade highlight
+      ctx.fillStyle = '#60a5fa';
       ctx.beginPath();
-      ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+      ctx.arc(0, 0, r * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#eff6ff';
+      ctx.beginPath();
+      ctx.arc(-r * 0.08, -r * 0.08, r * 0.12, 0, Math.PI * 2);
       ctx.fill();
 
     } else if (starType === 'kumbi') {
-      // 🌟 금비표창: 찬란한 순금 4각성 + 스파클
-      ctx.shadowColor = '#facc15';
+      // 🌟 금비표창: 찬란한 황금 4각 십자 표창
+      ctx.shadowColor = '#f59e0b';
       ctx.shadowBlur = 12;
 
-      ctx.fillStyle = '#fbbf24';
-      ctx.strokeStyle = '#b45309';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      for (let i = 0; i < 4; i++) {
-        const a = (i * Math.PI) / 2;
-        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
-        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
-        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.28), Math.sin(a + Math.PI / 4) * (r * 0.28));
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#fef08a';
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.25, 0, Math.PI * 2);
-      ctx.fill();
-
-    } else if (starType === 'hwabi') {
-      // 🔥 화비표창: 불타는 화염 수리검
-      ctx.shadowColor = '#f97316';
-      ctx.shadowBlur = 14;
-
-      ctx.fillStyle = '#ea580c';
-      ctx.strokeStyle = '#7c2d12';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      for (let i = 0; i < 4; i++) {
-        const a = (i * Math.PI) / 2;
-        if (i === 0) ctx.moveTo(Math.cos(a) * r * 1.05, Math.sin(a) * r * 1.05);
-        else ctx.lineTo(Math.cos(a) * r * 1.05, Math.sin(a) * r * 1.05);
-        ctx.lineTo(Math.cos(a + 0.35) * (r * 0.4), Math.sin(a + 0.35) * (r * 0.4));
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#fde047';
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-
-    } else if (starType === 'mokbi') {
-      // 🪵 목비표창: 청동/나무 십자 표창
-      ctx.fillStyle = '#92400e';
-      ctx.strokeStyle = '#451a03';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      for (let i = 0; i < 4; i++) {
-        const a = (i * Math.PI) / 2;
-        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
-        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
-        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.35), Math.sin(a + Math.PI / 4) * (r * 0.35));
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
       ctx.fillStyle = '#d97706';
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
-      ctx.fill();
-
-    } else {
-      // ⚙️ 수비표창: 표준 은빛 4각 수리검
-      ctx.fillStyle = '#cbd5e1';
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 1.8;
       ctx.beginPath();
       for (let i = 0; i < 4; i++) {
         const a = (i * Math.PI) / 2;
@@ -822,10 +1369,168 @@ class SpriteRenderer {
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = '#fde047';
       ctx.beginPath();
-      ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+      ctx.arc(0, 0, r * 0.35, 0, Math.PI * 2);
       ctx.fill();
+
+    } else if (starType === 'hwabi') {
+      // 🔥 화비표창: 불타는 진홍빛 화염 수리검
+      ctx.shadowColor = '#ea580c';
+      ctx.shadowBlur = 14;
+
+      ctx.fillStyle = '#c2410c';
+      ctx.strokeStyle = '#431407';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r * 1.1, Math.sin(a) * r * 1.1);
+        else ctx.lineTo(Math.cos(a) * r * 1.1, Math.sin(a) * r * 1.1);
+        ctx.lineTo(Math.cos(a + 0.38) * (r * 0.42), Math.sin(a + 0.38) * (r * 0.42));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#facc15';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.32, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'mokbi') {
+      // 🪵 목비표창: 견고한 암갈색 청동/나무 십자 표창
+      ctx.fillStyle = '#78350f';
+      ctx.strokeStyle = '#291003';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.35), Math.sin(a + Math.PI / 4) * (r * 0.35));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#b45309';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (starType === 'ultimate') {
+      // ★ 궁극의 성광수리검: 전설을 초월한 8방향 신화급 성광 수리검!
+      // 황금빛과 시안 코어의 눈부신 광휘 + 8방향 성스러운 다이아몬드 검날 + 회전 룬 후광
+      ctx.shadowColor = '#fbbf24';
+      ctx.shadowBlur = 22;
+
+      // 1. Rotating holy halo ring with geometric runes
+      ctx.save();
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.55)';
+      ctx.lineWidth = 1.4;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.72, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // 2. 8-Point Mythic Divine Blades (Outer golden-white blades)
+      ctx.fillStyle = '#f59e0b';
+      ctx.strokeStyle = '#451a03';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const a = (i * Math.PI) / 4;
+        const bladeLen = (i % 2 === 0) ? r * 1.25 : r * 0.85;
+        const cos = Math.cos(a), sin = Math.sin(a);
+        const pCos = Math.cos(a + Math.PI / 8), pSin = Math.sin(a + Math.PI / 8);
+        if (i === 0) ctx.moveTo(cos * bladeLen, sin * bladeLen);
+        else ctx.lineTo(cos * bladeLen, sin * bladeLen);
+        ctx.lineTo(pCos * (r * 0.32), pSin * (r * 0.32));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // 3. Inner Celestian Radiant Star (Cyan-White Starlight Layer)
+      ctx.fillStyle = '#67e8f9';
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const a = (i * Math.PI) / 4;
+        const bladeLen = (i % 2 === 0) ? r * 0.95 : r * 0.65;
+        const cos = Math.cos(a), sin = Math.sin(a);
+        const pCos = Math.cos(a + Math.PI / 8), pSin = Math.sin(a + Math.PI / 8);
+        if (i === 0) ctx.moveTo(cos * bladeLen, sin * bladeLen);
+        else ctx.lineTo(cos * bladeLen, sin * bladeLen);
+        ctx.lineTo(pCos * (r * 0.22), pSin * (r * 0.22));
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // 4. Pure Divine Diamond Core (Glittering White)
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(0, -r * 0.38);
+      ctx.lineTo(r * 0.38, 0);
+      ctx.lineTo(0, r * 0.38);
+      ctx.lineTo(-r * 0.38, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // 5. Star cross light rays
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -r * 1.35);
+      ctx.lineTo(0, r * 1.35);
+      ctx.moveTo(-r * 1.35, 0);
+      ctx.lineTo(r * 1.35, 0);
+      ctx.stroke();
+
+    } else {
+      // ⚙️ 수비표창: 클래식 은빛 4각 십자 수리검 (네온 외곽선 & 발광 보정 - INV-3)
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 10;
+
+      // Outer razor blade
+      ctx.fillStyle = '#cbd5e1';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * (r * 1.15), Math.sin(a) * (r * 1.15));
+        else ctx.lineTo(Math.cos(a) * (r * 1.15), Math.sin(a) * (r * 1.15));
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.36), Math.sin(a + Math.PI / 4) * (r * 0.36));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Cyan-White inner highlight blade
+      ctx.fillStyle = '#e0f2fe';
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        if (i === 0) ctx.moveTo(Math.cos(a) * (r * 0.8), Math.sin(a) * (r * 0.8));
+        else ctx.lineTo(Math.cos(a) * (r * 0.8), Math.sin(a) * (r * 0.8));
+        ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.22), Math.sin(a + Math.PI / 4) * (r * 0.22));
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Gleaming white center core
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.32, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
     }
 
     ctx.restore();
@@ -872,11 +1577,81 @@ class SpriteRenderer {
       angle = -0.2;
     }
 
+    const wsId = player.coordi?.weaponSkin || null;
+    if (wsId === 'ws_transparent') return;
+
     ctx.save();
     ctx.translate(handX, handY);
     ctx.rotate(angle);
 
-    const wpId = wp ? wp.id : (player.job === '도적' ? 'wp_meba' : 'wp_wood_sword');
+    // 한계 돌파 무기 오라 (Breakthrough Aura Glow)
+    if (wp && wp.auraColor && (wp.breakthroughTier || 0) >= 1) {
+      ctx.save();
+      ctx.strokeStyle = wp.auraColor;
+      ctx.lineWidth = 3 + Math.min(4, wp.breakthroughTier || 1);
+      ctx.globalAlpha = 0.38 + Math.sin(now / 140) * 0.15;
+      ctx.beginPath();
+      ctx.moveTo(-4, 0);
+      ctx.lineTo(30, 0);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (wsId === 'ws_rose') {
+      // 코디 무기: 붉은 장미 한 송이
+      ctx.strokeStyle = '#15803d';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(-4, 0);
+      ctx.lineTo(20, 0);
+      ctx.stroke();
+      ctx.fillStyle = '#e11d48';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      ctx.arc(22, 0, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      return;
+    } else if (wsId === 'ws_flame_katana') {
+      // 코디 무기: 홍련의 화염도
+      ctx.fillStyle = '#f97316';
+      ctx.strokeStyle = '#7c2d12';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -2.5);
+      ctx.lineTo(28, -2);
+      ctx.lineTo(34, 0);
+      ctx.lineTo(28, 2);
+      ctx.lineTo(0, 2.5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(2, -1, 24, 2);
+      ctx.restore();
+      return;
+    } else if (wsId === 'ws_star_wand') {
+      // 코디 무기: 별빛 요술봉
+      ctx.strokeStyle = '#f472b6';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(-4, 0);
+      ctx.lineTo(20, 0);
+      ctx.stroke();
+      ctx.fillStyle = '#facc15';
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      ctx.arc(22, 0, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+    const wpId = wp ? wp.id : ((player.job === '어쌔신' || player.job === '도적') ? 'wp_meba' : (player.job === '시프' ? 'wp_taeguk_fan' : 'wp_wood_sword'));
 
     if (wpId === 'wp_highlander') {
       ctx.fillStyle = '#e2e8f0';
@@ -1009,7 +1784,7 @@ class SpriteRenderer {
       ctx.fill();
       ctx.stroke();
 
-    } else if (wp?.weaponType === 'dagger' || wpId.includes('dagger') || wpId === 'wp_geta' || wpId === 'wp_fruit_dagger') {
+    } else if (wp?.weaponType === 'dagger' || wpId.includes('dagger') || wpId === 'wp_geta' || wpId === 'wp_fruit_dagger' || player.job === '시프') {
       ctx.fillStyle = '#e2e8f0';
       ctx.strokeStyle = 'rgba(20, 20, 20, 0.85)';
       ctx.lineWidth = 1.2;
@@ -1025,7 +1800,7 @@ class SpriteRenderer {
       ctx.fillStyle = '#78350f';
       ctx.fillRect(-5, -2, 5, 4);
 
-    } else if (wp?.weaponType === 'claw' || player.job === '도적') {
+    } else if (wp?.weaponType === 'claw' || player.job === '어쌔신' || player.job === '도적') {
       ctx.fillStyle = '#3b82f6';
       ctx.strokeStyle = '#1e3a8a';
       ctx.lineWidth = 1.2;
@@ -1091,6 +1866,22 @@ class SpriteRenderer {
   }
 
   // --- DRAW DROPS (MESOS & ITEMS) ---
+    getItemDropSprite(type) {
+    if (!this.itemDropCache) this.itemDropCache = {};
+    if (this.itemDropCache[type]) return this.itemDropCache[type];
+
+    if (this.drops && this.drops[type]) {
+      this.itemDropCache[type] = this.drops[type];
+      return this.drops[type];
+    }
+
+    const resolved = typeof UIManager !== 'undefined' ? UIManager.getItemIconPath({ id: type, type }) : null;
+    const img = new Image();
+    img.src = resolved || `assets/items/${type}.png`;
+    this.itemDropCache[type] = img;
+    return img;
+  }
+
   drawDrop(ctx, drop) {
     ctx.save();
     const bob = Math.sin(performance.now() / 250) * 2.5;
@@ -1102,20 +1893,34 @@ class SpriteRenderer {
     ctx.ellipse(0, 2 - bob, 8, 3, 0, 0, Math.PI * 2);
     ctx.fill();
 
+    const dtype = String(drop.type || '');
+    const isRareLoot = dtype.startsWith('trophy_') || dtype.startsWith('scroll_') || dtype.endsWith('_star') || dtype === 'equip';
+    if (isRareLoot) {
+      const beamColor = dtype.startsWith('trophy_') ? 'rgba(168, 85, 247, 0.35)' : 'rgba(250, 204, 21, 0.35)';
+      ctx.fillStyle = beamColor;
+      ctx.fillRect(-5, -36, 10, 36);
+    }
+
+
+
     let sprite = null;
-    if (drop.type === 'meso') {
+    if (dtype === 'meso') {
       if (drop.amount < 50) sprite = this.drops.meso_bronze;
       else if (drop.amount < 100) sprite = this.drops.meso_silver;
       else if (drop.amount < 500) sprite = this.drops.meso_gold;
       else sprite = this.drops.meso_bag;
     } else {
-      sprite = this.drops[drop.type] || this.drops.red_potion;
+      sprite = this.getItemDropSprite(dtype);
     }
 
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-      const sw = sprite.naturalWidth;
-      const sh = sprite.naturalHeight;
-      ctx.drawImage(sprite, -sw / 2, -sh + 2, sw, sh);
+      if (dtype.startsWith('trophy_')) {
+        ctx.drawImage(sprite, -14, -28, 28, 28);
+      } else {
+        const sw = sprite.naturalWidth;
+        const sh = sprite.naturalHeight;
+        ctx.drawImage(sprite, -sw / 2, -sh + 2, sw, sh);
+      }
     }
 
     ctx.restore();
@@ -1165,7 +1970,152 @@ class SpriteRenderer {
     ctx.save();
     ctx.translate(Math.round(fx.x), Math.round(fx.y));
 
-    if (fx.type === 'power_strike') {
+    if (fx.type === 'shadow_web') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p * 0.7);
+      ctx.strokeStyle = 
+gba(168, 85, 247, );
+      ctx.lineWidth = 2.0;
+      ctx.shadowColor = '#c084fc';
+      ctx.shadowBlur = 12;
+      for (let w = 0; w < 6; w++) {
+        const ang = (w / 6) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(ang) * 26, Math.sin(ang) * 26);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(0, 0, 12, 0, Math.PI * 2);
+      ctx.arc(0, 0, 22, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+        if (fx.type === 'chain_lightning') {
+      const alpha = Math.max(0, 1 - fx.progress);
+      ctx.save();
+      ctx.translate(fx.startX - fx.x, fx.startY - fx.y);
+      ctx.strokeStyle = `rgba(251, 191, 36, ${alpha})`;
+      ctx.shadowColor = '#3b82f6'; ctx.shadowBlur = 14;
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      const midX = (fx.x - fx.startX) * 0.5 + (Math.random() * 20 - 10);
+      const midY = (fx.y - fx.startY) * 0.5 + (Math.random() * 20 - 10);
+      ctx.lineTo(midX, midY); ctx.lineTo(fx.x - fx.startX, fx.y - fx.startY);
+      ctx.stroke();
+      ctx.restore();
+      ctx.restore();
+      return;
+    }
+
+    if (fx.type === 'meso_explosion') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.fillStyle = `rgba(251, 191, 36, ${alpha})`;
+      ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 18;
+      ctx.beginPath(); ctx.arc(0, 0, 20 * p + 5, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      return;
+    }
+
+    if (fx.type === 'meteor') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.fillStyle = `rgba(239, 68, 68, ${alpha * 0.8})`;
+      ctx.shadowColor = '#ea580c'; ctx.shadowBlur = 24;
+      for (let m = -3; m <= 3; m++) {
+        const fallY = -350 + (350 * Math.min(1, p * 1.5));
+        ctx.beginPath(); ctx.arc(m * 90, fallY, 24, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+      return;
+    }
+
+    if (fx.type === 'blizzard') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.strokeStyle = `rgba(186, 230, 253, ${alpha})`;
+      ctx.shadowColor = '#0284c7'; ctx.shadowBlur = 20;
+      ctx.lineWidth = 3;
+      for (let s = -4; s <= 4; s++) {
+        ctx.beginPath(); ctx.moveTo(s * 75, -200); ctx.lineTo(s * 75 + 20, 20); ctx.stroke();
+      }
+      ctx.restore();
+      return;
+    }
+
+    if (fx.type === 'sanctuary') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.fillStyle = `rgba(254, 240, 138, ${alpha})`;
+      ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 30;
+      ctx.fillRect(-25, -280, 50, 320);
+      ctx.fillRect(-120, -180, 240, 60);
+      ctx.restore();
+      return;
+    }
+
+    if (fx.type === 'dragon_roar') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.strokeStyle = `rgba(244, 63, 94, ${alpha})`;
+      ctx.shadowColor = '#be123c'; ctx.shadowBlur = 25;
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(0, 0, 320 * p, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 240 * p, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+    if (fx.type === 'boomerang_step') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.strokeStyle = `rgba(251, 191, 36, ${alpha})`;
+      ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 18;
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(-60, -40); ctx.lineTo(60, 40); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(60, -40); ctx.lineTo(-60, 40); ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+if (fx.type === 'teleport') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      // Start distortion sphere
+      ctx.save();
+      ctx.translate(fx.startX - fx.x, fx.startY - fx.y);
+      ctx.fillStyle = `rgba(168, 85, 247, ${alpha * 0.7})`;
+      ctx.shadowColor = '#c084fc';
+      ctx.shadowBlur = 16;
+      ctx.beginPath();
+      ctx.arc(0, -18, 22 * (1 - p * 0.5), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = `rgba(216, 180, 254, ${alpha})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, -18, 30 * p, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Destination arrival burst
+      ctx.save();
+      ctx.fillStyle = `rgba(192, 132, 252, ${alpha * 0.8})`;
+      ctx.shadowColor = '#a855f7';
+      ctx.shadowBlur = 20;
+      ctx.beginPath();
+      ctx.ellipse(0, -18, 24 * (1 - p * 0.3), 32 * (1 - p * 0.3), 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Cyan magical shockwave ring
+      ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(0, -18, 42 * p, 24 * p, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    } else if (fx.type === 'power_strike') {
       const progress = fx.progress;
       ctx.save();
       ctx.rotate((progress - 0.5) * Math.PI * 0.4);
@@ -1261,6 +2211,150 @@ class SpriteRenderer {
       ctx.beginPath();
       ctx.ellipse(0, 0, 55 * progress + 20, 14 * progress + 6, 0, 0, Math.PI * 2);
       ctx.stroke();
+      ctx.restore();
+    } else if (fx.type === 'heal') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.save();
+      // Holy healing green-gold aura rings
+      ctx.strokeStyle = `rgba(52, 211, 153, ${alpha * 0.9})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(0, -10, 40 * p + 10, 15 * p + 5, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Rising sacred crosses
+      const crosses = [
+        { x: -25, y: -20 - p * 50, scale: 0.8 },
+        { x: 0, y: -35 - p * 65, scale: 1.2 },
+        { x: 25, y: -20 - p * 50, scale: 0.8 },
+        { x: -12, y: -10 - p * 40, scale: 0.6 },
+        { x: 12, y: -10 - p * 40, scale: 0.6 }
+      ];
+      ctx.fillStyle = `rgba(167, 243, 208, ${alpha})`;
+      ctx.shadowColor = '#10b981';
+      ctx.shadowBlur = 12;
+      crosses.forEach(c => {
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        const s = c.scale;
+        // Draw cross
+        ctx.fillRect(-2 * s, -8 * s, 4 * s, 16 * s);
+        ctx.fillRect(-7 * s, -4 * s, 14 * s, 4 * s);
+        ctx.restore();
+      });
+      ctx.restore();
+    } else if (fx.type === 'holy_hit') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      ctx.save();
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = '#34d399';
+      ctx.strokeStyle = `rgba(110, 231, 183, ${alpha * 0.9})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 20 * p + 8, 10 * p + 4, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Golden sacred cross flash on hit undead monster
+      ctx.fillStyle = `rgba(254, 240, 138, ${alpha})`;
+      const s = 1.3 * (1 - p * 0.3);
+      ctx.fillRect(-2 * s, -12 * s, 4 * s, 24 * s);
+      ctx.fillRect(-10 * s, -6 * s, 20 * s, 4 * s);
+      ctx.restore();
+    } else if (fx.type === 'genesis') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p * 0.8);
+      ctx.save();
+      ctx.shadowBlur = 24;
+      ctx.shadowColor = '#fde047';
+
+      // 4 Sacred Divine Light Pillars from heavens
+      const pillarOffsets = [-180, -60, 60, 180];
+      pillarOffsets.forEach((px, idx) => {
+        const pillarAlpha = Math.max(0, Math.sin((p + idx * 0.1) * Math.PI) * alpha);
+        ctx.fillStyle = `rgba(254, 240, 138, ${pillarAlpha * 0.85})`;
+        ctx.fillRect(px - 18, -450, 36, 450);
+        ctx.fillStyle = `rgba(255, 255, 255, ${pillarAlpha})`;
+        ctx.fillRect(px - 8, -450, 16, 450);
+
+        // Ground burst at base of each pillar
+        ctx.strokeStyle = `rgba(250, 204, 21, ${pillarAlpha})`;
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.ellipse(px, 0, 35 * p + 10, 10 * p + 4, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Massive central shockwave
+      ctx.strokeStyle = `rgba(254, 249, 195, ${alpha * 0.9})`;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 260 * p, 45 * p, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    } else if (fx.type === 'strafe') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      const dir = fx.facing === 'right' ? 1 : -1;
+      ctx.save();
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = '#f59e0b';
+      // 4 Golden high-speed arrow vapor trails
+      for (let i = 0; i < 4; i++) {
+        const startX = dir * (i * 25 + p * 120);
+        const yOff = -24 + (i * 6 - 9);
+        ctx.strokeStyle = `rgba(254, 240, 138, ${alpha})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(startX, yOff);
+        ctx.lineTo(startX + dir * 65, yOff);
+        ctx.stroke();
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(startX + dir * 65, yOff, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    } else if (fx.type === 'savage_blow') {
+      const p = fx.progress;
+      const alpha = Math.max(0, 1 - p);
+      const dir = fx.facing === 'right' ? 1 : -1;
+      ctx.save();
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = '#e11d48';
+
+      // 6 rapid diagonal slash arcs
+      const slashes = [
+        { x: 30, y: -45, rot: 0.4, color: '#f43f5e' },
+        { x: 50, y: -25, rot: -0.6, color: '#fb7185' },
+        { x: 40, y: -10, rot: 0.8, color: '#f59e0b' },
+        { x: 60, y: -35, rot: -0.3, color: '#e11d48' },
+        { x: 45, y: -20, rot: 0.5, color: '#fda4af' },
+        { x: 55, y: -40, rot: -0.7, color: '#ffe4e6' }
+      ];
+
+      slashes.forEach((sl, idx) => {
+        const slashP = Math.min(1, Math.max(0, (p * 6 - idx * 0.8)));
+        if (slashP <= 0 || slashP >= 1) return;
+        ctx.save();
+        ctx.translate(dir * sl.x, sl.y);
+        ctx.rotate(sl.rot * dir);
+        ctx.strokeStyle = sl.color;
+        ctx.lineWidth = 4.5;
+        ctx.beginPath();
+        ctx.moveTo(-35 * slashP, 0);
+        ctx.lineTo(35 * slashP, 0);
+        ctx.stroke();
+
+        // White core spark
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(20 * slashP, 0, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
       ctx.restore();
     } else if (fx.type === 'level_up') {
       const p = fx.progress;
@@ -1501,7 +2595,57 @@ class SpriteRenderer {
       }
       ctx.restore();
     }
+
+
+
     ctx.restore();
+  }
+
+  // --- DRAW COMBO ATTACK ORBS ---
+  drawComboOrbs(ctx, player) {
+    const count = Math.min(5, Math.max(1, player.comboCount || 0));
+    const time = (window.performance ? window.performance.now() / 1000 : Date.now() / 1000) * 2.8;
+    const radius = 34;
+    const centerY = -30; // Chest / Shoulder height
+
+    for (let i = 0; i < count; i++) {
+      const angle = time + (i * 2 * Math.PI / count);
+      const ox = Math.cos(angle) * radius;
+      const oy = centerY + Math.sin(angle) * (radius * 0.42); // 3D perspective ellipse orbit
+
+      ctx.save();
+      ctx.translate(ox, oy);
+
+      // Max combo (5 orbs) turns blazing crimson-gold, otherwise mystical violet/azure
+      const isMax = count >= 5;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = isMax ? '#f59e0b' : '#a855f7';
+
+      // Outer glow orb
+      const grad = ctx.createRadialGradient(0, 0, 1, 0, 0, 7.5);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.4, isMax ? '#fbbf24' : '#c084fc');
+      grad.addColorStop(0.8, isMax ? '#ef4444' : '#7c3aed');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 7.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sharp dark outline
+      ctx.strokeStyle = 'rgba(20, 20, 20, 0.7)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Small specular sparkle
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-2, -2, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
   }
 
 
@@ -1542,6 +2686,81 @@ class SpriteRenderer {
     ctx.fillStyle = '#18181b';
     ctx.textAlign = 'center';
     ctx.fillText(text, Math.round(x), by + 15);
+
+    ctx.restore();
+  }
+
+  // --- DRAW HORNTAIL MYTHIC BOSS (3 HEADS + WINGS + BODY) ---
+  drawHorntailBoss(ctx, boss) {
+    if (!boss || (!boss.isAlive() && !boss.isDying())) return;
+    ctx.save();
+    if (boss.isDying()) ctx.globalAlpha *= Math.max(0, boss.dyingTimer / boss.dyingDuration);
+
+    const frameIdx = Math.floor(boss.animationTime * 4) % 6;
+    const sprite = this.monsters?.horntail?.stand?.[frameIdx] || this.monsters?.horntail?.move?.[frameIdx];
+
+    const drawX = Math.round(boss.x - boss.width / 2);
+    const drawY = Math.round(boss.y - boss.height);
+
+    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      ctx.drawImage(sprite, drawX, drawY, boss.width, boss.height);
+      if (boss.hitTimer > 0 && boss.isAlive()) {
+        ctx.save();
+        ctx.globalAlpha *= Math.min(1, boss.hitTimer / 0.15);
+        ctx.drawImage(this.getSpriteHitMask(sprite), drawX, drawY, boss.width, boss.height);
+        ctx.restore();
+      }
+    } else {
+      // Fallback silhouette
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(drawX, drawY, boss.width, boss.height);
+    }
+
+    // Draw Destructible Parts HP bars & labels (when alive)
+    if (boss.isAlive()) {
+      for (const part of boss.parts) {
+        if (!part.isAlive) continue;
+        const px = boss.x + part.offsetX;
+        const py = boss.y + part.offsetY;
+        const hpPct = Math.max(0, part.hp / part.maxHp);
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(px - 22, py - 6, 44, 5);
+        ctx.fillStyle = part.id === 'middle_head' ? '#eab308' : (part.id === 'left_head' ? '#ef4444' : (part.id === 'right_head' ? '#38bdf8' : '#a855f7'));
+        ctx.fillRect(px - 21, py - 5, hpPct * 42, 3);
+
+        ctx.font = 'bold 9px "Malgun Gothic", sans-serif';
+        ctx.fillStyle = '#fef08a';
+        ctx.textAlign = 'center';
+        ctx.fillText(part.name.split(' ')[1] || part.name, px, py - 8);
+      }
+    }
+
+    // Draw Active Spells
+    for (const spell of boss.activeSpells) {
+      const progress = Math.min(1, spell.timer / spell.duration);
+      ctx.save();
+      const color = spell.color || '#ef4444';
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 2.5;
+
+      const w = spell.width || 64;
+      const h = spell.height || 200;
+      const alpha = 0.35 + Math.sin(performance.now() / 65) * 0.25;
+      ctx.globalAlpha = alpha * 0.45;
+      ctx.fillRect(spell.x - w / 2, spell.y - h, w, h);
+      ctx.globalAlpha = 0.85;
+      ctx.strokeRect(spell.x - w / 2, spell.y - h, w, h);
+
+      if (spell.label) {
+        ctx.font = 'bold 11px "Malgun Gothic", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#fef08a';
+        ctx.fillText(`⚠️ ${spell.label}`, spell.x, spell.y - 20);
+      }
+      ctx.restore();
+    }
 
     ctx.restore();
   }

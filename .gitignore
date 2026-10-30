@@ -1,8 +1,16 @@
 # Antigravity Scratch & DB files
 openmaple.db
+openmaple.db-shm
+openmaple.db-wal
+*.db-shm
+*.db-wal
 scratch_scripts/
 inspect_ellinia_png.py
 update_server.py
 __pycache__/
 *.pyc
 .DS_Store
+*.tmp
+*.log
+reference_captures/
+captures/

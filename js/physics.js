@@ -39,7 +39,7 @@ class Physics {
   static AIR_ACCEL = 0.18;
   static GROUND_ACCEL = 0.65;
   static FRICTION = 0.82;
-  static LADDER_SNAP_RANGE = 12;
+  static LADDER_SNAP_RANGE = 14;
   static FIXED_STEP = 1 / 60; // 60Hz fixed physics step
 
   // Fixed timestep accumulator update
@@ -75,7 +75,20 @@ class Physics {
   }
 
   static findLadderFoothold(map, ladder, end = 'top') {
-    return map.findFootholdNear(ladder.x, ladder[end], 16);
+    let best = map.findFootholdNear(ladder.x, ladder[end], 28);
+    if (!best && end === 'top') {
+      for (const fh of map.footholds) {
+        if (fh.isProp || fh.width === 0) continue;
+        if (ladder.x >= fh.x1 - 12 && ladder.x <= fh.x2 + 12) {
+          const fy = fh.getYAtX(ladder.x);
+          if (Math.abs(fy - ladder.top) <= 32) {
+            best = fh;
+            break;
+          }
+        }
+      }
+    }
+    return best;
   }
 
   static landOnFoothold(entity, foothold) {
@@ -93,12 +106,27 @@ class Physics {
     if (!ladder) return false;
     const foothold = Physics.findLadderFoothold(map, ladder, end);
     entity.x = ladder.x;
-    entity.y = ladder[end];
     entity.vy = 0;
-    if (!foothold && end === 'top') return false; // An open rope tip remains grabbable.
-    Physics.detachFromLadder(entity);
-    if (foothold) Physics.landOnFoothold(entity, foothold);
-    return Boolean(foothold);
+    if (end === 'top') {
+      if (foothold) {
+        Physics.detachFromLadder(entity);
+        Physics.landOnFoothold(entity, foothold);
+        return true;
+      }
+      entity.y = ladder.top;
+      return false;
+    } else {
+      Physics.detachFromLadder(entity);
+      if (foothold) {
+        Physics.landOnFoothold(entity, foothold);
+      } else {
+        const ground = map.findGroundFootholdAt(entity.x);
+        if (ground && Math.abs(ground.getYAtX(entity.x) - ladder.bottom) < 32) {
+          Physics.landOnFoothold(entity, ground);
+        }
+      }
+      return Boolean(foothold);
+    }
   }
 
   static applyHorizontalInput(entity, stepTime) {
@@ -163,8 +191,11 @@ class Physics {
       entity.currentFoothold = null;
       entity.x = ladder.x;
       entity.vx = 0;
+      if (entity.vy !== 0) {
+        entity.climbAnimTimer = (entity.climbAnimTimer || 0) + stepTime;
+      }
       entity.y += entity.vy;
-      if (entity.vy < 0 && entity.y <= ladder.top + 2) Physics.finishLadder(entity, map, 'top');
+      if (entity.vy < 0 && entity.y <= ladder.top + 4) Physics.finishLadder(entity, map, 'top');
       else if (entity.vy > 0 && entity.y >= ladder.bottom) Physics.finishLadder(entity, map, 'bottom');
       else entity.y = Math.max(ladder.top, Math.min(ladder.bottom, entity.y));
       return;
@@ -244,12 +275,12 @@ class Physics {
         if (player.onGround && endpoint && Math.abs(player.y - endpoint.getYAtX(lad.x)) < 1e-6) continue;
         if (dir === 'up') {
           // If already at or above platform level, pressing UP must NOT grab ladder underneath!
-          if (player.y > lad.top + 6 && player.y <= lad.bottom + 15) {
+          if (player.y > lad.top + 4 && player.y <= lad.bottom + 20) {
             return lad;
           }
         } else if (dir === 'down') {
           // Can grab ladder going down from platform above
-          if (player.y >= lad.top - 12 && player.y < lad.bottom) {
+          if (player.y >= lad.top - 16 && player.y < lad.bottom) {
             return lad;
           }
         }

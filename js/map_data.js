@@ -1656,313 +1656,323 @@ const MAP_DATABASE = {
     ],
     "portals": [
       {
-        "x": 120,
-        "y": 1320.0,
-        "targetMap": "henesys_town",
-        "targetX": 2000,
-        "targetY": 559.0,
-        "name": "헤네시스",
-        "adaptation": true
+            "x": 120,
+            "y": 1320.0,
+            "targetMap": "henesys_town",
+            "targetX": 6240,
+            "targetY": 679.0,
+            "name": "헤네시스 마을",
+            "adaptation": true
       },
       {
-        "x": 2180,
-        "y": 1320.0,
-        "targetMap": "ant_tunnel",
-        "targetX": 721,
-        "targetY": 325.9347826086956,
-        "name": "개미굴 1",
-        "adaptation": true
+            "x": 2180,
+            "y": 1320.0,
+            "targetMap": "ant_tunnel",
+            "targetX": 520,
+            "targetY": 319.04347826086956,
+            "name": "던전 개미굴 1",
+            "adaptation": true
+      },
+      {
+            "x": 750,
+            "y": 1320.0,
+            "targetMap": "perion_boar",
+            "targetX": 280,
+            "targetY": 889.05,
+            "name": "와일드보어의 땅",
+            "adaptation": true
       }
+
     ],
     "mobSpawns": [
       {
-        "type": "blue_snail",
+        "type": "snail",
         "x": 302,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 114,
-        "sourceMobId": 100101
+        "sourceMobId": 100100
       },
       {
         "type": "blue_snail",
         "x": 715,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 131,
         "sourceMobId": 100101
       },
       {
         "type": "slime",
         "x": 741,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 15,
         "sourceMobId": 210100
       },
       {
         "type": "slime",
         "x": 951,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 12,
         "sourceMobId": 210100
       },
       {
         "type": "slime",
         "x": 1229,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 10,
         "sourceMobId": 210100
       },
       {
         "type": "slime",
         "x": 1571,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 5,
         "sourceMobId": 210100
       },
       {
         "type": "blue_snail",
         "x": 634,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 16,
         "sourceMobId": 100101
       },
       {
         "type": "blue_snail",
         "x": 894,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 7,
         "sourceMobId": 100101
       },
       {
         "type": "blue_snail",
         "x": 1111,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 8,
         "sourceMobId": 100101
       },
       {
         "type": "blue_snail",
         "x": 1322,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 11,
         "sourceMobId": 100101
       },
       {
         "type": "slime",
         "x": 1455,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 13,
         "sourceMobId": 210100
       },
       {
         "type": "orange_mushroom",
         "x": 717,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 45,
         "sourceMobId": 1210102
       },
       {
-        "type": "blue_snail",
+        "type": "snail",
         "x": 1109,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 134,
-        "sourceMobId": 100101
+        "sourceMobId": 100100
       },
       {
         "type": "orange_mushroom",
         "x": 1060,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 41,
         "sourceMobId": 1210102
       },
       {
         "type": "orange_mushroom",
         "x": 1346,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 44,
         "sourceMobId": 1210102
       },
       {
         "type": "red_snail",
         "x": 827,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 46,
         "sourceMobId": 130101
       },
       {
         "type": "red_snail",
         "x": 1280,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 43,
         "sourceMobId": 130101
       },
       {
         "type": "red_snail",
         "x": 1483,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 38,
         "sourceMobId": 130101
       },
       {
         "type": "orange_mushroom",
         "x": 1152,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 42,
         "sourceMobId": 1210102
       },
       {
         "type": "orange_mushroom",
         "x": 950,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 40,
         "sourceMobId": 1210102
       },
       {
         "type": "green_mushroom",
         "x": 785,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 62,
         "sourceMobId": 1110100
       },
       {
         "type": "green_mushroom",
         "x": 950,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 63,
         "sourceMobId": 1110100
       },
       {
         "type": "green_mushroom",
         "x": 1234,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 67,
         "sourceMobId": 1110100
       },
       {
-        "type": "blue_snail",
+        "type": "ribbon_pig",
         "x": 1517,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 112,
-        "sourceMobId": 100101
+        "sourceMobId": 1210100
       },
       {
         "type": "green_mushroom",
         "x": 1343,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 66,
         "sourceMobId": 1110100
       },
       {
         "type": "green_mushroom",
         "x": 1092,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 64,
         "sourceMobId": 1110100
       },
       {
         "type": "stump",
         "x": 867,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 68,
         "sourceMobId": 130100
       },
       {
         "type": "stump",
         "x": 1165,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 65,
         "sourceMobId": 130100
       },
       {
         "type": "green_mushroom",
         "x": 1423,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 70,
         "sourceMobId": 1110100
       },
       {
         "type": "stump",
         "x": 1021,
-        "y": 540,
+        "y": 540.0,
         "sourceFootholdId": 63,
         "sourceMobId": 130100
       },
       {
         "type": "stump",
         "x": 1236,
-        "y": 780,
+        "y": 780.0,
         "sourceFootholdId": 43,
         "sourceMobId": 130100
       },
       {
         "type": "shroom",
         "x": 1392,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 13,
         "sourceMobId": 120100
       },
       {
         "type": "slime",
         "x": 851,
-        "y": 1020,
+        "y": 1020.0,
         "sourceFootholdId": 7,
         "sourceMobId": 210100
       },
       {
         "type": "shroom",
         "x": 849,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 127,
         "sourceMobId": 120100
       },
       {
-        "type": "blue_snail",
+        "type": "ribbon_pig",
         "x": 1906,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 124,
-        "sourceMobId": 100101
+        "sourceMobId": 1210100
       },
       {
         "type": "red_snail",
         "x": 1681,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 122,
         "sourceMobId": 130101
       },
       {
         "type": "red_snail",
         "x": 1342,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 132,
         "sourceMobId": 130101
       },
       {
         "type": "red_snail",
         "x": 957,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 128,
         "sourceMobId": 130101
       },
       {
         "type": "red_snail",
         "x": 506,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 136,
         "sourceMobId": 130101
       },
       {
         "type": "red_snail",
         "x": 109,
-        "y": 1320,
+        "y": 1320.0,
         "sourceFootholdId": 118,
         "sourceMobId": 130101
       }
     ],
-    "maxMonsters": 40,
     "bossSpawn": {
       "type": "mushmom",
       "x": 1500,
-      "y": 540,
+      "y": 540.0,
       "adaptation": true
-    }
+    },
+    "maxMonsters": 40
   },
   "henesys_town": {
     "key": "henesys_town",
@@ -4252,23 +4262,33 @@ const MAP_DATABASE = {
     ],
     "portals": [
       {
-        "x": 6300,
-        "y": 679.0,
-        "targetMap": "henesys_hhg",
-        "targetX": 1050,
-        "targetY": 1320.0,
-        "name": "헤네시스 사냥터 1",
-        "adaptation": true
+            "x": 6300,
+            "y": 679.0,
+            "targetMap": "henesys_hhg",
+            "targetX": 180,
+            "targetY": 1320.0,
+            "name": "헤네시스 사냥터 1",
+            "adaptation": true
       },
       {
-        "x": 100,
-        "y": 499.0,
-        "targetMap": "ellinia",
-        "targetX": 1400,
-        "targetY": 4381.658536585366,
-        "name": "엘리니아",
-        "adaptation": true
+            "x": 100,
+            "y": 499.0,
+            "targetMap": "ellinia",
+            "targetX": 360,
+            "targetY": 4481.19,
+            "name": "마법의 숲 엘리니아",
+            "adaptation": true
+      },
+      {
+            "x": 4700,
+            "y": 679.0,
+            "targetMap": "ant_tunnel",
+            "targetX": 520,
+            "targetY": 319.04347826086956,
+            "name": "던전 개미굴 1",
+            "adaptation": true
       }
+
     ],
     "mobSpawns": [],
     "maxMonsters": 0
@@ -8118,212 +8138,253 @@ const MAP_DATABASE = {
     ],
     "portals": [
       {
-        "x": 520,
-        "y": 319.04347826086956,
-        "targetMap": "henesys_hhg",
-        "targetX": 1050,
-        "targetY": 1320.0,
-        "name": "헤네시스 사냥터 1",
-        "adaptation": true
+            "x": 2200,
+            "y": 1076.7,
+            "targetMap": "pianus_cave",
+            "targetX": 220,
+            "targetY": 683,
+            "name": "피아누스의 동굴",
+            "adaptation": true
       },
       {
-        "x": 2800,
-        "y": 2087.1428571428573,
-        "targetMap": "zakum_altar",
-        "targetX": 260,
-        "targetY": 534.0909090909091,
-        "name": "자쿰의 제단",
-        "adaptation": true
+            "x": 520,
+            "y": 319.04347826086956,
+            "targetMap": "henesys_town",
+            "targetX": 4700,
+            "targetY": 679.0,
+            "name": "헤네시스 마을",
+            "adaptation": true
+      },
+      {
+            "x": 440,
+            "y": 331.0204081632653,
+            "targetMap": "henesys_hhg",
+            "targetX": 2120,
+            "targetY": 1320.0,
+            "name": "헤네시스 사냥터 1",
+            "adaptation": true
+      },
+      {
+            "x": 1500,
+            "y": 1179.0576923076924,
+            "targetMap": "sleepy_dungeon",
+            "targetX": 120,
+            "targetY": 1019.0,
+            "name": "저주받은 신전",
+            "adaptation": true
+      },
+      {
+            "x": 2800,
+            "y": 2087.1428571428573,
+            "targetMap": "zakum_altar",
+            "targetX": 260,
+            "targetY": 534.0909090909091,
+            "name": "자쿰의 제단",
+            "adaptation": true
       }
+
     ],
     "mobSpawns": [
       {
         "type": "horny_mushroom",
         "x": 1040,
-        "y": 336,
+        "y": 336.65714285714284,
         "sourceFootholdId": 293,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 980,
-        "y": 575,
+        "y": 575.7142857142857,
         "sourceFootholdId": 49,
         "sourceMobId": 2110200
       },
       {
         "type": "zombie_mushroom",
         "x": 2554,
-        "y": 2089,
+        "y": 2089.2727272727275,
         "sourceFootholdId": 229,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2972,
-        "y": 2082,
+        "y": 2082.190476190476,
         "sourceFootholdId": 99,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2181,
-        "y": 1076,
+        "y": 1076.7272727272727,
         "sourceFootholdId": 379,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2258,
-        "y": 1076,
+        "y": 1076.304347826087,
         "sourceFootholdId": 391,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2010,
-        "y": 1370,
+        "y": 1370.0,
         "sourceFootholdId": 169,
         "sourceMobId": 2230101
       },
       {
         "type": "horny_mushroom",
         "x": 748,
-        "y": 589,
+        "y": 589.8823529411765,
         "sourceFootholdId": 40,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 1553,
-        "y": 394,
+        "y": 394.34285714285716,
         "sourceFootholdId": 312,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 2349,
-        "y": 1495,
+        "y": 1495.1739130434783,
         "sourceFootholdId": 441,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 1970,
-        "y": 1035,
+        "y": 1035.0545454545454,
         "sourceFootholdId": 426,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 1138,
-        "y": 580,
+        "y": 580.75,
         "sourceFootholdId": 69,
         "sourceMobId": 2110200
       },
       {
         "type": "zombie_mushroom",
         "x": 1491,
-        "y": 993,
+        "y": 993.2,
         "sourceFootholdId": 405,
         "sourceMobId": 2230101
       },
       {
         "type": "horny_mushroom",
         "x": 812,
-        "y": 338,
+        "y": 338.0,
         "sourceFootholdId": 281,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 2463,
-        "y": 1118,
+        "y": 1118.8275862068965,
         "sourceFootholdId": 433,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 1555,
-        "y": 576,
+        "y": 576.2413793103449,
         "sourceFootholdId": 364,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 1639,
-        "y": 988,
+        "y": 988.6,
         "sourceFootholdId": 412,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 1802,
-        "y": 1362,
+        "y": 1362.1904761904761,
         "sourceFootholdId": 156,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 2756,
-        "y": 2082,
+        "y": 2082.5,
         "sourceFootholdId": 224,
         "sourceMobId": 2110200
       },
       {
         "type": "zombie_mushroom",
         "x": 1749,
-        "y": 995,
+        "y": 995.96,
         "sourceFootholdId": 418,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 1642,
-        "y": 1369,
+        "y": 1369.5294117647059,
         "sourceFootholdId": 139,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2382,
-        "y": 1733,
+        "y": 1733.6285714285714,
         "sourceFootholdId": 453,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2575,
-        "y": 1729,
+        "y": 1729.2826086956522,
         "sourceFootholdId": 445,
         "sourceMobId": 2230101
       },
       {
         "type": "zombie_mushroom",
         "x": 2426,
-        "y": 1891,
+        "y": 1891.7818181818182,
         "sourceFootholdId": 488,
         "sourceMobId": 2230101
       },
       {
         "type": "horny_mushroom",
         "x": 2662,
-        "y": 1875,
+        "y": 1875.5,
         "sourceFootholdId": 479,
         "sourceMobId": 2110200
       },
       {
         "type": "horny_mushroom",
         "x": 2961,
-        "y": 1872,
+        "y": 1872.6857142857143,
         "sourceFootholdId": 467,
         "sourceMobId": 2110200
       }
     ],
+    "bossSpawn": {
+      "type": "zombie_mushmom",
+      "x": 1750,
+      "y": 1368.1818181818182,
+      "adaptation": true
+    },
     "maxMonsters": 26
   },
   "ellinia": {
     "key": "ellinia",
+    "boss": "faust",
+    "bossSpawn": {
+      "type": "faust",
+      "x": 1200,
+      "y": 4458.0,
+      "adaptation": true
+    },
     "name": "엘리니아",
     "mapId": 101000000,
     "source": "https://maplestory.io/api/GMS/62/map/101000000",
@@ -20879,23 +20940,33 @@ const MAP_DATABASE = {
     ],
     "portals": [
       {
-        "x": 300,
-        "y": 4487.547169811321,
-        "targetMap": "henesys_town",
-        "targetX": 2000,
-        "targetY": 559.0,
-        "name": "헤네시스",
-        "adaptation": true
+            "x": 300,
+            "y": 4487.547169811321,
+            "targetMap": "henesys_town",
+            "targetX": 160,
+            "targetY": 499.0,
+            "name": "헤네시스 마을",
+            "adaptation": true
       },
       {
-        "x": 2500,
-        "y": 4435.72,
-        "targetMap": "zakum_altar",
-        "targetX": 260,
-        "targetY": 534.0909090909091,
-        "name": "자쿰의 제단",
-        "adaptation": true
+            "x": 2500,
+            "y": 4435.72,
+            "targetMap": "ship_orbis",
+            "targetX": 660,
+            "targetY": 1017.5792349726776,
+            "name": "오르비스행 비행선 갑판",
+            "adaptation": true
+      },
+      {
+            "x": 1800,
+            "y": 4336.159090909091,
+            "targetMap": "zakum_altar",
+            "targetX": 260,
+            "targetY": 534.0909090909091,
+            "name": "자쿰의 제단",
+            "adaptation": true
       }
+
     ],
     "mobSpawns": [],
     "maxMonsters": 0
@@ -22624,22 +22695,11063 @@ const MAP_DATABASE = {
     ],
     "portals": [
       {
-        "x": 60,
-        "y": 537.0,
-        "targetMap": "henesys_hhg",
-        "targetX": 1050,
-        "targetY": 1320.0,
-        "name": "헤네시스 사냥터 1",
-        "adaptation": true
+            "x": 60,
+            "y": 537.0,
+            "targetMap": "sleepy_dungeon",
+            "targetX": 1360,
+            "targetY": 1019.0,
+            "name": "저주받은 신전",
+            "adaptation": true
+      },
+      {
+            "x": 400,
+            "y": 537.875,
+            "targetMap": "el_nath_deadmine",
+            "targetX": 340,
+            "targetY": 840.0,
+            "name": "죽은나무의 숲 4",
+            "adaptation": true
+      },
+      {
+            "x": 200,
+            "y": 539.5333333333333,
+            "targetMap": "ludi_clocktower",
+            "targetX": 2150,
+            "targetY": 2195.0,
+            "name": "시계탑 최하층 잊혀진 시간의 길 3",
+            "adaptation": true
       }
+
     ],
     "mobSpawns": [],
-    "maxMonsters": 0,
     "boss": "zakum",
     "bossSpawn": {
       "type": "zakum",
       "x": 600,
       "y": 537
+    },
+    "maxMonsters": 12
+  },
+  "perion_boar": {
+    "key": "perion_boar",
+    "name": "와일드보어의 땅",
+    "mapId": 102020300,
+    "source": "https://maplestory.io/api/GMS/62/map/102020300",
+    "region": "GMS",
+    "version": "62",
+    "category": "사냥터",
+    "width": 1764,
+    "height": 1657,
+    "terrainSourceWidth": 1791,
+    "terrainSourceHeight": 1657,
+    "img": "assets/map/perion_boar_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/perion_boar_minimap.png",
+    "terrainOffset": {
+      "x": -27,
+      "y": 0
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 1643,
+      "y": -1500
+    },
+    "isTown": false,
+    "isBossMap": false,
+    "footholds": [
+      {
+        "id": 125,
+        "x1": 1412,
+        "y1": 291,
+        "x2": 1419,
+        "y2": 291,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 139,
+        "x1": 1193,
+        "y1": 345,
+        "x2": 1283,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 56,
+        "x1": 360,
+        "y1": 1305,
+        "x2": 406,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 120,
+        "x1": 1307,
+        "y1": 236,
+        "x2": 1373,
+        "y2": 227,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 163,
+        "x1": 540,
+        "y1": 1005,
+        "x2": 586,
+        "y2": 1005,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 5
+      },
+      {
+        "id": 89,
+        "x1": 1131,
+        "y1": 550,
+        "x2": 1228,
+        "y2": 548,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 212,
+        "x1": 466,
+        "y1": 201,
+        "x2": 488,
+        "y2": 194,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 112,
+        "x1": 229,
+        "y1": 839,
+        "x2": 296,
+        "y2": 844,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 85,
+        "x1": 1196,
+        "y1": 885,
+        "x2": 1216,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 169,
+        "x1": 630,
+        "y1": 945,
+        "x2": 676,
+        "y2": 945,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 6
+      },
+      {
+        "id": 12,
+        "x1": 1733,
+        "y1": 885,
+        "x2": 1756,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 150,
+        "x1": 1080,
+        "y1": 345,
+        "x2": 1103,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 118,
+        "x1": 1175,
+        "y1": 272,
+        "x2": 1210,
+        "y2": 238,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 27,
+        "x1": 1080,
+        "y1": 1065,
+        "x2": 1103,
+        "y2": 1065,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 127,
+        "x1": 1422,
+        "y1": 293,
+        "x2": 1444,
+        "y2": 293,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 193,
+        "x1": 1000,
+        "y1": 43,
+        "x2": 1077,
+        "y2": 50,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 68,
+        "x1": 743,
+        "y1": 1245,
+        "x2": 766,
+        "y2": 1245,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 142,
+        "x1": 1553,
+        "y1": 345,
+        "x2": 1643,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 87,
+        "x1": 1156,
+        "y1": 616,
+        "x2": 1169,
+        "y2": 622,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 185,
+        "x1": 1026,
+        "y1": 0,
+        "x2": 1121,
+        "y2": 5,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 199,
+        "x1": 994,
+        "y1": 151,
+        "x2": 1021,
+        "y2": 149,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 214,
+        "x1": 576,
+        "y1": 192,
+        "x2": 593,
+        "y2": 189,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 114,
+        "x1": 308,
+        "y1": 848,
+        "x2": 329,
+        "y2": 849,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 180,
+        "x1": 907,
+        "y1": 227,
+        "x2": 942,
+        "y2": 193,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 206,
+        "x1": 882,
+        "y1": 255,
+        "x2": 923,
+        "y2": 255,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 106,
+        "x1": 142,
+        "y1": 748,
+        "x2": 169,
+        "y2": 750,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 172,
+        "x1": 676,
+        "y1": 945,
+        "x2": 720,
+        "y2": 945,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 6
+      },
+      {
+        "id": 66,
+        "x1": 563,
+        "y1": 1245,
+        "x2": 653,
+        "y2": 1245,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 201,
+        "x1": 1133,
+        "y1": 249,
+        "x2": 1154,
+        "y2": 250,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 101,
+        "x1": 175,
+        "y1": 642,
+        "x2": 252,
+        "y2": 649,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 144,
+        "x1": 1643,
+        "y1": 345,
+        "x2": 1710,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 178,
+        "x1": 923,
+        "y1": 255,
+        "x2": 967,
+        "y2": 259,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 99,
+        "x1": 565,
+        "y1": 617,
+        "x2": 599,
+        "y2": 623,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 187,
+        "x1": 1146,
+        "y1": 14,
+        "x2": 1274,
+        "y2": 19,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 136,
+        "x1": 994,
+        "y1": 295,
+        "x2": 1150,
+        "y2": 300,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 71,
+        "x1": 36,
+        "y1": 907,
+        "x2": 147,
+        "y2": 901,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 131,
+        "x1": 915,
+        "y1": 607,
+        "x2": 1071,
+        "y2": 612,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 174,
+        "x1": 450,
+        "y1": 1065,
+        "x2": 496,
+        "y2": 1065,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 4
+      },
+      {
+        "id": 59,
+        "x1": 1013,
+        "y1": 1305,
+        "x2": 1080,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 123,
+        "x1": 1379,
+        "y1": 293,
+        "x2": 1409,
+        "y2": 293,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 36,
+        "x1": 833,
+        "y1": 1305,
+        "x2": 923,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 166,
+        "x1": 653,
+        "y1": 1005,
+        "x2": 676,
+        "y2": 1005,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 5
+      },
+      {
+        "id": 215,
+        "x1": 593,
+        "y1": 189,
+        "x2": 661,
+        "y2": 189,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 161,
+        "x1": 496,
+        "y1": 1125,
+        "x2": 540,
+        "y2": 1125,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 3
+      },
+      {
+        "id": 115,
+        "x1": 268,
+        "y1": 865,
+        "x2": 356,
+        "y2": 874,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 73,
+        "x1": 174,
+        "y1": 892,
+        "x2": 237,
+        "y2": 890,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 129,
+        "x1": 835,
+        "y1": 602,
+        "x2": 900,
+        "y2": 603,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 88,
+        "x1": 1096,
+        "y1": 584,
+        "x2": 1131,
+        "y2": 550,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 210,
+        "x1": 221,
+        "y1": 207,
+        "x2": 284,
+        "y2": 205,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 110,
+        "x1": 203,
+        "y1": 813,
+        "x2": 243,
+        "y2": 816,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 42,
+        "x1": 180,
+        "y1": 1305,
+        "x2": 226,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 153,
+        "x1": 540,
+        "y1": 1185,
+        "x2": 586,
+        "y2": 1185,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 1
+      },
+      {
+        "id": 57,
+        "x1": 406,
+        "y1": 1305,
+        "x2": 450,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 196,
+        "x1": 968,
+        "y1": 115,
+        "x2": 983,
+        "y2": 118,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 202,
+        "x1": 635,
+        "y1": 249,
+        "x2": 646,
+        "y2": 245,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 102,
+        "x1": 76,
+        "y1": 681,
+        "x2": 152,
+        "y2": 682,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 10,
+        "x1": 1643,
+        "y1": 885,
+        "x2": 1710,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 191,
+        "x1": 1390,
+        "y1": 18,
+        "x2": 1424,
+        "y2": 24,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 145,
+        "x1": 1710,
+        "y1": 345,
+        "x2": 1733,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 159,
+        "x1": 540,
+        "y1": 1125,
+        "x2": 586,
+        "y2": 1125,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 3
+      },
+      {
+        "id": 7,
+        "x1": 1216,
+        "y1": 885,
+        "x2": 1283,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 75,
+        "x1": 237,
+        "y1": 890,
+        "x2": 419,
+        "y2": 886,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 140,
+        "x1": 1373,
+        "y1": 345,
+        "x2": 1463,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 208,
+        "x1": 83,
+        "y1": 222,
+        "x2": 194,
+        "y2": 216,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 108,
+        "x1": 159,
+        "y1": 779,
+        "x2": 193,
+        "y2": 782,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 2,
+        "x1": 1373,
+        "y1": 885,
+        "x2": 1463,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 44,
+        "x1": 653,
+        "y1": 1245,
+        "x2": 720,
+        "y2": 1245,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 117,
+        "x1": 1235,
+        "y1": 304,
+        "x2": 1248,
+        "y2": 310,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 183,
+        "x1": 1105,
+        "y1": 182,
+        "x2": 1169,
+        "y2": 182,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 132,
+        "x1": 1071,
+        "y1": 612,
+        "x2": 1112,
+        "y2": 612,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 8,
+        "x1": 1463,
+        "y1": 885,
+        "x2": 1553,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 189,
+        "x1": 1289,
+        "y1": 17,
+        "x2": 1338,
+        "y2": 22,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 175,
+        "x1": 540,
+        "y1": 1065,
+        "x2": 586,
+        "y2": 1065,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 4
+      },
+      {
+        "id": 77,
+        "x1": 441,
+        "y1": 879,
+        "x2": 529,
+        "y2": 877,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 204,
+        "x1": 711,
+        "y1": 246,
+        "x2": 726,
+        "y2": 250,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 104,
+        "x1": 143,
+        "y1": 714,
+        "x2": 158,
+        "y2": 717,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 170,
+        "x1": 720,
+        "y1": 945,
+        "x2": 766,
+        "y2": 945,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 6
+      },
+      {
+        "id": 138,
+        "x1": 1103,
+        "y1": 345,
+        "x2": 1126,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 46,
+        "x1": 23,
+        "y1": 1305,
+        "x2": 46,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 91,
+        "x1": 1294,
+        "y1": 539,
+        "x2": 1358,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 134,
+        "x1": 914,
+        "y1": 290,
+        "x2": 979,
+        "y2": 291,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 51,
+        "x1": 113,
+        "y1": 1305,
+        "x2": 180,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 177,
+        "x1": 496,
+        "y1": 1065,
+        "x2": 540,
+        "y2": 1065,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 4
+      },
+      {
+        "id": 70,
+        "x1": 1,
+        "y1": 940,
+        "x2": 36,
+        "y2": 907,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 93,
+        "x1": 201,
+        "y1": 599,
+        "x2": 296,
+        "y2": 604,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 126,
+        "x1": 1419,
+        "y1": 291,
+        "x2": 1422,
+        "y2": 293,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 192,
+        "x1": 986,
+        "y1": 54,
+        "x2": 1000,
+        "y2": 43,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 121,
+        "x1": 1373,
+        "y1": 227,
+        "x2": 1437,
+        "y2": 227,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 35,
+        "x1": 923,
+        "y1": 1305,
+        "x2": 1013,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 3,
+        "x1": 1283,
+        "y1": 885,
+        "x2": 1373,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 164,
+        "x1": 586,
+        "y1": 1005,
+        "x2": 630,
+        "y2": 1005,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 5
+      },
+      {
+        "id": 80,
+        "x1": 631,
+        "y1": 874,
+        "x2": 719,
+        "y2": 870,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 198,
+        "x1": 967,
+        "y1": 149,
+        "x2": 994,
+        "y2": 151,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 213,
+        "x1": 488,
+        "y1": 194,
+        "x2": 576,
+        "y2": 192,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 113,
+        "x1": 296,
+        "y1": 844,
+        "x2": 308,
+        "y2": 848,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 72,
+        "x1": 147,
+        "y1": 901,
+        "x2": 174,
+        "y2": 892,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 95,
+        "x1": 321,
+        "y1": 613,
+        "x2": 449,
+        "y2": 618,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 9,
+        "x1": 1553,
+        "y1": 885,
+        "x2": 1643,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 156,
+        "x1": 586,
+        "y1": 1185,
+        "x2": 630,
+        "y2": 1185,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 1
+      },
+      {
+        "id": 22,
+        "x1": 1103,
+        "y1": 1065,
+        "x2": 1126,
+        "y2": 1065,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 205,
+        "x1": 726,
+        "y1": 250,
+        "x2": 882,
+        "y2": 255,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 151,
+        "x1": 1126,
+        "y1": 345,
+        "x2": 1193,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 105,
+        "x1": 158,
+        "y1": 717,
+        "x2": 190,
+        "y2": 720,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 119,
+        "x1": 1210,
+        "y1": 238,
+        "x2": 1307,
+        "y2": 236,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 194,
+        "x1": 901,
+        "y1": 82,
+        "x2": 977,
+        "y2": 83,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 78,
+        "x1": 529,
+        "y1": 877,
+        "x2": 546,
+        "y2": 874,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 200,
+        "x1": 1121,
+        "y1": 245,
+        "x2": 1133,
+        "y2": 249,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 100,
+        "x1": 161,
+        "y1": 653,
+        "x2": 175,
+        "y2": 642,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 82,
+        "x1": 799,
+        "y1": 874,
+        "x2": 832,
+        "y2": 882,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 28,
+        "x1": 1126,
+        "y1": 1065,
+        "x2": 1170,
+        "y2": 1065,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 143,
+        "x1": 1283,
+        "y1": 345,
+        "x2": 1373,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 5,
+        "x1": 1170,
+        "y1": 885,
+        "x2": 1193,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 74,
+        "x1": 546,
+        "y1": 874,
+        "x2": 614,
+        "y2": 874,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 97,
+        "x1": 464,
+        "y1": 616,
+        "x2": 513,
+        "y2": 621,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 186,
+        "x1": 1121,
+        "y1": 5,
+        "x2": 1146,
+        "y2": 14,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 181,
+        "x1": 942,
+        "y1": 193,
+        "x2": 1039,
+        "y2": 191,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 135,
+        "x1": 979,
+        "y1": 291,
+        "x2": 994,
+        "y2": 295,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 61,
+        "x1": 766,
+        "y1": 1305,
+        "x2": 833,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 130,
+        "x1": 900,
+        "y1": 603,
+        "x2": 915,
+        "y2": 607,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 84,
+        "x1": 1169,
+        "y1": 881,
+        "x2": 1196,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 207,
+        "x1": 48,
+        "y1": 255,
+        "x2": 83,
+        "y2": 222,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 107,
+        "x1": 169,
+        "y1": 750,
+        "x2": 196,
+        "y2": 748,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 11,
+        "x1": 1710,
+        "y1": 885,
+        "x2": 1733,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 49,
+        "x1": 0,
+        "y1": 1305,
+        "x2": 23,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 76,
+        "x1": 419,
+        "y1": 886,
+        "x2": 441,
+        "y2": 879,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 122,
+        "x1": 1437,
+        "y1": 227,
+        "x2": 1450,
+        "y2": 243,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 165,
+        "x1": 630,
+        "y1": 1005,
+        "x2": 653,
+        "y2": 1005,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 5
+      },
+      {
+        "id": 90,
+        "x1": 1228,
+        "y1": 548,
+        "x2": 1294,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 179,
+        "x1": 967,
+        "y1": 259,
+        "x2": 980,
+        "y2": 265,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 63,
+        "x1": 450,
+        "y1": 1245,
+        "x2": 496,
+        "y2": 1245,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 128,
+        "x1": 824,
+        "y1": 606,
+        "x2": 835,
+        "y2": 602,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 86,
+        "x1": 1112,
+        "y1": 612,
+        "x2": 1156,
+        "y2": 616,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 137,
+        "x1": 1150,
+        "y1": 300,
+        "x2": 1191,
+        "y2": 300,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 50,
+        "x1": 46,
+        "y1": 1305,
+        "x2": 113,
+        "y2": 1305,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 195,
+        "x1": 931,
+        "y1": 114,
+        "x2": 968,
+        "y2": 115,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 92,
+        "x1": 1358,
+        "y1": 539,
+        "x2": 1371,
+        "y2": 555,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 124,
+        "x1": 1409,
+        "y1": 293,
+        "x2": 1412,
+        "y2": 291,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 190,
+        "x1": 1338,
+        "y1": 22,
+        "x2": 1390,
+        "y2": 18,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 158,
+        "x1": 450,
+        "y1": 1125,
+        "x2": 496,
+        "y2": 1125,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 3
+      },
+      {
+        "id": 65,
+        "x1": 496,
+        "y1": 1245,
+        "x2": 563,
+        "y2": 1245,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 1,
+        "x1": 1193,
+        "y1": 885,
+        "x2": 1196,
+        "y2": 885,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 116,
+        "x1": 1191,
+        "y1": 300,
+        "x2": 1235,
+        "y2": 304,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 182,
+        "x1": 1039,
+        "y1": 191,
+        "x2": 1105,
+        "y2": 182,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 98,
+        "x1": 513,
+        "y1": 621,
+        "x2": 565,
+        "y2": 617,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 211,
+        "x1": 284,
+        "y1": 205,
+        "x2": 466,
+        "y2": 201,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 111,
+        "x1": 243,
+        "y1": 816,
+        "x2": 280,
+        "y2": 815,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 52,
+        "x1": 293,
+        "y1": 1365,
+        "x2": 360,
+        "y2": 1365,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 94,
+        "x1": 296,
+        "y1": 604,
+        "x2": 321,
+        "y2": 613,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 154,
+        "x1": 630,
+        "y1": 1185,
+        "x2": 676,
+        "y2": 1185,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 1
+      },
+      {
+        "id": 188,
+        "x1": 1274,
+        "y1": 19,
+        "x2": 1289,
+        "y2": 17,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 67,
+        "x1": 720,
+        "y1": 1245,
+        "x2": 743,
+        "y2": 1245,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 197,
+        "x1": 983,
+        "y1": 118,
+        "x2": 1015,
+        "y2": 121,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 203,
+        "x1": 646,
+        "y1": 245,
+        "x2": 711,
+        "y2": 246,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 103,
+        "x1": 106,
+        "y1": 713,
+        "x2": 143,
+        "y2": 714,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 146,
+        "x1": 1733,
+        "y1": 345,
+        "x2": 1756,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 81,
+        "x1": 719,
+        "y1": 870,
+        "x2": 799,
+        "y2": 874,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 141,
+        "x1": 1463,
+        "y1": 345,
+        "x2": 1553,
+        "y2": 345,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 22
+      },
+      {
+        "id": 209,
+        "x1": 194,
+        "y1": 216,
+        "x2": 221,
+        "y2": 207,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 7
+      },
+      {
+        "id": 109,
+        "x1": 193,
+        "y1": 782,
+        "x2": 251,
+        "y2": 783,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 54,
+        "x1": 226,
+        "y1": 1365,
+        "x2": 293,
+        "y2": 1365,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 96,
+        "x1": 449,
+        "y1": 618,
+        "x2": 464,
+        "y2": 616,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 184,
+        "x1": 1169,
+        "y1": 182,
+        "x2": 1182,
+        "y2": 198,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 12
+      },
+      {
+        "id": 133,
+        "x1": 903,
+        "y1": 294,
+        "x2": 914,
+        "y2": 290,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 79,
+        "x1": 614,
+        "y1": 874,
+        "x2": 631,
+        "y2": 874,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 83,
+        "x1": 832,
+        "y1": 882,
+        "x2": 1169,
+        "y2": 881,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      }
+    ],
+    "defaultSpawn": {
+      "x": 680,
+      "y": 871.7727272727273
+    },
+    "ladders": [
+      {
+        "id": 1,
+        "x": 1340,
+        "top": 541,
+        "bottom": 862,
+        "nativeBottom": 862,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 2,
+        "x": 1107,
+        "top": 614,
+        "bottom": 848,
+        "nativeBottom": 848,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 3,
+        "x": 1176,
+        "top": 347,
+        "bottom": 548,
+        "nativeBottom": 548,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 4,
+        "x": 217,
+        "top": 210,
+        "bottom": 529,
+        "nativeBottom": 529,
+        "renderedInTerrain": true,
+        "isLadder": false
+      }
+    ],
+    "npcs": [
+      {
+        "name": "일반택시",
+        "type": "regular_cab",
+        "x": 480,
+        "y": 878.1136363636364,
+        "dialog": "cab",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 220,
+            "y": 890.5396825396825,
+            "targetMap": "henesys_hhg",
+            "targetX": 750,
+            "targetY": 1320.0,
+            "name": "헤네시스 사냥터 1",
+            "adaptation": true
+      },
+      {
+            "x": 1580,
+            "y": 885.0,
+            "targetMap": "kerning_subway",
+            "targetX": 360,
+            "targetY": 678.0,
+            "name": "커닝시티 지하철 1호선",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [
+      {
+        "type": "wild_boar",
+        "x": 455,
+        "y": 878.6818181818181,
+        "sourceFootholdId": 77,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 273,
+        "y": 842.2835820895523,
+        "sourceFootholdId": 112,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 176,
+        "y": 891.936507936508,
+        "sourceFootholdId": 73,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1508,
+        "y": 885.0,
+        "sourceFootholdId": 8,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 895,
+        "y": 602.9230769230769,
+        "sourceFootholdId": 129,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1006,
+        "y": 609.9166666666666,
+        "sourceFootholdId": 131,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1265,
+        "y": 542.9545454545455,
+        "sourceFootholdId": 90,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1309,
+        "y": 345.0,
+        "sourceFootholdId": 143,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1416,
+        "y": 345.0,
+        "sourceFootholdId": 140,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1519,
+        "y": 345.0,
+        "sourceFootholdId": 141,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "axe_stump",
+        "x": 1643,
+        "y": 345.0,
+        "sourceFootholdId": 144,
+        "sourceMobId": 1130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 1125,
+        "y": 299.19871794871796,
+        "sourceFootholdId": 136,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "wild_boar",
+        "x": 631,
+        "y": 874.0,
+        "sourceFootholdId": 80,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 1342,
+        "y": 231.22727272727272,
+        "sourceFootholdId": 120,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 1040,
+        "y": 296.47435897435895,
+        "sourceFootholdId": 136,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 858,
+        "y": 254.23076923076923,
+        "sourceFootholdId": 205,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 1058,
+        "y": 188.4090909090909,
+        "sourceFootholdId": 182,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 184,
+        "y": 216.54054054054055,
+        "sourceFootholdId": 208,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 363,
+        "y": 203.26373626373626,
+        "sourceFootholdId": 211,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 545,
+        "y": 192.70454545454547,
+        "sourceFootholdId": 213,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 282,
+        "y": 205.06349206349208,
+        "sourceFootholdId": 210,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 750,
+        "y": 250.76923076923077,
+        "sourceFootholdId": 205,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 983,
+        "y": 192.15463917525773,
+        "sourceFootholdId": 181,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "wild_boar",
+        "x": 824,
+        "y": 880.060606060606,
+        "sourceFootholdId": 82,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "fire_boar",
+        "x": 1251,
+        "y": 237.15463917525773,
+        "sourceFootholdId": 119,
+        "sourceMobId": 3210800
+      },
+      {
+        "type": "fire_boar",
+        "x": 455,
+        "y": 201.24175824175825,
+        "sourceFootholdId": 211,
+        "sourceMobId": 3210800
+      },
+      {
+        "type": "fire_boar",
+        "x": 961,
+        "y": 608.474358974359,
+        "sourceFootholdId": 131,
+        "sourceMobId": 3210800
+      },
+      {
+        "type": "wild_boar",
+        "x": 999,
+        "y": 881.5044510385757,
+        "sourceFootholdId": 83,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 1177,
+        "y": 882.1851851851852,
+        "sourceFootholdId": 84,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 1406,
+        "y": 885.0,
+        "sourceFootholdId": 2,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "wild_boar",
+        "x": 1580,
+        "y": 885.0,
+        "sourceFootholdId": 9,
+        "sourceMobId": 2230102
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 721,
+        "y": 870.1,
+        "sourceFootholdId": 81,
+        "sourceMobId": 2130100
+      },
+      {
+        "type": "dark_axe_stump",
+        "x": 234,
+        "y": 815.325,
+        "sourceFootholdId": 110,
+        "sourceMobId": 2130100
+      }
+    ],
+    "bossSpawn": {
+      "type": "stumpy",
+      "x": 1050,
+      "y": 881.353115727003,
+      "adaptation": true
+    },
+    "maxMonsters": 33
+  },
+  "kerning_subway": {
+    "key": "kerning_subway",
+    "name": "커닝시티 지하철 1호선",
+    "mapId": 103000101,
+    "source": "https://maplestory.io/api/GMS/62/map/103000101",
+    "region": "GMS",
+    "version": "62",
+    "category": "사냥터",
+    "width": 4102,
+    "height": 1076,
+    "terrainSourceWidth": 4051,
+    "terrainSourceHeight": 1076,
+    "img": "assets/map/kerning_subway_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/kerning_subway_minimap.png",
+    "terrainOffset": {
+      "x": 51,
+      "y": 0
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 595,
+      "y": 480
+    },
+    "isTown": false,
+    "isBossMap": false,
+    "footholds": [
+      {
+        "id": 99,
+        "x1": 820,
+        "y1": 553,
+        "x2": 910,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 156,
+        "x1": 1765,
+        "y1": 803,
+        "x2": 1855,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 84,
+        "x1": 2350,
+        "y1": 553,
+        "x2": 2440,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 243,
+        "x1": 2563,
+        "y1": 678,
+        "x2": 2911,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 67,
+        "x1": 1540,
+        "y1": 493,
+        "x2": 1630,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 230,
+        "x1": 893,
+        "y1": 702,
+        "x2": 896,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 239,
+        "x1": 2794,
+        "y1": 714,
+        "x2": 2854,
+        "y2": 702,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 246,
+        "x1": 1972,
+        "y1": 678,
+        "x2": 2206,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 233,
+        "x1": 1620,
+        "y1": 714,
+        "x2": 1639,
+        "y2": 714,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 54,
+        "x1": 1720,
+        "y1": 373,
+        "x2": 1810,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 220,
+        "x1": 3469,
+        "y1": 714,
+        "x2": 3488,
+        "y2": 714,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 89,
+        "x1": 2260,
+        "y1": 553,
+        "x2": 2350,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 229,
+        "x1": 833,
+        "y1": 714,
+        "x2": 893,
+        "y2": 702,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 83,
+        "x1": 2440,
+        "y1": 553,
+        "x2": 2530,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 236,
+        "x1": 1702,
+        "y1": 698,
+        "x2": 1736,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 66,
+        "x1": 1270,
+        "y1": 493,
+        "x2": 1360,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 223,
+        "x1": 3551,
+        "y1": 698,
+        "x2": 3585,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 210,
+        "x1": 685,
+        "y1": 803,
+        "x2": 775,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 41,
+        "x1": 3450,
+        "y1": 373,
+        "x2": 3475,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 75
+      },
+      {
+        "id": 86,
+        "x1": 2665,
+        "y1": 553,
+        "x2": 2710,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 219,
+        "x1": 3416,
+        "y1": 740,
+        "x2": 3632,
+        "y2": 740,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 59,
+        "x1": 1900,
+        "y1": 373,
+        "x2": 1990,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 226,
+        "x1": 580,
+        "y1": 678,
+        "x2": 919,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 26,
+        "x1": 480,
+        "y1": 433,
+        "x2": 550,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 71,
+        "x1": 1675,
+        "y1": 493,
+        "x2": 1720,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 100,
+        "x1": 3160,
+        "y1": 553,
+        "x2": 3250,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 209,
+        "x1": 595,
+        "y1": 803,
+        "x2": 685,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 109,
+        "x1": 3250,
+        "y1": 553,
+        "x2": 3340,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 9,
+        "x1": 2530,
+        "y1": 313,
+        "x2": 2620,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 56,
+        "x1": 1585,
+        "y1": 373,
+        "x2": 1650,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 216,
+        "x1": 919,
+        "y1": 678,
+        "x2": 1267,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 13,
+        "x1": 730,
+        "y1": 313,
+        "x2": 750,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 203,
+        "x1": 3115,
+        "y1": 803,
+        "x2": 3205,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 40,
+        "x1": 3385,
+        "y1": 373,
+        "x2": 3450,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 75
+      },
+      {
+        "id": 3,
+        "x1": 2710,
+        "y1": 313,
+        "x2": 2755,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 103,
+        "x1": 3070,
+        "y1": 553,
+        "x2": 3160,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 85,
+        "x1": 2620,
+        "y1": 553,
+        "x2": 2665,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 58,
+        "x1": 1810,
+        "y1": 373,
+        "x2": 1900,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 25,
+        "x1": 415,
+        "y1": 433,
+        "x2": 480,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 43,
+        "x1": 3520,
+        "y1": 373,
+        "x2": 3540,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 75
+      },
+      {
+        "id": 206,
+        "x1": 325,
+        "y1": 803,
+        "x2": 415,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 172,
+        "x1": 3385,
+        "y1": 803,
+        "x2": 3475,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 70,
+        "x1": 1450,
+        "y1": 493,
+        "x2": 1540,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 106,
+        "x1": 3565,
+        "y1": 553,
+        "x2": 3610,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 8,
+        "x1": 2460,
+        "y1": 313,
+        "x2": 2530,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 168,
+        "x1": 2755,
+        "y1": 803,
+        "x2": 2845,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 12,
+        "x1": 1000,
+        "y1": 313,
+        "x2": 1090,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 30,
+        "x1": 640,
+        "y1": 433,
+        "x2": 730,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 162,
+        "x1": 1855,
+        "y1": 803,
+        "x2": 1945,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 48,
+        "x1": 2910,
+        "y1": 313,
+        "x2": 2980,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 158,
+        "x1": 3205,
+        "y1": 803,
+        "x2": 3295,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 15,
+        "x1": 1090,
+        "y1": 313,
+        "x2": 1180,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 171,
+        "x1": 3655,
+        "y1": 803,
+        "x2": 3745,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 42,
+        "x1": 3475,
+        "y1": 373,
+        "x2": 3520,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 75
+      },
+      {
+        "id": 60,
+        "x1": 1990,
+        "y1": 373,
+        "x2": 2035,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 5,
+        "x1": 2620,
+        "y1": 313,
+        "x2": 2710,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 165,
+        "x1": 2305,
+        "y1": 803,
+        "x2": 2395,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 87,
+        "x1": 2710,
+        "y1": 553,
+        "x2": 2730,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 152,
+        "x1": 865,
+        "y1": 803,
+        "x2": 955,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 27,
+        "x1": 775,
+        "y1": 433,
+        "x2": 820,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 248,
+        "x1": 3661,
+        "y1": 644,
+        "x2": 3780,
+        "y2": 644,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 31
+      },
+      {
+        "id": 174,
+        "x1": 3295,
+        "y1": 803,
+        "x2": 3385,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 148,
+        "x1": 2125,
+        "y1": 803,
+        "x2": 2215,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 72,
+        "x1": 1720,
+        "y1": 493,
+        "x2": 1740,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 161,
+        "x1": 1585,
+        "y1": 803,
+        "x2": 1675,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 155,
+        "x1": 1225,
+        "y1": 803,
+        "x2": 1315,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 242,
+        "x1": 2206,
+        "y1": 678,
+        "x2": 2563,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 75,
+        "x1": 2530,
+        "y1": 553,
+        "x2": 2620,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 57,
+        "x1": 1650,
+        "y1": 373,
+        "x2": 1720,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 238,
+        "x1": 2775,
+        "y1": 714,
+        "x2": 2794,
+        "y2": 714,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 14,
+        "x1": 820,
+        "y1": 313,
+        "x2": 910,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 164,
+        "x1": 2485,
+        "y1": 803,
+        "x2": 2575,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 245,
+        "x1": 3259,
+        "y1": 678,
+        "x2": 3503,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 151,
+        "x1": 1405,
+        "y1": 803,
+        "x2": 1495,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 232,
+        "x1": 1567,
+        "y1": 740,
+        "x2": 1783,
+        "y2": 740,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 17,
+        "x1": 1180,
+        "y1": 313,
+        "x2": 1270,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 62,
+        "x1": 2080,
+        "y1": 373,
+        "x2": 2100,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 228,
+        "x1": 814,
+        "y1": 714,
+        "x2": 833,
+        "y2": 714,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 154,
+        "x1": 1045,
+        "y1": 803,
+        "x2": 1135,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 241,
+        "x1": 2857,
+        "y1": 698,
+        "x2": 2891,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 91,
+        "x1": 640,
+        "y1": 553,
+        "x2": 730,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 235,
+        "x1": 1699,
+        "y1": 702,
+        "x2": 1702,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 135,
+        "x1": 2845,
+        "y1": 803,
+        "x2": 2935,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 47,
+        "x1": 3070,
+        "y1": 313,
+        "x2": 3160,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 19,
+        "x1": 685,
+        "y1": 313,
+        "x2": 730,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 74,
+        "x1": 1360,
+        "y1": 493,
+        "x2": 1450,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 222,
+        "x1": 3548,
+        "y1": 702,
+        "x2": 3551,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 157,
+        "x1": 955,
+        "y1": 803,
+        "x2": 1045,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 31,
+        "x1": 550,
+        "y1": 433,
+        "x2": 640,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 244,
+        "x1": 2911,
+        "y1": 678,
+        "x2": 3259,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 77,
+        "x1": 1900,
+        "y1": 553,
+        "x2": 1920,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 49,
+        "x1": 3160,
+        "y1": 313,
+        "x2": 3205,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 231,
+        "x1": 896,
+        "y1": 698,
+        "x2": 930,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 225,
+        "x1": 290,
+        "y1": 678,
+        "x2": 580,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 199,
+        "x1": 2395,
+        "y1": 803,
+        "x2": 2485,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 16,
+        "x1": 1270,
+        "y1": 313,
+        "x2": 1360,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 34,
+        "x1": 2395,
+        "y1": 433,
+        "x2": 2460,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 67
+      },
+      {
+        "id": 61,
+        "x1": 2035,
+        "y1": 373,
+        "x2": 2080,
+        "y2": 373,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 76
+      },
+      {
+        "id": 112,
+        "x1": 2910,
+        "y1": 553,
+        "x2": 2980,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 247,
+        "x1": 3642,
+        "y1": 662,
+        "x2": 3772,
+        "y2": 662,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 31
+      },
+      {
+        "id": 79,
+        "x1": 1855,
+        "y1": 553,
+        "x2": 1900,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 234,
+        "x1": 1639,
+        "y1": 714,
+        "x2": 1699,
+        "y2": 702,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 208,
+        "x1": 505,
+        "y1": 803,
+        "x2": 595,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 90,
+        "x1": 910,
+        "y1": 553,
+        "x2": 955,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 180,
+        "x1": 3025,
+        "y1": 803,
+        "x2": 3115,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 46,
+        "x1": 2845,
+        "y1": 313,
+        "x2": 2910,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 221,
+        "x1": 3488,
+        "y1": 714,
+        "x2": 3548,
+        "y2": 702,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 215,
+        "x1": 1267,
+        "y1": 678,
+        "x2": 1615,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 21,
+        "x1": 1360,
+        "y1": 313,
+        "x2": 1405,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 202,
+        "x1": 1945,
+        "y1": 803,
+        "x2": 2035,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 102,
+        "x1": 3520,
+        "y1": 553,
+        "x2": 3565,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 93,
+        "x1": 505,
+        "y1": 553,
+        "x2": 570,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 237,
+        "x1": 2722,
+        "y1": 740,
+        "x2": 2938,
+        "y2": 740,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 76,
+        "x1": 1990,
+        "y1": 553,
+        "x2": 2080,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 211,
+        "x1": 775,
+        "y1": 803,
+        "x2": 865,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 33,
+        "x1": 2125,
+        "y1": 433,
+        "x2": 2190,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 67
+      },
+      {
+        "id": 51,
+        "x1": 3205,
+        "y1": 313,
+        "x2": 3250,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 205,
+        "x1": 290,
+        "y1": 803,
+        "x2": 325,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 111,
+        "x1": 2845,
+        "y1": 553,
+        "x2": 2910,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 105,
+        "x1": 2980,
+        "y1": 553,
+        "x2": 3070,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 69,
+        "x1": 1200,
+        "y1": 493,
+        "x2": 1270,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 227,
+        "x1": 761,
+        "y1": 740,
+        "x2": 977,
+        "y2": 740,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 80,
+        "x1": 1920,
+        "y1": 553,
+        "x2": 1990,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 36,
+        "x1": 2190,
+        "y1": 433,
+        "x2": 2260,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 67
+      },
+      {
+        "id": 214,
+        "x1": 1615,
+        "y1": 678,
+        "x2": 1972,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 114,
+        "x1": 2755,
+        "y1": 493,
+        "x2": 2820,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 56
+      },
+      {
+        "id": 98,
+        "x1": 730,
+        "y1": 553,
+        "x2": 820,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 201,
+        "x1": 2575,
+        "y1": 803,
+        "x2": 2665,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 20,
+        "x1": 750,
+        "y1": 313,
+        "x2": 820,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 1,
+        "x1": 2755,
+        "y1": 313,
+        "x2": 2820,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 101,
+        "x1": 3340,
+        "y1": 553,
+        "x2": 3430,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 38,
+        "x1": 2260,
+        "y1": 433,
+        "x2": 2350,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 67
+      },
+      {
+        "id": 217,
+        "x1": 3503,
+        "y1": 678,
+        "x2": 3780,
+        "y2": 678,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 117,
+        "x1": 2935,
+        "y1": 803,
+        "x2": 3025,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 23,
+        "x1": 730,
+        "y1": 433,
+        "x2": 775,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 170,
+        "x1": 2035,
+        "y1": 803,
+        "x2": 2125,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 104,
+        "x1": 3430,
+        "y1": 553,
+        "x2": 3520,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 50,
+        "x1": 2980,
+        "y1": 313,
+        "x2": 3070,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 4,
+        "x1": 2440,
+        "y1": 313,
+        "x2": 2460,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 95,
+        "x1": 1000,
+        "y1": 553,
+        "x2": 1020,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 179,
+        "x1": 3475,
+        "y1": 803,
+        "x2": 3565,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 68,
+        "x1": 1630,
+        "y1": 493,
+        "x2": 1675,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 207,
+        "x1": 415,
+        "y1": 803,
+        "x2": 505,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 173,
+        "x1": 3745,
+        "y1": 803,
+        "x2": 3780,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 107,
+        "x1": 3610,
+        "y1": 553,
+        "x2": 3630,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 51
+      },
+      {
+        "id": 7,
+        "x1": 2395,
+        "y1": 313,
+        "x2": 2440,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 85
+      },
+      {
+        "id": 10,
+        "x1": 1405,
+        "y1": 313,
+        "x2": 1470,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 160,
+        "x1": 1495,
+        "y1": 803,
+        "x2": 1585,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 82,
+        "x1": 2170,
+        "y1": 553,
+        "x2": 2260,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 28,
+        "x1": 820,
+        "y1": 433,
+        "x2": 840,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 66
+      },
+      {
+        "id": 65,
+        "x1": 1135,
+        "y1": 493,
+        "x2": 1200,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 57
+      },
+      {
+        "id": 176,
+        "x1": 3565,
+        "y1": 803,
+        "x2": 3655,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 22,
+        "x1": 910,
+        "y1": 313,
+        "x2": 1000,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 86
+      },
+      {
+        "id": 163,
+        "x1": 2665,
+        "y1": 803,
+        "x2": 2755,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 94,
+        "x1": 955,
+        "y1": 553,
+        "x2": 1000,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 150,
+        "x1": 1315,
+        "y1": 803,
+        "x2": 1405,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 159,
+        "x1": 1675,
+        "y1": 803,
+        "x2": 1765,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 52,
+        "x1": 3250,
+        "y1": 313,
+        "x2": 3270,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 84
+      },
+      {
+        "id": 166,
+        "x1": 2215,
+        "y1": 803,
+        "x2": 2305,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 97,
+        "x1": 570,
+        "y1": 553,
+        "x2": 640,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 52
+      },
+      {
+        "id": 153,
+        "x1": 1135,
+        "y1": 803,
+        "x2": 1225,
+        "y2": 803,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 240,
+        "x1": 2854,
+        "y1": 702,
+        "x2": 2857,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 81,
+        "x1": 2080,
+        "y1": 553,
+        "x2": 2170,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 53
+      },
+      {
+        "id": 37,
+        "x1": 2350,
+        "y1": 433,
+        "x2": 2395,
+        "y2": 433,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 67
+      }
+    ],
+    "defaultSpawn": {
+      "x": 520,
+      "y": 678.0
+    },
+    "ladders": [
+      {
+        "id": 1,
+        "x": 2760,
+        "top": 315,
+        "bottom": 480,
+        "nativeBottom": 480,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 2,
+        "x": 2677,
+        "top": 555,
+        "bottom": 661,
+        "nativeBottom": 661,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 3,
+        "x": 3309,
+        "top": 555,
+        "bottom": 667,
+        "nativeBottom": 667,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 4,
+        "x": 864,
+        "top": 555,
+        "bottom": 664,
+        "nativeBottom": 664,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 5,
+        "x": 1373,
+        "top": 495,
+        "bottom": 656,
+        "nativeBottom": 656,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 6,
+        "x": 2555,
+        "top": 680,
+        "bottom": 787,
+        "nativeBottom": 787,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 7,
+        "x": 3155,
+        "top": 680,
+        "bottom": 787,
+        "nativeBottom": 787,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 8,
+        "x": 482,
+        "top": 680,
+        "bottom": 787,
+        "nativeBottom": 787,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 9,
+        "x": 1535,
+        "top": 680,
+        "bottom": 787,
+        "nativeBottom": 787,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 10,
+        "x": 1992,
+        "top": 680,
+        "bottom": 786,
+        "nativeBottom": 786,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 11,
+        "x": 866,
+        "top": 315,
+        "bottom": 427,
+        "nativeBottom": 427,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 12,
+        "x": 1862,
+        "top": 375,
+        "bottom": 536,
+        "nativeBottom": 536,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 13,
+        "x": 740,
+        "top": 435,
+        "bottom": 544,
+        "nativeBottom": 544,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 14,
+        "x": 1363,
+        "top": 315,
+        "bottom": 477,
+        "nativeBottom": 477,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 15,
+        "x": 2491,
+        "top": 315,
+        "bottom": 534,
+        "nativeBottom": 534,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 16,
+        "x": 3145,
+        "top": 315,
+        "bottom": 529,
+        "nativeBottom": 529,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 17,
+        "x": 3454,
+        "top": 375,
+        "bottom": 538,
+        "nativeBottom": 538,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 18,
+        "x": 2221,
+        "top": 555,
+        "bottom": 665,
+        "nativeBottom": 665,
+        "renderedInTerrain": true,
+        "isLadder": true
+      }
+    ],
+    "npcs": [
+      {
+        "name": "웅이",
+        "type": "regular_cab",
+        "x": 350,
+        "y": 678.0,
+        "dialog": "cab",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 320,
+            "y": 678.0,
+            "targetMap": "perion_boar",
+            "targetX": 1520,
+            "targetY": 885.0,
+            "name": "와일드보어의 땅",
+            "adaptation": true
+      },
+      {
+            "x": 3650,
+            "y": 678.0,
+            "targetMap": "kerning_pq",
+            "targetX": 150,
+            "targetY": 2549.0,
+            "name": "커닝시티 파퀘 킹슬라임 제단",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [
+      {
+        "type": "bubbling",
+        "x": 382,
+        "y": 803.0,
+        "sourceFootholdId": 206,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 690,
+        "y": 803.0,
+        "sourceFootholdId": 210,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3733,
+        "y": 803.0,
+        "sourceFootholdId": 171,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3543,
+        "y": 678.0,
+        "sourceFootholdId": 217,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3216,
+        "y": 678.0,
+        "sourceFootholdId": 244,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2921,
+        "y": 678.0,
+        "sourceFootholdId": 244,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2637,
+        "y": 678.0,
+        "sourceFootholdId": 243,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2320,
+        "y": 678.0,
+        "sourceFootholdId": 242,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2037,
+        "y": 678.0,
+        "sourceFootholdId": 246,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1792,
+        "y": 678.0,
+        "sourceFootholdId": 214,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1532,
+        "y": 678.0,
+        "sourceFootholdId": 215,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1282,
+        "y": 678.0,
+        "sourceFootholdId": 215,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1019,
+        "y": 803.0,
+        "sourceFootholdId": 157,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1018,
+        "y": 678.0,
+        "sourceFootholdId": 216,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 737,
+        "y": 678.0,
+        "sourceFootholdId": 226,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 465,
+        "y": 678.0,
+        "sourceFootholdId": 225,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 655,
+        "y": 553.0,
+        "sourceFootholdId": 91,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 940,
+        "y": 553.0,
+        "sourceFootholdId": 90,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1512,
+        "y": 493.0,
+        "sourceFootholdId": 70,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1946,
+        "y": 553.0,
+        "sourceFootholdId": 80,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2410,
+        "y": 553.0,
+        "sourceFootholdId": 84,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2865,
+        "y": 553.0,
+        "sourceFootholdId": 111,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3529,
+        "y": 553.0,
+        "sourceFootholdId": 102,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1338,
+        "y": 803.0,
+        "sourceFootholdId": 150,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3182,
+        "y": 553.0,
+        "sourceFootholdId": 100,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3612,
+        "y": 803.0,
+        "sourceFootholdId": 176,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2919,
+        "y": 803.0,
+        "sourceFootholdId": 135,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2228,
+        "y": 803.0,
+        "sourceFootholdId": 166,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1890,
+        "y": 803.0,
+        "sourceFootholdId": 162,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1142,
+        "y": 803.0,
+        "sourceFootholdId": 153,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 782,
+        "y": 313.0,
+        "sourceFootholdId": 20,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 929,
+        "y": 313.0,
+        "sourceFootholdId": 22,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1091,
+        "y": 313.0,
+        "sourceFootholdId": 15,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1212,
+        "y": 313.0,
+        "sourceFootholdId": 17,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1712,
+        "y": 803.0,
+        "sourceFootholdId": 159,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 680,
+        "y": 433.0,
+        "sourceFootholdId": 30,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 817,
+        "y": 433.0,
+        "sourceFootholdId": 27,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 515,
+        "y": 433.0,
+        "sourceFootholdId": 26,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 789,
+        "y": 553.0,
+        "sourceFootholdId": 98,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1223,
+        "y": 493.0,
+        "sourceFootholdId": 69,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1363,
+        "y": 493.0,
+        "sourceFootholdId": 74,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1696,
+        "y": 373.0,
+        "sourceFootholdId": 57,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1853,
+        "y": 373.0,
+        "sourceFootholdId": 58,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2001,
+        "y": 373.0,
+        "sourceFootholdId": 60,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 1664,
+        "y": 493.0,
+        "sourceFootholdId": 68,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2040,
+        "y": 803.0,
+        "sourceFootholdId": 170,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2145,
+        "y": 553.0,
+        "sourceFootholdId": 81,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2634,
+        "y": 553.0,
+        "sourceFootholdId": 85,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2207,
+        "y": 433.0,
+        "sourceFootholdId": 36,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2370,
+        "y": 433.0,
+        "sourceFootholdId": 37,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2499,
+        "y": 313.0,
+        "sourceFootholdId": 8,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2577,
+        "y": 313.0,
+        "sourceFootholdId": 9,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2695,
+        "y": 313.0,
+        "sourceFootholdId": 5,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3003,
+        "y": 313.0,
+        "sourceFootholdId": 50,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3151,
+        "y": 313.0,
+        "sourceFootholdId": 47,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3027,
+        "y": 553.0,
+        "sourceFootholdId": 105,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2385,
+        "y": 803.0,
+        "sourceFootholdId": 165,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3365,
+        "y": 553.0,
+        "sourceFootholdId": 101,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 3289,
+        "y": 803.0,
+        "sourceFootholdId": 158,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 2469,
+        "y": 678.0,
+        "sourceFootholdId": 242,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "bubbling",
+        "x": 482,
+        "y": 803.0,
+        "sourceFootholdId": 207,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "jr_wraith",
+        "x": 586,
+        "y": 803.0,
+        "sourceFootholdId": 208,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 615,
+        "y": 553.0,
+        "sourceFootholdId": 97,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 594,
+        "y": 678.0,
+        "sourceFootholdId": 226,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 816,
+        "y": 678.0,
+        "sourceFootholdId": 226,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 938,
+        "y": 678.0,
+        "sourceFootholdId": 216,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 1220,
+        "y": 803.0,
+        "sourceFootholdId": 153,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "bubbling",
+        "x": 2736,
+        "y": 803.0,
+        "sourceFootholdId": 163,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "jr_wraith",
+        "x": 1412,
+        "y": 678.0,
+        "sourceFootholdId": 215,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 1425,
+        "y": 493.0,
+        "sourceFootholdId": 74,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 1761,
+        "y": 373.0,
+        "sourceFootholdId": 54,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2075,
+        "y": 553.0,
+        "sourceFootholdId": 76,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2246,
+        "y": 433.0,
+        "sourceFootholdId": 36,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2476,
+        "y": 553.0,
+        "sourceFootholdId": 83,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2148,
+        "y": 678.0,
+        "sourceFootholdId": 246,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 1897,
+        "y": 678.0,
+        "sourceFootholdId": 214,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2127,
+        "y": 803.0,
+        "sourceFootholdId": 148,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2523,
+        "y": 803.0,
+        "sourceFootholdId": 164,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "bubbling",
+        "x": 3104,
+        "y": 803.0,
+        "sourceFootholdId": 180,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2731,
+        "y": 678.0,
+        "sourceFootholdId": 243,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2843,
+        "y": 678.0,
+        "sourceFootholdId": 243,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2881,
+        "y": 678.0,
+        "sourceFootholdId": 243,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3133,
+        "y": 678.0,
+        "sourceFootholdId": 244,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3105,
+        "y": 553.0,
+        "sourceFootholdId": 103,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3453,
+        "y": 553.0,
+        "sourceFootholdId": 104,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3299,
+        "y": 553.0,
+        "sourceFootholdId": 109,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3370,
+        "y": 803.0,
+        "sourceFootholdId": 174,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3577,
+        "y": 678.0,
+        "sourceFootholdId": 217,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3362,
+        "y": 678.0,
+        "sourceFootholdId": 245,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "bubbling",
+        "x": 3460,
+        "y": 803.0,
+        "sourceFootholdId": 172,
+        "sourceMobId": 1210103
+      },
+      {
+        "type": "jr_wraith",
+        "x": 3070,
+        "y": 313.0,
+        "sourceFootholdId": 47,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 2325,
+        "y": 433.0,
+        "sourceFootholdId": 38,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 1904,
+        "y": 373.0,
+        "sourceFootholdId": 59,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 994,
+        "y": 313.0,
+        "sourceFootholdId": 22,
+        "sourceMobId": 9400568
+      },
+      {
+        "type": "jr_wraith",
+        "x": 594,
+        "y": 433.0,
+        "sourceFootholdId": 31,
+        "sourceMobId": 9400568
+      }
+    ],
+    "bossSpawn": {
+      "type": "dyle",
+      "x": 1850,
+      "y": 803.0,
+      "adaptation": true
+    },
+    "maxMonsters": 95
+  },
+  "sleepy_dungeon": {
+    "key": "sleepy_dungeon",
+    "name": "저주받은 신전",
+    "mapId": 105090900,
+    "source": "https://maplestory.io/api/GMS/62/map/105090900",
+    "region": "GMS",
+    "version": "62",
+    "category": "사냥터",
+    "width": 1600,
+    "height": 1259,
+    "terrainSourceWidth": 1604,
+    "terrainSourceHeight": 1259,
+    "img": "assets/map/sleepy_dungeon_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/sleepy_dungeon_minimap.png",
+    "terrainOffset": {
+      "x": -4,
+      "y": 0
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 432,
+      "y": 889
+    },
+    "isTown": false,
+    "isBossMap": true,
+    "footholds": [
+      {
+        "id": 125,
+        "x1": 137,
+        "y1": 233,
+        "x2": 148,
+        "y2": 229,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 171,
+        "x1": 938,
+        "y1": 233,
+        "x2": 954,
+        "y2": 228,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 36
+      },
+      {
+        "id": 139,
+        "x1": 92,
+        "y1": 537,
+        "x2": 122,
+        "y2": 535,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 29,
+        "x1": 964,
+        "y1": 414,
+        "x2": 982,
+        "y2": 408,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 56,
+        "x1": 1345,
+        "y1": 623,
+        "x2": 1371,
+        "y2": 618,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 120,
+        "x1": 178,
+        "y1": 193,
+        "x2": 199,
+        "y2": 201,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 25,
+        "x1": 1468,
+        "y1": 1019,
+        "x2": 1530,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 163,
+        "x1": 552,
+        "y1": 228,
+        "x2": 561,
+        "y2": 225,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 37
+      },
+      {
+        "id": 89,
+        "x1": 725,
+        "y1": 578,
+        "x2": 751,
+        "y2": 573,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 112,
+        "x1": 5,
+        "y1": 200,
+        "x2": 37,
+        "y2": 195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 43,
+        "x1": 1343,
+        "y1": 314,
+        "x2": 1360,
+        "y2": 310,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 85,
+        "x1": 650,
+        "y1": 619,
+        "x2": 653,
+        "y2": 599,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 155,
+        "x1": 248,
+        "y1": 567,
+        "x2": 262,
+        "y2": 573,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 169,
+        "x1": 895,
+        "y1": 237,
+        "x2": 904,
+        "y2": 234,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 36
+      },
+      {
+        "id": 12,
+        "x1": 656,
+        "y1": 1019,
+        "x2": 748,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 150,
+        "x1": 158,
+        "y1": 571,
+        "x2": 167,
+        "y2": 567,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 118,
+        "x1": 144,
+        "y1": 202,
+        "x2": 154,
+        "y2": 202,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 127,
+        "x1": 157,
+        "y1": 232,
+        "x2": 166,
+        "y2": 228,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 30,
+        "x1": 982,
+        "y1": 408,
+        "x2": 1134,
+        "y2": 406,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 68,
+        "x1": 986,
+        "y1": 714,
+        "x2": 1002,
+        "y2": 709,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 18,
+        "x1": 928,
+        "y1": 1019,
+        "x2": 1016,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 142,
+        "x1": 155,
+        "y1": 541,
+        "x2": 179,
+        "y2": 532,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 4,
+        "x1": 54,
+        "y1": 1019,
+        "x2": 118,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 45,
+        "x1": 1394,
+        "y1": 313,
+        "x2": 1424,
+        "y2": 308,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 87,
+        "x1": 680,
+        "y1": 591,
+        "x2": 707,
+        "y2": 590,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 185,
+        "x1": 819,
+        "y1": 260,
+        "x2": 849,
+        "y2": 265,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 34
+      },
+      {
+        "id": 14,
+        "x1": 568,
+        "y1": 1019,
+        "x2": 656,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 114,
+        "x1": 52,
+        "y1": 204,
+        "x2": 77,
+        "y2": 205,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 180,
+        "x1": 691,
+        "y1": 267,
+        "x2": 708,
+        "y2": 268,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 34
+      },
+      {
+        "id": 148,
+        "x1": 138,
+        "y1": 572,
+        "x2": 149,
+        "y2": 568,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 157,
+        "x1": 270,
+        "y1": 568,
+        "x2": 305,
+        "y2": 568,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 32,
+        "x1": 1142,
+        "y1": 391,
+        "x2": 1151,
+        "y2": 386,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 106,
+        "x1": 326,
+        "y1": 258,
+        "x2": 343,
+        "y2": 259,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      },
+      {
+        "id": 172,
+        "x1": 954,
+        "y1": 228,
+        "x2": 1006,
+        "y2": 229,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 36
+      },
+      {
+        "id": 47,
+        "x1": 1146,
+        "y1": 462,
+        "x2": 1225,
+        "y2": 462,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 66,
+        "x1": 943,
+        "y1": 718,
+        "x2": 952,
+        "y2": 715,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 101,
+        "x1": 415,
+        "y1": 531,
+        "x2": 444,
+        "y2": 537,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 16,
+        "x1": 1016,
+        "y1": 1019,
+        "x2": 1108,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 178,
+        "x1": 1126,
+        "y1": 191,
+        "x2": 1178,
+        "y2": 192,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 99,
+        "x1": 347,
+        "y1": 531,
+        "x2": 360,
+        "y2": 538,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 187,
+        "x1": 882,
+        "y1": 717,
+        "x2": 962,
+        "y2": 717,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 21
+      },
+      {
+        "id": 34,
+        "x1": 1160,
+        "y1": 367,
+        "x2": 1183,
+        "y2": 357,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 53,
+        "x1": 1273,
+        "y1": 644,
+        "x2": 1300,
+        "y2": 636,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 136,
+        "x1": 38,
+        "y1": 534,
+        "x2": 53,
+        "y2": 543,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 71,
+        "x1": 1082,
+        "y1": 715,
+        "x2": 1221,
+        "y2": 713,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 131,
+        "x1": 210,
+        "y1": 229,
+        "x2": 247,
+        "y2": 228,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 21,
+        "x1": 1378,
+        "y1": 1019,
+        "x2": 1468,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 174,
+        "x1": 1050,
+        "y1": 199,
+        "x2": 1067,
+        "y2": 200,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 40,
+        "x1": 1284,
+        "y1": 311,
+        "x2": 1304,
+        "y2": 309,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 59,
+        "x1": 1404,
+        "y1": 620,
+        "x2": 1430,
+        "y2": 621,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 123,
+        "x1": 104,
+        "y1": 225,
+        "x2": 117,
+        "y2": 234,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 36,
+        "x1": 1186,
+        "y1": 337,
+        "x2": 1213,
+        "y2": 329,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 55,
+        "x1": 1327,
+        "y1": 635,
+        "x2": 1345,
+        "y2": 623,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 166,
+        "x1": 611,
+        "y1": 219,
+        "x2": 663,
+        "y2": 220,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 37
+      },
+      {
+        "id": 115,
+        "x1": 77,
+        "y1": 205,
+        "x2": 91,
+        "y2": 198,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 161,
+        "x1": 2,
+        "y1": 720,
+        "x2": 61,
+        "y2": 719,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 73,
+        "x1": 828,
+        "y1": 496,
+        "x2": 837,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 129,
+        "x1": 177,
+        "y1": 233,
+        "x2": 205,
+        "y2": 232,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 88,
+        "x1": 707,
+        "y1": 590,
+        "x2": 725,
+        "y2": 578,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 110,
+        "x1": 402,
+        "y1": 250,
+        "x2": 454,
+        "y2": 251,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      },
+      {
+        "id": 42,
+        "x1": 1317,
+        "y1": 313,
+        "x2": 1343,
+        "y2": 314,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 153,
+        "x1": 206,
+        "y1": 571,
+        "x2": 211,
+        "y2": 568,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 57,
+        "x1": 1371,
+        "y1": 618,
+        "x2": 1391,
+        "y2": 616,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 60,
+        "x1": 1430,
+        "y1": 621,
+        "x2": 1447,
+        "y2": 617,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 102,
+        "x1": 444,
+        "y1": 537,
+        "x2": 461,
+        "y2": 529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 48,
+        "x1": 1221,
+        "y1": 713,
+        "x2": 1229,
+        "y2": 698,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 145,
+        "x1": 89,
+        "y1": 562,
+        "x2": 105,
+        "y2": 564,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 159,
+        "x1": 81,
+        "y1": 722,
+        "x2": 96,
+        "y2": 720,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 7,
+        "x1": 118,
+        "y1": 1019,
+        "x2": 206,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 75,
+        "x1": 871,
+        "y1": 492,
+        "x2": 887,
+        "y2": 487,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 140,
+        "x1": 122,
+        "y1": 535,
+        "x2": 145,
+        "y2": 541,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 108,
+        "x1": 352,
+        "y1": 256,
+        "x2": 386,
+        "y2": 255,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      },
+      {
+        "id": 2,
+        "x1": 0,
+        "y1": 1019,
+        "x2": 54,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 44,
+        "x1": 1360,
+        "y1": 310,
+        "x2": 1394,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 117,
+        "x1": 121,
+        "y1": 196,
+        "x2": 144,
+        "y2": 202,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 183,
+        "x1": 751,
+        "y1": 264,
+        "x2": 767,
+        "y2": 259,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 34
+      },
+      {
+        "id": 62,
+        "x1": 1481,
+        "y1": 620,
+        "x2": 1511,
+        "y2": 615,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 132,
+        "x1": 247,
+        "y1": 228,
+        "x2": 261,
+        "y2": 234,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 8,
+        "x1": 476,
+        "y1": 1019,
+        "x2": 568,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 31,
+        "x1": 1134,
+        "y1": 406,
+        "x2": 1142,
+        "y2": 391,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 175,
+        "x1": 1067,
+        "y1": 200,
+        "x2": 1076,
+        "y2": 197,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 77,
+        "x1": 939,
+        "y1": 488,
+        "x2": 969,
+        "y2": 493,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 104,
+        "x1": 502,
+        "y1": 934,
+        "x2": 582,
+        "y2": 934,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 170,
+        "x1": 904,
+        "y1": 234,
+        "x2": 938,
+        "y2": 233,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 36
+      },
+      {
+        "id": 138,
+        "x1": 78,
+        "y1": 544,
+        "x2": 92,
+        "y2": 537,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 19,
+        "x1": 1108,
+        "y1": 1019,
+        "x2": 1196,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 46,
+        "x1": 1424,
+        "y1": 308,
+        "x2": 1445,
+        "y2": 315,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 147,
+        "x1": 118,
+        "y1": 573,
+        "x2": 138,
+        "y2": 572,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 91,
+        "x1": 771,
+        "y1": 571,
+        "x2": 784,
+        "y2": 575,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 64,
+        "x1": 1233,
+        "y1": 769,
+        "x2": 1312,
+        "y2": 769,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 162,
+        "x1": 535,
+        "y1": 227,
+        "x2": 552,
+        "y2": 228,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 37
+      },
+      {
+        "id": 33,
+        "x1": 1151,
+        "y1": 386,
+        "x2": 1160,
+        "y2": 367,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 134,
+        "x1": 269,
+        "y1": 229,
+        "x2": 304,
+        "y2": 229,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 168,
+        "x1": 878,
+        "y1": 236,
+        "x2": 895,
+        "y2": 237,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 36
+      },
+      {
+        "id": 51,
+        "x1": 1247,
+        "y1": 674,
+        "x2": 1270,
+        "y2": 664,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 177,
+        "x1": 1110,
+        "y1": 196,
+        "x2": 1126,
+        "y2": 191,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 70,
+        "x1": 1054,
+        "y1": 710,
+        "x2": 1082,
+        "y2": 715,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 93,
+        "x1": 810,
+        "y1": 576,
+        "x2": 827,
+        "y2": 572,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 20,
+        "x1": 1288,
+        "y1": 1019,
+        "x2": 1378,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 126,
+        "x1": 148,
+        "y1": 229,
+        "x2": 157,
+        "y2": 232,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 39,
+        "x1": 1258,
+        "y1": 316,
+        "x2": 1284,
+        "y2": 311,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 58,
+        "x1": 1391,
+        "y1": 616,
+        "x2": 1404,
+        "y2": 620,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 35,
+        "x1": 1183,
+        "y1": 357,
+        "x2": 1186,
+        "y2": 337,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 164,
+        "x1": 561,
+        "y1": 225,
+        "x2": 595,
+        "y2": 224,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 37
+      },
+      {
+        "id": 80,
+        "x1": 449,
+        "y1": 670,
+        "x2": 601,
+        "y2": 668,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 113,
+        "x1": 37,
+        "y1": 195,
+        "x2": 52,
+        "y2": 204,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 72,
+        "x1": 811,
+        "y1": 495,
+        "x2": 828,
+        "y2": 496,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 95,
+        "x1": 861,
+        "y1": 575,
+        "x2": 891,
+        "y2": 570,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 9,
+        "x1": 388,
+        "y1": 1019,
+        "x2": 476,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 156,
+        "x1": 262,
+        "y1": 573,
+        "x2": 270,
+        "y2": 568,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 22,
+        "x1": 1530,
+        "y1": 1019,
+        "x2": 1584,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 105,
+        "x1": 485,
+        "y1": 623,
+        "x2": 565,
+        "y2": 623,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 151,
+        "x1": 167,
+        "y1": 567,
+        "x2": 178,
+        "y2": 572,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 119,
+        "x1": 154,
+        "y1": 202,
+        "x2": 178,
+        "y2": 193,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 37,
+        "x1": 1213,
+        "y1": 329,
+        "x2": 1240,
+        "y2": 328,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 78,
+        "x1": 945,
+        "y1": 764,
+        "x2": 1025,
+        "y2": 764,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 18
+      },
+      {
+        "id": 100,
+        "x1": 360,
+        "y1": 538,
+        "x2": 415,
+        "y2": 531,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 82,
+        "x1": 609,
+        "y1": 653,
+        "x2": 618,
+        "y2": 648,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 28,
+        "x1": 610,
+        "y1": 976,
+        "x2": 690,
+        "y2": 976,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 143,
+        "x1": 179,
+        "y1": 532,
+        "x2": 200,
+        "y2": 540,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 5,
+        "x1": 296,
+        "y1": 1019,
+        "x2": 388,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 74,
+        "x1": 837,
+        "y1": 493,
+        "x2": 871,
+        "y2": 492,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 97,
+        "x1": 613,
+        "y1": 724,
+        "x2": 692,
+        "y2": 724,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 186,
+        "x1": 875,
+        "y1": 969,
+        "x2": 955,
+        "y2": 969,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 4
+      },
+      {
+        "id": 181,
+        "x1": 708,
+        "y1": 268,
+        "x2": 717,
+        "y2": 265,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 34
+      },
+      {
+        "id": 135,
+        "x1": 6,
+        "y1": 539,
+        "x2": 38,
+        "y2": 534,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 149,
+        "x1": 149,
+        "y1": 568,
+        "x2": 158,
+        "y2": 571,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 61,
+        "x1": 1447,
+        "y1": 617,
+        "x2": 1481,
+        "y2": 620,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 130,
+        "x1": 205,
+        "y1": 232,
+        "x2": 210,
+        "y2": 229,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 84,
+        "x1": 627,
+        "y1": 629,
+        "x2": 650,
+        "y2": 619,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 107,
+        "x1": 343,
+        "y1": 259,
+        "x2": 352,
+        "y2": 256,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      },
+      {
+        "id": 173,
+        "x1": 1006,
+        "y1": 229,
+        "x2": 1036,
+        "y2": 234,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 36
+      },
+      {
+        "id": 49,
+        "x1": 1229,
+        "y1": 698,
+        "x2": 1238,
+        "y2": 693,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 76,
+        "x1": 887,
+        "y1": 487,
+        "x2": 939,
+        "y2": 488,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 122,
+        "x1": 88,
+        "y1": 223,
+        "x2": 104,
+        "y2": 225,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 165,
+        "x1": 595,
+        "y1": 224,
+        "x2": 611,
+        "y2": 219,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 37
+      },
+      {
+        "id": 179,
+        "x1": 1178,
+        "y1": 192,
+        "x2": 1208,
+        "y2": 197,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 90,
+        "x1": 751,
+        "y1": 573,
+        "x2": 771,
+        "y2": 571,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 160,
+        "x1": 61,
+        "y1": 719,
+        "x2": 81,
+        "y2": 722,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 63,
+        "x1": 1511,
+        "y1": 615,
+        "x2": 1532,
+        "y2": 622,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 128,
+        "x1": 166,
+        "y1": 228,
+        "x2": 177,
+        "y2": 233,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 86,
+        "x1": 653,
+        "y1": 599,
+        "x2": 680,
+        "y2": 591,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 137,
+        "x1": 53,
+        "y1": 543,
+        "x2": 78,
+        "y2": 544,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 13,
+        "x1": 748,
+        "y1": 1019,
+        "x2": 838,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 152,
+        "x1": 178,
+        "y1": 572,
+        "x2": 206,
+        "y2": 571,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 50,
+        "x1": 1238,
+        "y1": 693,
+        "x2": 1247,
+        "y2": 674,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 69,
+        "x1": 1002,
+        "y1": 709,
+        "x2": 1054,
+        "y2": 710,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 92,
+        "x1": 784,
+        "y1": 575,
+        "x2": 810,
+        "y2": 576,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 124,
+        "x1": 117,
+        "y1": 234,
+        "x2": 137,
+        "y2": 233,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 38,
+        "x1": 1240,
+        "y1": 328,
+        "x2": 1258,
+        "y2": 316,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 158,
+        "x1": 96,
+        "y1": 720,
+        "x2": 186,
+        "y2": 722,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 65,
+        "x1": 926,
+        "y1": 717,
+        "x2": 943,
+        "y2": 718,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 6,
+        "x1": 206,
+        "y1": 1019,
+        "x2": 296,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 167,
+        "x1": 663,
+        "y1": 220,
+        "x2": 693,
+        "y2": 225,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 37
+      },
+      {
+        "id": 15,
+        "x1": 1196,
+        "y1": 1019,
+        "x2": 1288,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 116,
+        "x1": 91,
+        "y1": 198,
+        "x2": 121,
+        "y2": 196,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 182,
+        "x1": 717,
+        "y1": 265,
+        "x2": 751,
+        "y2": 264,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 34
+      },
+      {
+        "id": 98,
+        "x1": 325,
+        "y1": 533,
+        "x2": 347,
+        "y2": 531,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 111,
+        "x1": 454,
+        "y1": 251,
+        "x2": 484,
+        "y2": 256,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      },
+      {
+        "id": 52,
+        "x1": 1270,
+        "y1": 664,
+        "x2": 1273,
+        "y2": 644,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 94,
+        "x1": 827,
+        "y1": 572,
+        "x2": 861,
+        "y2": 575,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 154,
+        "x1": 211,
+        "y1": 568,
+        "x2": 248,
+        "y2": 567,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 188,
+        "x1": 1154,
+        "y1": 767,
+        "x2": 1234,
+        "y2": 767,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 14
+      },
+      {
+        "id": 67,
+        "x1": 952,
+        "y1": 715,
+        "x2": 986,
+        "y2": 714,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 103,
+        "x1": 461,
+        "y1": 529,
+        "x2": 489,
+        "y2": 534,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 17,
+        "x1": 838,
+        "y1": 1019,
+        "x2": 928,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 4,
+        "sourceGroup": 0
+      },
+      {
+        "id": 146,
+        "x1": 105,
+        "y1": 564,
+        "x2": 118,
+        "y2": 573,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 81,
+        "x1": 601,
+        "y1": 668,
+        "x2": 609,
+        "y2": 653,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 141,
+        "x1": 145,
+        "y1": 541,
+        "x2": 155,
+        "y2": 541,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 109,
+        "x1": 386,
+        "y1": 255,
+        "x2": 402,
+        "y2": 250,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      },
+      {
+        "id": 54,
+        "x1": 1300,
+        "y1": 636,
+        "x2": 1327,
+        "y2": 635,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 96,
+        "x1": 891,
+        "y1": 570,
+        "x2": 912,
+        "y2": 577,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 184,
+        "x1": 767,
+        "y1": 259,
+        "x2": 819,
+        "y2": 260,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 34
+      },
+      {
+        "id": 133,
+        "x1": 261,
+        "y1": 234,
+        "x2": 269,
+        "y2": 229,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 1
+      },
+      {
+        "id": 41,
+        "x1": 1304,
+        "y1": 309,
+        "x2": 1317,
+        "y2": 313,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 2
+      },
+      {
+        "id": 176,
+        "x1": 1076,
+        "y1": 197,
+        "x2": 1110,
+        "y2": 196,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 79,
+        "x1": 431,
+        "y1": 676,
+        "x2": 449,
+        "y2": 670,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      },
+      {
+        "id": 83,
+        "x1": 618,
+        "y1": 648,
+        "x2": 627,
+        "y2": 629,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 3
+      }
+    ],
+    "defaultSpawn": {
+      "x": 180,
+      "y": 1019.0
+    },
+    "ladders": [
+      {
+        "id": 1,
+        "x": 132,
+        "top": 723,
+        "bottom": 981,
+        "nativeBottom": 981,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 2,
+        "x": 219,
+        "top": 570,
+        "bottom": 817,
+        "nativeBottom": 817,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 3,
+        "x": 1016,
+        "top": 410,
+        "bottom": 670,
+        "nativeBottom": 670,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 4,
+        "x": 1108,
+        "top": 199,
+        "bottom": 396,
+        "nativeBottom": 396,
+        "renderedInTerrain": true,
+        "isLadder": false
+      }
+    ],
+    "npcs": [
+      {
+        "name": "수행사제",
+        "type": "adobis",
+        "x": 320,
+        "y": 1019.0,
+        "dialog": "adobis",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 60,
+            "y": 1019.0,
+            "targetMap": "ant_tunnel",
+            "targetX": 1500,
+            "targetY": 1179.0576923076924,
+            "name": "개미굴 1",
+            "adaptation": true
+      },
+      {
+            "x": 1420,
+            "y": 1019.0,
+            "targetMap": "zakum_altar",
+            "targetX": 260,
+            "targetY": 534.0909090909091,
+            "name": "자쿰의 제단",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [
+      {
+        "type": "tauromacis",
+        "x": 650,
+        "y": 1019.0,
+        "sourceFootholdId": 14,
+        "sourceMobId": 7130100
+      },
+      {
+        "type": "tauromacis",
+        "x": 950,
+        "y": 1019.0,
+        "sourceFootholdId": 18,
+        "sourceMobId": 7130100
+      },
+      {
+        "type": "tauromacis",
+        "x": 1220,
+        "y": 1019.0,
+        "sourceFootholdId": 15,
+        "sourceMobId": 7130100
+      },
+      {
+        "type": "drake",
+        "x": 520,
+        "y": 669.0657894736842,
+        "sourceFootholdId": 80,
+        "sourceMobId": 5130100
+      },
+      {
+        "type": "tauromacis",
+        "x": 780,
+        "y": 573.7692307692307,
+        "sourceFootholdId": 91,
+        "sourceMobId": 7130100
+      },
+      {
+        "type": "drake",
+        "x": 1120,
+        "y": 714.4532374100719,
+        "sourceFootholdId": 71,
+        "sourceMobId": 5130100
+      },
+      {
+        "type": "tauromacis",
+        "x": 900,
+        "y": 487.25,
+        "sourceFootholdId": 76,
+        "sourceMobId": 7130100
+      },
+      {
+        "type": "drake",
+        "x": 400,
+        "y": 250.625,
+        "sourceFootholdId": 109,
+        "sourceMobId": 5130100
+      },
+      {
+        "type": "tauromacis",
+        "x": 650,
+        "y": 219.75,
+        "sourceFootholdId": 166,
+        "sourceMobId": 7130100
+      },
+      {
+        "type": "tauromacis",
+        "x": 1220,
+        "y": 462.0,
+        "sourceFootholdId": 47,
+        "sourceMobId": 7130100
+      }
+    ],
+    "boss": "jr_balrog",
+    "bossSpawn": {
+      "type": "jr_balrog",
+      "x": 820,
+      "y": 1019.0
+    },
+    "maxMonsters": 10
+  },
+  "ship_orbis": {
+    "key": "ship_orbis",
+    "name": "오르비스행 비행선 갑판",
+    "mapId": 200090010,
+    "source": "https://maplestory.io/api/GMS/62/map/200090010",
+    "region": "GMS",
+    "version": "62",
+    "category": "마을",
+    "width": 1147,
+    "height": 1489,
+    "terrainSourceWidth": 1342,
+    "terrainSourceHeight": 1290,
+    "img": "assets/map/ship_orbis_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/ship_orbis_minimap.png",
+    "terrainOffset": {
+      "x": -202,
+      "y": 199
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 482,
+      "y": 853
+    },
+    "isTown": true,
+    "isBossMap": true,
+    "footholds": [
+      {
+        "id": 27,
+        "x1": 119,
+        "y1": 594,
+        "x2": 775,
+        "y2": 576,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 26,
+        "x1": 71,
+        "y1": 336,
+        "x2": 815,
+        "y2": 566,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 12,
+        "x1": 617,
+        "y1": 967,
+        "x2": 705,
+        "y2": 967,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 8,
+        "x1": 330,
+        "y1": 1019,
+        "x2": 446,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 3,
+        "x1": 156,
+        "y1": 797,
+        "x2": 226,
+        "y2": 864,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 10,
+        "x1": 817,
+        "y1": 1009,
+        "x2": 1147,
+        "y2": 966,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 6,
+        "x1": 287,
+        "y1": 967,
+        "x2": 330,
+        "y2": 967,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 4,
+        "x1": 226,
+        "y1": 864,
+        "x2": 287,
+        "y2": 913,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 21,
+        "x1": 545,
+        "y1": 1019,
+        "x2": 634,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 2,
+        "x1": 0,
+        "y1": 777,
+        "x2": 156,
+        "y2": 797,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 14,
+        "x1": 705,
+        "y1": 922,
+        "x2": 806,
+        "y2": 922,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 19,
+        "x1": 446,
+        "y1": 1334,
+        "x2": 545,
+        "y2": 1334,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 25,
+        "x1": 332,
+        "y1": 281,
+        "x2": 790,
+        "y2": 550,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 18,
+        "x1": 446,
+        "y1": 1019,
+        "x2": 545,
+        "y2": 1019,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 23,
+        "x1": 445,
+        "y1": 228,
+        "x2": 494,
+        "y2": 228,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 9,
+        "x1": 634,
+        "y1": 1019,
+        "x2": 817,
+        "y2": 1009,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 29,
+        "x1": 329,
+        "y1": 893,
+        "x2": 783,
+        "y2": 605,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 16,
+        "x1": 360,
+        "y1": 899,
+        "x2": 576,
+        "y2": 899,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      },
+      {
+        "id": 28,
+        "x1": 203,
+        "y1": 798,
+        "x2": 776,
+        "y2": 594,
+        "isProp": true,
+        "sourceLayer": 1,
+        "sourceGroup": 0
+      }
+    ],
+    "defaultSpawn": {
+      "x": 520,
+      "y": 1019.0
+    },
+    "ladders": [],
+    "npcs": [
+      {
+        "name": "선원 캘리",
+        "type": "chief_stan",
+        "x": 380,
+        "y": 1019.0,
+        "dialog": "stan",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 660,
+            "y": 1017.5792349726776,
+            "targetMap": "ellinia",
+            "targetX": 2440,
+            "targetY": 4411.74,
+            "name": "마법의 숲 엘리니아",
+            "adaptation": true
+      },
+      {
+            "x": 920,
+            "y": 995.5787878787879,
+            "targetMap": "el_nath_deadmine",
+            "targetX": 340,
+            "targetY": 840.0,
+            "name": "죽은나무의 숲 4",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [],
+    "boss": "crimson_balrog",
+    "bossSpawn": {
+      "type": "crimson_balrog",
+      "x": 780,
+      "y": 1011.0218579234972
+    },
+    "maxMonsters": 0
+  },
+  "el_nath_deadmine": {
+    "key": "el_nath_deadmine",
+    "name": "죽은나무의 숲 4",
+    "mapId": 211041400,
+    "source": "https://maplestory.io/api/GMS/62/map/211041400",
+    "region": "GMS",
+    "version": "62",
+    "category": "사냥터",
+    "width": 2655,
+    "height": 1263,
+    "terrainSourceWidth": 2657,
+    "terrainSourceHeight": 1025,
+    "img": "assets/map/el_nath_deadmine_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/el_nath_deadmine_minimap.png",
+    "terrainOffset": {
+      "x": -2,
+      "y": 238
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 130,
+      "y": 866
+    },
+    "isTown": false,
+    "isBossMap": false,
+    "footholds": [
+      {
+        "id": 99,
+        "x1": 220,
+        "y1": 840,
+        "x2": 310,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 67,
+        "x1": 1570,
+        "y1": 960,
+        "x2": 1660,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 24,
+        "x1": 1520,
+        "y1": 480,
+        "x2": 1570,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 96,
+        "x1": 1890,
+        "y1": 900,
+        "x2": 1930,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 54,
+        "x1": 940,
+        "y1": 0,
+        "x2": 980,
+        "y2": 0,
+        "isProp": true,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 89,
+        "x1": 0,
+        "y1": 960,
+        "x2": 40,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 11,
+        "x1": 620,
+        "y1": 480,
+        "x2": 630,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 83,
+        "x1": 1840,
+        "y1": 960,
+        "x2": 1890,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 66,
+        "x1": 1300,
+        "y1": 900,
+        "x2": 1390,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 110,
+        "x1": 90,
+        "y1": 840,
+        "x2": 130,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 86,
+        "x1": 40,
+        "y1": 960,
+        "x2": 80,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 26,
+        "x1": 2200,
+        "y1": 480,
+        "x2": 2250,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 71,
+        "x1": 1660,
+        "y1": 960,
+        "x2": 1750,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 53,
+        "x1": 900,
+        "y1": 0,
+        "x2": 940,
+        "y2": 0,
+        "isProp": true,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 113,
+        "x1": 1030,
+        "y1": 840,
+        "x2": 1120,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 100,
+        "x1": 130,
+        "y1": 840,
+        "x2": 170,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 9,
+        "x1": 630,
+        "y1": 480,
+        "x2": 710,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 116,
+        "x1": 490,
+        "y1": 840,
+        "x2": 580,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 13,
+        "x1": 810,
+        "y1": 480,
+        "x2": 890,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 25
+      },
+      {
+        "id": 3,
+        "x1": 1160,
+        "y1": 660,
+        "x2": 1210,
+        "y2": 660,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 15
+      },
+      {
+        "id": 85,
+        "x1": 1750,
+        "y1": 960,
+        "x2": 1840,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 25,
+        "x1": 2020,
+        "y1": 480,
+        "x2": 2110,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 106,
+        "x1": 2560,
+        "y1": 1080,
+        "x2": 2600,
+        "y2": 1080,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 6,
+        "x1": 1210,
+        "y1": 660,
+        "x2": 1260,
+        "y2": 660,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 15
+      },
+      {
+        "id": 8,
+        "x1": 540,
+        "y1": 480,
+        "x2": 620,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 18,
+        "x1": 2110,
+        "y1": 480,
+        "x2": 2200,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 30,
+        "x1": 1930,
+        "y1": 480,
+        "x2": 2020,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 2,
+        "x1": 1080,
+        "y1": 660,
+        "x2": 1160,
+        "y2": 660,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 15
+      },
+      {
+        "id": 15,
+        "x1": 990,
+        "y1": 480,
+        "x2": 1070,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 25
+      },
+      {
+        "id": 87,
+        "x1": 940,
+        "y1": 840,
+        "x2": 1030,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 78,
+        "x1": 580,
+        "y1": 840,
+        "x2": 670,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 27,
+        "x1": 2250,
+        "y1": 480,
+        "x2": 2290,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 72,
+        "x1": 310,
+        "y1": 840,
+        "x2": 400,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 75,
+        "x1": 2110,
+        "y1": 900,
+        "x2": 2200,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 14,
+        "x1": 890,
+        "y1": 480,
+        "x2": 940,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 25
+      },
+      {
+        "id": 32,
+        "x1": 760,
+        "y1": 300,
+        "x2": 850,
+        "y2": 300,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 17,
+        "x1": 940,
+        "y1": 480,
+        "x2": 990,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 25
+      },
+      {
+        "id": 91,
+        "x1": 2200,
+        "y1": 900,
+        "x2": 2290,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 19,
+        "x1": 1660,
+        "y1": 480,
+        "x2": 1750,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 31,
+        "x1": 1840,
+        "y1": 480,
+        "x2": 1930,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 118,
+        "x1": 1210,
+        "y1": 900,
+        "x2": 1300,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 77,
+        "x1": 400,
+        "y1": 840,
+        "x2": 490,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 49,
+        "x1": 710,
+        "y1": 0,
+        "x2": 760,
+        "y2": 0,
+        "isProp": true,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 79,
+        "x1": 1120,
+        "y1": 900,
+        "x2": 1210,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 90,
+        "x1": 80,
+        "y1": 960,
+        "x2": 90,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 46,
+        "x1": 630,
+        "y1": 0,
+        "x2": 710,
+        "y2": 0,
+        "isProp": true,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 115,
+        "x1": 2380,
+        "y1": 900,
+        "x2": 2430,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 93,
+        "x1": 2430,
+        "y1": 900,
+        "x2": 2510,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 76,
+        "x1": 1390,
+        "y1": 960,
+        "x2": 1480,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 33,
+        "x1": 850,
+        "y1": 300,
+        "x2": 900,
+        "y2": 300,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 51,
+        "x1": 760,
+        "y1": 0,
+        "x2": 850,
+        "y2": 0,
+        "isProp": true,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 111,
+        "x1": 170,
+        "y1": 840,
+        "x2": 220,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 105,
+        "x1": 2520,
+        "y1": 1080,
+        "x2": 2560,
+        "y2": 1080,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 80,
+        "x1": 1480,
+        "y1": 960,
+        "x2": 1570,
+        "y2": 960,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 114,
+        "x1": 850,
+        "y1": 840,
+        "x2": 940,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 20,
+        "x1": 1750,
+        "y1": 480,
+        "x2": 1840,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 92,
+        "x1": 2290,
+        "y1": 900,
+        "x2": 2380,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 38,
+        "x1": 710,
+        "y1": 300,
+        "x2": 760,
+        "y2": 300,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 117,
+        "x1": 2020,
+        "y1": 900,
+        "x2": 2110,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 23,
+        "x1": 1570,
+        "y1": 480,
+        "x2": 1660,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 104,
+        "x1": 2510,
+        "y1": 1080,
+        "x2": 2520,
+        "y2": 1080,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 50,
+        "x1": 850,
+        "y1": 0,
+        "x2": 900,
+        "y2": 0,
+        "isProp": true,
+        "sourceLayer": 3,
+        "sourceGroup": 30
+      },
+      {
+        "id": 4,
+        "x1": 1260,
+        "y1": 660,
+        "x2": 1340,
+        "y2": 660,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 15
+      },
+      {
+        "id": 82,
+        "x1": 670,
+        "y1": 840,
+        "x2": 760,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 28,
+        "x1": 2290,
+        "y1": 480,
+        "x2": 2330,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 65,
+        "x1": 1930,
+        "y1": 900,
+        "x2": 1970,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 22,
+        "x1": 1440,
+        "y1": 480,
+        "x2": 1520,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 97,
+        "x1": 1970,
+        "y1": 900,
+        "x2": 2020,
+        "y2": 900,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      },
+      {
+        "id": 81,
+        "x1": 760,
+        "y1": 840,
+        "x2": 850,
+        "y2": 840,
+        "isProp": false,
+        "sourceLayer": 5,
+        "sourceGroup": 0
+      }
+    ],
+    "defaultSpawn": {
+      "x": 920,
+      "y": 840.0
+    },
+    "ladders": [
+      {
+        "id": 1,
+        "x": 1190,
+        "top": 662,
+        "bottom": 869,
+        "nativeBottom": 869,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 2,
+        "x": 773,
+        "top": 302,
+        "bottom": 628,
+        "nativeBottom": 628,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 3,
+        "x": 1502,
+        "top": 482,
+        "bottom": 922,
+        "nativeBottom": 922,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 4,
+        "x": 1994,
+        "top": 482,
+        "bottom": 882,
+        "nativeBottom": 882,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 5,
+        "x": 981,
+        "top": 482,
+        "bottom": 805,
+        "nativeBottom": 805,
+        "renderedInTerrain": true,
+        "isLadder": false
+      }
+    ],
+    "npcs": [
+      {
+        "name": "폐광 광부",
+        "type": "regular_cab",
+        "x": 680,
+        "y": 840.0,
+        "dialog": "cab",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 1600,
+            "y": 840.0,
+            "targetMap": "horntail_cave",
+            "targetX": 220,
+            "targetY": 987,
+            "name": "생명의 동굴: 혼테일의 동굴",
+            "adaptation": true
+      },
+      {
+            "x": 280,
+            "y": 840.0,
+            "targetMap": "ship_orbis",
+            "targetX": 660,
+            "targetY": 1017.5792349726776,
+            "name": "오르비스행 비행선 갑판",
+            "adaptation": true
+      },
+      {
+            "x": 2320,
+            "y": 900.0,
+            "targetMap": "ludi_clocktower",
+            "targetX": 840,
+            "targetY": 480.0,
+            "name": "시계탑 최하층 잊혀진 시간의 길 3",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [
+      {
+        "type": "coolie_zombie",
+        "x": 317,
+        "y": 840.0,
+        "sourceFootholdId": 72,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 515,
+        "y": 840.0,
+        "sourceFootholdId": 116,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 2419,
+        "y": 900.0,
+        "sourceFootholdId": 115,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1953,
+        "y": 480.0,
+        "sourceFootholdId": 30,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 2238,
+        "y": 480.0,
+        "sourceFootholdId": 26,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1581,
+        "y": 480.0,
+        "sourceFootholdId": 23,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1838,
+        "y": 480.0,
+        "sourceFootholdId": 20,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 2136,
+        "y": 480.0,
+        "sourceFootholdId": 18,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 723,
+        "y": 840.0,
+        "sourceFootholdId": 82,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1250,
+        "y": 900.0,
+        "sourceFootholdId": 118,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 943,
+        "y": 840.0,
+        "sourceFootholdId": 87,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1547,
+        "y": 960.0,
+        "sourceFootholdId": 80,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1707,
+        "y": 480.0,
+        "sourceFootholdId": 19,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1802,
+        "y": 960.0,
+        "sourceFootholdId": 85,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 2043,
+        "y": 900.0,
+        "sourceFootholdId": 117,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 2201,
+        "y": 900.0,
+        "sourceFootholdId": 91,
+        "sourceMobId": 5130107
+      },
+
+      {
+        "type": "coolie_zombie",
+        "x": 600,
+        "y": 480.0,
+        "sourceFootholdId": 8,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 670,
+        "y": 480.0,
+        "sourceFootholdId": 9,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 850,
+        "y": 480.0,
+        "sourceFootholdId": 13,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 960,
+        "y": 480.0,
+        "sourceFootholdId": 17,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1030,
+        "y": 480.0,
+        "sourceFootholdId": 15,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1500,
+        "y": 480.0,
+        "sourceFootholdId": 22,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1120,
+        "y": 660.0,
+        "sourceFootholdId": 2,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1230,
+        "y": 660.0,
+        "sourceFootholdId": 6,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1290,
+        "y": 660.0,
+        "sourceFootholdId": 4,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 250,
+        "y": 840.0,
+        "sourceFootholdId": 99,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 450,
+        "y": 840.0,
+        "sourceFootholdId": 77,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 630,
+        "y": 840.0,
+        "sourceFootholdId": 78,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 800,
+        "y": 840.0,
+        "sourceFootholdId": 81,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1160,
+        "y": 900.0,
+        "sourceFootholdId": 79,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1430,
+        "y": 960.0,
+        "sourceFootholdId": 76,
+        "sourceMobId": 5130107
+      },
+      {
+        "type": "coolie_zombie",
+        "x": 1710,
+        "y": 960.0,
+        "sourceFootholdId": 71,
+        "sourceMobId": 5130107
+      }
+    ],
+    "bossSpawn": {
+      "type": "manon",
+      "x": 1550,
+      "y": 960.0,
+      "adaptation": true
+    },
+    "maxMonsters": 32
+  },
+  "ludi_clocktower": {
+    "key": "ludi_clocktower",
+    "name": "시계탑 최하층 잊혀진 시간의 길 3",
+    "mapId": 220070200,
+    "source": "https://maplestory.io/api/GMS/62/map/220070200",
+    "region": "GMS",
+    "version": "62",
+    "category": "사냥터",
+    "width": 2510,
+    "height": 2317,
+    "terrainSourceWidth": 2514,
+    "terrainSourceHeight": 2317,
+    "img": "assets/map/ludi_clocktower_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/ludi_clocktower_minimap.png",
+    "terrainOffset": {
+      "x": -4,
+      "y": 0
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 1433,
+      "y": 791
+    },
+    "isTown": false,
+    "isBossMap": false,
+    "footholds": [
+      {
+        "id": 84,
+        "x1": 2015,
+        "y1": 1124,
+        "x2": 2194,
+        "y2": 1124,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 67,
+        "x1": 744,
+        "y1": 480,
+        "x2": 923,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 24,
+        "x1": 1946,
+        "y1": 1803,
+        "x2": 2045,
+        "y2": 1803,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 96,
+        "x1": 1364,
+        "y1": 1898,
+        "x2": 1415,
+        "y2": 1898,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 54,
+        "x1": 728,
+        "y1": 1270,
+        "x2": 902,
+        "y2": 1270,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 70
+      },
+      {
+        "id": 89,
+        "x1": 1652,
+        "y1": 1529,
+        "x2": 1826,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 47
+      },
+      {
+        "id": 11,
+        "x1": 986,
+        "y1": 1931,
+        "x2": 1180,
+        "y2": 1931,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 21
+      },
+      {
+        "id": 83,
+        "x1": 1923,
+        "y1": 1124,
+        "x2": 2015,
+        "y2": 1124,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 29,
+        "x1": 2271,
+        "y1": 851,
+        "x2": 2322,
+        "y2": 851,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 102
+      },
+      {
+        "id": 66,
+        "x1": 687,
+        "y1": 480,
+        "x2": 744,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 41,
+        "x1": 226,
+        "y1": 1741,
+        "x2": 344,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 86,
+        "x1": 2255,
+        "y1": 1149,
+        "x2": 2341,
+        "y2": 1149,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 59,
+        "x1": 558,
+        "y1": 907,
+        "x2": 733,
+        "y2": 907,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 96
+      },
+      {
+        "id": 26,
+        "x1": 1618,
+        "y1": 1803,
+        "x2": 1767,
+        "y2": 1803,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 53,
+        "x1": 553,
+        "y1": 1270,
+        "x2": 728,
+        "y2": 1270,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 70
+      },
+      {
+        "id": 71,
+        "x1": 1205,
+        "y1": 681,
+        "x2": 1379,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 88,
+        "x1": 1488,
+        "y1": 1554,
+        "x2": 1574,
+        "y2": 1554,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 47
+      },
+      {
+        "id": 9,
+        "x1": 59,
+        "y1": 1970,
+        "x2": 347,
+        "y2": 1970,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 18
+      },
+      {
+        "id": 56,
+        "x1": 266,
+        "y1": 907,
+        "x2": 384,
+        "y2": 907,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 96
+      },
+      {
+        "id": 13,
+        "x1": 986,
+        "y1": 887,
+        "x2": 1180,
+        "y2": 887,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 101
+      },
+      {
+        "id": 40,
+        "x1": 1044,
+        "y1": 1270,
+        "x2": 1152,
+        "y2": 1270,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 73
+      },
+      {
+        "id": 3,
+        "x1": 20,
+        "y1": 2195,
+        "x2": 436,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 85,
+        "x1": 2194,
+        "y1": 1124,
+        "x2": 2293,
+        "y2": 1124,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 58,
+        "x1": 384,
+        "y1": 907,
+        "x2": 558,
+        "y2": 907,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 96
+      },
+      {
+        "id": 25,
+        "x1": 1767,
+        "y1": 1803,
+        "x2": 1946,
+        "y2": 1803,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 43,
+        "x1": 344,
+        "y1": 1741,
+        "x2": 518,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 70,
+        "x1": 1041,
+        "y1": 706,
+        "x2": 1127,
+        "y2": 706,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 6,
+        "x1": 1715,
+        "y1": 2195,
+        "x2": 2131,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 8,
+        "x1": 2483,
+        "y1": 2195,
+        "x2": 2507,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 18,
+        "x1": 1309,
+        "y1": 1970,
+        "x2": 1597,
+        "y2": 1970,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 19
+      },
+      {
+        "id": 55,
+        "x1": 902,
+        "y1": 1270,
+        "x2": 1000,
+        "y2": 1270,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 70
+      },
+      {
+        "id": 73,
+        "x1": 1554,
+        "y1": 681,
+        "x2": 1729,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 12,
+        "x1": 940,
+        "y1": 1570,
+        "x2": 1228,
+        "y2": 1570,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 51
+      },
+      {
+        "id": 30,
+        "x1": 2273,
+        "y1": 815,
+        "x2": 2324,
+        "y2": 815,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 102
+      },
+      {
+        "id": 2,
+        "x1": 436,
+        "y1": 2195,
+        "x2": 852,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 48,
+        "x1": 934,
+        "y1": 1741,
+        "x2": 1052,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 32
+      },
+      {
+        "id": 15,
+        "x1": 1253,
+        "y1": 480,
+        "x2": 1371,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 123
+      },
+      {
+        "id": 60,
+        "x1": 733,
+        "y1": 907,
+        "x2": 908,
+        "y2": 907,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 96
+      },
+      {
+        "id": 42,
+        "x1": 180,
+        "y1": 1766,
+        "x2": 266,
+        "y2": 1766,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 5,
+        "x1": 1299,
+        "y1": 2195,
+        "x2": 1715,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 87,
+        "x1": 1534,
+        "y1": 1529,
+        "x2": 1652,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 47
+      },
+      {
+        "id": 78,
+        "x1": 2234,
+        "y1": 706,
+        "x2": 2320,
+        "y2": 706,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 27,
+        "x1": 2190,
+        "y1": 1570,
+        "x2": 2478,
+        "y2": 1570,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 52
+      },
+      {
+        "id": 45,
+        "x1": 623,
+        "y1": 1741,
+        "x2": 681,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 72,
+        "x1": 1379,
+        "y1": 681,
+        "x2": 1554,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 57,
+        "x1": 220,
+        "y1": 932,
+        "x2": 306,
+        "y2": 932,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 96
+      },
+      {
+        "id": 75,
+        "x1": 1904,
+        "y1": 681,
+        "x2": 1993,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 14,
+        "x1": 986,
+        "y1": 416,
+        "x2": 1180,
+        "y2": 416,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 131
+      },
+      {
+        "id": 32,
+        "x1": 1143,
+        "y1": 1766,
+        "x2": 1251,
+        "y2": 1766,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 38
+      },
+      {
+        "id": 17,
+        "x1": 1097,
+        "y1": 480,
+        "x2": 1253,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 123
+      },
+      {
+        "id": 44,
+        "x1": 518,
+        "y1": 1741,
+        "x2": 623,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 62,
+        "x1": 220,
+        "y1": 480,
+        "x2": 338,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 91,
+        "x1": 2001,
+        "y1": 1529,
+        "x2": 2106,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 47
+      },
+      {
+        "id": 47,
+        "x1": 859,
+        "y1": 1741,
+        "x2": 934,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 19,
+        "x1": 1357,
+        "y1": 1934,
+        "x2": 1408,
+        "y2": 1934,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 19
+      },
+      {
+        "id": 74,
+        "x1": 1729,
+        "y1": 681,
+        "x2": 1904,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 31,
+        "x1": 2273,
+        "y1": 778,
+        "x2": 2324,
+        "y2": 778,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 102
+      },
+      {
+        "id": 49,
+        "x1": 1014,
+        "y1": 1766,
+        "x2": 1100,
+        "y2": 1766,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 32
+      },
+      {
+        "id": 77,
+        "x1": 2172,
+        "y1": 681,
+        "x2": 2272,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 34,
+        "x1": 1340,
+        "y1": 1197,
+        "x2": 1448,
+        "y2": 1197,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 80
+      },
+      {
+        "id": 16,
+        "x1": 1333,
+        "y1": 505,
+        "x2": 1419,
+        "y2": 505,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 123
+      },
+      {
+        "id": 61,
+        "x1": 908,
+        "y1": 907,
+        "x2": 972,
+        "y2": 907,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 96
+      },
+      {
+        "id": 79,
+        "x1": 1524,
+        "y1": 1124,
+        "x2": 1642,
+        "y2": 1124,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 90,
+        "x1": 1826,
+        "y1": 1529,
+        "x2": 2001,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 47
+      },
+      {
+        "id": 46,
+        "x1": 681,
+        "y1": 1741,
+        "x2": 859,
+        "y2": 1741,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 31
+      },
+      {
+        "id": 64,
+        "x1": 338,
+        "y1": 480,
+        "x2": 512,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 21,
+        "x1": 2217,
+        "y1": 1803,
+        "x2": 2335,
+        "y2": 1803,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 93,
+        "x1": 1500,
+        "y1": 1803,
+        "x2": 1618,
+        "y2": 1803,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 25
+      },
+      {
+        "id": 39,
+        "x1": 1363,
+        "y1": 1528,
+        "x2": 1471,
+        "y2": 1528,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 55
+      },
+      {
+        "id": 76,
+        "x1": 1993,
+        "y1": 681,
+        "x2": 2172,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 33,
+        "x1": 1195,
+        "y1": 1244,
+        "x2": 1303,
+        "y2": 1244,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 75
+      },
+      {
+        "id": 51,
+        "x1": 215,
+        "y1": 1295,
+        "x2": 301,
+        "y2": 1295,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 70
+      },
+      {
+        "id": 69,
+        "x1": 1087,
+        "y1": 681,
+        "x2": 1205,
+        "y2": 681,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 114
+      },
+      {
+        "id": 80,
+        "x1": 1478,
+        "y1": 1149,
+        "x2": 1564,
+        "y2": 1149,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 36,
+        "x1": 1591,
+        "y1": 615,
+        "x2": 1699,
+        "y2": 615,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 119
+      },
+      {
+        "id": 63,
+        "x1": 174,
+        "y1": 505,
+        "x2": 260,
+        "y2": 505,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 20,
+        "x1": 2236,
+        "y1": 1931,
+        "x2": 2430,
+        "y2": 1931,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 1,
+        "x1": 852,
+        "y1": 2195,
+        "x2": 1299,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 92,
+        "x1": 2106,
+        "y1": 1529,
+        "x2": 2135,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 47
+      },
+      {
+        "id": 38,
+        "x1": 1247,
+        "y1": 1508,
+        "x2": 1355,
+        "y2": 1508,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 57
+      },
+      {
+        "id": 23,
+        "x1": 2045,
+        "y1": 1803,
+        "x2": 2217,
+        "y2": 1803,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 50,
+        "x1": 261,
+        "y1": 1270,
+        "x2": 379,
+        "y2": 1270,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 70
+      },
+      {
+        "id": 4,
+        "x1": 0,
+        "y1": 2195,
+        "x2": 20,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 95,
+        "x1": 1378,
+        "y1": 1863,
+        "x2": 1429,
+        "y2": 1863,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 24
+      },
+      {
+        "id": 68,
+        "x1": 923,
+        "y1": 480,
+        "x2": 1097,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 35,
+        "x1": 1455,
+        "y1": 553,
+        "x2": 1563,
+        "y2": 553,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 124
+      },
+      {
+        "id": 7,
+        "x1": 2131,
+        "y1": 2195,
+        "x2": 2483,
+        "y2": 2195,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 10,
+        "x1": 59,
+        "y1": 679,
+        "x2": 347,
+        "y2": 679,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 115
+      },
+      {
+        "id": 82,
+        "x1": 1782,
+        "y1": 1124,
+        "x2": 1923,
+        "y2": 1124,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 28,
+        "x1": 2236,
+        "y1": 887,
+        "x2": 2430,
+        "y2": 887,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 102
+      },
+      {
+        "id": 65,
+        "x1": 512,
+        "y1": 480,
+        "x2": 687,
+        "y2": 480,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 122
+      },
+      {
+        "id": 22,
+        "x1": 2297,
+        "y1": 1828,
+        "x2": 2383,
+        "y2": 1828,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 22
+      },
+      {
+        "id": 94,
+        "x1": 1454,
+        "y1": 1828,
+        "x2": 1540,
+        "y2": 1828,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 25
+      },
+      {
+        "id": 52,
+        "x1": 379,
+        "y1": 1270,
+        "x2": 553,
+        "y2": 1270,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 70
+      },
+      {
+        "id": 81,
+        "x1": 1642,
+        "y1": 1124,
+        "x2": 1782,
+        "y2": 1124,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 78
+      },
+      {
+        "id": 37,
+        "x1": 1304,
+        "y1": 1796,
+        "x2": 1412,
+        "y2": 1796,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 35
+      }
+    ],
+    "defaultSpawn": {
+      "x": 1250,
+      "y": 681.0
+    },
+    "ladders": [
+      {
+        "id": 1,
+        "x": 326,
+        "top": 681,
+        "bottom": 902,
+        "nativeBottom": 902,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 2,
+        "x": 198,
+        "top": 1972,
+        "bottom": 2191,
+        "nativeBottom": 2191,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 3,
+        "x": 1211,
+        "top": 1768,
+        "bottom": 2181,
+        "nativeBottom": 2181,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 4,
+        "x": 981,
+        "top": 1572,
+        "bottom": 1724,
+        "nativeBottom": 1724,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 5,
+        "x": 2188,
+        "top": 1805,
+        "bottom": 2155,
+        "nativeBottom": 2155,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 6,
+        "x": 1839,
+        "top": 1531,
+        "bottom": 1797,
+        "nativeBottom": 1797,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 7,
+        "x": 2354,
+        "top": 889,
+        "bottom": 1155,
+        "nativeBottom": 1155,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 8,
+        "x": 204,
+        "top": 507,
+        "bottom": 677,
+        "nativeBottom": 677,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 9,
+        "x": 993,
+        "top": 482,
+        "bottom": 873,
+        "nativeBottom": 873,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 10,
+        "x": 1776,
+        "top": 683,
+        "bottom": 1095,
+        "nativeBottom": 1095,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 11,
+        "x": 642,
+        "top": 909,
+        "bottom": 1259,
+        "nativeBottom": 1259,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 12,
+        "x": 2171,
+        "top": 1126,
+        "bottom": 1561,
+        "nativeBottom": 1561,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 13,
+        "x": 1097,
+        "top": 1272,
+        "bottom": 1538,
+        "nativeBottom": 1538,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 14,
+        "x": 389,
+        "top": 1272,
+        "bottom": 1706,
+        "nativeBottom": 1706,
+        "renderedInTerrain": true,
+        "isLadder": false
+      },
+      {
+        "id": 15,
+        "x": 320,
+        "top": 1743,
+        "bottom": 1965,
+        "nativeBottom": 1965,
+        "renderedInTerrain": true,
+        "isLadder": false
+      }
+    ],
+    "npcs": [
+      {
+        "name": "보좌관 티군",
+        "type": "vip_cab",
+        "x": 1050,
+        "y": 706.0,
+        "dialog": "vip_cab",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 780,
+            "y": 480.0,
+            "targetMap": "el_nath_deadmine",
+            "targetX": 2260,
+            "targetY": 900.0,
+            "name": "죽은나무의 숲 4",
+            "adaptation": true
+      },
+      {
+            "x": 2200,
+            "y": 2195.0,
+            "targetMap": "zakum_altar",
+            "targetX": 260,
+            "targetY": 534.0909090909091,
+            "name": "자쿰의 제단",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [
+      {
+        "type": "death_teddy",
+        "x": 1868,
+        "y": 681.0,
+        "sourceFootholdId": 74,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1226,
+        "y": 681.0,
+        "sourceFootholdId": 71,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 802,
+        "y": 1270.0,
+        "sourceFootholdId": 54,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1389,
+        "y": 1197.0,
+        "sourceFootholdId": 34,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1688,
+        "y": 1124.0,
+        "sourceFootholdId": 81,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 2092,
+        "y": 1124.0,
+        "sourceFootholdId": 84,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 2241,
+        "y": 1570.0,
+        "sourceFootholdId": 27,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1934,
+        "y": 1529.0,
+        "sourceFootholdId": 90,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1063,
+        "y": 1570.0,
+        "sourceFootholdId": 12,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1618,
+        "y": 1529.0,
+        "sourceFootholdId": 87,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 456,
+        "y": 1741.0,
+        "sourceFootholdId": 43,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 830,
+        "y": 1741.0,
+        "sourceFootholdId": 46,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 874,
+        "y": 480.0,
+        "sourceFootholdId": 67,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1673,
+        "y": 1803.0,
+        "sourceFootholdId": 26,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 2153,
+        "y": 1803.0,
+        "sourceFootholdId": 23,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 2333,
+        "y": 1931.0,
+        "sourceFootholdId": 20,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1480,
+        "y": 1970.0,
+        "sourceFootholdId": 18,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 118,
+        "y": 2195.0,
+        "sourceFootholdId": 3,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 606,
+        "y": 2195.0,
+        "sourceFootholdId": 2,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1092,
+        "y": 2195.0,
+        "sourceFootholdId": 1,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1782,
+        "y": 2195.0,
+        "sourceFootholdId": 6,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 2305,
+        "y": 2195.0,
+        "sourceFootholdId": 7,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1073,
+        "y": 416.0,
+        "sourceFootholdId": 14,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 468,
+        "y": 480.0,
+        "sourceFootholdId": 64,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 391,
+        "y": 907.0,
+        "sourceFootholdId": 58,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 776,
+        "y": 907.0,
+        "sourceFootholdId": 60,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1506,
+        "y": 553.0,
+        "sourceFootholdId": 35,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 1099,
+        "y": 887.0,
+        "sourceFootholdId": 13,
+        "sourceMobId": 7130010
+      },
+      {
+        "type": "death_teddy",
+        "x": 446,
+        "y": 1270.0,
+        "sourceFootholdId": 52,
+        "sourceMobId": 7130010
+      }
+    ],
+    "bossSpawn": {
+      "type": "papulatus",
+      "x": 1550,
+      "y": 681.0,
+      "adaptation": true
+    },
+    "maxMonsters": 29
+  },
+  "kerning_pq": {
+    "key": "kerning_pq",
+    "name": "커닝시티 파퀘 킹슬라임 제단",
+    "mapId": 103000804,
+    "source": "https://maplestory.io/api/GMS/62/map/103000804",
+    "region": "GMS",
+    "version": "62",
+    "category": "사냥터",
+    "width": 978,
+    "height": 2840,
+    "terrainSourceWidth": 1037,
+    "terrainSourceHeight": 2840,
+    "img": "assets/map/kerning_pq_terrain.png",
+    "nativeTerrain": true,
+    "minimap": "assets/map/kerning_pq_minimap.png",
+    "terrainOffset": {
+      "x": -59,
+      "y": 0
+    },
+    "nativeRopeTailOffset": 0,
+    "sourceTransform": {
+      "x": 303,
+      "y": 2984
+    },
+    "isTown": false,
+    "isBossMap": true,
+    "footholds": [
+      {
+        "id": 99,
+        "x1": 303,
+        "y1": 1529,
+        "x2": 393,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 67,
+        "x1": 561,
+        "y1": 539,
+        "x2": 585,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 24
+      },
+      {
+        "id": 96,
+        "x1": 663,
+        "y1": 1529,
+        "x2": 753,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 89,
+        "x1": 573,
+        "y1": 1529,
+        "x2": 663,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 11,
+        "x1": 213,
+        "y1": 269,
+        "x2": 270,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 27
+      },
+      {
+        "id": 83,
+        "x1": 123,
+        "y1": 809,
+        "x2": 213,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 29,
+        "x1": 577,
+        "y1": 246,
+        "x2": 701,
+        "y2": 246,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 41,
+        "x1": 180,
+        "y1": 1229,
+        "x2": 246,
+        "y2": 1229,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 18
+      },
+      {
+        "id": 110,
+        "x1": 753,
+        "y1": 2549,
+        "x2": 810,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 59,
+        "x1": 66,
+        "y1": 1229,
+        "x2": 90,
+        "y2": 1229,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 19
+      },
+      {
+        "id": 26,
+        "x1": 753,
+        "y1": 269,
+        "x2": 810,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 53,
+        "x1": 540,
+        "y1": 2189,
+        "x2": 606,
+        "y2": 2189,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 12
+      },
+      {
+        "id": 113,
+        "x1": 483,
+        "y1": 2549,
+        "x2": 573,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 88,
+        "x1": 753,
+        "y1": 1529,
+        "x2": 810,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 100,
+        "x1": 213,
+        "y1": 1529,
+        "x2": 303,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 56,
+        "x1": 0,
+        "y1": 1229,
+        "x2": 66,
+        "y2": 1229,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 19
+      },
+      {
+        "id": 116,
+        "x1": 303,
+        "y1": 2549,
+        "x2": 393,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 13,
+        "x1": 123,
+        "y1": 269,
+        "x2": 213,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 27
+      },
+      {
+        "id": 103,
+        "x1": 66,
+        "y1": 1529,
+        "x2": 123,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 3,
+        "x1": 663,
+        "y1": 2249,
+        "x2": 696,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 6
+      },
+      {
+        "id": 85,
+        "x1": 0,
+        "y1": 809,
+        "x2": 66,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 70,
+        "x1": 765,
+        "y1": 539,
+        "x2": 831,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 23
+      },
+      {
+        "id": 6,
+        "x1": 630,
+        "y1": 2249,
+        "x2": 663,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 6
+      },
+      {
+        "id": 8,
+        "x1": 270,
+        "y1": 269,
+        "x2": 336,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 27
+      },
+      {
+        "id": 73,
+        "x1": 810,
+        "y1": 809,
+        "x2": 876,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 12,
+        "x1": 33,
+        "y1": 269,
+        "x2": 66,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 27
+      },
+      {
+        "id": 30,
+        "x1": 588,
+        "y1": 234,
+        "x2": 713,
+        "y2": 234,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 48,
+        "x1": 336,
+        "y1": 2129,
+        "x2": 360,
+        "y2": 2129,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 13
+      },
+      {
+        "id": 15,
+        "x1": 0,
+        "y1": 269,
+        "x2": 33,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 27
+      },
+      {
+        "id": 42,
+        "x1": 270,
+        "y1": 1229,
+        "x2": 336,
+        "y2": 1229,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 18
+      },
+      {
+        "id": 87,
+        "x1": 66,
+        "y1": 809,
+        "x2": 123,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 78,
+        "x1": 213,
+        "y1": 809,
+        "x2": 303,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 45,
+        "x1": 303,
+        "y1": 2129,
+        "x2": 336,
+        "y2": 2129,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 13
+      },
+      {
+        "id": 72,
+        "x1": 741,
+        "y1": 539,
+        "x2": 765,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 23
+      },
+      {
+        "id": 57,
+        "x1": 90,
+        "y1": 1229,
+        "x2": 156,
+        "y2": 1229,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 19
+      },
+      {
+        "id": 44,
+        "x1": 246,
+        "y1": 1229,
+        "x2": 270,
+        "y2": 1229,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 18
+      },
+      {
+        "id": 91,
+        "x1": 810,
+        "y1": 1529,
+        "x2": 843,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 47,
+        "x1": 270,
+        "y1": 2129,
+        "x2": 303,
+        "y2": 2129,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 13
+      },
+      {
+        "id": 19,
+        "x1": 450,
+        "y1": 269,
+        "x2": 516,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 122,
+        "x1": 66,
+        "y1": 2549,
+        "x2": 123,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 31,
+        "x1": 598,
+        "y1": 224,
+        "x2": 723,
+        "y2": 224,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 77,
+        "x1": 303,
+        "y1": 809,
+        "x2": 393,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 49,
+        "x1": 360,
+        "y1": 2129,
+        "x2": 393,
+        "y2": 2129,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 13
+      },
+      {
+        "id": 16,
+        "x1": 66,
+        "y1": 269,
+        "x2": 123,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 27
+      },
+      {
+        "id": 34,
+        "x1": 90,
+        "y1": 2249,
+        "x2": 156,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 10
+      },
+      {
+        "id": 61,
+        "x1": 450,
+        "y1": 2129,
+        "x2": 516,
+        "y2": 2129,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 14
+      },
+      {
+        "id": 112,
+        "x1": 663,
+        "y1": 2549,
+        "x2": 753,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 79,
+        "x1": 753,
+        "y1": 809,
+        "x2": 810,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 90,
+        "x1": 483,
+        "y1": 1529,
+        "x2": 573,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 108,
+        "x1": 810,
+        "y1": 2549,
+        "x2": 876,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 64,
+        "x1": 495,
+        "y1": 539,
+        "x2": 561,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 24
+      },
+      {
+        "id": 121,
+        "x1": 0,
+        "y1": 2549,
+        "x2": 66,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 115,
+        "x1": 123,
+        "y1": 2549,
+        "x2": 213,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 21,
+        "x1": 516,
+        "y1": 269,
+        "x2": 573,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 102,
+        "x1": 0,
+        "y1": 1529,
+        "x2": 33,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 76,
+        "x1": 573,
+        "y1": 809,
+        "x2": 663,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 33,
+        "x1": 0,
+        "y1": 2249,
+        "x2": 66,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 10
+      },
+      {
+        "id": 111,
+        "x1": 393,
+        "y1": 2549,
+        "x2": 483,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 69,
+        "x1": 675,
+        "y1": 539,
+        "x2": 741,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 23
+      },
+      {
+        "id": 80,
+        "x1": 663,
+        "y1": 809,
+        "x2": 753,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 36,
+        "x1": 66,
+        "y1": 2249,
+        "x2": 90,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 10
+      },
+      {
+        "id": 114,
+        "x1": 573,
+        "y1": 2549,
+        "x2": 663,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 98,
+        "x1": 393,
+        "y1": 1529,
+        "x2": 483,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 20,
+        "x1": 573,
+        "y1": 269,
+        "x2": 663,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 1,
+        "x1": 810,
+        "y1": 2249,
+        "x2": 876,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 6
+      },
+      {
+        "id": 92,
+        "x1": 843,
+        "y1": 1529,
+        "x2": 876,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 38,
+        "x1": 180,
+        "y1": 2189,
+        "x2": 246,
+        "y2": 2189,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 11
+      },
+      {
+        "id": 117,
+        "x1": 213,
+        "y1": 2549,
+        "x2": 303,
+        "y2": 2549,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 0
+      },
+      {
+        "id": 23,
+        "x1": 810,
+        "y1": 269,
+        "x2": 876,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 50,
+        "x1": 393,
+        "y1": 2129,
+        "x2": 426,
+        "y2": 2129,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 13
+      },
+      {
+        "id": 4,
+        "x1": 753,
+        "y1": 2249,
+        "x2": 810,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 6
+      },
+      {
+        "id": 7,
+        "x1": 696,
+        "y1": 2249,
+        "x2": 753,
+        "y2": 2249,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 6
+      },
+      {
+        "id": 82,
+        "x1": 483,
+        "y1": 809,
+        "x2": 573,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      },
+      {
+        "id": 28,
+        "x1": 567,
+        "y1": 258,
+        "x2": 692,
+        "y2": 258,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 65,
+        "x1": 585,
+        "y1": 539,
+        "x2": 651,
+        "y2": 539,
+        "isProp": false,
+        "sourceLayer": 2,
+        "sourceGroup": 24
+      },
+      {
+        "id": 22,
+        "x1": 663,
+        "y1": 269,
+        "x2": 753,
+        "y2": 269,
+        "isProp": false,
+        "sourceLayer": 1,
+        "sourceGroup": 26
+      },
+      {
+        "id": 94,
+        "x1": 123,
+        "y1": 1529,
+        "x2": 213,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 97,
+        "x1": 33,
+        "y1": 1529,
+        "x2": 66,
+        "y2": 1529,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 15
+      },
+      {
+        "id": 81,
+        "x1": 393,
+        "y1": 809,
+        "x2": 483,
+        "y2": 809,
+        "isProp": false,
+        "sourceLayer": 3,
+        "sourceGroup": 20
+      }
+    ],
+    "defaultSpawn": {
+      "x": 220,
+      "y": 2549.0
+    },
+    "ladders": [
+      {
+        "id": 1,
+        "x": 544,
+        "top": 271,
+        "bottom": 529,
+        "nativeBottom": 529,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 2,
+        "x": 112,
+        "top": 2251,
+        "bottom": 2510,
+        "nativeBottom": 2510,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 3,
+        "x": 275,
+        "top": 1231,
+        "bottom": 1491,
+        "nativeBottom": 1491,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 4,
+        "x": 778,
+        "top": 541,
+        "bottom": 800,
+        "nativeBottom": 800,
+        "renderedInTerrain": true,
+        "isLadder": true
+      },
+      {
+        "id": 5,
+        "x": 698,
+        "top": 2251,
+        "bottom": 2512,
+        "nativeBottom": 2512,
+        "renderedInTerrain": true,
+        "isLadder": true
+      }
+    ],
+    "npcs": [
+      {
+        "name": "라케리스",
+        "type": "betty",
+        "x": 340,
+        "y": 2549.0,
+        "dialog": "betty",
+        "adaptation": true
+      }
+    ],
+    "portals": [
+      {
+            "x": 90,
+            "y": 2549.0,
+            "targetMap": "kerning_subway",
+            "targetX": 3580,
+            "targetY": 678.0,
+            "name": "커닝시티 지하철 1호선",
+            "adaptation": true
+      }
+
+    ],
+    "mobSpawns": [
+      {
+        "type": "curse_eye",
+        "x": 600,
+        "y": 809.0,
+        "sourceFootholdId": 76,
+        "sourceMobId": 9300002
+      },
+      {
+        "type": "curse_eye",
+        "x": 435,
+        "y": 809.0,
+        "sourceFootholdId": 81,
+        "sourceMobId": 9300002
+      },
+      {
+        "type": "curse_eye",
+        "x": 736,
+        "y": 809.0,
+        "sourceFootholdId": 80,
+        "sourceMobId": 9300002
+      },
+      {
+        "type": "jr_necki",
+        "x": 192,
+        "y": 1529.0,
+        "sourceFootholdId": 94,
+        "sourceMobId": 9300000
+      },
+      {
+        "type": "jr_necki",
+        "x": 285,
+        "y": 1529.0,
+        "sourceFootholdId": 100,
+        "sourceMobId": 9300000
+      },
+      {
+        "type": "jr_necki",
+        "x": 383,
+        "y": 1529.0,
+        "sourceFootholdId": 99,
+        "sourceMobId": 9300000
+      },
+      {
+        "type": "jr_necki",
+        "x": 602,
+        "y": 1529.0,
+        "sourceFootholdId": 89,
+        "sourceMobId": 9300000
+      },
+      {
+        "type": "jr_necki",
+        "x": 694,
+        "y": 1529.0,
+        "sourceFootholdId": 96,
+        "sourceMobId": 9300000
+      },
+      {
+        "type": "jr_necki",
+        "x": 550,
+        "y": 1529.0,
+        "sourceFootholdId": 90,
+        "sourceMobId": 9300000
+      }
+    ],
+    "boss": "king_slime",
+    "bossSpawn": {
+      "type": "king_slime",
+      "x": 580,
+      "y": 2549.0
+    },
+    "maxMonsters": 9
+  },
+  "horntail_cave": {
+  "key": "horntail_cave",
+  "name": "생명의 동굴: 혼테일의 동굴",
+  "mapId": 240060200,
+  "source": "https://maplestory.io/api/GMS/62/map/240060200",
+  "region": "GMS",
+  "version": "62",
+  "category": "던전",
+  "width": 1510,
+  "height": 1001,
+  "terrainSourceWidth": 1510,
+  "terrainSourceHeight": 1001,
+  "img": "assets/map/horntail_cave_terrain.png",
+  "nativeTerrain": true,
+  "minimap": "assets/map/horntail_cave_minimap.png",
+  "terrainOffset": {
+    "x": 0,
+    "y": 0
+  },
+  "nativeRopeTailOffset": 0,
+  "sourceTransform": {
+    "x": 665,
+    "y": 727
+  },
+  "isTown": false,
+  "isBossMap": true,
+  "footholds": [
+    {
+      "id": 24,
+      "x1": 165,
+      "y1": 987,
+      "x2": 215,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 11,
+      "x1": 395,
+      "y1": 987,
+      "x2": 485,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 29,
+      "x1": 255,
+      "y1": 747,
+      "x2": 265,
+      "y2": 747,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 8
+    },
+    {
+      "id": 66,
+      "x1": 535,
+      "y1": 447,
+      "x2": 615,
+      "y2": 447,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 22
+    },
+    {
+      "id": 59,
+      "x1": 1255,
+      "y1": 747,
+      "x2": 1335,
+      "y2": 747,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 9
+    },
+    {
+      "id": 26,
+      "x1": 175,
+      "y1": 747,
+      "x2": 255,
+      "y2": 747,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 8
+    },
+    {
+      "id": 9,
+      "x1": 1295,
+      "y1": 987,
+      "x2": 1345,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 13,
+      "x1": 1115,
+      "y1": 987,
+      "x2": 1205,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 40,
+      "x1": 255,
+      "y1": 567,
+      "x2": 305,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 13
+    },
+    {
+      "id": 3,
+      "x1": 125,
+      "y1": 987,
+      "x2": 165,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 58,
+      "x1": 1165,
+      "y1": 747,
+      "x2": 1245,
+      "y2": 747,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 9
+    },
+    {
+      "id": 6,
+      "x1": 755,
+      "y1": 987,
+      "x2": 845,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 55,
+      "x1": 985,
+      "y1": 567,
+      "x2": 1065,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 15
+    },
+    {
+      "id": 12,
+      "x1": 215,
+      "y1": 987,
+      "x2": 305,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 2,
+      "x1": 1025,
+      "y1": 987,
+      "x2": 1115,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 15,
+      "x1": 305,
+      "y1": 987,
+      "x2": 395,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 42,
+      "x1": 1075,
+      "y1": 687,
+      "x2": 1155,
+      "y2": 687,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 11
+    },
+    {
+      "id": 5,
+      "x1": 665,
+      "y1": 987,
+      "x2": 755,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 27,
+      "x1": 265,
+      "y1": 747,
+      "x2": 345,
+      "y2": 747,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 8
+    },
+    {
+      "id": 14,
+      "x1": 1205,
+      "y1": 987,
+      "x2": 1295,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 17,
+      "x1": 1385,
+      "y1": 987,
+      "x2": 1425,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 44,
+      "x1": 1255,
+      "y1": 507,
+      "x2": 1335,
+      "y2": 507,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 18
+    },
+    {
+      "id": 47,
+      "x1": 1205,
+      "y1": 507,
+      "x2": 1255,
+      "y2": 507,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 18
+    },
+    {
+      "id": 31,
+      "x1": 355,
+      "y1": 807,
+      "x2": 435,
+      "y2": 807,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 6
+    },
+    {
+      "id": 49,
+      "x1": 1075,
+      "y1": 507,
+      "x2": 1115,
+      "y2": 507,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 18
+    },
+    {
+      "id": 16,
+      "x1": 1345,
+      "y1": 987,
+      "x2": 1385,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 34,
+      "x1": 215,
+      "y1": 567,
+      "x2": 255,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 13
+    },
+    {
+      "id": 61,
+      "x1": 1245,
+      "y1": 747,
+      "x2": 1255,
+      "y2": 747,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 9
+    },
+    {
+      "id": 46,
+      "x1": 1115,
+      "y1": 507,
+      "x2": 1155,
+      "y2": 507,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 18
+    },
+    {
+      "id": 39,
+      "x1": 175,
+      "y1": 567,
+      "x2": 215,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 13
+    },
+    {
+      "id": 33,
+      "x1": 305,
+      "y1": 567,
+      "x2": 355,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 13
+    },
+    {
+      "id": 69,
+      "x1": 985,
+      "y1": 447,
+      "x2": 1065,
+      "y2": 447,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 21
+    },
+    {
+      "id": 36,
+      "x1": 395,
+      "y1": 567,
+      "x2": 435,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 13
+    },
+    {
+      "id": 63,
+      "x1": 445,
+      "y1": 507,
+      "x2": 525,
+      "y2": 507,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 19
+    },
+    {
+      "id": 1,
+      "x1": 485,
+      "y1": 987,
+      "x2": 575,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 23,
+      "x1": 85,
+      "y1": 987,
+      "x2": 125,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 50,
+      "x1": 1155,
+      "y1": 507,
+      "x2": 1205,
+      "y2": 507,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 18
+    },
+    {
+      "id": 4,
+      "x1": 575,
+      "y1": 987,
+      "x2": 665,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 35,
+      "x1": 355,
+      "y1": 567,
+      "x2": 395,
+      "y2": 567,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 13
+    },
+    {
+      "id": 7,
+      "x1": 845,
+      "y1": 987,
+      "x2": 935,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 10,
+      "x1": 935,
+      "y1": 987,
+      "x2": 1025,
+      "y2": 987,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 0
+    },
+    {
+      "id": 52,
+      "x1": 1075,
+      "y1": 807,
+      "x2": 1155,
+      "y2": 807,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 7
     }
-  }
+  ],
+  "defaultSpawn": {
+    "x": 220,
+    "y": 987
+  },
+  "ladders": [
+    {
+      "id": 1,
+      "x": 235,
+      "top": 569,
+      "bottom": 735,
+      "nativeBottom": 735,
+      "renderedInTerrain": true,
+      "isLadder": false
+    },
+    {
+      "id": 2,
+      "x": 279,
+      "top": 749,
+      "bottom": 952,
+      "nativeBottom": 952,
+      "renderedInTerrain": true,
+      "isLadder": false
+    },
+    {
+      "id": 3,
+      "x": 1106,
+      "top": 509,
+      "bottom": 676,
+      "nativeBottom": 676,
+      "renderedInTerrain": true,
+      "isLadder": false
+    },
+    {
+      "id": 4,
+      "x": 1237,
+      "top": 749,
+      "bottom": 967,
+      "nativeBottom": 967,
+      "renderedInTerrain": true,
+      "isLadder": false
+    }
+  ],
+  "npcs": [
+    {
+      "name": "원정대 조사원",
+      "type": "adobis",
+      "x": 160,
+      "y": 987,
+      "dialog": "adobis",
+      "adaptation": true
+    }
+  ],
+  "portals": [
+    {
+      "x": 120,
+      "y": 987,
+      "targetMap": "el_nath_deadmine",
+      "targetX": 920,
+      "targetY": 840,
+      "name": "폐광 4",
+      "adaptation": true
+    }
+  ],
+  "mobSpawns": [],
+  "boss": "horntail",
+  "bossSpawn": {
+    "type": "horntail",
+    "x": 755,
+    "y": 987
+  },
+  "maxMonsters": 12
+},
+  "pianus_cave": {
+  "key": "pianus_cave",
+  "name": "피아누스의 동굴",
+  "mapId": 230040420,
+  "source": "https://maplestory.io/api/GMS/62/map/230040420",
+  "region": "GMS",
+  "version": "62",
+  "category": "던전",
+  "width": 1475,
+  "height": 696,
+  "terrainSourceWidth": 1475,
+  "terrainSourceHeight": 696,
+  "img": "assets/map/pianus_cave_terrain.png",
+  "nativeTerrain": true,
+  "minimap": "assets/map/pianus_cave_minimap.png",
+  "terrainOffset": {
+    "x": 0,
+    "y": 0
+  },
+  "nativeRopeTailOffset": 0,
+  "sourceTransform": {
+    "x": 693,
+    "y": 515
+  },
+  "isTown": false,
+  "isBossMap": true,
+  "footholds": [
+    {
+      "id": 23,
+      "x1": 840,
+      "y1": 593,
+      "x2": 906,
+      "y2": 593,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 12
+    },
+    {
+      "id": 2,
+      "x1": 30,
+      "y1": 653,
+      "x2": 96,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 5
+    },
+    {
+      "id": 34,
+      "x1": 468,
+      "y1": 683,
+      "x2": 558,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 10,
+      "x1": 1200,
+      "y1": 653,
+      "x2": 1266,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 6
+    },
+    {
+      "id": 32,
+      "x1": 1008,
+      "y1": 683,
+      "x2": 1098,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 43,
+      "x1": 1368,
+      "y1": 683,
+      "x2": 1458,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 4,
+      "x1": 96,
+      "y1": 653,
+      "x2": 153,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 5
+    },
+    {
+      "id": 30,
+      "x1": 828,
+      "y1": 683,
+      "x2": 918,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 41,
+      "x1": 108,
+      "y1": 683,
+      "x2": 198,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 6,
+      "x1": 210,
+      "y1": 653,
+      "x2": 243,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 5
+    },
+    {
+      "id": 29,
+      "x1": 738,
+      "y1": 683,
+      "x2": 828,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 12,
+      "x1": 1380,
+      "y1": 653,
+      "x2": 1446,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 6
+    },
+    {
+      "id": 38,
+      "x1": 1278,
+      "y1": 683,
+      "x2": 1368,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 7,
+      "x1": 243,
+      "y1": 653,
+      "x2": 276,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 5
+    },
+    {
+      "id": 17,
+      "x1": 660,
+      "y1": 593,
+      "x2": 726,
+      "y2": 593,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 11
+    },
+    {
+      "id": 15,
+      "x1": 1323,
+      "y1": 653,
+      "x2": 1380,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 6
+    },
+    {
+      "id": 26,
+      "x1": 930,
+      "y1": 653,
+      "x2": 996,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 8
+    },
+    {
+      "id": 37,
+      "x1": 1188,
+      "y1": 683,
+      "x2": 1278,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 35,
+      "x1": 378,
+      "y1": 683,
+      "x2": 468,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 28,
+      "x1": 648,
+      "y1": 683,
+      "x2": 738,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 39,
+      "x1": 288,
+      "y1": 683,
+      "x2": 378,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 11,
+      "x1": 1266,
+      "y1": 653,
+      "x2": 1323,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 6
+    },
+    {
+      "id": 33,
+      "x1": 1098,
+      "y1": 683,
+      "x2": 1188,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 3,
+      "x1": 153,
+      "y1": 653,
+      "x2": 210,
+      "y2": 653,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 5
+    },
+    {
+      "id": 20,
+      "x1": 750,
+      "y1": 533,
+      "x2": 816,
+      "y2": 533,
+      "isProp": false,
+      "sourceLayer": 3,
+      "sourceGroup": 14
+    },
+    {
+      "id": 31,
+      "x1": 918,
+      "y1": 683,
+      "x2": 1008,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 42,
+      "x1": 18,
+      "y1": 683,
+      "x2": 108,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 40,
+      "x1": 198,
+      "y1": 683,
+      "x2": 288,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    },
+    {
+      "id": 36,
+      "x1": 558,
+      "y1": 683,
+      "x2": 648,
+      "y2": 683,
+      "isProp": false,
+      "sourceLayer": 4,
+      "sourceGroup": 0
+    }
+  ],
+  "defaultSpawn": {
+    "x": 220,
+    "y": 683
+  },
+  "ladders": [
+    {
+      "id": 1,
+      "x": 786,
+      "top": 535,
+      "bottom": 670,
+      "nativeBottom": 670,
+      "renderedInTerrain": true,
+      "isLadder": false
+    }
+  ],
+  "npcs": [
+    {
+      "name": "원정대 조사원",
+      "type": "adobis",
+      "x": 160,
+      "y": 683,
+      "dialog": "adobis",
+      "adaptation": true
+    }
+  ],
+  "portals": [
+    {
+      "x": 120,
+      "y": 683,
+      "targetMap": "ant_tunnel",
+      "targetX": 721,
+      "targetY": 225,
+      "name": "개미굴 1",
+      "adaptation": true
+    }
+  ],
+  "mobSpawns": [],
+  "boss": "pianus",
+  "bossSpawn": {
+    "type": "pianus",
+    "x": 1150,
+    "y": 683
+  },
+  "maxMonsters": 12
+},
 };

@@ -373,7 +373,7 @@ class AutoHuntManager {
   }
 
   isMultipartBoss(target) {
-    return Boolean(target && Array.isArray(target.arms) && typeof target.getPartGeometry === 'function');
+    return Boolean(target && (Array.isArray(target.arms) || Array.isArray(target.parts)) && typeof target.getHitBoxes === 'function');
   }
 
   getAttackRange(player) {
@@ -645,8 +645,9 @@ class AutoHuntManager {
 
       let attackRange = 56;
       if (player.job === '궁수') attackRange = 240;
-      else if (player.job === '도적') attackRange = 210;
+      else if (player.job === '어쌔신' || player.job === '도적') attackRange = 210;
       else if (player.job === '마법사') attackRange = 160;
+      else if (player.job === '시프') attackRange = 75;
 
       const inRange = Math.abs(dx) <= attackRange && Math.abs(dy) <= 35;
 
@@ -677,10 +678,12 @@ class AutoHuntManager {
     if (!this.config.useSkills) return player.normalAttack(this.game);
     if (this.isMultipartBoss?.(this.currentTarget)) return player.primaryAttack(this.game);
     const preferences = {
-      '전사': ['slash_blast', 'power_strike'],
-      '마법사': ['magic_claw', 'energy_bolt'],
-      '궁수': ['double_shot', 'arrow_blow'],
-      '도적': player.weaponType === 'dagger' ? ['double_stab', 'lucky_seven'] : ['lucky_seven', 'double_stab']
+      '전사': ['brandish', 'slash_blast', 'power_strike'],
+      '마법사': ['genesis', 'thunderbolt', 'magic_claw', 'energy_bolt'],
+      '궁수': ['hurricane', 'strafe', 'arrow_bomb', 'double_shot', 'arrow_blow'],
+      '어쌔신': ['lucky_seven', 'avenger'],
+      '시프': ['savage_blow', 'double_stab'],
+      '도적': player.weaponType === 'dagger' ? ['savage_blow', 'double_stab'] : ['lucky_seven', 'avenger']
     };
     for (const id of preferences[player.job] || []) {
       if (!player.skills[id]?.level) continue;

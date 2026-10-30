@@ -447,6 +447,198 @@ class SkillSvgIcons {
         <line x1="6" y1="26" x2="26" y2="26" stroke="#fb7185" stroke-width="2"/>
         <circle cx="16" cy="10" r="2.5" fill="#ffffff"/>
       </svg>
+    `,
+    'drain': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="10" fill="rgba(239, 68, 68, 0.2)"/>
+        <path d="M 16 6 L 19 13 L 26 16 L 19 19 L 16 26 L 13 19 L 6 16 L 13 13 Z" fill="#ef4444" stroke="#7f1d1d" stroke-width="1"/>
+        <path d="M 16 11 C 14 11 12 13 12 15 C 12 18 16 21 16 21 C 16 21 20 18 20 15 C 20 13 18 11 16 11 Z" fill="#f87171"/>
+      </svg>
+    `,
+    'shadow_web': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#2e1065" stroke="#7c3aed" stroke-width="1.5"/>
+        <path d="M 16 4 L 16 28 M 4 16 L 28 16 M 7 7 L 25 25 M 7 25 L 25 7" stroke="#c084fc" stroke-width="1" opacity="0.6"/>
+        <circle cx="16" cy="16" r="6" fill="none" stroke="#a855f7" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="11" fill="none" stroke="#9333ea" stroke-width="1" stroke-dasharray="2,2"/>
+        <circle cx="16" cy="16" r="2.5" fill="#f3e8ff"/>
+      </svg>
+    `,
+    'panic': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="1.5"/>
+        <polygon points="16,3 20,12 30,14 22,21 24,30 16,24 8,30 10,21 2,14 12,12" fill="#ef4444" stroke="#7f1d1d" stroke-width="1"/>
+        <circle cx="16" cy="16" r="4" fill="#fef08a"/>
+      </svg>
+    `,
+    'coma': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="9" fill="none" stroke="#818cf8" stroke-width="2" stroke-dasharray="3,3"/>
+        <polygon points="16,7 19,13 25,16 19,19 16,25 13,19 7,16 13,13" fill="#a5b4fc"/>
+      </svg>
+    `,
+    'elemental_charge': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="4" fill="#ef4444"/>
+        <circle cx="22" cy="10" r="4" fill="#3b82f6"/>
+        <circle cx="10" cy="22" r="4" fill="#eab308"/>
+        <circle cx="22" cy="22" r="4" fill="#a855f7"/>
+        <circle cx="16" cy="16" r="3" fill="#ffffff"/>
+      </svg>
+    `,
+    'dragon_buster': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.5"/>
+        <line x1="4" y1="28" x2="26" y2="6" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="28,4 20,6 26,12" fill="#0284c7"/>
+        <line x1="8" y1="24" x2="24" y2="8" stroke="#ffffff" stroke-width="1.2"/>
+      </svg>
+    `,
+    'dragon_roar': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#3b0764" stroke="#c084fc" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="5" fill="#f43f5e"/>
+        <circle cx="16" cy="16" r="9" fill="none" stroke="#e879f9" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="13" fill="none" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="3,3"/>
+      </svg>
+    `,
+    'sanctuary': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#451a03" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="13" y="4" width="6" height="24" rx="2" fill="#fbbf24"/>
+        <rect x="7" y="9" width="18" height="6" rx="2" fill="#fbbf24"/>
+        <circle cx="16" cy="12" r="3" fill="#ffffff"/>
+      </svg>
+    `,
+    'cold_beam': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5"/>
+        <polygon points="16,3 21,20 16,29 11,20" fill="#7dd3fc" stroke="#0284c7" stroke-width="1"/>
+        <line x1="16" y1="3" x2="16" y2="29" stroke="#ffffff" stroke-width="1.5"/>
+      </svg>
+    `,
+    'ice_strike': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#082f49" stroke="#0284c7" stroke-width="1.5"/>
+        <polygon points="16,4 23,26 9,26" fill="#38bdf8" stroke="#0369a1" stroke-width="1"/>
+        <polygon points="9,14 16,26 4,26" fill="#7dd3fc" opacity="0.8"/>
+        <polygon points="23,14 28,26 16,26" fill="#7dd3fc" opacity="0.8"/>
+      </svg>
+    `,
+    'chain_lightning': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#172554" stroke="#60a5fa" stroke-width="1.5"/>
+        <polyline points="6,6 14,14 11,18 20,24 17,28 26,18 20,18 24,10 16,10 20,4" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="14" r="3" fill="#ffffff"/>
+      </svg>
+    `,
+    'meteor': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#450a0a" stroke="#f97316" stroke-width="1.5"/>
+        <circle cx="21" cy="11" r="7" fill="#ea580c"/>
+        <polygon points="6,26 18,17 12,23" fill="#fdba74"/>
+        <line x1="26" y1="6" x2="6" y2="26" stroke="#fef08a" stroke-width="2"/>
+      </svg>
+    `,
+    'blizzard': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#082f49" stroke="#7dd3fc" stroke-width="1.5"/>
+        <line x1="16" y1="4" x2="16" y2="28" stroke="#bae6fd" stroke-width="2"/>
+        <line x1="4" y1="16" x2="28" y2="16" stroke="#bae6fd" stroke-width="2"/>
+        <line x1="8" y1="8" x2="24" y2="24" stroke="#e0f2fe" stroke-width="1.5"/>
+        <line x1="8" y1="24" x2="24" y2="8" stroke="#e0f2fe" stroke-width="1.5"/>
+      </svg>
+    `,
+    'iron_arrow': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="4" y1="16" x2="26" y2="16" stroke="#cbd5e1" stroke-width="3"/>
+        <polygon points="28,16 20,11 20,21" fill="#475569"/>
+      </svg>
+    `,
+    'piercing': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#1e1b4b" stroke="#a855f7" stroke-width="1.5"/>
+        <polygon points="28,16 16,8 18,14 4,14 4,18 18,18 16,24" fill="#c084fc"/>
+        <circle cx="20" cy="16" r="3" fill="#fbcfe8"/>
+      </svg>
+    `,
+    'sniping': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#18181b" stroke="#ef4444" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="10" fill="none" stroke="#f87171" stroke-width="1.5"/>
+        <line x1="16" y1="4" x2="16" y2="28" stroke="#ef4444" stroke-width="1.5"/>
+        <line x1="4" y1="16" x2="28" y2="16" stroke="#ef4444" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="2" fill="#ef4444"/>
+      </svg>
+    `,
+    'sharp_eyes': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#3b0764" stroke="#f43f5e" stroke-width="1.5"/>
+        <ellipse cx="16" cy="16" rx="11" ry="6" fill="#881337" stroke="#fda4af" stroke-width="1"/>
+        <circle cx="16" cy="16" r="4.5" fill="#f43f5e"/>
+        <circle cx="17.5" cy="14.5" r="1.5" fill="#ffffff"/>
+      </svg>
+    `,
+    'triple_throw': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#18181b" stroke="#38bdf8" stroke-width="1.5"/>
+        <g transform="translate(10, 10)">
+          <polygon points="0,-4 3,0 0,4 -3,0" fill="#38bdf8"/>
+        </g>
+        <g transform="translate(22, 10)">
+          <polygon points="0,-4 3,0 0,4 -3,0" fill="#38bdf8"/>
+        </g>
+        <g transform="translate(16, 21)">
+          <polygon points="0,-4 3,0 0,4 -3,0" fill="#38bdf8"/>
+        </g>
+        <circle cx="16" cy="14" r="2" fill="#ffffff"/>
+      </svg>
+    `,
+    'boomerang_step': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#18181b" stroke="#f59e0b" stroke-width="1.5"/>
+        <line x1="6" y1="6" x2="26" y2="26" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+        <line x1="26" y1="6" x2="6" y2="26" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="3" fill="#ffffff"/>
+      </svg>
+    `,
+    'double_fire': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#292524" stroke="#f97316" stroke-width="1.5"/>
+        <rect x="4" y="10" width="14" height="6" rx="1" fill="#78716c"/>
+        <rect x="14" y="16" width="14" height="6" rx="1" fill="#78716c"/>
+        <circle cx="20" cy="13" r="2" fill="#fbbf24"/>
+        <circle cx="30" cy="19" r="2" fill="#fbbf24"/>
+      </svg>
+    `,
+    'dragon_strike': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+        <path d="M 6 26 Q 16 8 26 26" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="16,6 12,12 20,12" fill="#bbf7d0"/>
+      </svg>
+    `,
+    'rapid_fire': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#3f2c00" stroke="#facc15" stroke-width="1.5"/>
+        <line x1="4" y1="12" x2="26" y2="12" stroke="#fde047" stroke-width="2"/>
+        <line x1="8" y1="16" x2="28" y2="16" stroke="#fde047" stroke-width="2"/>
+        <line x1="4" y1="20" x2="26" y2="20" stroke="#fde047" stroke-width="2"/>
+        <circle cx="27" cy="16" r="3" fill="#ffffff"/>
+      </svg>
+    `,
+    'battleship': `
+      <svg viewBox="0 0 32 32" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="#1e3a8a" stroke="#60a5fa" stroke-width="1.5"/>
+        <polygon points="4,22 28,22 24,27 8,27" fill="#475569"/>
+        <rect x="10" y="12" width="12" height="10" rx="2" fill="#94a3b8"/>
+        <line x1="16" y1="6" x2="16" y2="12" stroke="#38bdf8" stroke-width="2"/>
+        <circle cx="22" cy="18" r="2" fill="#f59e0b"/>
+      </svg>
     `
   };
 

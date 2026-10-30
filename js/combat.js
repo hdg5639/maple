@@ -126,6 +126,8 @@ class CombatSystem {
     let first = null;
     for (const foothold of map.footholds) {
       if (foothold.isProp) continue;
+      // ★ 단방향 관통 발판은 표창 및 투사체가 관통 (불변 규격 INV-5)
+      if (foothold.canDropThrough) continue;
       const fx = foothold.x2 - foothold.x1, fy = foothold.y2 - foothold.y1;
       const determinant = dx * fy - dy * fx;
       if (Math.abs(determinant) < 1e-9) continue;
@@ -213,7 +215,7 @@ class CombatSystem {
   }
 
   /**
-   * Classic Maple Damage formula with Job-specific Crit Rates
+   * Classic Maple Damage formula with Job-specific Crit Rates & Awakened Weapon Traits
    */
   static calculateDamage(attacker, multiplier = 1.0, target = null) {
     const minAtk = attacker.minAtk || 5;
@@ -221,12 +223,22 @@ class CombatSystem {
     const range = maxAtk - minAtk;
     const base = minAtk + Math.floor(Math.random() * (range + 1));
 
-    const critRate = attacker.job === '도적' ? 0.45 : (attacker.job === '궁수' ? 0.35 : 0.22);
+    const baseCritRate = (attacker.job === '도적' || attacker.job === '어쌔신' || attacker.job === '시프')
+      ? 0.45 : (attacker.job === '궁수' ? 0.35 : 0.22);
+    const critRate = Math.min(0.95, baseCritRate + (Number(attacker.bonusCritRate) || 0));
     const isCrit = Math.random() < critRate;
-    const scaled = isCrit ? Math.floor(base * 1.6) : base;
+    const critMult = 1.6 + (Number(attacker.bonusCritDamage) || 0);
+    const scaled = isCrit ? Math.floor(base * critMult) : base;
 
-    const targetDef = target ? (target.getDefense ? target.getDefense() : (target.def || 0)) : 0;
-    const finalDmg = Math.max(1, Math.floor(scaled * multiplier - targetDef * 0.5));
+    const rawDef = target ? (target.getDefense ? target.getDefense() : (target.def || 0)) : 0;
+    const ignoreDefRatio = Math.max(0, Math.min(0.9, (Number(attacker.ignoreDefPercent) || 0) / 100));
+    const targetDef = rawDef * (1 - ignoreDefRatio);
+
+    const isBossTarget = Boolean(target && (target.isBoss || target.id === 'zakum'));
+    const dmgAmpPct = (Number(attacker.totalDamagePercent) || 0) + (isBossTarget ? (Number(attacker.bossDamagePercent) || 0) : 0);
+    const ampFactor = 1 + Math.max(0, dmgAmpPct) / 100;
+
+    const finalDmg = Math.max(1, Math.floor(scaled * multiplier * ampFactor - targetDef * 0.5));
 
     return { damage: finalDmg, isCrit };
   }
@@ -347,46 +359,239 @@ class CombatSystem {
   static resolveProjectileCollision(projectile, game) {
     if (projectile.hit) return false;
 
+    if (!projectile.hitTargets) projectile.hitTargets = new Set();
+    const isPiercing = Boolean(projectile.pierce || projectile.maxTargets > 1 || projectile.type === 'avenger_star');
+    const maxTargets = projectile.maxTargets || (projectile.type === 'avenger_star' ? 6 : 1);
+
     const targets = this.getAllDamageableTargets(game);
-    let firstHit = null;
+    const candidateHits = [];
 
     for (const target of targets) {
-      if (!target.isAlive()) continue;
+      if (!target.isAlive() || projectile.hitTargets.has(target)) continue;
 
       const targetBoxes = target.getHitBoxes ? target.getHitBoxes() : [target.getHitBox()];
 
       for (const tBox of targetBoxes) {
         const time = this.getTargetHitTime(projectile.prevX, projectile.prevY, projectile.x, projectile.y, tBox);
-        if (time !== null && (!firstHit || time < firstHit.time)) {
-          firstHit = { target, box: tBox, time };
+        if (time !== null) {
+          candidateHits.push({ target, box: tBox, time });
+          break; // Avoid double hitting the same target via multiple sub-boxes in a single step
         }
       }
     }
 
+    // Sort candidates by hit time (closest along flight path first)
+    candidateHits.sort((a, b) => a.time - b.time);
+
     const terrainTime = this.terrainHitTime(game.map, projectile.prevX, projectile.prevY, projectile.x, projectile.y, true);
-    if (terrainTime !== null && (!firstHit || terrainTime < firstHit.time)) {
+
+    let processedHit = false;
+
+    for (const hit of candidateHits) {
+      // If solid wall terrain was struck BEFORE reaching this candidate, stop projectile
+      if (terrainTime !== null && terrainTime < hit.time) {
+        projectile.hit = true;
+        return true;
+      }
+
+      const { target, box: tBox, time } = hit;
+      const hitX = projectile.prevX + (projectile.x - projectile.prevX) * time;
+      const hitY = projectile.prevY + (projectile.y - projectile.prevY) * time;
+      const hitPoint = this.closestTargetPoint(tBox, hitX, hitY) || {x: hitX, y: hitY};
+
+      projectile.hitTargets.add(target);
+      processedHit = true;
+
+      // Accuracy Check
+      if (projectile.owner && !this.checkHit(projectile.owner, target)) {
+        game.spawnMissText(hitPoint.x, hitPoint.y);
+      } else {
+        const targetDef = target.getDefense ? target.getDefense() : (target.def || 0);
+        let currentRaw = projectile.damage;
+        if (projectile.pierceScale && projectile.hitTargets.size > 1) {
+          currentRaw = Math.floor(projectile.damage * Math.pow(projectile.pierceScale, projectile.hitTargets.size - 1));
+        }
+        const finalDmg = Math.max(1, Math.floor(currentRaw - targetDef * 0.5));
+        const hitDir = projectile.vx >= 0 ? 'right' : 'left';
+        if (this.applyTargetDamage(target, finalDmg, projectile.isCrit, hitDir, game, tBox)) {
+          game.spawnStaggeredDamage(hitPoint.x, hitPoint.y, finalDmg, projectile.isCrit);
+
+          // Vampiric Drain HP recovery
+          if (projectile.drainRate > 0 && projectile.owner && projectile.owner.hp > 0) {
+            const healAmount = Math.min(Math.floor(finalDmg * projectile.drainRate), Math.floor((projectile.owner.maxHp || 1000) * 0.5));
+            projectile.owner.hp = Math.min(projectile.owner.maxHp, projectile.owner.hp + healAmount);
+            game.spawnItemText(projectile.owner.x, projectile.owner.y - 35, `💚 +${healAmount} HP`);
+          }
+        }
+      }
+
+      // If max target limit reached or not piercing, terminate projectile
+      if (projectile.hitTargets.size >= maxTargets || !isPiercing) {
+        projectile.hit = true;
+        return true;
+      }
+    }
+
+    // Terrain impact check if no candidate hit earlier
+    if (terrainTime !== null) {
       projectile.hit = true;
       return true;
     }
-    if (!firstHit) return false;
-    const { target, box: tBox, time } = firstHit;
-    const hitX = projectile.prevX + (projectile.x - projectile.prevX) * time;
-    const hitY = projectile.prevY + (projectile.y - projectile.prevY) * time;
-    const hitPoint = this.closestTargetPoint(tBox, hitX, hitY) || {x: hitX, y: hitY};
-    projectile.hit = true;
 
-    // Accuracy is evaluated for the first contacted target, not the array's first entry.
-    if (projectile.owner && !this.checkHit(projectile.owner, target)) {
-      game.spawnMissText(hitPoint.x, hitPoint.y);
-      return true;
+    return processedHit;
+  }
+  /**
+   * Cleric Holy Heal attack targeting Undead monsters within radius
+   */
+  static executeUndeadHolyHeal(attacker, holyRange = 360, multiplier = 2.8, game) {
+    const targets = this.getAllDamageableTargets(game);
+    const { damage } = attacker.getDamage();
+    let hitCount = 0;
+    for (const target of targets) {
+      if (!target.isAlive()) continue;
+      const isUndead = Boolean(
+        target.isUndead ||
+        target.type === 'coolie_zombie' ||
+        target.type === 'jr_wraith' ||
+        target.type === 'zombie_mushroom' ||
+        target.type === 'zombie_mushmom' ||
+        target.type === 'death_teddy'
+      );
+      if (!isUndead) continue;
+
+      const dist = Math.hypot(target.x - attacker.x, target.y - attacker.y);
+      if (dist <= holyRange) {
+        hitCount++;
+        const holyDmg = Math.floor(damage * multiplier);
+        const hitDirection = attacker.x < target.x ? 'right' : 'left';
+        this.applyTargetDamage(target, holyDmg, true, hitDirection, game);
+        game.damageDigits.push(new DamageDigit(target.x, target.y - 40, holyDmg, true));
+        game.skillEffects.push({ type: 'holy_hit', x: target.x, y: target.y - 20, duration: 0.35, progress: 0 });
+      }
+    }
+    return hitCount;
+  }
+
+  /**
+   * Archmage Chain Lightning - Multi-target electric arc chaining
+   */
+  static executeChainLightning(attacker, maxBounces = 5, multiplier = 2.4, game = window.game) {
+    const targets = this.getAllDamageableTargets(game);
+    const aliveTargets = targets.filter(t => t.isAlive());
+    if (aliveTargets.length === 0) return 0;
+
+    // Find first target in front
+    const facing = attacker.facing;
+    const sorted = aliveTargets.filter(t => {
+      const dx = t.x - attacker.x;
+      return facing === 'right' ? (dx > 0 && dx < 360) : (dx < 0 && dx > -360);
+    }).sort((a, b) => Math.hypot(a.x - attacker.x, a.y - attacker.y) - Math.hypot(b.x - attacker.x, b.y - attacker.y));
+
+    if (sorted.length === 0) return 0;
+
+    const chained = [];
+    let current = sorted[0];
+    chained.push(current);
+
+    while (chained.length < maxBounces) {
+      const pool = aliveTargets.filter(t => !chained.includes(t));
+      if (pool.length === 0) break;
+      pool.sort((a, b) => Math.hypot(a.x - current.x, a.y - current.y) - Math.hypot(b.x - current.x, b.y - current.y));
+      if (Math.hypot(pool[0].x - current.x, pool[0].y - current.y) > 280) break;
+      current = pool[0];
+      chained.push(current);
     }
 
-    const targetDef = target.getDefense ? target.getDefense() : (target.def || 0);
-    const finalDmg = Math.max(1, Math.floor(projectile.damage - targetDef * 0.5));
-    const hitDir = projectile.vx >= 0 ? 'right' : 'left';
-    if (!this.applyTargetDamage(target, finalDmg, projectile.isCrit, hitDir, game, tBox)) return true;
-    game.spawnStaggeredDamage(hitPoint.x, hitPoint.y, finalDmg, projectile.isCrit);
-    return true;
+    const { damage, isCrit } = attacker.getDamage();
+    chained.forEach((m, idx) => {
+      setTimeout(() => {
+        if (!m.isAlive()) return;
+        const bounceDmg = Math.max(1, Math.floor(damage * multiplier * Math.pow(0.85, idx)));
+        this.applyTargetDamage(m, bounceDmg, isCrit, attacker.facing, game);
+        game.spawnStaggeredDamage(m.x, m.y - 25, bounceDmg, isCrit);
+        game.skillEffects.push({
+          type: 'chain_lightning',
+          startX: idx === 0 ? attacker.x : chained[idx - 1].x,
+          startY: idx === 0 ? attacker.y - 18 : chained[idx - 1].y - 20,
+          x: m.x,
+          y: m.y - 20,
+          duration: 0.3,
+          progress: 0
+        });
+      }, idx * 55);
+    });
+
+    return chained.length;
+  }
+
+  /**
+   * Chief Bandit Meso Explosion - Detonates dropped mesos on the ground
+   */
+  static executeMesoExplosion(attacker, radius = 340, maxCoins = 12, multiplier = 1.6, game = window.game) {
+    if (!game.drops) return 0;
+    const mesoDrops = game.drops.filter(d => (d.type === 'meso' || d.type === 'bag_meso' || d.meso > 0) && Math.hypot(d.x - attacker.x, d.y - attacker.y) <= radius).slice(0, maxCoins);
+    if (mesoDrops.length === 0) {
+      game.spawnItemText(attacker.x, attacker.y - 45, '⚠️ 주변에 폭파할 메소가 없습니다!');
+      return 0;
+    }
+
+    const targets = this.getAllDamageableTargets(game).filter(t => t.isAlive() && Math.hypot(t.x - attacker.x, t.y - attacker.y) <= radius);
+
+    mesoDrops.forEach((coin, idx) => {
+      // Remove drop from field
+      const dropIdx = game.drops.indexOf(coin);
+      if (dropIdx !== -1) game.drops.splice(dropIdx, 1);
+
+      setTimeout(() => {
+        game.skillEffects.push({ type: 'meso_explosion', x: coin.x, y: coin.y, duration: 0.35, progress: 0 });
+        targets.forEach(m => {
+          if (!m.isAlive() || Math.hypot(m.x - coin.x, m.y - coin.y) > 90) return;
+          const { damage } = attacker.getDamage();
+          const coinDmg = Math.floor(damage * 0.95 + 120);
+          this.applyTargetDamage(m, coinDmg, true, attacker.facing, game);
+          game.damageDigits.push(new DamageDigit(m.x + (Math.random() * 20 - 10), m.y - 20 - idx * 4, coinDmg, true));
+        });
+      }, idx * 40);
+    });
+
+    game.spawnItemText(attacker.x, attacker.y - 45, `💣 [메소 익스플로전] 동전 ${mesoDrops.length}개 연쇄 폭파!`);
+    return mesoDrops.length;
+  }
+
+  /**
+   * Full Map Screen-Wipe Ultimates (Genesis, Meteor, Blizzard, Sanctuary, Dragon Roar)
+   */
+  static executeFullMapUltimate(attacker, skillType, maxTargets = 15, multiplier = 3.2, game = window.game) {
+    const targets = this.getAllDamageableTargets(game).filter(t => t.isAlive()).slice(0, maxTargets);
+    game.shakeTimer = 0.5;
+    game.shakeMagnitude = 6;
+
+    game.skillEffects.push({
+      type: skillType,
+      x: attacker.x,
+      y: attacker.y,
+      duration: 0.85,
+      progress: 0
+    });
+
+    const { damage, isCrit } = attacker.getDamage();
+
+    targets.forEach((m, idx) => {
+      setTimeout(() => {
+        if (!m.isAlive()) return;
+        const finalDmg = Math.floor(damage * multiplier);
+        this.applyTargetDamage(m, finalDmg, isCrit, attacker.facing, game);
+        game.spawnStaggeredDamage(m.x, m.y - 30, finalDmg, isCrit);
+
+        if (skillType === 'blizzard') {
+          m.frozenTimer = 4.0;
+        } else if (skillType === 'sanctuary' || skillType === 'dragon_roar') {
+          m.snaredTimer = 3.0;
+        }
+      }, idx * 30);
+    });
+
+    return targets.length;
   }
 }
 

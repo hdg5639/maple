@@ -8,6 +8,8 @@ class StorageManager {
     return {
       name: player.name,
       job: player.job,
+      jobTier: player.jobTier || 0,
+      selectedMobility: player.selectedMobility || 'flash_jump',
       level: player.level,
       exp: player.exp,
       maxExp: player.maxExp,
@@ -27,6 +29,11 @@ class StorageManager {
       x: Math.round(player.x),
       y: Math.round(player.y),
       inventory: player.inventory || { equip: [], use: [], setup: [], etc: [], cash: [] },
+      coordi: player.coordi || null,
+      coordiPresets: player.coordiPresets || null,
+      activeCoordiPreset: player.activeCoordiPreset ?? 0,
+      coordiCloset: player.coordiCloset || null,
+      bossKills: player.bossKills || {},
       skills: player.skills || {},
       quickslots: player.quickslotBindings || [],
       savedAt: Date.now()

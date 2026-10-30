@@ -162,16 +162,45 @@ class GameMap {
       name: pData.name
     }));
 
+    this.initAtmosphere(key);
+
     return this;
   }
 
+  initAtmosphere(key) {
+    this.weatherParticles = [];
+    let mode = null;
+    if (key === 'el_nath_deadmine') mode = 'snow';
+    else if (key === 'zakum_altar' || key === 'sleepy_dungeon') mode = 'ember';
+    else if (key === 'ship_orbis') mode = 'wind';
+    else if (key === 'ludi_clocktower') mode = 'time';
+    this.weatherMode = mode;
+    if (!mode) return;
+
+    const count = mode === 'snow' ? 42 : 24;
+    for (let i = 0; i < count; i++) {
+      this.weatherParticles.push({
+        x: ((i * 197) % Math.max(800, this.width)),
+        y: ((i * 131) % Math.max(600, this.height)),
+        vx: mode === 'wind' ? -1.8 - (i % 3) * 0.5 : ((i % 5) - 2) * 0.22,
+        vy: mode === 'ember' ? -0.6 - (i % 3) * 0.25 : (mode === 'snow' ? 0.8 + (i % 4) * 0.3 : 0.25),
+        size: 1.8 + (i % 3) * 1.1,
+        phase: i * 0.7
+      });
+    }
+  }
+
   get platforms() {
-    return this.footholds.map(fh => ({
-      x: fh.x1,
-      y: fh.y1,
-      width: fh.x2 - fh.x1,
-      height: 10
-    }));
+    if (!this._cachedPlatforms || this._cachedPlatformsFhLen !== this.footholds.length) {
+      this._cachedPlatformsFhLen = this.footholds.length;
+      this._cachedPlatforms = this.footholds.map(fh => ({
+        x: fh.x1,
+        y: fh.y1,
+        width: fh.x2 - fh.x1,
+        height: 10
+      }));
+    }
+    return this._cachedPlatforms;
   }
 
   // Find continuous slope segment
@@ -261,6 +290,18 @@ class GameMap {
       c.x += c.speed;
       if (c.x > this.width + 150) c.x = -150;
     });
+    if (this.weatherParticles && this.weatherParticles.length) {
+      const step = (dt || 0.016) * 60;
+      for (const p of this.weatherParticles) {
+        p.phase += 0.03 * step;
+        p.x += (p.vx + Math.sin(p.phase) * 0.25) * step;
+        p.y += p.vy * step;
+        if (p.x < 0) p.x += this.width;
+        if (p.x > this.width) p.x -= this.width;
+        if (p.y < 0) p.y += this.height;
+        if (p.y > this.height) p.y -= this.height;
+      }
+    }
   }
 
   bakeTerrainExtensions() {
@@ -367,6 +408,42 @@ class GameMap {
         window.sprites.drawPortal(ctx, portal);
       });
     }
+
+    // 5. Render Atmospheric Weather Overlay
+    this.drawAtmosphere(ctx, camera);
+  }
+
+  drawAtmosphere(ctx, camera) {
+    if (!this.weatherMode || !this.weatherParticles?.length) return;
+    ctx.save();
+    for (const p of this.weatherParticles) {
+      if (p.x < camera.x - 20 || p.x > camera.x + camera.width + 20 ||
+          p.y < camera.y - 20 || p.y > camera.y + camera.height + 20) continue;
+      if (this.weatherMode === 'snow') {
+        ctx.fillStyle = 'rgba(241, 245, 249, 0.8)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (this.weatherMode === 'ember') {
+        ctx.fillStyle = 'rgba(251, 146, 60, 0.72)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (this.weatherMode === 'wind') {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.38)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + 22, p.y + 2);
+        ctx.stroke();
+      } else if (this.weatherMode === 'time') {
+        ctx.fillStyle = 'rgba(253, 224, 71, 0.65)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.85, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
   }
 
   drawSkyAndFarBackdrop(ctx, camera) {

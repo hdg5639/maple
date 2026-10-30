@@ -1,0 +1,607 @@
+{
+  "backgroundMusic": "Bgm04/UponTheSky",
+  "isReturnMap": false,
+  "returnMap": 101000300,
+  "portals": [
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": 60,
+      "y": 32,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": 60,
+        "y": 32,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 60,
+          "y": 32,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 32,
+        "right": 61,
+        "bottom": 33,
+        "left": 60
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": 198,
+      "y": 72,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": 198,
+        "y": 72,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 198,
+          "y": 72,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 72,
+        "right": 199,
+        "bottom": 73,
+        "left": 198
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": -232,
+      "y": -10,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": -232,
+        "y": -10,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -232,
+          "y": -10,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -10,
+        "right": -231,
+        "bottom": -9,
+        "left": -232
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": -395,
+      "y": -110,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": -395,
+        "y": -110,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -395,
+          "y": -110,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -110,
+        "right": -394,
+        "bottom": -109,
+        "left": -395
+      }
+    },
+    null,
+    null,
+    {
+      "portalName": "h002",
+      "toName": "h002_1",
+      "type": 1,
+      "toMap": 200090010,
+      "x": -11,
+      "y": 45,
+      "linkToMap": "/map/200090010",
+      "toMapName": {
+        "name": "To Orbis",
+        "streetName": "During the Ride",
+        "id": 200090010
+      },
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": false,
+      "bounds": {
+        "x": -11,
+        "y": 45,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -11,
+          "y": 45,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 45,
+        "right": -10,
+        "bottom": 46,
+        "left": -11
+      }
+    },
+    {
+      "portalName": "h002_1",
+      "toName": "h002",
+      "type": 1,
+      "toMap": 200090010,
+      "x": -13,
+      "y": -625,
+      "linkToMap": "/map/200090010",
+      "toMapName": {
+        "name": "To Orbis",
+        "streetName": "During the Ride",
+        "id": 200090010
+      },
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": false,
+      "bounds": {
+        "x": -13,
+        "y": -625,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -13,
+          "y": -625,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -625,
+        "right": -12,
+        "bottom": -624,
+        "left": -13
+      }
+    }
+  ],
+  "npcs": [],
+  "mobs": [],
+  "mobRate": 1,
+  "isTown": true,
+  "isSwim": false,
+  "mapMark": "Ellinia",
+  "miniMap": {
+    "centerX": 732,
+    "centerY": 804,
+    "height": 1488,
+    "width": 1438,
+    "magnification": 4,
+    "canvas": "iVBORw0KGgoAAAANSUhEUgAAAFkAAABdCAYAAADOmsq5AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAZEUlEQVR4nO1d7XnjKhPlx9sALXBLYEsgJeASpBKkEqQSTAmmBFNCKGFpgRbecwZJVrLebJw42eR5lr1JbFnWx2E4c2YYdP\u002Bn/rUPb/9A/oT2D\u002BRPaP9A/oT2D\u002BRPaP9A/oT2D\u002BRPaP9A/oT2D\u002BRPaN8RZL17XdU3aN8KZGPMpDaQqy6l9uobAP2tQC6lBGv0UKv6Fha8tm8FsmpWq41RXf4mVsz2bUA2WjmttS21znjhDN7gta7qH13co2ln9QDLjeDgGa\u002BPWivycbLYnnId1RdvXxFkY6075px6WC8N1u6BxAZTay3gZo/tBJ1Az\u002BoLty8HMkCtp\u002BPgUlSPKaUYs3Dv9nHKJRijqTJIE5UWTsD5V33R9uVABoDkXuW7CTabrA7zKZUaSlUJlm2hLEDFir8StJyW99iu22dZfcF2f5C17hSGM17xhm9xSsK9Xdf5dYNzzqKZOo7F1uyBug6pjABU4QyFzhDAkqtpzUNu5/1yjvD\u002BINcayKOdd0daWkwZVljSS9p2VQ65qABgOyUoysFIH/p4PA4ZLYZZeaum9UPg70oqQhO5OcXpKzrCD6ELOKY8h9gfj9PJawMHlYwzBiCWQk6tzeLYVuUQqBamaTgRVfmg/eaxZEeatD2eVIxRlRSM1dXnLABzT9mJDpCKI38xR/iRnIxRPveP59MjGICA0BSzs8Y7WiBggXESdLE87DLgx\u002BtnB1kw38DGLrY6p9Q8e9JyymomX6/nrOgs8jo7TX2R9qGOjxY7hxBAtANu3B6nyS7b2TTpFmg7Aui903VBUq/I7ho3NZIQClHDNHkAWW2CYxQVothZwFhlq1WHAxj6R/UF2oerixjTPA3DsN\u002BmW2N8rIG6zkBpnkOilXNbAo/TyQF4sIzRK\u002Bgrj6xgy0d\u002BAJX4roaI0ZJH9FMg/eBY0zpK/nb7cJBpnTC4wiCCAOmnH8oftzTuGqiM0axVsNSsMBAi9wKVWEQp5rmVS2dh52kyGiBPOYw\u002BFjUS4K/iCD9FJ5N7DYxSQN1hJBSwqIjlvQG1GLz0C6WgAyAJ\u002BXktJQZAB\u002BkGju9g4WrfaRTKEh6ak1HzONC30qLRLUwmBfUX26eADEUQ4bDcarn7dlER/Ft32xtLEExRf2AHiIkC6/SI81QG3mBnJTpaSa5Zvoe/ZpiOhpLPxHmSsLBq7Fz/WqDyKSCDL4rorF/92dZ2rHvlAPwunGPXuXa8go4TDncF5BJTYX8EAmyt0LhhIIMf\u002BgQFKX00Ko87FfKp7XPCan3Nhm/4uvSAFg7nP1rtNE2dkAhEMQQFaMF4Mjbjnjlm0INRHUQhYxhwe99ZfcbuHVXIZ6uOe4BMn3YEBz78bgdSpfx9x0kuEcouGlT0eVYfrR0aayO\u002BhunSwmnONSc6XmJvmGjC9sGZQgpBoKg\u002BzSG\u002BC2Q6qvPpeEboDMGlH2OKM4OOXUQnDX5K8hEBQxcUquzCn28659NflwbMLSXhNHTyFg2AFw\u002B4h8795CZcm5pjHBmydFadATQTTx\u002BevXszyOA7j\u002BBCEuiI0\u002Bo89uU4HU\u002B6jWrGCZXOKWG8YndLHoWlvQvgl9qe02t7pbuus3VNmoj3y\u002Bo4ML2nmcUjsSNoqUNI9fCRFHITyHT3GJ6ewQWdy7JRpBOtFzFFoorgJkRdynbedojl1u9jAGP3qtYbN/plAtnzuH7FPpctepOKeifzfKfKw8Phh2kJrImdwHvyXfmJWAgDLffqA9qfQGaukZGXp7eWgGLX9nGB952NzE0gaOAtqt2uoixqXf4qtSbkVrWxft6wrzs1V7cYuy44t85pPlD2rK3Lahs\u002BojxEjOz7RYJLwzwHb\u002BFkdKnNH0ZJPEn\u002BWtcOsDsgTcq7q65\u002BEeRh6AYxSEQEz03peXqB4MYw5wRzYDi8Bh77vRA\u002B15SiDEuxNdx4rlZ2MSqtsF2yQXrDVTAD2WgJUIxkgtQyxNcc8toP/JpjJzNA5L/tIjCKcAlQfI2HJb\u002Bh6wBZ4qlRbDvje/zz1fYiyLYFAmWeR9VB4OvruRtpEu9aB2czJwFZ/9IvssnYruUtlh\u002B/canX\u002B55bX6x5il8O1IShxSd2t23tkfbd3ff0wmEwAptyqnB8g3wMCV/4nzJpHgNTpHfn5pfpgiBgOM0YPuPhoQzHU6OMJRP2vIGru7F/IDUn5iJWXlzMTBq5fGWdfWh8DcxtW\u002BOfS9pz236lI59cfnvXnHBUDFrAKB1NGpJu9gCaqdKQ84eG3S\u002BC3KyFtDF0fV/GuT9UP0wWhmqr6NSnt8iIC0KqhBCKgPz0WOtglp8meXcjWakneY2623YVyGf7Xt60d4XlRiEkiGVaOmPAOnSdfKkf547zB3MSbf/h01Uvg2yMXm\u002BGU0APh0Mfxh5x08Qkjb/2nQGR2Nw/MHWQV6fCtiZ8lFL6Naz3WmKsuxcN2Dmpko0E4hg0zg9QROJTNK05xcAgkSri00Lsl0DWWj3hBH06nY6Hh0OfwuhLLYH08IQD8c82a460ZnTMFukVkRe1HfI3Q/017Rezq3RmifN/GRIRutgY6zzA9Uw3y/nR3zXHuUK2x8\u002BM9Nb2W5CNZMufyCA65wY0LFql4PtaZwQkw2WXNifHWYvQPxSZ/tDPxnVt2fZbxug1vmbOE9gyQJZ\u002B9t3g2sC5nI/aLoYRUi3VkBWt96/MlPwWZNCBgPcEI93yBWfE0qQOk2PXj\u002BoJ0Gz0bFAaBeZcumFYKUN\u002BcTqK\u002B6/O8DXWLCNBVFupGO7MAulUdWHGDT5iI/k9VyeE1LReOrjPCJ1far8DWT93XLJR/GDj1TNMuu/7EePQjaMOdI5ar4l4Jtu9Geeo/cUCRUQwK0Zf\u002BhK4K/i0RCb8ybN0YHzPicGum8CylMDml05iQBJDj\u002BgTqrxRw1\u002Bvw7gKMvCajL6uy9uEZqulBOdO8zzHmoMNUSf4QsdcBbA/SJJI62mcAyJYl1kmkSpogrkyNHL3NaBXbTvHkEqMwt4kc99NjM5YnyFUo59xOr/H3EScxxxT7av6OtVEz0Hm9M\u002BJ85eNT6UMqrUncktvGUdYsE/JVlgtHEwBLvEii8DZqkRz6OOBkaN3zOm2nCRJf7NY2SazgUpUF77oHcsOT4s\u002BVi1Zv17kM73MFCc6U60TqeqLtecgcwr/EGNApKlcqTrhDot3kr2wZrG\u002BFZyVA61VuvNVhVhAI/axjWJTm7MqRocy5ayyWbFffig5YoqZsxzQXA6yQGMUWfWbyFL/Ci6j0YhO01\u002BFGq61a3RBWpsx8ma6Ogxwl9Os8JMB\u002BsgZ46EbOtNibsX7SomCoYOzVCpmRK\u002BSDGo4cWrNIw6YpBPaN0hFcIq5VW/pDI7tmGdQK7h/kHekhn4cZ4RxOhcmPd6veWFUfujURAUKnxkxMGd1p077UxaOxSKRVKdaxQOjfxdGASc439G6bfP9RTk7AfCoKE/B05DLzNN0KiHogq4G2EGHpFwEaVrOFw1HKg\u002Bhgs1y/wBwzom8i3gDHFzVXVKTzqojRmOXq5fjAuzBuKEbx/Gh3mEC9pZ8Mgc/PTatRovwjzOIgqO7So5ssFkJoeC6IjSsZ94MgWGTYMyzdeo0heNhTD8i4jKbsjtOw9EsU82/Sz7JyfED60cfBlsqs3f5LtkyADxRsNAY5BrkTOIyQF3DGXT0g8z0nnPcmLRXGr185AySxCaFqJSW4yWUeZbaKCZzJ6Zh6MLKAZ94UEmT0ilqfZ7mx8OsDnBU6cfD4T/I5iNrZusu8bTllLU4ytqPcGxAmPeO41p1h8AC9wGagpw0lwyBMUWsCXRIWoKU9Sc48x/vOc9NIE9OnQCmU2ZizrLlC0ALotZ8W2InKfQ0KpOSonnKdJ\u002BZKXhh9EflEOOkZPRpGM8IFAK4b2RhYktEdd2eBCn3xn6OpSTF6TnVRtOk1hzIOxoGnPegicramS0PXWE9CUYyNUmYo2KJNMJ283ze8pZ2E8iOqQkWL4ReFebllZXhxR9eEGeHDbl5mQXZboiUHcgP/ynjJtzdgP0hX9QBDrSyZIiLmigScKNe7jmGmEIYGT3Hp5rXMgOCfUD0byg0oOxpFKG8XL\u002BkXeG4Na7bAGDJ9/sWCclnmvmYAfr/zfz/apAttaqRW1tqtEHNNcmYbfND5OP1syUHtK\u002B15xDkV/KoqqNTnGQdAgObgLGZMDK6xCJvjUAk4R98/LVwWF959XJr\u002BXpSg1Ey/9i2WoDHH6hUuRf\u002B12HHSSZ8ackW98SoEorKqvx2//dqkCHPjg\u002BKs0p6mXq7vt82qBha0xk6UMk6SaQkfINV4yb0AWAbqWEbKTDwdwbV6tjnEFRPzicoTw9OZLP0oW5h0i\u002Bhf95VCVE1ACOvdz7ViK5fXDGsoK0/of8eVJuPKKJgFlcMOsztxTvaq0EGxcahSzJlg2tQLOKmVDaKhX1LcKIXS5YatmbEfTEySz24NiNHwHVz4GB3WgyAxsFpT4PmLH3jXjjOM0Cyy8RIm3Rl9dtKEVp8rFtnAesSJc0JAwGBCTqIjqMLpQ39zgRapBzsIR3FUk8OUrCwvGEQH9PyJbXNH\u002BKAiK1wr3JzTN8\u002BCh\u002Bq21OlrwaZ5U0Y6Rk33lnSlMS7jZPrgoRZMtDQmJKG5GaZuya5CJ2URilLJ9GH0vEMZVRHXcTxBKd8CpDWWZuyWP/GOLXNVLeJ1C07J50W87avWDeu00fm7smrmpraQGJWNUZodmflAhhnsrqOluttmyqU2hDnqWSwvV5UTtOq\u002BjUgaxFbIgLKTSDzux2UGHrY4ILFgJyhs6iNQlSzYloLraINt8qkjvyt1bahSCVi24g2tgMYuKFMiwkCRGEZhB3tLzHJzplmnC/DQZY2G4IRkKWDSqMxC9Xwk3OJky0NE3aOqdJBHH3g\u002B8a5GF10cjWXxVBIDwkHGET3Gxk8Zb23sniZbpkl36Ym1S5xqBo1\u002BWW5W7gJZFoGo7PaOkmtZ65mwMXCaiGzNACzrhNAyHea1ruUMDB0ZOy00kV17apYYFTpuPGBXxJPxbFMVi3OaMN4Y0bHqf3aOGI/R7i9BsA4hij4AectuaECVgLYGRY9i4EIH8PaGbQyUrXWCdgpQu/DcDtXpONjzD1T2bjdMz7mDWW8PrUZH3VQMj\u002Bsjni9Jsd0u9PWXs/JWYVJ18nrfLkzcmDgtH6W6ARX136WMbsONZHKde3mhT\u002BXiSkGeyn7VvwiGhraFLTMgcDRXora6GgPZC4X2SrBkL5QCM\u002BBrmuWTq9hIMsgVFgSoGEUdCoJt0FaUFI\u002BloUyxFC47zYv2Sw/QyVzCks/7fe1CYM5z5UY9rx8F1RX3DzP//ErN\u002BlkUFjCZfm1NqhK9j1e7rTu5/tWh4VfvJfmt1otpsxATWJBy\u002BrT7RzyHakEYlWNZPjUGuToegH67LPo2LoU4qtljFJWchTZsqwtQZd5RJu1dts5uh3/kr44xAJthz9wGB3nXQG2HwY5V8rjgN06zvgA81Muonwamko98sVahM4JZAQvsPyyCdibQEZke0heP9a2nmaXbL7wZV1mmuoyYarlNnnz7cYsrYWnh7cvpSmwfc6CfF5c10AF77IKlJSS4ij7dRzmpjnZIh3llrRn07RUK3Noy/u4uFUq9beCpN15Fv/hWT0eRvHk9B8sGjegDVLHun9HL5HTSpOX\u002BrMqaXCW/M8xzzuh\u002BrTdXNWZYn3ofD3JGuj1dHr7tU4byRVwnlMiKkkwY\u002BCydDa3nZKUW2n1rLxuAcVu72MMjX5kZgTKOxKQLN8z4lusgCtnlMkYzVCYCydVBAlPtEb9pDiJleOSz6UGZucQ4JjazIrVbTvMUTqcs3CmPa6g1d81O0o8v/NW7Kefw4up1ptB9k6f6JepCChwWLWHE3Iy5bLWbgGayatWLgt6AOJ2kVnFKgmv9xqf\u002B0VEIa2SHk4H0Q8BFqVo1BIo4MwAu8QDrqBZWpZJFr1b5LN0FLidQAYck8fatxSbM6Ylc1AS1M61ch1rvbwnwPxuDDMnbDXOJ4TI7BxCfmbHJCCsOwd3F5CNrMYX4dNoMucAT99lKZstu/2qZPSxu2KtkY0t6pOr9M2hMUxtN9Uog47HOisArw3eRG64Pq3plAjNbiMnC0WsHWWWidyVItbX\u002BwwfR0VdKIZUxCpgOkF2TphHWGgHgGfun6XMYJlMqOJUioQD8IOh1GxSS1zdD\u002BQ2VNrlIvgJna1DLjK1t83rSY6gyRlofmbolVnZJFNWIVBp1T7M0kHw1wEW5QVcc5nTagBK0sGq5kPUBiQBkam8hfNLdQugSob8\u002BsbaS4ddn85q4BZYvdTkCJwttDZCFa3HMyOrUpj21DQGPskAneNY86e28XMvkAFcTPlhcvmMYI0AV1DfaJakCy0dEdRRKJJGFXeSC3Q6Fp24zNfIMiUEIVQZtVmi1mvxoX6SGNnkVKkXwseJmDq1drXSstXNSK5Br7s2681XkjubtYumv\u002BSwvfeNpgzYQJyd5gIfy9IEbJc6EtaTsEJpnOOrFsrfzMlcuzxHdYASP1NiQO2cg7ESdS1VRpcZt0VYJgDcRwr1ir2SSbRyZ53wqmrBQGMEvaPpS/TBDuCEjACtqLlbWLw\u002B5qmoFlgQbFp6W1J8GQ3PwX36Htbg/dJBbekaF9DCq\u002BuuG4QmoHflASbDNFm\u002B9s4L0PWVZQdvWjOCI6cfVf0HGXv0MIShMmxaLlpvEHFrTVKqpsBt5mTp9hnQY0gnFrnU6qZp0NuN12WOZQssWqgruaEl/djakk/NTU\u002BJg62L5Rot83SXx2u0iG8DdXu15Fl0mzkmJYDCKuSb4fJA35Yh13HsMwt1YOGG2VfW1BB4jOhXP\u002B7hzQtzaEAzwshZLaMzP601aXehPCIm23WOi2HIZ0VSmKyyTNFyaDLE4BBnkWCre37yfdXyHi38vhi3VuuzyvJmyWv2bNHEaumK0orl1sYHl/Ar0zCdGX4T3DDPLPW13cDpPqP6fpxZrMhSr2WbZm0Hrr8OeA\u002BnmG8p/brLYsm6xXvSqKgGea7NUgFIi8AFJzIxJRALqBjl0dngdXS\u002BjVfcdGpps63uQjcVsANvSQoZmbnQbeSUvIXTZYcoPD8d8rUhzUomnQLLe1nrAVNl2nZZYgy8B1xWJT2sspQdAT42Yk9NSv3R4a3tnitSWToBcJ2VhRoXh8WniRRYqky\u002BMsuFcFU74H84HEbwHmcxYSm5WOOXTHMjHy6yySnqVS9vfblEd6IEyMHL/e4BXsoFfseZmnTFh5jQDraQmMUy4yjLMRiKH/qxP5\u002BOR\u002Bjq6jspf5Ay3FsfkXYXkJlBhKo56w3bJYfM8dWkj2gsvM0cbjBoPc8jIwLNiUrG\u002BVw0unxR4v9xHAPIvHTePa4J9XaytWxmScwx7lbN8\u002Bnm9EyKqf9DuRYLEnv8jOfT6Wxk3kBoI8N6XSsb5kyr86zWJ3WsHcHix9c6vLXdiy5yiPEH9OO5DXfxdpEXB\u002BI1LR6tdeLiHiPDjSxRjqezhGIJUZUfjnyYgIJ1P4mglrV1pI2NA4HrEYY/s\u002BqHShGdtCXSAcy51Fc/I6728GzT0J3I\u002BdPx6Pd1kHR\u002BGEU1lRrnvk8I0aecy82TfXejC9HQIfYA\u002BkSLBSF7AsrhzKCA9KCXZA2sNMKheGa1OERDTGkM/5Xrx61csnYCpW/AiXaFakT3dQ\u002BpXlvT/Wq\u002BLEsbhs7t8yg8AK4zDdDFAL5Dx3lQV3nLszPu\u002BpQAPhCPQ5waeJUJ9HtS7brcAReY0ylycQ/fI4yNf/DU9dojiRD0uCpJ\u002B2p2iBo\u002BO\u002BrGy2ZF6AM62nKd\u002BGrJ4GY\u002Bo2Or8CV/zDHuHfyr290fxQDL7HH/j\u002Bt7cgBuYqTWgA\u002BhlSuMOinZkWLZUvbTOFcbH1HEVYJbXVploZbSASBPpk6HVqvHziC/v6mqnn7h4dA/8OlfjO447ByzXpdr4CrLN603uTvIBII/vGFmr5fhxRX6oN45gU7c\u002BvwK0ZuvSLBQooJuprXApDOcDFQyt8iocwDW0Ow9F9ULsb\u002BxEWgWsUtWjovf1WUZHa413urw1vYhDxXh5ICBXdFhq92FzTEd4MjM6QyPjniaC2bq62raEIlpSR8zSGO5hqQwJFyT2Ws\u002BLCS8paLoeaOaGGAIHGVmic0ZiJT9fNeN7WNALlwdLrf8i1XxEQg92nGaTtCbr3YiTiUDYjkOTrKcWh7UqRivK\u002BlGAH1MLKR\u002BZ6OsS6lVZMFvdEdcqCxRaxOob2of9BhJiXZ/O7RgFZlUUW8o3uZU3DTwoXpQKLaTNCkzcWapwWCdHks91B0bRE8okJSIoliS\u002BuZj/5VH\u002B8p0Z8o3cSdzOI6RYG0R3jrZuh2zSgXAXUFmkyddvnORz197fnK5cfjNWR0gt3/qqpYVPVug16KhKtViH7Xi6V2d9\u002BUeUv1SGxEQnp161KyJzk8qIGr8C8t5X9u\u002BFciS9kXg0iH60mvhC8tWKv97e5H2R7dvBTJbn9TBefXTONUWaFPC5PplrZjt24HMBn4OR8dlDRL8lKru7/Du2b4lyODfMBUlz\u002BGMRX3Z/yvD2r4lyDJ/yBWu1MbvCBI\u002Bq31LkNnGrObB6OkrO7y1fVuQuTYka52/OB1L\u002B7Ygo9U5lYP6Bu07g/xt2j\u002BQP6H9H5K6bAoIRibPAAAAAElFTkSuQmCC"
+  },
+  "footholds": {
+    "20": {
+      "id": 20,
+      "next": 21,
+      "prev": 19,
+      "piece": 0,
+      "x1": 63,
+      "x2": 63,
+      "y1": 481,
+      "y2": 166,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "27": {
+      "id": 27,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -363,
+      "x2": 293,
+      "y1": -259,
+      "y2": -277,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "26": {
+      "id": 26,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -411,
+      "x2": 333,
+      "y1": -517,
+      "y2": -287,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "12": {
+      "id": 12,
+      "next": 13,
+      "prev": 0,
+      "piece": 0,
+      "x1": 135,
+      "x2": 223,
+      "y1": 114,
+      "y2": 114,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "8": {
+      "id": 8,
+      "next": 18,
+      "prev": 7,
+      "piece": 0,
+      "x1": -152,
+      "x2": -36,
+      "y1": 166,
+      "y2": 166,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "3": {
+      "id": 3,
+      "next": 4,
+      "prev": 2,
+      "piece": 0,
+      "x1": -326,
+      "x2": -256,
+      "y1": -56,
+      "y2": 11,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "11": {
+      "id": 11,
+      "next": 0,
+      "prev": 10,
+      "piece": 0,
+      "x1": 665,
+      "x2": 665,
+      "y1": 113,
+      "y2": -853,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "1": {
+      "id": 1,
+      "next": 2,
+      "prev": 0,
+      "piece": 0,
+      "x1": -482,
+      "x2": -482,
+      "y1": -853,
+      "y2": -76,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "10": {
+      "id": 10,
+      "next": 11,
+      "prev": 9,
+      "piece": 0,
+      "x1": 335,
+      "x2": 665,
+      "y1": 156,
+      "y2": 113,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "6": {
+      "id": 6,
+      "next": 7,
+      "prev": 5,
+      "piece": 0,
+      "x1": -195,
+      "x2": -152,
+      "y1": 114,
+      "y2": 114,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "17": {
+      "id": 17,
+      "next": 19,
+      "prev": 8,
+      "piece": 0,
+      "x1": -36,
+      "x2": -36,
+      "y1": 166,
+      "y2": 481,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "22": {
+      "id": 22,
+      "next": 23,
+      "prev": 0,
+      "piece": 0,
+      "x1": -37,
+      "x2": -37,
+      "y1": -647,
+      "y2": -625,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "4": {
+      "id": 4,
+      "next": 5,
+      "prev": 3,
+      "piece": 0,
+      "x1": -256,
+      "x2": -195,
+      "y1": 11,
+      "y2": 60,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "21": {
+      "id": 21,
+      "next": 9,
+      "prev": 18,
+      "piece": 0,
+      "x1": 63,
+      "x2": 152,
+      "y1": 166,
+      "y2": 166,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "2": {
+      "id": 2,
+      "next": 3,
+      "prev": 1,
+      "piece": 0,
+      "x1": -482,
+      "x2": -326,
+      "y1": -76,
+      "y2": -56,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "14": {
+      "id": 14,
+      "next": 15,
+      "prev": 13,
+      "piece": 0,
+      "x1": 223,
+      "x2": 324,
+      "y1": 69,
+      "y2": 69,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "7": {
+      "id": 7,
+      "next": 8,
+      "prev": 6,
+      "piece": 0,
+      "x1": -152,
+      "x2": -152,
+      "y1": 114,
+      "y2": 166,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "13": {
+      "id": 13,
+      "next": 14,
+      "prev": 12,
+      "piece": 0,
+      "x1": 223,
+      "x2": 223,
+      "y1": 114,
+      "y2": 69,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "5": {
+      "id": 5,
+      "next": 6,
+      "prev": 4,
+      "piece": 0,
+      "x1": -195,
+      "x2": -195,
+      "y1": 60,
+      "y2": 114,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "19": {
+      "id": 19,
+      "next": 20,
+      "prev": 17,
+      "piece": 0,
+      "x1": -36,
+      "x2": 63,
+      "y1": 481,
+      "y2": 481,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "25": {
+      "id": 25,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -150,
+      "x2": 308,
+      "y1": -572,
+      "y2": -303,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "18": {
+      "id": 18,
+      "next": 21,
+      "prev": 8,
+      "piece": 0,
+      "x1": -36,
+      "x2": 63,
+      "y1": 166,
+      "y2": 166,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "24": {
+      "id": 24,
+      "next": 0,
+      "prev": 23,
+      "piece": 0,
+      "x1": 12,
+      "x2": 12,
+      "y1": -625,
+      "y2": -647,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "23": {
+      "id": 23,
+      "next": 24,
+      "prev": 22,
+      "piece": 0,
+      "x1": -37,
+      "x2": 12,
+      "y1": -625,
+      "y2": -625,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "9": {
+      "id": 9,
+      "next": 10,
+      "prev": 21,
+      "piece": 0,
+      "x1": 152,
+      "x2": 335,
+      "y1": 166,
+      "y2": 156,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "29": {
+      "id": 29,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -153,
+      "x2": 301,
+      "y1": 40,
+      "y2": -248,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "16": {
+      "id": 16,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -122,
+      "x2": 94,
+      "y1": 46,
+      "y2": 46,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "28": {
+      "id": 28,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -279,
+      "x2": 294,
+      "y1": -55,
+      "y2": -259,
+      "layerId": 1,
+      "groupId": 0
+    },
+    "15": {
+      "id": 15,
+      "next": 0,
+      "prev": 14,
+      "piece": 0,
+      "x1": 324,
+      "x2": 324,
+      "y1": 69,
+      "y2": -152,
+      "layerId": 1,
+      "groupId": 0
+    }
+  },
+  "vrBounds": {
+    "x": -800,
+    "y": -850,
+    "width": 1750,
+    "height": 1500,
+    "location": {
+      "x": -800,
+      "y": -850,
+      "isEmpty": false
+    },
+    "size": {
+      "width": 1750,
+      "height": 1500,
+      "isEmpty": false
+    },
+    "isEmpty": false,
+    "top": -850,
+    "right": 950,
+    "bottom": 650,
+    "left": -800
+  },
+  "returnMapName": {
+    "name": "Ellinia Station",
+    "streetName": "Victoria Road",
+    "id": 101000300
+  },
+  "ladderRopes": [],
+  "name": "To Orbis",
+  "streetName": "During the Ride",
+  "id": 200090010
+}

@@ -24,10 +24,12 @@
       <button id="btn-shop-open" class="maple-badge-btn btn-shop-btn">🛒 헤네시스 상점</button>
       <div id="auto-hunt-badge">⚡ AUTO HUNTING...</div>
       <button id="btn-armory-open" class="maple-badge-btn" style="background: linear-gradient(to bottom, #d97706, #b45309); border-color: #fef08a;">🗡️ 무기&표창 보급</button>
+      <button id="btn-coordi-open" class="maple-badge-btn" style="background: linear-gradient(to bottom, #db2777, #9d174d); border-color: #fbcfe8;">👗 코디 옷장 / 미러룸</button>
       <button id="btn-map-travel-open" class="maple-badge-btn">🗺️ 월드 이동 / 택시</button>
       <button id="btn-keyconfig-open" class="maple-badge-btn">⌨️ 단축키 설정</button>
       <button id="btn-job-select-open" class="maple-badge-btn">🛡️ 직업 선택/변경</button>
-      <button id="btn-boss-spawn" class="maple-badge-btn">👑 머쉬맘 소환 (B)</button>
+      <button id="btn-boss-spawn" class="maple-badge-btn">👑 보스 레이드 원정대 (B)</button>
+      <button id="btn-snail-race-open" class="maple-badge-btn" style="background: linear-gradient(to bottom, #10b981, #047857); border-color: #a7f3d0;">🐌 달팽이 경마장</button>
       <button id="btn-sound-toggle" class="maple-badge-btn">🎵 BGM 토글</button>
 
     <!-- Auto-Hunt Analytics Dashboard -->
@@ -206,7 +208,13 @@
     </div>
     <div class="maple-window-body">
       <div class="stat-item"><span>이름:</span> <strong id="stat-win-name">단풍모험가</strong></div>
-      <div class="stat-item"><span>직업:</span> <strong id="stat-win-job">초보자</strong></div>
+      <div class="stat-item">
+        <span>직업:</span>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <strong id="stat-win-job">초보자</strong>
+          <button id="btn-stat-job-change" class="btn-maple" style="font-size: 10px; padding: 1px 6px; cursor: pointer; border-radius: 4px;" title="직업 변경">직업 변경</button>
+        </div>
+      </div>
       <div class="stat-item"><span>레벨:</span> <strong id="stat-win-level">1</strong></div>
       <div class="stat-item"><span>인기도:</span> <strong id="stat-win-fame" style="color: #ea580c;">0</strong></div>
       <div class="stat-item"><span>HP:</span> <strong id="stat-win-hp">100/100</strong></div>
@@ -269,8 +277,9 @@
       <button class="btn-window-close">×</button>
     </div>
     <div class="maple-window-body">
-      <div style="font-size: 11px; margin-bottom: 8px; color: #b45309; font-weight: 700;">
-        남은 SP: <span id="skill-sp-count">3</span>
+      <div style="font-size: 11px; margin-bottom: 8px; color: #b45309; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+        <div>남은 SP: <span id="skill-sp-count">3</span></div>
+        <button id="btn-skills-job-change" class="btn-maple" style="font-size: 10px; padding: 1px 6px; cursor: pointer; border-radius: 4px;" title="직업 변경">🛡️ 직업 변경</button>
       </div>
       <div id="skill-list-container">
         <!-- Generated Dynamically -->
@@ -380,6 +389,45 @@
     </div>
   </div>
 
+  <!-- COORDI CLOSET & MIRROR ROOM WINDOW -->
+  <div id="win-coordi" class="maple-window" style="top: 65px; left: 120px; width: 520px; max-width: calc(100vw - 24px); z-index: 1055;">
+    <div class="maple-window-header" style="background: linear-gradient(to bottom, #db2777, #831843);">
+      <span class="window-title">👗 클래식 코디 옷장 & 미러룸 (Coordi Closet)</span>
+      <button class="btn-window-close">×</button>
+    </div>
+    <div class="maple-window-body" style="padding: 10px; max-height: calc(100vh - 140px); overflow-y: auto;">
+      <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+        <div style="background: radial-gradient(circle, #fef3c7, #fde68a); border: 2px solid #b45309; border-radius: 8px; padding: 6px; text-align: center; width: 120px;">
+          <canvas id="coordi-mirror-canvas" width="96" height="96" style="display: block; margin: 0 auto;"></canvas>
+          <div style="font-size: 10px; font-weight: 800; color: #78350f; margin-top: 2px;">✨ 실시간 미러룸</div>
+        </div>
+        <div style="flex: 1; min-width: 180px;">
+          <div style="font-size: 11px; color: #831843; font-weight: 800; margin-bottom: 4px;">
+            💡 전투 장비와 100% 분리된 코디 전용 슬롯! (스탯 영향 0%)
+          </div>
+          <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">
+            투명모자, 파란색 가운, 분홍빛 모험가 망토 등 코디 프리셋 3종을 자유롭게 전환하세요.
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button type="button" class="maple-badge-btn coordi-preset-btn" data-preset="0" style="font-size: 11px;">프리셋 1</button>
+            <button type="button" class="maple-badge-btn coordi-preset-btn" data-preset="1" style="font-size: 11px;">프리셋 2</button>
+            <button type="button" class="maple-badge-btn coordi-preset-btn" data-preset="2" style="font-size: 11px;">프리셋 3</button>
+          </div>
+        </div>
+      </div>
+      <div class="coordi-tab-bar" style="display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; justify-content: center;">
+        <button type="button" class="armory-tab-btn coordi-tab-btn active" data-slot="hat">🎩 모자</button>
+        <button type="button" class="armory-tab-btn coordi-tab-btn" data-slot="face">🍓 얼굴장식</button>
+        <button type="button" class="armory-tab-btn coordi-tab-btn" data-slot="clothes">👘 한벌옷</button>
+        <button type="button" class="armory-tab-btn coordi-tab-btn" data-slot="cape">🧣 망토</button>
+        <button type="button" class="armory-tab-btn coordi-tab-btn" data-slot="weaponSkin">🌹 무기 스킨</button>
+      </div>
+      <div id="coordi-grid-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <!-- Dynamically rendered coordi cards -->
+      </div>
+    </div>
+  </div>
+
 <!-- QUICK WORLD TRAVEL MODAL -->
   <div id="modal-map-travel" class="maple-dialog-modal">
     <div class="map-travel-box">
@@ -396,16 +444,44 @@
           <div class="map-target-title">헤네시스 마을</div>
           <div class="map-target-desc">장로 스탄, 자유시장 입구, 모범택시</div>
         </div>
+        <div class="btn-map-target" data-map="perion_boar">
+          <div class="map-target-title">페리온 와일드보어의 땅</div>
+          <div class="map-target-desc">와일드보어, 다크스텀프 핫플레이스</div>
+        </div>
+        <div class="btn-map-target" data-map="kerning_subway">
+          <div class="map-target-title">커닝시티 지하철 1호선</div>
+          <div class="map-target-desc">버블링, 주니어레이스 출몰 철로</div>
+        </div>
+        <div class="btn-map-target" data-map="kerning_pq">
+          <div class="map-target-title">커닝 파퀘 (킹슬라임 제단)</div>
+          <div class="map-target-desc">라케리스 & 거대 킹슬라임 보스전</div>
+        </div>
         <div class="btn-map-target" data-map="ant_tunnel">
           <div class="map-target-title">던전 개미굴 1</div>
           <div class="map-target-desc">좀비버섯, 뿔버섯 출몰 위험 동굴</div>
+        </div>
+        <div class="btn-map-target" data-map="sleepy_dungeon">
+          <div class="map-target-title">저주받은 신전 (주니어발록)</div>
+          <div class="map-target-desc">타우로마시스 & 공포의 주니어발록</div>
         </div>
         <div class="btn-map-target" data-map="ellinia">
           <div class="map-target-title">마법의 숲 엘리니아</div>
           <div class="map-target-desc">거대 나무 요정 마을 & 베티 박사</div>
         </div>
+        <div class="btn-map-target" data-map="ship_orbis">
+          <div class="map-target-title">오르비스행 비행선 갑판</div>
+          <div class="map-target-desc">Upon The Sky 항해 & 크림슨발록 난입</div>
+        </div>
+        <div class="btn-map-target" data-map="el_nath_deadmine">
+          <div class="map-target-title">죽은나무의 숲 4 (죽숲)</div>
+          <div class="map-target-desc">쿨리좀비 대량 서식 성지 & 만년설 폐광</div>
+        </div>
+        <div class="btn-map-target" data-map="ludi_clocktower">
+          <div class="map-target-title">시계탑 최하층 (시간의 길)</div>
+          <div class="map-target-desc">듀얼파이렛, 드레이크 출몰 시계탑 심층</div>
+        </div>
         <div class="btn-map-target" data-map="zakum_altar">
-          <div class="map-target-title">자쿰의 제단 (보스)</div>
+          <div class="map-target-title">자쿰의 제단 (원정대 보스)</div>
           <div class="map-target-desc">8개의 팔을 가진 고대 거신 자쿰 레이드</div>
         </div>
       </div>
@@ -562,6 +638,177 @@
     </div>
   </div>
 
+
+  <!-- SNAIL DERBY MINI-GAME MODAL -->
+  <div id="modal-snail-race" class="maple-dialog-modal" style="display: none;">
+    <div class="maple-dialog-box" style="width: 860px; max-width: 96vw; background: #fffbe8;">
+      <div class="maple-dialog-header" style="background: linear-gradient(to bottom, #10b981, #047857); border-bottom: 2px solid #065f46;">
+        <span class="dialog-title" style="color: #ffffff; text-shadow: 1px 1px 2px #064e3b; font-weight: 800;">🐌 리스항구배 공식 달팽이 경마 대회 [미니게임]</span>
+        <button id="btn-snail-race-close" class="btn-dialog-close btn-window-close" style="color: #fff;">✕</button>
+      </div>
+
+      <div class="maple-dialog-body" style="padding: 10px; font-size: 12px;">
+        <!-- Header Info Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed #d1c4a9;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-weight: 800; color: #047857; font-size: 13px;">🏆 최고의 달팽이를 선택하고 실시간으로 응원해 승리를 쟁취하세요!</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 11px; background: #0f172a; color: #38bdf8; padding: 4px 10px; border-radius: 12px; border: 1px solid #0284c7; font-family: monospace;">🔒 서약 해시: <span id="snail-provably-fair-hash">생성중...</span></span>
+            <span style="font-weight: 800; color: #f59e0b; background: #1e293b; padding: 4px 12px; border-radius: 12px; border: 1px solid #475569;">
+              내 보유 메소: <span id="snail-user-meso">0</span> 💰
+            </span>
+          </div>
+        </div>
+
+        <!-- Mini Progress Track Bar -->
+        <div id="snail-mini-track-container" style="position: relative; height: 18px; background: #cbd5e1; border-radius: 9px; margin-bottom: 6px; overflow: hidden; border: 1px solid #94a3b8;">
+          <div style="position: absolute; right: 4px; top: 1px; font-size: 10px; font-weight: bold; color: #334155;">🏁 FINISH</div>
+          <div id="snail-mini-pin-0" class="snail-mini-pin" style="position: absolute; left: 0%; top: 1px; font-size: 11px; transform: translateX(-50%); transition: left 0.1s linear;">🟢</div>
+          <div id="snail-mini-pin-1" class="snail-mini-pin" style="position: absolute; left: 0%; top: 1px; font-size: 11px; transform: translateX(-50%); transition: left 0.1s linear;">🔵</div>
+          <div id="snail-mini-pin-2" class="snail-mini-pin" style="position: absolute; left: 0%; top: 1px; font-size: 11px; transform: translateX(-50%); transition: left 0.1s linear;">🔴</div>
+          <div id="snail-mini-pin-3" class="snail-mini-pin" style="position: absolute; left: 0%; top: 1px; font-size: 11px; transform: translateX(-50%); transition: left 0.1s linear;">👑</div>
+        </div>
+
+        <!-- Main Race Canvas (800x260) -->
+        <div style="position: relative; width: 100%; border: 2px solid #78350f; border-radius: 6px; overflow: hidden; background: #38bdf8; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);">
+          <canvas id="snail-race-canvas" width="800" height="260" style="display: block; width: 100%; height: auto; image-rendering: pixelated;"></canvas>
+        </div>
+
+        <!-- Live Commentary Broadcast Bar -->
+        <div id="snail-race-commentary" style="margin-top: 6px; padding: 6px 12px; background: #1e293b; color: #fef08a; font-weight: 700; border-radius: 4px; font-size: 12px; border-left: 4px solid #f59e0b; min-height: 28px; display: flex; align-items: center;">
+          [안내] 달팽이를 선택하고 배팅 금액을 설정한 뒤 [레이스 시작]을 누르세요!
+        </div>
+
+        <!-- 1. Betting Control Panel (Displayed during BETTING phase) -->
+        <div id="snail-betting-panel" style="margin-top: 8px;">
+          <!-- 4 Racer Selection Cards -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px;">
+            <!-- Racer 1: Green Snail -->
+            <div class="snail-racer-card selected" data-racer-index="0" style="border: 2px solid #16a34a; background: #f0fdf4; border-radius: 6px; padding: 8px; cursor: pointer; text-align: center; position: relative;">
+              <div style="font-size: 10px; font-weight: 800; color: #16a34a; background: #dcfce7; border-radius: 4px; padding: 1px 4px; margin-bottom: 4px;">1번 레인 · 페이스메이커</div>
+              <div style="font-size: 24px; line-height: 1;">🐌</div>
+              <div style="font-weight: 800; font-size: 13px; color: #14532d; margin-top: 2px;">초록달팽이</div>
+              <div style="font-size: 11px; color: #15803d; font-weight: 700;">배당 2.0배</div>
+              <div style="font-size: 10px; color: #4b5563; margin-top: 4px; line-height: 1.2;">정속 주행 · 높은 안정성</div>
+            </div>
+
+            <!-- Racer 2: Blue Snail -->
+            <div class="snail-racer-card" data-racer-index="1" style="border: 2px solid #2563eb; background: #eff6ff; border-radius: 6px; padding: 8px; cursor: pointer; text-align: center; position: relative;">
+              <div style="font-size: 10px; font-weight: 800; color: #2563eb; background: #dbeafe; border-radius: 4px; padding: 1px 4px; margin-bottom: 4px;">2번 레인 · 스피드스타</div>
+              <div style="font-size: 24px; line-height: 1;">🐚</div>
+              <div style="font-weight: 800; font-size: 13px; color: #1e3a8a; margin-top: 2px;">파란달팽이</div>
+              <div style="font-size: 11px; color: #1d4ed8; font-weight: 700;">배당 2.8배</div>
+              <div style="font-size: 10px; color: #4b5563; margin-top: 4px; line-height: 1.2;">최고 속도 최상 · 가끔 낮잠</div>
+            </div>
+
+            <!-- Racer 3: Red Snail -->
+            <div class="snail-racer-card" data-racer-index="2" style="border: 2px solid #dc2626; background: #fef2f2; border-radius: 6px; padding: 8px; cursor: pointer; text-align: center; position: relative;">
+              <div style="font-size: 10px; font-weight: 800; color: #dc2626; background: #fee2e2; border-radius: 4px; padding: 1px 4px; margin-bottom: 4px;">3번 레인 · 역전마</div>
+              <div style="font-size: 24px; line-height: 1;">🏎️</div>
+              <div style="font-weight: 800; font-size: 13px; color: #7f1d1d; margin-top: 2px;">빨간달팽이</div>
+              <div style="font-size: 11px; color: #b91c1c; font-weight: 700;">배당 4.0배</div>
+              <div style="font-size: 10px; color: #4b5563; margin-top: 4px; line-height: 1.2;">결승선 600px 전 분노 스퍼트</div>
+            </div>
+
+            <!-- Racer 4: Mano King -->
+            <div class="snail-racer-card" data-racer-index="3" style="border: 2px solid #9333ea; background: #faf5ff; border-radius: 6px; padding: 8px; cursor: pointer; text-align: center; position: relative;">
+              <div style="font-size: 10px; font-weight: 800; color: #9333ea; background: #f3e8ff; border-radius: 4px; padding: 1px 4px; margin-bottom: 4px;">4번 레인 · 대박 로또</div>
+              <div style="font-size: 24px; line-height: 1;">👑</div>
+              <div style="font-weight: 800; font-size: 13px; color: #581c87; margin-top: 2px;">미니 마노 킹</div>
+              <div style="font-size: 11px; color: #7e22ce; font-weight: 700;">배당 8.5배</div>
+              <div style="font-size: 10px; color: #4b5563; margin-top: 4px; line-height: 1.2;">거구 · 응원 시 무지개 대폭주</div>
+            </div>
+          </div>
+
+          <!-- Meso Bet Amount Selector & ALL-IN Button -->
+          <div style="display: flex; gap: 8px; align-items: center; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; justify-content: space-between;">
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span style="font-weight: bold; color: #334155;">베팅 금액:</span>
+              <button class="btn-bet-add maple-badge-btn" data-add="10000" style="padding: 4px 8px; font-size: 11px;">+1만</button>
+              <button class="btn-bet-add maple-badge-btn" data-add="100000" style="padding: 4px 8px; font-size: 11px;">+10만</button>
+              <button class="btn-bet-add maple-badge-btn" data-add="1000000" style="padding: 4px 8px; font-size: 11px;">+100만</button>
+              <button id="btn-bet-clear" class="maple-badge-btn" style="padding: 4px 8px; font-size: 11px; background: #64748b;">초기화</button>
+              <!-- THE ALL-IN BUTTON -->
+              <button id="btn-snail-all-in" class="btn-all-in-glow" style="margin-left: 4px; padding: 5px 12px; font-size: 12px; font-weight: 900; background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; border: 2px solid #fef08a; border-radius: 6px; cursor: pointer; text-shadow: 1px 1px 2px #000;">
+                🔥 전재산 몰빵 (ALL-IN)
+              </button>
+            </div>
+
+            <div style="text-align: right;">
+              <div>배팅: <strong id="snail-current-bet" style="color: #dc2626; font-size: 14px;">10,000</strong> 메소</div>
+              <div style="font-size: 11px; color: #15803d; font-weight: bold;">적중 시 예상 상금: <span id="snail-expected-winnings">20,000</span> 메소</div>
+            </div>
+          </div>
+
+          <!-- Start Race Button -->
+          <div style="text-align: center; margin-top: 10px;">
+            <button id="btn-snail-race-start" style="padding: 10px 36px; font-size: 15px; font-weight: 900; background: linear-gradient(to bottom, #10b981, #059669); color: #ffffff; border: 2px solid #a7f3d0; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4); text-shadow: 1px 1px 2px #064e3b;">
+              🏁 레이스 시작하기 (출발!)
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Real-Time Interactive Action Deck (Displayed during RACING phase) -->
+        <div id="snail-action-deck" style="display: none; margin-top: 8px; background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 2px solid #38bdf8; justify-content: space-between; align-items: center; color: #fff;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-weight: 800; color: #38bdf8; font-size: 12px;">⚡ 실시간 개입:</span>
+            <!-- Q: Apple -->
+            <button id="btn-snail-item-apple" class="snail-action-btn" style="position: relative; padding: 6px 12px; background: #166534; border: 1px solid #4ade80; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">
+              🍎 [Q] 꿀사과 (가속)
+              <span id="snail-cd-apple" class="snail-cd-badge"></span>
+            </button>
+            <!-- W: Banana -->
+            <button id="btn-snail-item-banana" class="snail-action-btn" style="position: relative; padding: 6px 12px; background: #854d0e; border: 1px solid #facc15; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">
+              🍌 [W] 바나나 (스턴)
+              <span id="snail-cd-banana" class="snail-cd-badge"></span>
+            </button>
+            <!-- E: Shell -->
+            <button id="btn-snail-item-shell" class="snail-action-btn" style="position: relative; padding: 6px 12px; background: #991b1b; border: 1px solid #f87171; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">
+              🐌 [E] 껍질 슛 (방해)
+              <span id="snail-cd-shell" class="snail-cd-badge"></span>
+            </button>
+          </div>
+
+          <!-- Spacebar Cheer Gauge -->
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button id="btn-snail-item-cheer" style="padding: 6px 12px; background: linear-gradient(to bottom, #ec4899, #be185d); border: 1px solid #fbcfe8; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">
+              💨 [Space] 응원 연타!
+            </button>
+            <div style="width: 100px; height: 16px; background: #334155; border-radius: 8px; overflow: hidden; border: 1px solid #64748b; position: relative;">
+              <div id="snail-cheer-fill" style="width: 0%; height: 100%; background: linear-gradient(to right, #ec4899, #38bdf8); transition: width 0.08s;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Result & Payout Panel (Displayed during RESULT phase) -->
+        <div id="snail-result-panel" style="display: none; margin-top: 8px; background: #fff; border: 2px solid #78350f; border-radius: 6px; padding: 12px; flex-direction: column; align-items: center; text-align: center;">
+          <h3 id="snail-result-title" style="margin: 0 0 6px 0; font-size: 18px;"></h3>
+          <p id="snail-result-desc" style="margin: 0 0 8px 0; font-size: 13px; color: #334155;"></p>
+          <div id="snail-result-payout" style="margin-bottom: 10px; font-size: 14px; font-weight: bold;"></div>
+
+          <!-- Rank Summary Table -->
+          <table style="width: 280px; font-size: 11px; margin-bottom: 12px; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1;">
+                <th style="padding: 4px;">순위</th>
+                <th style="padding: 4px;">달팽이</th>
+                <th style="padding: 4px; text-align: right;">기록</th>
+              </tr>
+            </thead>
+            <tbody id="snail-result-ranks"></tbody>
+          </table>
+
+          <div id="snail-provably-fair-result" style="width: 100%; max-width: 440px; margin-bottom: 10px;"></div>
+
+          <button id="btn-snail-race-restart" style="padding: 8px 24px; font-size: 14px; font-weight: bold; background: linear-gradient(to bottom, #f59e0b, #d97706); color: #fff; border: 2px solid #fde68a; border-radius: 6px; cursor: pointer;">
+            🔄 다시 베팅하기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- PEER USER INTERACTION MODAL -->
   <div id="modal-user-interaction" class="maple-dialog-modal" style="display: none;">
     <div class="maple-dialog-box" style="width: 320px;">
@@ -576,6 +823,63 @@
           <button id="btn-interact-fame" class="btn-maple" style="padding: 8px; font-weight: 800; background: linear-gradient(to bottom, #fbbf24, #d97706); color: #fff;">🌟 인기도 +1 올려주기</button>
           <button id="btn-interact-whisper" class="btn-maple" style="padding: 8px; font-weight: 800;">💬 귓속말 보내기</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- BOSS SPAWN & HUNTER ENCYCLOPEDIA MODAL -->
+  <div id="modal-boss-spawn" class="maple-dialog" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; width: min(760px, 94vw); max-height: 86vh; background: #fffbe8; border: 3px solid #78350f; border-radius: 10px; box-shadow: 0 14px 35px rgba(0,0,0,0.72); overflow: hidden;">
+    <div class="maple-dialog-header" style="background: linear-gradient(to bottom, #b45309, #78350f); color: #fff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 800;">
+      <span>👑 메이플 월드 13대 보스 레이드 & 토벌 도감</span>
+      <button id="btn-boss-modal-close" class="btn-dialog-close" style="background: none; border: none; color: #fff; font-size: 16px; cursor: pointer;">✕</button>
+    </div>
+    <div style="padding: 12px 14px; max-height: calc(86vh - 48px); overflow-y: auto;">
+      <div id="boss-collection-summary" style="background: linear-gradient(90deg, #451a03, #78350f); color: #fef08a; padding: 9px 12px; border-radius: 7px; margin-bottom: 10px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+        <span>🏆 <strong>보스 헌터 컬렉션:</strong> 0 / 13종 토벌</span>
+        <span style="color: #bbf7d0;">영구 보너스: 공격력 +0 · 올스탯 +0 · 보스 대미지 +0% · 최대 HP +0</span>
+      </div>
+      <div id="boss-raid-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
+        <button class="btn-boss-select btn-maple" data-boss="mushmom" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/mushmom/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #b45309; font-size: 13px;">머쉬맘 (Lv.60)</strong>
+          <span style="font-size: 11px; color: #666;">HP 4,500 · 점프 지진</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="king_slime" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/king_slime/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #15803d; font-size: 13px;">킹슬라임 (Lv.40)</strong>
+          <span style="font-size: 11px; color: #666;">HP 8,000 · 커닝 파퀘 보스</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="mano" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/mano/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #16a34a; font-size: 13px;">마노 (Lv.20)</strong>
+          <span style="font-size: 11px; color: #666;">HP 2,500 · 무지개 달팽이 군주</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="stumpy" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/stumpy/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #84cc16; font-size: 13px;">스텀피 (Lv.35)</strong>
+          <span style="font-size: 11px; color: #666;">HP 6,000 · 고목 대지진 충격파</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="jr_balrog" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/jr_balrog/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #b91c1c; font-size: 13px;">주니어 발록 (Lv.80)</strong>
+          <span style="font-size: 11px; color: #666;">HP 50,000 · 신전의 악마</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="crimson_balrog" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/crimson_balrog/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #7f1d1d; font-size: 13px;">크림슨 발록 (Lv.100)</strong>
+          <span style="font-size: 11px; color: #666;">HP 100,000 · 비행선 습격 보스</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="papulatus" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/papulatus/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #6366f1; font-size: 13px;">파풀라투스 (Lv.125)</strong>
+          <span style="font-size: 11px; color: #666;">HP 160,000 · 차원의 균열 지배자</span>
+        </button>
+        <button class="btn-boss-select btn-maple" data-boss="zakum" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;">
+          <img src="assets/monsters/zakum/stand_0.png" style="height: 48px; object-fit: contain; margin-bottom: 4px;">
+          <strong style="color: #eab308; font-size: 13px;">자쿰 (Lv.140)</strong>
+          <span style="font-size: 11px; color: #666;">HP 220,000 · 8팔+본체 고대신</span>
+        </button>
       </div>
     </div>
   </div>
@@ -603,9 +907,19 @@
           <div class="job-desc">원거리 정확도와 크리티컬 특화</div>
         </div>
         <div class="btn-job-choice" data-job="도적">
-          <div class="job-icon">🗡️</div>
+          <div class="job-icon">⭐</div>
           <div class="job-name">도적 (Thief)</div>
-          <div class="job-desc">기동성과 플래시 점프의 날렵한 암살자</div>
+          <div class="job-desc">표창 투척과 단검 암살을 겸비한 그림자 모험가</div>
+        </div>
+        <div class="btn-job-choice" data-job="어쌔신">
+          <div class="job-icon">🦅</div>
+          <div class="job-name">어쌔신 (표창도적)</div>
+          <div class="job-desc">아대와 표창의 원거리 암살자 · 럭키세븐 진화 & 분신</div>
+        </div>
+        <div class="btn-job-choice" data-job="시프">
+          <div class="job-icon">🗡️</div>
+          <div class="job-name">시프 (단검도적)</div>
+          <div class="job-desc">단검 근접 암살자 · 더블스탭 & 6연타 새비지블로우</div>
         </div>
       </div>
     </div>
@@ -627,6 +941,7 @@
   <script src="js/entities.js"></script>
   <script src="js/autohunt.js"></script>
   <script src="js/network.js"></script>
+  <script src="js/snail_race.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/game.js"></script>
 </body>

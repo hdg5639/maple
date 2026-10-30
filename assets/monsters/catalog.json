@@ -380,5 +380,355 @@
       "summonType": 1,
       "revivesMonsterId": []
     }
+  },
+  "pig": {
+    "mobId": 1210100,
+    "name": "Pig",
+    "source": "https://maplestory.io/api/GMS/62/mob/1210100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 3,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {}
+  },
+  "wild_boar": {
+    "mobId": 2230102,
+    "name": "Wild Boar",
+    "source": "https://maplestory.io/api/GMS/62/mob/2230102",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 3,
+      "hit1": 1,
+      "die1": 2
+    },
+    "classicStats": {}
+  },
+  "octopus": {
+    "mobId": 1120100,
+    "name": "Octopus",
+    "source": "https://maplestory.io/api/GMS/62/mob/1120100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 5,
+      "move": 5,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {}
+  },
+  "bubbling": {
+    "mobId": 1210103,
+    "name": "Bubbling",
+    "source": "https://maplestory.io/api/GMS/62/mob/1210103",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 7,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {}
+  },
+  "jr_wraith": {
+    "mobId": 3230101,
+    "name": "Jr. Wraith",
+    "source": "https://maplestory.io/api/GMS/62/mob/3230101",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 5,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "coolie_zombie": {
+    "mobId": 5130107,
+    "name": "Coolie Zombie",
+    "source": "https://maplestory.io/api/GMS/62/mob/5130107",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 3,
+      "hit1": 1,
+      "die1": 11
+    },
+    "classicStats": {}
+  },
+  "drake": {
+    "mobId": 5130100,
+    "name": "Drake",
+    "source": "https://maplestory.io/api/GMS/62/mob/5130100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 4,
+      "hit1": 1,
+      "die1": 8
+    },
+    "classicStats": {}
+  },
+  "king_slime": {
+    "mobId": 9500168,
+    "name": "King Slime",
+    "source": "https://maplestory.io/api/GMS/62/mob/9500168",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 2,
+      "move": 7,
+      "hit1": 1,
+      "die1": 8
+    },
+    "classicStats": {}
+  },
+  "jr_balrog": {
+    "mobId": 8130100,
+    "name": "Jr. Balrog",
+    "source": "https://maplestory.io/api/GMS/62/mob/8130100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 2,
+      "move": 5,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {}
+  },
+  "crimson_balrog": {
+    "mobId": 8150000,
+    "name": "Crimson Balrog",
+    "source": "https://maplestory.io/api/GMS/62/mob/8150000",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 4,
+      "move": 4,
+      "hit1": 1,
+      "die1": 10
+    },
+    "classicStats": {}
+  },
+  "axe_stump": {
+    "mobId": 1130100,
+    "name": "Axe Stump",
+    "source": "https://maplestory.io/api/GMS/62/mob/1130100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 4,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {}
+  },
+  "dark_axe_stump": {
+    "mobId": 2130100,
+    "name": "Dark Axe Stump",
+    "source": "https://maplestory.io/api/GMS/62/mob/2130100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 4,
+      "hit1": 1,
+      "die1": 4
+    },
+    "classicStats": {}
+  },
+  "fire_boar": {
+    "mobId": 3210100,
+    "name": "Fire Boar",
+    "source": "https://maplestory.io/api/GMS/62/mob/3210100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 3,
+      "hit1": 1,
+      "die1": 2
+    },
+    "classicStats": {}
+  },
+  "curse_eye": {
+    "mobId": 3230100,
+    "name": "Curse Eye",
+    "source": "https://maplestory.io/api/GMS/62/mob/3230100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 4,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {}
+  },
+  "jr_necki": {
+    "mobId": 2130103,
+    "name": "Jr. Necki",
+    "source": "https://maplestory.io/api/GMS/62/mob/2130103",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 3,
+      "move": 3,
+      "hit1": 1,
+      "die1": 3
+    },
+    "classicStats": {}
+  },
+  "tauromacis": {
+    "mobId": 7130100,
+    "name": "Tauromacis",
+    "source": "https://maplestory.io/api/GMS/62/mob/7130100",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "death_teddy": {
+    "mobId": 7130010,
+    "name": "Death Teddy",
+    "source": "https://maplestory.io/api/GMS/62/mob/7130010",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 5
+    },
+    "classicStats": {}
+  },
+  "mano": {
+    "mobId": 2220000,
+    "name": "Mano",
+    "source": "https://maplestory.io/api/GMS/62/mob/2220000",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "stumpy": {
+    "mobId": 3220000,
+    "name": "Stumpy",
+    "source": "https://maplestory.io/api/GMS/62/mob/3220000",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "faust": {
+    "mobId": 5220002,
+    "name": "Faust",
+    "source": "https://maplestory.io/api/GMS/62/mob/5220002",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "dyle": {
+    "mobId": 6220000,
+    "name": "Dyle",
+    "source": "https://maplestory.io/api/GMS/62/mob/6220000",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "zombie_mushmom": {
+    "mobId": 6300005,
+    "name": "Zombie Mushmom",
+    "source": "https://maplestory.io/api/GMS/62/mob/6300005",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 1,
+      "move": 6,
+      "hit1": 1,
+      "die1": 5
+    },
+    "classicStats": {}
+  },
+  "manon": {
+    "mobId": 8180000,
+    "name": "Manon",
+    "source": "https://maplestory.io/api/GMS/62/mob/8180000",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "papulatus": {
+    "mobId": 8500001,
+    "name": "Papulatus",
+    "source": "https://maplestory.io/api/GMS/62/mob/8500001",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
+  },
+  "horntail": {
+    "mobId": 8810002,
+    "name": "Horntail",
+    "source": "https://maplestory.io/api/GMS/62/mob/8810002",
+    "region": "GMS",
+    "version": "62",
+    "frames": {
+      "stand": 6,
+      "move": 6,
+      "hit1": 1,
+      "die1": 6
+    },
+    "classicStats": {}
   }
 }

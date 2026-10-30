@@ -1,0 +1,2932 @@
+{
+  "backgroundMusic": "Bgm10/TimelessB",
+  "isReturnMap": false,
+  "returnMap": 220000000,
+  "portals": [
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": 953,
+      "y": 52,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": 953,
+        "y": 52,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 953,
+          "y": 52,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 52,
+        "right": 954,
+        "bottom": 53,
+        "left": 953
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": -1317,
+      "y": -146,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": -1317,
+        "y": -146,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -1317,
+          "y": -146,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -146,
+        "right": -1316,
+        "bottom": -145,
+        "left": -1317
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": -190,
+      "y": 410,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": -190,
+        "y": 410,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -190,
+          "y": 410,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 410,
+        "right": -189,
+        "bottom": 411,
+        "left": -190
+      }
+    },
+    {
+      "portalName": "sp",
+      "toName": "",
+      "type": 0,
+      "toMap": 999999999,
+      "x": -309,
+      "y": 1122,
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": true,
+      "bounds": {
+        "x": -309,
+        "y": 1122,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -309,
+          "y": 1122,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1122,
+        "right": -308,
+        "bottom": 1123,
+        "left": -309
+      }
+    },
+    {
+      "portalName": "in00",
+      "toName": "out00",
+      "type": 10,
+      "toMap": 220070201,
+      "x": 908,
+      "y": 778,
+      "linkToMap": "/map/220070201",
+      "toMapName": {
+        "name": "Lost Time",
+        "streetName": "Hidden Street",
+        "id": 220070201
+      },
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": false,
+      "bounds": {
+        "x": 908,
+        "y": 778,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 908,
+          "y": 778,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 778,
+        "right": 909,
+        "bottom": 779,
+        "left": 908
+      }
+    },
+    {
+      "portalName": "top00",
+      "toName": "under00",
+      "type": 2,
+      "toMap": 220070100,
+      "x": 673,
+      "y": -113,
+      "linkToMap": "/map/220070100",
+      "toMapName": {
+        "name": "Forgotten Path of Time\u003C2\u003E",
+        "streetName": "Ludibrium",
+        "id": 220070100
+      },
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": false,
+      "bounds": {
+        "x": 673,
+        "y": -113,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 673,
+          "y": -113,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -113,
+        "right": 674,
+        "bottom": -112,
+        "left": 673
+      }
+    },
+    {
+      "portalName": "under00",
+      "toName": "top00",
+      "type": 2,
+      "toMap": 220070300,
+      "x": -980,
+      "y": 1403,
+      "linkToMap": "/map/220070300",
+      "toMapName": {
+        "name": "Forgotten Path of Time\u003C4\u003E",
+        "streetName": "Ludibrium",
+        "id": 220070300
+      },
+      "isStarForcePortal": false,
+      "index": 0,
+      "unknownExit": false,
+      "bounds": {
+        "x": -980,
+        "y": 1403,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -980,
+          "y": 1403,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1403,
+        "right": -979,
+        "bottom": 1404,
+        "left": -980
+      }
+    }
+  ],
+  "npcs": [],
+  "mobs": [
+    {
+      "x": 435,
+      "y": -110,
+      "walkAreaX1": -372,
+      "walkAreaX2": 867,
+      "id": 7130010,
+      "footholdId": 74,
+      "foothold": {
+        "id": 74,
+        "next": 75,
+        "prev": 73,
+        "piece": 0,
+        "x1": 296,
+        "x2": 471,
+        "y1": -110,
+        "y2": -110,
+        "layerId": 3,
+        "groupId": 114
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 0,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 435,
+        "y": -110,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 435,
+          "y": -110,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -110,
+        "right": 436,
+        "bottom": -109,
+        "left": 435
+      },
+      "flip": false
+    },
+    {
+      "x": -207,
+      "y": -110,
+      "walkAreaX1": -372,
+      "walkAreaX2": 867,
+      "id": 7130010,
+      "footholdId": 71,
+      "foothold": {
+        "id": 71,
+        "next": 72,
+        "prev": 69,
+        "piece": 0,
+        "x1": -228,
+        "x2": -54,
+        "y1": -110,
+        "y2": -110,
+        "layerId": 3,
+        "groupId": 114
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 1,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -207,
+        "y": -110,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -207,
+          "y": -110,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -110,
+        "right": -206,
+        "bottom": -109,
+        "left": -207
+      },
+      "flip": false
+    },
+    {
+      "x": -631,
+      "y": 479,
+      "walkAreaX1": -1198,
+      "walkAreaX2": -453,
+      "id": 7130010,
+      "footholdId": 54,
+      "foothold": {
+        "id": 54,
+        "next": 55,
+        "prev": 53,
+        "piece": 0,
+        "x1": -705,
+        "x2": -531,
+        "y1": 479,
+        "y2": 479,
+        "layerId": 3,
+        "groupId": 70
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 10,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -631,
+        "y": 479,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -631,
+          "y": 479,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 479,
+        "right": -630,
+        "bottom": 480,
+        "left": -631
+      },
+      "flip": false
+    },
+    {
+      "x": -44,
+      "y": 406,
+      "walkAreaX1": -73,
+      "walkAreaX2": -5,
+      "id": 7130010,
+      "footholdId": 34,
+      "foothold": {
+        "id": 34,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": -93,
+        "x2": 15,
+        "y1": 406,
+        "y2": 406,
+        "layerId": 3,
+        "groupId": 80
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 11,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -44,
+        "y": 406,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -44,
+          "y": 406,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 406,
+        "right": -43,
+        "bottom": 407,
+        "left": -44
+      },
+      "flip": false
+    },
+    {
+      "x": 255,
+      "y": 333,
+      "walkAreaX1": 65,
+      "walkAreaX2": 888,
+      "id": 7130010,
+      "footholdId": 81,
+      "foothold": {
+        "id": 81,
+        "next": 82,
+        "prev": 79,
+        "piece": 0,
+        "x1": 209,
+        "x2": 349,
+        "y1": 333,
+        "y2": 333,
+        "layerId": 3,
+        "groupId": 78
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 12,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 255,
+        "y": 333,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 255,
+          "y": 333,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 333,
+        "right": 256,
+        "bottom": 334,
+        "left": 255
+      },
+      "flip": false
+    },
+    {
+      "x": 659,
+      "y": 333,
+      "walkAreaX1": 65,
+      "walkAreaX2": 888,
+      "id": 7130010,
+      "footholdId": 84,
+      "foothold": {
+        "id": 84,
+        "next": 85,
+        "prev": 83,
+        "piece": 0,
+        "x1": 582,
+        "x2": 761,
+        "y1": 333,
+        "y2": 333,
+        "layerId": 3,
+        "groupId": 78
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 13,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 659,
+        "y": 333,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 659,
+          "y": 333,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 333,
+        "right": 660,
+        "bottom": 334,
+        "left": 659
+      },
+      "flip": false
+    },
+    {
+      "x": 808,
+      "y": 779,
+      "walkAreaX1": 777,
+      "walkAreaX2": 1025,
+      "id": 7130010,
+      "footholdId": 27,
+      "foothold": {
+        "id": 27,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": 757,
+        "x2": 1045,
+        "y1": 779,
+        "y2": 779,
+        "layerId": 3,
+        "groupId": 52
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 14,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 808,
+        "y": 779,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 808,
+          "y": 779,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 779,
+        "right": 809,
+        "bottom": 780,
+        "left": 808
+      },
+      "flip": false
+    },
+    {
+      "x": 501,
+      "y": 738,
+      "walkAreaX1": 75,
+      "walkAreaX2": 682,
+      "id": 7130010,
+      "footholdId": 90,
+      "foothold": {
+        "id": 90,
+        "next": 91,
+        "prev": 89,
+        "piece": 0,
+        "x1": 393,
+        "x2": 568,
+        "y1": 738,
+        "y2": 738,
+        "layerId": 3,
+        "groupId": 47
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 15,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 501,
+        "y": 738,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 501,
+          "y": 738,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 738,
+        "right": 502,
+        "bottom": 739,
+        "left": 501
+      },
+      "flip": false
+    },
+    {
+      "x": -370,
+      "y": 779,
+      "walkAreaX1": -473,
+      "walkAreaX2": -225,
+      "id": 7130010,
+      "footholdId": 12,
+      "foothold": {
+        "id": 12,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": -493,
+        "x2": -205,
+        "y1": 779,
+        "y2": 779,
+        "layerId": 3,
+        "groupId": 51
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 16,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -370,
+        "y": 779,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -370,
+          "y": 779,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 779,
+        "right": -369,
+        "bottom": 780,
+        "left": -370
+      },
+      "flip": false
+    },
+    {
+      "x": 185,
+      "y": 738,
+      "walkAreaX1": 75,
+      "walkAreaX2": 682,
+      "id": 7130010,
+      "footholdId": 87,
+      "foothold": {
+        "id": 87,
+        "next": 89,
+        "prev": 0,
+        "piece": 0,
+        "x1": 101,
+        "x2": 219,
+        "y1": 738,
+        "y2": 738,
+        "layerId": 3,
+        "groupId": 47
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 17,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 185,
+        "y": 738,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 185,
+          "y": 738,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 738,
+        "right": 186,
+        "bottom": 739,
+        "left": 185
+      },
+      "flip": false
+    },
+    {
+      "x": -977,
+      "y": 950,
+      "walkAreaX1": -1233,
+      "walkAreaX2": -519,
+      "id": 7130010,
+      "footholdId": 43,
+      "foothold": {
+        "id": 43,
+        "next": 44,
+        "prev": 41,
+        "piece": 0,
+        "x1": -1089,
+        "x2": -915,
+        "y1": 950,
+        "y2": 950,
+        "layerId": 3,
+        "groupId": 31
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 18,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -977,
+        "y": 950,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -977,
+          "y": 950,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 950,
+        "right": -976,
+        "bottom": 951,
+        "left": -977
+      },
+      "flip": false
+    },
+    {
+      "x": -603,
+      "y": 950,
+      "walkAreaX1": -1233,
+      "walkAreaX2": -519,
+      "id": 7130010,
+      "footholdId": 46,
+      "foothold": {
+        "id": 46,
+        "next": 47,
+        "prev": 45,
+        "piece": 0,
+        "x1": -752,
+        "x2": -574,
+        "y1": 950,
+        "y2": 950,
+        "layerId": 3,
+        "groupId": 31
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 19,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -603,
+        "y": 950,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -603,
+          "y": 950,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 950,
+        "right": -602,
+        "bottom": 951,
+        "left": -603
+      },
+      "flip": false
+    },
+    {
+      "x": -559,
+      "y": -311,
+      "walkAreaX1": -1239,
+      "walkAreaX2": -356,
+      "id": 7130010,
+      "footholdId": 67,
+      "foothold": {
+        "id": 67,
+        "next": 68,
+        "prev": 66,
+        "piece": 0,
+        "x1": -689,
+        "x2": -510,
+        "y1": -311,
+        "y2": -311,
+        "layerId": 3,
+        "groupId": 122
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 2,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -559,
+        "y": -311,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -559,
+          "y": -311,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -311,
+        "right": -558,
+        "bottom": -310,
+        "left": -559
+      },
+      "flip": false
+    },
+    {
+      "x": 240,
+      "y": 1012,
+      "walkAreaX1": 205,
+      "walkAreaX2": 977,
+      "id": 7130010,
+      "footholdId": 26,
+      "foothold": {
+        "id": 26,
+        "next": 25,
+        "prev": 93,
+        "piece": 0,
+        "x1": 185,
+        "x2": 334,
+        "y1": 1012,
+        "y2": 1012,
+        "layerId": 3,
+        "groupId": 22
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 20,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 240,
+        "y": 1012,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 240,
+          "y": 1012,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1012,
+        "right": 241,
+        "bottom": 1013,
+        "left": 240
+      },
+      "flip": false
+    },
+    {
+      "x": 720,
+      "y": 1012,
+      "walkAreaX1": 205,
+      "walkAreaX2": 977,
+      "id": 7130010,
+      "footholdId": 23,
+      "foothold": {
+        "id": 23,
+        "next": 21,
+        "prev": 24,
+        "piece": 0,
+        "x1": 612,
+        "x2": 784,
+        "y1": 1012,
+        "y2": 1012,
+        "layerId": 3,
+        "groupId": 22
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 21,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 720,
+        "y": 1012,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 720,
+          "y": 1012,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1012,
+        "right": 721,
+        "bottom": 1013,
+        "left": 720
+      },
+      "flip": false
+    },
+    {
+      "x": 900,
+      "y": 1140,
+      "walkAreaX1": 205,
+      "walkAreaX2": 977,
+      "id": 7130010,
+      "footholdId": 20,
+      "foothold": {
+        "id": 20,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": 803,
+        "x2": 997,
+        "y1": 1140,
+        "y2": 1140,
+        "layerId": 3,
+        "groupId": 22
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 22,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 900,
+        "y": 1140,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 900,
+          "y": 1140,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1140,
+        "right": 901,
+        "bottom": 1141,
+        "left": 900
+      },
+      "flip": false
+    },
+    {
+      "x": 47,
+      "y": 1179,
+      "walkAreaX1": -104,
+      "walkAreaX2": 144,
+      "id": 7130010,
+      "footholdId": 18,
+      "foothold": {
+        "id": 18,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": -124,
+        "x2": 164,
+        "y1": 1179,
+        "y2": 1179,
+        "layerId": 3,
+        "groupId": 19
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 23,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 47,
+        "y": 1179,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 47,
+          "y": 1179,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1179,
+        "right": 48,
+        "bottom": 1180,
+        "left": 47
+      },
+      "flip": false
+    },
+    {
+      "x": -1315,
+      "y": 1404,
+      "walkAreaX1": -1413,
+      "walkAreaX2": 1054,
+      "id": 7130010,
+      "footholdId": 3,
+      "foothold": {
+        "id": 3,
+        "next": 2,
+        "prev": 4,
+        "piece": 0,
+        "x1": -1413,
+        "x2": -997,
+        "y1": 1404,
+        "y2": 1404,
+        "layerId": 3,
+        "groupId": 0
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 24,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -1315,
+        "y": 1404,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -1315,
+          "y": 1404,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1404,
+        "right": -1314,
+        "bottom": 1405,
+        "left": -1315
+      },
+      "flip": false
+    },
+    {
+      "x": -827,
+      "y": 1404,
+      "walkAreaX1": -1413,
+      "walkAreaX2": 1054,
+      "id": 7130010,
+      "footholdId": 2,
+      "foothold": {
+        "id": 2,
+        "next": 1,
+        "prev": 3,
+        "piece": 0,
+        "x1": -997,
+        "x2": -581,
+        "y1": 1404,
+        "y2": 1404,
+        "layerId": 3,
+        "groupId": 0
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 25,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -827,
+        "y": 1404,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -827,
+          "y": 1404,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1404,
+        "right": -826,
+        "bottom": 1405,
+        "left": -827
+      },
+      "flip": false
+    },
+    {
+      "x": -341,
+      "y": 1404,
+      "walkAreaX1": -1413,
+      "walkAreaX2": 1054,
+      "id": 7130010,
+      "footholdId": 1,
+      "foothold": {
+        "id": 1,
+        "next": 5,
+        "prev": 2,
+        "piece": 0,
+        "x1": -581,
+        "x2": -134,
+        "y1": 1404,
+        "y2": 1404,
+        "layerId": 3,
+        "groupId": 0
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 26,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -341,
+        "y": 1404,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -341,
+          "y": 1404,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1404,
+        "right": -340,
+        "bottom": 1405,
+        "left": -341
+      },
+      "flip": false
+    },
+    {
+      "x": 349,
+      "y": 1404,
+      "walkAreaX1": -1413,
+      "walkAreaX2": 1054,
+      "id": 7130010,
+      "footholdId": 6,
+      "foothold": {
+        "id": 6,
+        "next": 7,
+        "prev": 5,
+        "piece": 0,
+        "x1": 282,
+        "x2": 698,
+        "y1": 1404,
+        "y2": 1404,
+        "layerId": 3,
+        "groupId": 0
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 27,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 349,
+        "y": 1404,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 349,
+          "y": 1404,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1404,
+        "right": 350,
+        "bottom": 1405,
+        "left": 349
+      },
+      "flip": false
+    },
+    {
+      "x": 872,
+      "y": 1404,
+      "walkAreaX1": -1413,
+      "walkAreaX2": 1054,
+      "id": 7130010,
+      "footholdId": 7,
+      "foothold": {
+        "id": 7,
+        "next": 8,
+        "prev": 6,
+        "piece": 0,
+        "x1": 698,
+        "x2": 1050,
+        "y1": 1404,
+        "y2": 1404,
+        "layerId": 3,
+        "groupId": 0
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 28,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 872,
+        "y": 1404,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 872,
+          "y": 1404,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 1404,
+        "right": 873,
+        "bottom": 1405,
+        "left": 872
+      },
+      "flip": false
+    },
+    {
+      "x": -360,
+      "y": -375,
+      "walkAreaX1": -427,
+      "walkAreaX2": -273,
+      "id": 7130010,
+      "footholdId": 14,
+      "foothold": {
+        "id": 14,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": -447,
+        "x2": -253,
+        "y1": -375,
+        "y2": -375,
+        "layerId": 3,
+        "groupId": 131
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 3,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -360,
+        "y": -375,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -360,
+          "y": -375,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -375,
+        "right": -359,
+        "bottom": -374,
+        "left": -360
+      },
+      "flip": false
+    },
+    {
+      "x": -965,
+      "y": -311,
+      "walkAreaX1": -1239,
+      "walkAreaX2": -356,
+      "id": 7130010,
+      "footholdId": 64,
+      "foothold": {
+        "id": 64,
+        "next": 65,
+        "prev": 62,
+        "piece": 0,
+        "x1": -1095,
+        "x2": -921,
+        "y1": -311,
+        "y2": -311,
+        "layerId": 3,
+        "groupId": 122
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 4,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -965,
+        "y": -311,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -965,
+          "y": -311,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -311,
+        "right": -964,
+        "bottom": -310,
+        "left": -965
+      },
+      "flip": false
+    },
+    {
+      "x": -1042,
+      "y": 116,
+      "walkAreaX1": -1193,
+      "walkAreaX2": -481,
+      "id": 7130010,
+      "footholdId": 58,
+      "foothold": {
+        "id": 58,
+        "next": 59,
+        "prev": 56,
+        "piece": 0,
+        "x1": -1049,
+        "x2": -875,
+        "y1": 116,
+        "y2": 116,
+        "layerId": 3,
+        "groupId": 96
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 5,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -1042,
+        "y": 116,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -1042,
+          "y": 116,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 116,
+        "right": -1041,
+        "bottom": 117,
+        "left": -1042
+      },
+      "flip": false
+    },
+    {
+      "x": -657,
+      "y": 116,
+      "walkAreaX1": -1193,
+      "walkAreaX2": -481,
+      "id": 7130010,
+      "footholdId": 60,
+      "foothold": {
+        "id": 60,
+        "next": 61,
+        "prev": 59,
+        "piece": 0,
+        "x1": -700,
+        "x2": -525,
+        "y1": 116,
+        "y2": 116,
+        "layerId": 3,
+        "groupId": 96
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 6,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -657,
+        "y": 116,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -657,
+          "y": 116,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 116,
+        "right": -656,
+        "bottom": 117,
+        "left": -657
+      },
+      "flip": false
+    },
+    {
+      "x": 73,
+      "y": -238,
+      "walkAreaX1": 42,
+      "walkAreaX2": 110,
+      "id": 7130010,
+      "footholdId": 35,
+      "foothold": {
+        "id": 35,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": 22,
+        "x2": 130,
+        "y1": -238,
+        "y2": -238,
+        "layerId": 3,
+        "groupId": 124
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 7,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": 73,
+        "y": -238,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": 73,
+          "y": -238,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": -238,
+        "right": 74,
+        "bottom": -237,
+        "left": 73
+      },
+      "flip": false
+    },
+    {
+      "x": -334,
+      "y": 96,
+      "walkAreaX1": -427,
+      "walkAreaX2": -273,
+      "id": 7130010,
+      "footholdId": 13,
+      "foothold": {
+        "id": 13,
+        "next": 0,
+        "prev": 0,
+        "piece": 0,
+        "x1": -447,
+        "x2": -253,
+        "y1": 96,
+        "y2": 96,
+        "layerId": 3,
+        "groupId": 101
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 8,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -334,
+        "y": 96,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -334,
+          "y": 96,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 96,
+        "right": -333,
+        "bottom": 97,
+        "left": -334
+      },
+      "flip": false
+    },
+    {
+      "x": -987,
+      "y": 479,
+      "walkAreaX1": -1198,
+      "walkAreaX2": -453,
+      "id": 7130010,
+      "footholdId": 52,
+      "foothold": {
+        "id": 52,
+        "next": 53,
+        "prev": 50,
+        "piece": 0,
+        "x1": -1054,
+        "x2": -880,
+        "y1": 479,
+        "y2": 479,
+        "layerId": 3,
+        "groupId": 70
+      },
+      "hidden": false,
+      "type": 1,
+      "link": "/mob/7130010",
+      "index": 9,
+      "name": "Death Teddy",
+      "position": {},
+      "bounds": {
+        "x": -987,
+        "y": 479,
+        "width": 1,
+        "height": 1,
+        "location": {
+          "x": -987,
+          "y": 479,
+          "isEmpty": false
+        },
+        "size": {
+          "width": 1,
+          "height": 1,
+          "isEmpty": false
+        },
+        "isEmpty": false,
+        "top": 479,
+        "right": -986,
+        "bottom": 480,
+        "left": -987
+      },
+      "flip": false
+    }
+  ],
+  "mobRate": 0.6999999284744263,
+  "isTown": false,
+  "isSwim": false,
+  "mapMark": "Ludibrium",
+  "miniMap": {
+    "centerX": 1485,
+    "centerY": 940,
+    "height": 2515,
+    "width": 2610,
+    "magnification": 4,
+    "canvas": "iVBORw0KGgoAAAANSUhEUgAAAKMAAACdCAYAAADYHMhdAAAACXBIWXMAAA7EAAAOxAGVKw4bAABCSElEQVR4nO19i3Xjug4t31qvAZ4SeErglMCUIJcglyCXIJVglWCWYJYQljAs4aKE97ABypa/sR07k1knvHdOYsfWhwJBfDY2/q/5GT/jm4wfYfwZ32b8COPP\u002BDbjRxh/xrcZP8L4M77N\u002BBHGn/Ftxo8w/oxvM36E8Wd8m/EjjD/j24wfYfwZ32b8COOLhw2dMyUZKrmc\u002Bau1zvJHuj6N40A5Z/MfHj/C\u002BOJBaSgutD3/Glkgs/M\u002B\u002BLZtc0zR\u002BtCWyEJYqFjfGPpvy\u002BKPML562NCz7qPCSrBh4XMEiUwZrx2VQsb5AGEscfhvS6L5EcaXD0qrUpwrLHONc67JhffrFFeGpXL6zH9eCuv4EcYvGL5pbU5pyHFkAbQt24hb/lkyCyWxmjQ/Q8aPML54sLloc4xprwhpSOOQfNtv2JZsbQgmDasV/mD\u002B4\u002BNHGD8YvmmawrYdOxfpke\u002BncUWGXWZ4zkYETmROt2rrLbvZ0fwIoowfYTwalg07/o/n7TOGrl\u002BHtmljzOx1LP59\u002BKDsoZgqcC40ng9mcHwWVWKnhs8WHO/ZxfzHx48wzobl0bIADsvFor7jhrfFG/H49LGddy6EXoTdNR7H5N/gR7NLk1fmZ/wI48FgiRnHmFzTrSEkEpL2TWcgOex9sIZ7aKvGQNC7JBqafr3JiOmkYUG26UscFuZnyPgRxtlggWFhy4mqfxsz7DoX\u002BC\u002BQGxbQzLqMbbySlo8dv\u002BRx8fYvYowQ8Hl452f8COPHg7Uh23UdC5IKonOtKeZz3q9u\u002B\u002BS9s\u002BK\u002B/AwZTxVGXvC8rbm2pPTX2UAutIGdigJ1tRcztRV5u2YbrxBLY3RsVrL6dObzsWqbUhJRZOvA87mQkflPi\u002BZThdE1oWXTyNVt6K/agkqK2VgRMnZv2dvwjeVdWuw5ODbWkG2DWYfgTbJpvRrp18MnsxrmIQgjju19y7JOuArzHw7zPE8YMadt21LkWR0Wf5Ug6hCNCG2X2VsxuewVXwjJZzKWcJPYqQ3rf0sNq9HHhKcu1Kbre96xvW2bkGPOBBv1PzyeJ4w8q\u002BPb21to\u002B/5vk0Teom1J41mh8taGQM5mWwyU1wiMg8HWajf8C4sjIf74kDaLmnnhX0ZWxF1v/uPj08Lom6aDPc524sACmdOw\u002ButCFezkQhiazNJx8kd2pC2rRc/KjFq2GlkCg4VfYyCURM/YVgHlGVf/\u002BRDPp4XRsc\u002BSc7H7d\u002Bjvs3lK5lso5Ju2z3EczEzA2t62hSUPxiSxVizOIvijr/nlD8rheePTwshPETs0dmZv/mo0FGsnFkRkSVjoBr4ltTaq6itVPD0vu8j\u002BhyMxGB9eeD7UHYX3EvMzZHxaGBEKob98Ql3T885LPqdxZHNj6XzoWdwyMF7jSOPW\u002BzDkbJqNlRBh46qAJnO3w4F0YGBB5ANDlv/ToZzj8QwHxkuoQnfnv2\u002BL5lHiKsECZB\u002B5AwY2xziy0DShW7esuigWtkMsS2AKLqXRaDWLRmfuPZdvex9XywFAHip/5XS9bHxaGJumddnT7zwO7MCU12rI0G7Y27CskmDsP/lJUgJMLOVsXWjWLJTBIFxqXVrFcSFGMdGWnJcoYUYYKOe7ryGtFhHa0bdtz1p4RA4c/8zPeIbNyCPGoeLyPhoV03f/CF23YSXlWaO4bPyaNdbSvEITAx3BThk71oPn/ZR88LwImpLGVSrEguTbTDs7\u002BbEBhWptMCEYWv140dP4vDCOw8d2EysCNsxUqwH5QvnuB\u002BCd9zkOMQTf8YYa\u002BIjvYzTIgjxNIHlbXvP9sOk4LICF9S3bdoOUkMpCS7mMfB8tfreP\u002BmqYCza0c0wDpfhX29rPHs\u002BwGa8KAxSNaddbE6Nsb2R9w7ZSa1kokf\u002B64zzWe\u002BObAA\u002B02JSe77nzJo0tlK8ztHyyJidShPdk3MHDxpZKxJfPgnnHtbMM95Jm5NWE1J/8Y/nnCVI1m\u002BJ/HtP4ctROCKGHd4BqzYDgHBvuvNeuERJiiwv1mTc/hFBssCzCCWJM4gLYZwSdrXgvyKfEAncXUhc8OysxEV\u002B4lw9N8Ik8vFUoxT3nZSNmhFlhS/IeCKDQ9l1WAfyLw2HPHZ8SRt\u002BuG55mh5AIXjdd10u5yGzrtgSTn0xoDCo/TAunAGKU5Wm2/Fg88g83hTmsGp3YQh3Q\u002Brn0KdOnbcd1Z7bsrrAp4fUkwgCxQEzRFm/Wx5\u002BP2Sz5Vu7RjNPY1dKwCSp58OkPFfHEwvrfrRZ8WBgFPm\u002BKBx6VPc\u002Bt88Eiq8UT6ja/f/9erVYR9Zl9b3wsSwN/0VlssRl1IPyg2Rk1BSVJIaOQndghIbr4gEWgOxbkMZvOgjEkY/cM5pmDDhXeOQm3Bz8eGLw0nW/akoZRbBjvERrzpmB5OqkmlCKu/\u002BB4WBiBxAc3AiYUaBaB5mH7aVpBuLCFF8hK5RG0o0mCTbWmdWx2mQhryVipi8ti0\u002BfiO0PpojDCakss0Z4UTPjMEN1qNMuYTPCutIf3ePRBVui8BsYHtaKOksmGAOD4Nqonzes68JylggR/Sv/d4OP9wmjrYG2GDIXWh0ASxT0xcVw5X5pOXvi2e1sOK299z0uepSmxLsxqflmkxJzB3FvADxzLmHNbfiZLyDdp\u002BGOPb5VcTzbsYZhQ38EpWOrd7WGWs5ElyLbnrTfi3/FnNZ5/8B0yFzWjnf355Dv6idBrmjvGiEwPTJSUlstHg\u002BgvGw5BNN/IBGR2NosQAb30\u002Bu4SRh9atqtsyEiSpSjaAeZb2/UbwBlBogXxgO0lDxAAA9aUuJ8GDxVxZKs7qwhkYGeG9IHrTxco0O9JAGx95BM0hmzHD9OayG84FmSH0pRS3tUMs9NR1RepxyUVWPnbTrj3Qi5DsTiu/unSZw8F7OA87ugz8\u002BPrGs2s/laygHlOeP4SHjQ71pY3i65YO/CCfrjY6wXDhm69SSjsttjkcmcyW\u002Bc5L40G6F8ilHcJo1QQRVTJAbViWdfRmnCt42An1dQhCmijPANsy7ATP2FhfTiSZsdv/4I9\u002Bll/deec2jOf/fC4s9c\u002BGUHfepi8xWyAz\u002BWFBIcrQfhiTpistmn7jQFIPqehpPGP5qtt0/RsxgKphN1PFicMBygV3pLeKY5sc8WHMZzXxn3CCHuHlzhJdRIUgnUZFiNswmr7Y900oT5g//pdB8LuniDsL1kvuH1AzoRsjKcJ02ddCyNZKjPUDAAtI6IPARR5YODBPJs/NIivIdgRz9asRMMkAYZEEkgx34eHo9rRUa03yAiU0u9xU\u002BO\u002BbdqHrkjIcNBSzSqAUIuw/LFvYxWxM8CfFZw\u002BRvlEFvDKsHp6uvYJmdMdhuNSkF2Asu6WU9qP5trVE\u002B9ul8QmNgJ8VKuwJJbOaEIXvHcNVCMyqnwBoDzJf1IQ1R9wbJd3prWD6XiHY8PRwAzK/B4Y/IoEiPNB5kiC\u002BbAvQ9vK3ymPCBMUdiAkHOfA0PExPcxNwogwDhuGa9JAM0lgWJ6ghp1JVo4\u002BJwlIG40a8kcWkM3XmBgfH7M19h31KrviFkNL0p3zYHhnOp6q8dxBXWgA7EaRlmM5YYEZL6fwECywZu2qqg6m2pPQjE53jXoOChZF2K6T6L2XpcBqxxXyLcyOZYQ79ZUDRj97\u002BDxXNrM2yW21wdmUJbbPQbyLkByx3PGEbWkcEQlQ/JLDsgptSkgmsSCCBHVc/ap5frBnwFF4jjACVZJXy0Wz3mxzKlmq0fn9kc\u002BMXTJOSlA0uWoP/v\u002Bggvhnxtq4beBNBRj00amzwbbbxmqeGVGlXX78WmFVAWUd0W2eJBkU0sAXayHCUvhaBTIWmgieRMiwpCNKVOdaFN9lWe9CeKGVfX7AVkR1hSSg\u002BP9ZVyB7p40ZgIFxVB1JGJDBG5/XrCHf8F3W6KNEVpwL/F4UTcjvN223wXtxubyJp\u002BiebZqgFb1DMlWED3WVbyzym1T9CCMZhh2u8Y95h/yEGy9MECwQvHgdrjiJZw2ZbGWRXBOt6s5jWa\u002B32y0CiwlMEDcMfmBL1PmhisHsDBlxsQ7Yxng5kyMvzvjutJLl5GtOX08CxRpwdF0TeJtF3smitKKwACJrhk0QySkpv\u002BBfWPiQoz/cIXAnWelfxDjiD/LOPDrXsU6QoP6H93SXzYiM1bhazNNvKnm0m\u002BhvESfjhR2oJpCLh02r2yQVNSv4UQ/Hn8\u002B65VDT9evEeySCp6Ht\u002BjEmIA7vvYSRaplMfX1yAPA9mXE8EXBcdSl/IN4IRt0lLzhvg137LfG\u002BRoOkzYwk27BSfDRl5DdjubAwd5eNjC888K7Aeyu3cRTdJYzj6pTUknTb\u002BW7gUDEb5j4JHjIWbDIaPj/6/O51TrB6p4ijdWyDK\u002BXx/cQEH372Iynv\u002B35rZIOcnB\u002Bavld4vbyZFwy4AC3f\u002Bc6AxqLmy2w79f7Hqx6jIv7zwA4u7EWShASABL/Z3nmTdNuVcV9o50HCzK8ebDMsEVruWrMOcBCL0VIB9g/4DvAQDwSlLiiZZfEGpcaAfTAWROvbHmk6vvfHU4APjsjXUTQGNCFEgGaWUNqrBsjuc9aE7mTPigMoroK8uLzIJoNjsoFzwoIGVAYxLLYx41UWjs9DyL7Fxnw4SJdgXEaT4M11vPWOy8WSLjsi81LbyWGRB8N71Rt8wma9XqdhtfzKEgG2KBP/a/Sy6tXhf87lF14E0AKAoHizM12RQvK6MZQrpSVzuxA5WtgbJQ9d17Ypspf\u002BwYk/j/Smy3hEthvaQuaP0QRjh2FFlyVOL9HQ8yoFEMtCe\u002B3o2rZ1mntPkvtmm4fnNUuvlvJ14GxWzMjTn8zvBfLS5wRzkReV4Dz/DgBqqUBO5XeBMdiI0NGHZgji\u002BXAzQnDZAZqwGmzLJuTFHeaqMPL3\u002B4Y9U6XzcJpaGcfdI52SlLT7/XAuanKkQxil/CEQ6XqzXiMC0LT9Og6Ls3bWXBAx2LNMGflO74O0y0gJXBKonPKh6zTmprSzdS\u002BbPE0nEDn\u002BmmWLhvgn/AJkLeQ7GqXV9CWCyVCyQJDB\u002Bjn8bNZQLmnwFjs1ju\u002Bdkzp1/o7NKAiqn0XNDtB7/KWi10IXroWv0bvdtRQhX1D7GNBzSI4Q6pK38l3H3zH1WrJeBzlq\u002BcE2cAvhnOBaQL3Lxz7grOQ5D65B3NEEKwJdECrqsslTGO1k4VwVRifxYAhUjT/AlKqSqP\u002B1VQh5HtpG7DKbq4uAz7ITpVEr8\u002BVxM7k6FBCE4OVB8pMEOgH7xpmPSl7OSuTXS0gIWzNvTAGbVvBWucKcgr53P42fHaK6S15/et/Un\u002BHgO4fj0mfDlc\u002B6s59FlEAxprOpPrmW/fVrZ7j9Nqz4EOURQloPz3AC6lCeVM1O\u002BVo5jCwuWYReY8vwwVXQeu979r0RTDMjFoEm4lhE7W/hP8h0ohhuy8DsfjuDXkEiveuNVgLw5YZ64/HL7f2Tge1suRojC2TQopPzbCSoq2eVZ1Ic2MqMaeP978TWhR/Zxqi8Ok1vWSj3fsTJur70njH7aTv\u002Bff76miVLZ947OhYC7KyNdkink3MefTcZOr2WO4eP\u002B6xG702bsmlRwsuT/AYnC/OH8rkkOsxKpk611/moxFVhjBDqCVAIu31U8292b9B/wY\u002BDrIACPO04onAEmG41NWqA3PyhkdjwSuN1ewrbEGBdJHEIxV0UIXvaywluH\u002BgQfw3Jc\u002B4slx749L4114XiWFiPBbP\u002B/UQI7dHnjg6J4W7Jx38wJngf8Aj1IVtJ3gCOj8QNm\u002BouS18HuEUyp\u002BkCOPmqMGYp95iEn8wxzRFvEC2qATTAjK0ZVg8gUhb7wQQylGdr/uy4atjDyaH5GqsRa0Ee1ZUUWfXHtHvouOVd8L9hW6jhfRM2GdDoNQf\u002BpfcMxBp9EMebD02X7V/31iOn7nD9sDn5HhZ0NG98jgYZrEnwG9q9v/tJVT4FVEE1T0x1EU\u002Ba8cLzeNib7oxbt\u002Bx3YpseHMoBYD\u002BSZzf0vbCRlcbyeN\u002BULx61bnQSHi0idbo9p7pNm90fRUvC3pEHb\u002BsGIWAWMdPFjuYZEa/xFXCls8Op4nkoDuwBWeb1hzhimewQksrLaGb3AKXmhN0XprgAVg9usOhOgpfZssEYECPid5pGBVPms8g8379NXxqS6QEuz6CUvUjpr9inBNBecS7u0MDSGuobhiIPxjwdWHhxvRFrBZ7INljQGztyu4fBOp8dwrLvgLox/h31EkCMCMgTW5G1XUB8kEQiH6dbvuceVBjvFn5YHnwP6GVoRlt2KCO\u002BhzV7bz3/CoaqXXgJC5Hd7XcEAoC6l7y1lCBTFho6GKO8KkcUmFn2y4v1hQ3vWIHsRYTl/CU\u002BrBlL3cqwkiRR5LSmBVnIknda428ZImfsfPXwpinyhlxyYity2op3K9navLutYGyLeAqWW5Z0o9KCZ1UR2OG/zIs7Dk/dOnh369Up0MUkiHeqxiTfXD6DvGJB/MXbcFNfCmSz780GVhwiQvgme9DgJ7LFWV7TtteYDEJTlxswPagZtbZkfucSrUL5tNSdmFIdne\u002BuFGVM\u002BXVKcckLapNKvthag3I6ys1LGKECMoz8x/OkJwgoVWG0kr64aM/5pm2RHRKS\u002B0/dxkPD7iqHqkkSnCL3axTyku27F1LZ4qsMzOO1CNkWGoLvu8LqMYt6upw8ug\u002B1wzo8tG2PIOoypX/7xvRsOwTFPWlql7XJgv4\u002BlgS1lDwgr8i0hOCapsvjuKzBtosD0YYpuFd3uBp9tWUCZPi2A4fP8lggK1cjz2eWfr\u002BfuYHjLNKtQ5wNCbyoHIm4GM1WqB98kx\u002B2M8XozIY4kpNw\u002B0cHuQ8owQo5DqtdpH0VzQLFEevNdjOUYQRhzMEVVm/6viWrWDhTvg6UgeJEWDrQeiyKY7Neb4WKrOu3BZ52kU4Ew3HlF5tHbE9RXHdm08o1a8ELgrop065tB4DQ6H4\u002B7y3tmw5g/RZcjeY5i/chq2gw5Q2WFu6hcawTE6J4yH\u002BaId3OJ0TKo3SoGXd/jAO2zP4jkPIjddNqUMwaKAuW0gefj4TxkW2aVUWrYQchWPqS8Eg\u002BwDcSaXE9afFZha1fKUEkFqc3bGqb7ftmNbwt5/63xOCWi1/HM8GyXXI0TyN7ergNiH6pLFbml\u002BUlw0p8PYxvd8HTUMouK\u002BGCa8KLEEL9IUbhzm0axroYhQHQS7zX9\u002Bs1Um1d17gVAM7pIPVyNgd5bcBv4BnZCPILBT1/YlQ\u002Bb6J8s8ZCXhfKlLd4z1r0AL1iZnNgvQMLGStKH0pKf7Qs9Xh4Hk3wdkCNKt3FnV/MlOWuz1zjngca/0M5uEsYW96\u002BAHVLw76mAU9Ao5wsoWxrjelzeUA\u002Bx4a3OHsBHfySuB3bvusQTNiZNaSmEkztMjOGpitgX3t5HNPbsqmC5Hbfdd1ymfMk0Oduoeu7NQiKhrdfv645NvcMNhDCox61XBU/x816vUYWCmh3Nh/eDsPip6MJhnUQHHInUYTgExxxl535fRSClHkDtp1dtIuwp9uFEcBdo6WBc9TzkkeQhjqErWcJgmDUPqFmCwn0cvQTCWKr/CW7UhOsILBJ\u002BKZx4pmBJ9FQo8Vl8h3FNFEBSjPJtdx2fAHICCEV/lY/g9JQ2HGSOSplxXMJ/IHbYaqLLu1iZoaYnU\u002BF2JhzYbQIdXkNEFk9//lpRJH0sFotwe3N/9aF56zWt31qVK/38YWKh1BIbD8gIOINyx6kXR5SOHkFVTuWiuqw9tCO5TkOTxFGoRQWbF8\u002BtOUA9huXk7HOjmOzPkjMkzmgGTn3E6MUzRHHBISNbb1rarHh/rNQlhDaKSe3T81\u002BfHzxcfmZp5QEXqWT7g27LKmyaqMgfJetvWJfnMsg0HKxWLqmBSF9piseOFie\u002BBaCGMXsQdOT6l0\u002Bm37E5Sz4Hth6aGAq3ULTAU2M8iKLHp82nzoJhzn3UjX3xXGzMCrrmBG8G5sUPb/alUn0ZHpkfQTZP6wUwYP31xISvs3Nq\u002B0s2lApUc6MJDg9\u002BzCDhKbrjKaQ8M8VeMSEqMAq6tvm\u002BuXSpYcunGzj6mIfahdaz6s2qxbM4KQc2Olr8/NKOT4Ne0C/7XRHFGNMZoV/Mm9W2DIEF6lBQGpQqDcRq96yWG7fpgvglZGkQTjIPRX/Fxxicrz7KbhT4zjT2YFabyr/5i1DNeHlBSlovWNEygNjv/UeweFeCG7AtIW235AAUUFhgl/2D976xh04PneOR9OBzxgyb2qieFT0O7bbQEYtdYHj6mZo/M3CWCDxmcba1UCQZUCJVIygsLtOkCvAPfGhGBFwM5MmK3cFw\u002BnsW7uGMwfjFuGcLRINzysigs5vHZKO8E27riy8d0cFTs\u002BPzU/4GMEW2jbdWuqKQV4vQA2hOH9cmD7jvDxrVPMEET5Ay9eU7tP6t2tGsRMFibJbvYgJ8vuATgnxiUTu0bunTosAKvVpwyb7dGcCB1PgE/G003HmMNhhQMzENyfuU78B89aqxsqeMbBVr1gxbvlUvWWnLY\u002BLFXw1wLfpGn3K9XFtTr5UY4a\u002B35RxtOBQ5PtZmhvHvUFvEURWw9iduzQMbMYhXirAHSTO4Rl0wr8j2koztxVy9VfkqSXNxBsoNFZJ4pGtyySIVvEpNQb30P3w3DUoydHiOYSAYuQtusUCKI8L4uV0INsG/E6rxTcJNeAvim3WMIKWbSDaMcC1vecIDwElQG/Bz2NF\u002B35jVBEqgU30SXPN7Z\u002BnCGL5bPji1qHFMw3LyZinlsUQxKb7LRBw3G1\u002BjKPQwTYsoGeUeCzaceF1adt1M6RP3duJscJyv068nBxwXWLRhzVRnKIBT53H0HZdURMkAO8hrLckae\u002Bbhf9xTu/zbAh7Ctm/fGCHNl2/zlMuXkjggaCNCzYm380N/HjnRhoWw9xzgiDyjzIsF5/yqs\u002BZL4EXFPgxAkrBPUiH2RhI7h2xLP7wr2c6bCjvwE8fmlYSVxr0vyt\u002Bei/XjreB95TQ\u002BDHGVOLZDk8vE8S6FT1vVaNFg9UyzYOMj/CUI5CFqKA0E7KlEuCAEA5FdiyWTSYbb8mfK6Vg07U\u002B\u002BBE\u002B9Ne0aNO8rZeyUTHkNQwqvb3AzbQRIDYJXO5pQpn39Not0QuFUWJkkSe/7X\u002BDqcrYdNPDeNZ4euilXa9Bc5mBwyyrf8xMyNkUib7b/EZcNbP0tS5KeScL1BqQ\u002B8LOxzKFUNLwIahAKQWHZdmGd3bqvKKSnts3/TgduO7DuvERkX5TYr0tRPbRZgwYFNaVYAfLFALf7NNpkekB7/7ubRpKY3h7e0P7MdewcT\u002BuXkJAdP7kr7EZsWlaNrDKcV4dsbKpRpo9tBLQ1QudqPPEs85P1m6NwsU\u002BvK7hbYF52yAOV9Cf8ImDN/sDUAkUcBNsg4jRWFjuUCpnapyttqkX7DXu0Vo4OJ\u002BiykAbOrZiKlpEGPdRnD0IU\u002B\u002BN4y5hFBZX5zv8rqnBxPYx6EyB\u002BSuVxRTsBi/rZTIv7nzacHAAnVsDrJ1nzSUFxobafZ5PMIAmpwVLMWvrOad59fDhxbC9iXnjQ1lhOkSw2zoY\u002BOkRu/OWMcYy8FnASteCeZawztCDh4xksawg44pmyLzpKZts6HFOzdrZC8yU8nBYVLbpzobadwkjgplavWq09IMnmUo\u002B8JYAmkgpDZ/JJlwatUPH048rIOsU3wA98kBeq0DuphLoDTy8wFqGdYiJXvvXSOKLBepD3CYoVHNaEog4EX0Fh8kdGuPRwdc38IS1nQcFsmbrga/Jguhw\u002BnulUDEf3APm3gqP2xU2YjhIPH/av4T3lFZasrAojBHpz4\u002Bu9xFvWrMR4rUfCgZyrdjpXkWSTq/MMtTYIQtigUCySTdQBWQ0bC8WqwyupZLnJxT568W4G1fH/qnXNCBQLFNWCEAodjDWwoejDhP4eKC/LBI06kQJvw4I6SvHTaHps1bzqLvP4hmgM0EUahGUWQUjZY61lll4f\u002BRvslZQTAdUux6v8gbJxmDdBMkUxh\u002BAwieeoMrbA5pvOS9f31IadkoqkIit1ne2x0ftDfnxeE5XVb4z9rH7PK5w0j/Pa3LvONwpIZCAeP3Gk4GgjaUx66wdunyrHN2gw0K2fngQrY18y2ZjtoCbpNoPwvALr89dc/qmViJChZlcfxYWnPrT6/uVQufsZ5UOKFeoZj6MRjqAHYoW2FOxfjq\u002Bvq7gqOmnzJP1VsOUQuMjZFRYAPIZy9bAhs3pgZRMO6XVcgFJdkACSYD/urP7HGFE0iIOFyvqnjheYjOeG0JzbAEVVZ0gO49wtXhl1ij648PwhTBIhVbpxeBWx3GzNr0wzxD4aqxJaN/KQoHmYdCZGS0T\u002Bk/SjxzCt85/hExtl3fbkGak7mjqp3kQG1pmrMemmUHgXxl/CZtL03XSAeHKeF6/aaKXCwhKbe6NXd16YPnhG5hzXW2\u002BRFpwztswC\u002BMv2wglnbDTj8VUWAOZjxwQSS\u002BiqboNpeZpvbOaVpzIaZJul3AfJsGAO9AcSMkel7lTVDvM5slJzWlp1Kl0CnHGHQgoRVWdedMYNWFmlyksyiTEq8jWLXliT1olH4\u002B7hRHpHvGWdcV7QZwIJo\u002BeLyRH4xU2I82Md1bvSEmDvbjxXeNJm6sbkTrQyPGLAVgRb\u002BvkYxdPZ69HuPjYjmtCqI2KbJy46cBthpSgm\u002BTKO6Gdg9KVigfQOMTKs6WO1K8JJcyHdBsX3vH7KOEaNmOJzmicc5dFN33q0nDoc5jMyGtyawVWaivIm7SpU0XI14PyftAh8J2kNUf8OJR1f5xxwuBJ0fmYEG/klf8lge\u002Bnq97V26\u002Byn7zp8FJrnktpcF\u002BA4LvQWuCieIsdIsqkQ7MVMb0SukBBNAtjGEo52WxpFLLQuOmpKVrsr\u002B9Xt3yufXI54CC3a2INA3guGCCUehyIVnAwZTLm5QrBKAJrAYEMQRsLTrVCTte2\u002BmREK\u002BA\u002BWGVJPJpfL0q83kf7s9s0ife0H1I5C2hZDSCT1KdIuPrzXNgVQPrEwPeMewxDq\u002BoFQSM6iP2TDCxsWiAtKFSvJO21ocLSFIQ/O/IwrPxm\u002B/ukD5y4zti9KKYM1UkIY7Ipao0SD0ukotSIy0FNdW/cBgFLXDJinp6KNAsNbGJCflnG/6EXrNlp2P0\u002BnyGQMRXJRuHapei/EJz3qQKgRg7KMo/Lm\u002Bz859mM9Xrrg2SDtReHn\u002B3WbgSYfbn4NCvZ1RjXMwYi91N5LNIIFtzDymeSY3WasfbjatE0TR9Ar2Wa7uAQ/OfVaiUF/2kcR96tW96EV0rXoI8zezTCki7TyXabd7IJaTuEa4AMNRTPGvpStpMhgHKYsrMZa61PeaUg6hWY\u002BRnAnvdrHGnqd1PjP2y78aaQNLKyQ3XdcvgnhXZ0hK5fI70kxOgezaGdH/jBTNmZSjj/d4R\u002BSAncqiF\u002BqAF5PwBx\u002BlCoO/AJSHvtYQpIioWs5XW4ZFs0SyHb8QBJgCAX0oItrDWBkMb5hi4ggmxlUNCqRVXqIOOEOORiXy6LR/uIvGVmmts3DZoQuYrguftiHhZG3s6CC00rHQHQGQAIHqF1JtRAbJzwerhawAW/33XBSQfRDvjLU1L1IwJ2VwnYK/80rzcldvdKnF4jJRpyoTnBe6nHS6ho3H92RgqvJQjKWa2fQeuTtND7alzfNkIRR6gWFOJ1L0V8\u002BNSoDRwVtLEryqlDShz3RTwZvbl9wP03rEV94jk6qRwUNjcivj20SPNsll6qV6bIvoq3QoUpZRGS0lNthX39jxIChH7T5nGFtPDDOe5P4RlzylmEDoF7H3rLc4Xg6a5uSgposd3VntCAd3olWgN9ngRWfdBgsq\u002Bafvdsyy5QG4L\u002B9P7op5hjtCvrk\u002B/Uzzoh3DjzHSsgAhV\u002BEWQc37msFFmSjkYWV5HqiAILUznfmhDn74SEF//Q9X06rh9jMxBla2ovIauDikAjqVQIUOMVkoYU2YBepHx0y/K/aUAnaHNYDnSxJC0aekP0p2ts73wX4PgXuP8Kknh9aO1KBWJaLT69490sjK5dtxQHaWWmjQBgw8cRpvi7sW0KVprYQBiQrc582Zt1jV1UAZvwE\u002BDmAeFANK3Rfo/OeLbVrTSdpNNY1nycC\u002BbeEOCdj6jZTFFixxWJ2E6dFGiL3FpBdqO\u002BRz5rh/leyybIPd4rpm7MbEjyCdvQdBvnii02CauPqaXK7KD0yZThEmgBypANn2VoSkss26zUb64x\u002Beyw8zL0F4zb66anMA7vf8dQK5GDGri18TBwKx0CztyAk8KMkS34LL/HApXpJRIcpMPf/OBHJ6Mzvx8I5JF00oX35RgijjR7DaQmBSeVn44dGjRBeBjuZVlF18q/2fWwUPKW1nXNu1S4WfTk0xSbExIlGygRHL5LFCkWXafg7Czj6C5TqTx3lGuiCKuskY7uVopxx/vreW5nlGhadARY8TlbIS3Kk\u002B1TH24lJyzVwsb0DCPtuCx4Rb9NVjftWLrI7Of7MogFNMdrGzb4svbmZZ1M9IGA0NX3aSagVhuJTX\u002BgtFwt/Gb7nhDIgZXK2\u002Bmj/IlwSKBRjr\u002BPWXOSDuQ9Yo3GAE4WJTjETbkevmLzoPdqVBNr2HUal1\u002BHKb004OXFNPi2ewdIXoL8dwKvbxbGNCzFwwCThOTEQxuQZxXnJQuzt3pz0jdyF8VQcSOzlEY0\u002BzTozcoeh2mN7/CNbCfRFSZYBZw8Af19zl0YFm9vru03lRAo\u002BLZv8nh/uUBJA\u002BaIFzCcvf2OAvA4uyu69yXgI3mnjjskkElX5ijxkN42RuJ7X4a0v2YzykDfnbe3N56rrWtQrro8qApd9\u002BLQGjYzzt7bfQ6MZhxgtoxsgXvfdD3Int7E0SPMJ3aaZqKE1v4zQnEx1puZ9sSbba218VvevL1kKqAiC2a/wPF\u002Bh/sxkPnHPHMg8I0ORaj3weor6GOOdqzZ\u002BnYT8rgAoNge0ylfG4BQkS2hYiVXLJeO35K9BXa0Ynv5c3C6svTDvjo/fIz49pYUgvNFW7Tcx4WF75se7dA8HDTSZAFAjBHAa2wJbevNumv66bF3nc3/55/hZBt/PM6IjPQ4DGDSYptohZoRKWvKdBCBP39Ptw1bQfLSYlYg8kXsK20r8CLOcARFk2DyhMvfO8t2cpKJy3lKFj\u002BQdSPwK7Bl3LRrfkaOX6wag672bGs3GlmAx1SsUsfdcLzyitt/ZIAYw6MKwEjUYKxMcH6HY3TNtgiIwQeE9JrGnrXJPhn0Bq5gtZwhdq4\u002BpUeEZ3I5diAZq94vtOTUVeElQxHc5lwXUGV/cOxkxPuMdKHoY803joh4\u002BUVMK7jobfYd8POp7MLZf7qJ09kxSwceDoUQwqtHTLUNTQPCfDa5EfJjEwVVfCR9/Cx2gmFI3f/\u002BX1P\u002B\u002BT/xQCif0G/6pdAxEnw1UHITVEmkUtDKsBm\u002Bgvf74AFg61H2h/tIUVFLj/LNyhrBW3XPpoCPLM95KCkAn6xJPlckEPodx8cZZpALAiCB9dqzGffuA408Y8Jfif3NtYjuF1tWZf37f83q33/izrF7dm766rjXZoQmXZnybxBEvuuA0QRtbEHaN5uX1x4LN7ylJgOw37SA8gtguWUjaEjxrkVIecTi2aHCeUfZ/c5acRna9h19fDR88j2bRezSgdL2otvyokHY6s2cwgeRPFg61oEwlItAcgHiDOyESvLAwqbrjkAkTxVGIFMptBuB/ua0PC46etTGY1M9pmWJ6816M/C2iapE8wUDRoFwryn34s4UGZaLp6beYAVHNE0TzfM9BXE\u002B2q7fxBgzaniy8b2htDyuh9psPDJL0ni4ICNstc0YNrkKlhfY7fw7z9WMTbcxCKdZqchcs8F1DqnzkEDWhs\u002BONUgbV18jjFLVZ19d5qBc0sjAd2vWuDHZvPxWvPO7MYV2BBXDF42iMGsyHJftmMzuWfdrEI/4lsbSkM0OXfzKzvoX8LxpG1fIHOJBPxZGO\u002Bsjeunv9TwVwDa2nr2mgiiare0g5/ejRzN3jvVms8E236BbQItA7/AlaTCrsekXHNha1jDrEVw\u002BGp6lkSWRSvme9qI5SAdaAIelTR\u002B8/yzNr9S/REmjbdYUBwQVLRtYRSWEhJsYH4soG/cNHXtD14UxtGvX9uDYQxH420mtL7zKfvt7egmUKJsHfRPAj8fmnaP3ccw76ox68ocaWyY211ztNG/Nl8U07IeB3rNf2mfX6YqDx1tdhG1jBCJrXdSiNrF3HosfvXbM04EeRX9FCQ1QLc2C2ZA\u002BHvnc6DrbehpYKOBUN0j1O6sVNyFI42R73OjhA81o7cRbDEJGlBkc/lVSMuiUqTllN2iLWIl/JuOLfHnff/16/PHqGFfLZRyBvSFD5cseFGouPyxFhUPD5vJWX\u002B12dZvZmgD3NHveh84WhLV//21MBQKhTzXwGGxvC8IM9n4a/r0AJbtp2H2r7JcMK\u002B02SEilHEBtiZqoMDyKOUf2W7phMa42W6dLy4AoayrBIKQueF7u2abtTKV5IJYR1FQkNIQT\u002Bfqiutn0bCvmoF\u002BLwChStRKCfTfSCo0\u002B3eqWSv522gIjoSTY\u002BZMYHIqsQHnedd37wfvYHcpoi2VLEfWpVgUSD7cN6MrKf\u002BnarRTrV46os5jPWkwPWrQjfKgtGXVlQXtnSxsSxXLu8KEANKDQvxbrCxcVomhGj4/j8PFsRqS\u002BYhSnOCPcEuljNgLswtc7SueBfW9AlAVWxPziTTp0x/ffwupWTT5Dv/49rZu6KoxWD2yEaVJqbwp63q3Zk8glgiggr0zjZaItbihplRjqfoEosZVgiPYyfXc68G8YsPN6Ly2n6wNR42r0Ett20Z6aJuC\u002BEegaAJ6kSftGq\u002BdhkAFmx/6arm4hgzXaKuR0uPqZ5uCzQl7ijiuv3cFnpp8VGMoX72VhyZoXrDmwnt6Po3a2YOUtdrrWWyvXzK02zK9/P46dnhVGhGgs7o6XNVnNPLGkj8KkIKSZBQ1\u002BoJIn58ZYVIJEvS8k/gEytVkb9QjLwP7w3yOHZXRx8PV2qK0hcfg\u002BvrTDjJAuNFKAwK/OuHcsQewJ8g\u002BcWAkgYC1BmB9HOcwa2UHWcWnQOdwPKGJVxFPorQCC92wO5tD9Oyh3mF1UHYjjBZevf//McaQXrNXzisF8pr2SFHxTEqBfC3mf6r\u002Bv8AHMDzLN2/FnzgojgrssbKMVMr8Q6ikykn8J5EW8PbNN8I5yjTQ5WJNBWK9dSNGkM/3\u002BxPSNBLEBiASAIPHzXOfb1pjV6sCwLUc/96Peo5H1t2Q9MgLQEWaADmx3nnRbcChr8AGbK4oPxZaj0HgY/Laav6Uu3EmFZmnSVNlJKkr\u002BZNDsb0eCNaGmDj433cQlkTkL9Tx8D5fkl6OdQNO2CYaNRZAG2d6Y33OO5mvzxr8hl3pgS1/apuuCL6T7apkfFAbLChkrsrkTVYgtnBV5QNt2WKrt/kIEXfY9t2WdT9ki692R2f9\u002BFTp\u002BqE54tSLJJYs2VkAHgImk1qEEzoHWQTMn4AjYQGvJd/tzki7eydvDZEU2eZC5rZoN2bS7QlkAmKweiKDLQpz61AnCrRw7nVNi1uy4LeocqszfNm/WnER2bgt6kz1jGQhShxWjb8SLzIAYCt8KC2ly0hbtuMT9m9mMdPBb1eg0\u002B3ftK3NVw4LYSFccLGGoMsDCYDuTVtDkWmILUn5Wnh18wTKTeTGFhBVMt2lTjJlazRXadYu4yzOuNeaPJwem9XnjXraft\u002BO9f/rr4QI\u002Bd9jPZWCoNnXlMYQWqE8hM28A73JCkQWDeLeiv9M2zdKxSlrPDBvY0mp19ODozG\u002BHf59snwAMpzG7ojO90drv8AiFA57CPCzJtes1/gaPeuFbCSsWWJuVmmEyeFAsbx4I0VT\u002B86dnj6Dzfxn6p96MmDanp9gvbKumpKtiPXXLe0AYcx4JHjos6nOtaLFm0WXdml3hHPr7BbaMEFqQgjs68aK\u002Bi0BOi142pZ3H72QVgVW5iajjKJfhXNONjAagABM6tAquoVm1\u002BUC7HNIxHw8A\u002BgTc8KR94NUChTydCV5zGt/qhvnQfD23edPhOFAq0mf3ypx1m3eTk5I81nYlly7qujACkHAdlCDNp4/fjCVss\u002BCXT077cDrwhYPmk6vAUDAKdi1KrSv39tXrJWWFG5fRRI\u002B2pG3X8zPJpLmyU6iZgBrjGNqmSTFmVYIz40AKuP4wYkJYQoU\u002B58Ot/uKcCZUbu3M5vrE5hxIO1CVfTLw/uk1fVf\u002BFl4dEaY\u002B70Ncf30oST94gYVVbLRZLC\u002BOuRS3HbST6QijB3\u002B3QDz7BPDlWAnumCIuasuwahz08jU\u002BHw9Vt\u002BsEiMhdYz29tVrieEZjYlXFxzmpDcf5I661NbJzknJ8ojMLbjBZg0mj6LNJZeL6VrexwezJfVzx06zh2qrDCUZJrVH8BOT\u002BYWbP3j8ZmvVl7p1QvvGnshUx7ynQSosgxiRMutLD4nxSYfQenTkbXdf0QS/GqNjwSbCiFuPT8Ls0ZzwNYAa1vwgatm4OzYbmyQQT8zLhfGCXiA/JLgZED\u002BewnHhm07FIy8cd76331OJ5gxS6y6SHENt5XT3sK6wLo3SJOc64QSmBuwUtjT96ufQZ1xPQ5Jc1MkpLBR1JcZVg4VlpVCK\u002BmnX/\u002Bk6N8jlRV\u002Bjc3jUWjGPil/tqHL81ZCNRml2W/lgpSISmwPbtpICk40ZAPaUY0d8wxDjBcJa8pbK\u002BEklVeBvAMd0wLL8YCPm\u002BgrQj4GGkX\u002BYN8pIMHCtgJr/KGnG/LuDzBagop4RBhNwIaQHPBkqJDEMhH0Jm5lrUkNpAkwWkkmR2YiFgY4/ipfizPGnJZGeWz4OsDFfLlIE9lGNGaqzpnSN60NvgVdnlL0stKKDo8scK1m3MkBXe2awOaspYiJqldIN\u002BuPQIYucQBD9PaLApCED0IVqClmcSWQeJh60/t2A6lIIr9iHRrFxKYfdYpiZTg/grRrPne/Lh2l06X67WmHl5Oc/C5/fsoteyCsIEBh1xrUVg4MuVR2cSAWGJjhwWoybmAh6Q1FxZaHJbLePQ3EIdKPbm0lY6jVS9njY0bFMsiqfyvPK\u002BN8GQzPuxRTwF4YRrywTVUtimVt3PhuTqVLe\u002BWQC8hR8IyCNIgtkVmJAVatERT1Opk3CSMQijW9GvsUniWgh7xjVCdZPYhYWME/o8SYc5yU3AkPfgLq7DZMz/NxEt9Jmc1\u002B2wVKEGp5GeDd0pUw7ESXFtlTXbsX1jWZCNWvhf6aIHCoB3Cwmqq4RLHOE0TB9ZWWNlqTAFZ4HtY23EYliCeh67laRwKqwrrnofjnRhkH/kubqwHRov3Z\u002BBSrXAh0\u002BnFodcd0po8RXJvtow5a/SF94ZQvLYMknJcUDFJZwVVM/GM/XlbBgY71sjGODgY2x4o6xGNJ7bGvkdrej8MrtSwJutm01QwSJJMRLmaILp35E\u002BEztWNDaotp3B0BaOLZCEiCOwm3i0JdXrNoE11BiyG9XqNbBN/VOKCgGmBS4cA9RrH8RQih416XC2wA6BBDwRb25olFPmWSjivjXxKGZ9JR50/xYOp8Wn811PNLJX9bqSaHhWSKQofJbQhynZnCg/tCaVzA3LurSYEku\u002BV4nQ8T5h1J6MEu0F7DxGPUcC7QOdQvYdS\u002BZ2lnZKbiibM88YMUVJPOb19eKlH7xOE0DYCbQMowVa2M4uMptXcqliKVsmxacedXiMxkKsCAjurZbNVNUqWo3zsabPqgI3Nm8VwDNbFBjPwvr1hdRw/0wD9whQ8/HVw5hx5LjKdcNDAxq92YspsyKAIsJu3usPfQFKAnIeFpoJSAg4yrwDhepI3Pe2X08usOadQNDaSEdyKSvogsMonhiwqTtSc9TetsCn6afVWpvO83/mTQIisB6Eum4aZd0Y2sNlE3\u002B0Xvp5EvlJmmb16344KoIntLnNSEOstQEYcqLR\u002BvX63dpbQr\u002BlBSV87/yYP0\u002B6wqiAxbSD\u002BvLIb17SeH2oSLnSwlaqrTXYXssNNAAJQsnxGfoJ/OcvryuZgNVMrtBviqqMue/4dtlr9vMMWzPep/IY1vYUfgtMJQRIWkYB57aYyKWVpVefVhFKwb4G92FhtoZOl32lMIPMGKX6P2mJezgItpAsB/buFkT3CDcjTzbTnB9U0SNCKISDpCKswer6vlSb5v8KjBm/zdo8nlC19RQeF/ijaWMKgaUHDwp/c8Dw20thRXZ/axowES4gAFdt1Tv0o58aVJGJFs6mXRusMmuQjgzzqIrQHNjAeNCJg4oyRW/d2k1HMjr5HymyqVjOiQ6FrJjv6\u002BOfZG5dsbKi1cde/c2CfH9ni020oh8CUoqi2uybep8WOJhC7v\u002B\u002BhmnJcBBMaCDPPAWKTNIBw10tPMSM9rk1\u002BijCyASU6A3qa3gwtBLfDJwLaXVok1ZsVm9e\u002BLj96PLbGv\u002BOxZgFpCHKL1wltXZEgKJLB\u002BwC0NjpnPcTb9pAXfK0bNDyVsgnMO39xTKQIAEiMNFaNB3ExUqLvcq7gilXQ2LFE6auKAbNSjpGwUJxoWZ6tUVE9jk8FKjws5L63ptY1XR5PDJhNh0m32uJigp3f7CabGx/qvelZ5DpU0AtJgW8bbdyKcf779wgj4ot9gUvEz9kIWZYELtmF2qndupGqBezE0n/9aK3vnVPsfEI8CzddnC4KDXGcM\u002BZJNLxQddMv/ldFURZ7Uec5CTr2ON740RiHYcS/c397f7e/pVVbFW0IYJjkgPag2gm8enE8yQ6fDqPxzo8PS/X6zh6rmiO4l1QqEk7tbRcBHRYa1ssSf48wUj5fq4z4W2smAC7bCjNm/2e6LhcHioFKrqW7QXdE77REvKhDcljViNrrlGmW4oOwTb8LDgWtikslnb943tvLWG3bs/LmLwyRXBfqxJCuVrG5SVc2QLUpmwmpTXQPn9Ad2vJYD051WwFgBu2KKp86zm9L/HIi3LJy/zsw\u002BqR5ZlTrOyPFxBVShLwV5YvVlk9hlJh64h2PzwZe7xlU/ztBCicGg\u002BojH058yueuqWpFiT938QbC9Fs5rmFWoaIIiwSEG0MxqfeKDIdZgYcnFySAMTs5X8jf/DJfmM93UsKkVWDTSYtQYO73VYvOqWVv8rBJ8RszJn3dZ9WLboLRVX/SaL/pq5GClxI/lVf2h56NwZQFggfr3mwamGNZHyziDkkJos4K3vFwAZmYhEzITd0DCt12b6E13dSrmn/GDCHuQEdEosXjFKCoKqUK4kOg2kcHBHFr0JPQmtFOQiW1Qu9WAZirapYdDEWh0zsy7CS\u002BNJw\u002Ba2KkZRXim4Pvr2Yh\u002BxLnxajs5beV\u002BRfx5a7frFfLtwXRfQ\u002BzpOH5HD4COjVo6Cg\u002BpKTK\u002BFS/3ghaoiEpbxXNLfa32c/ZV82djNb4NVXbQcKCkKNac09WCAEm4vPjOYUj/u\u002BIptw6oILmdVk3j5cKo0X7gi/SjtOQEjxXcaE3yiLvTQ3SV4pVsTsD6gB1uzuBVJ9CkMotNqMmv/YZ\u002BNl14uLSFHwwX8M1eWWQFqVOU1Dt7mpM07mFDTMsBJbj43kz5tRP0Vqe8Rqa6KXCyDbDlyNQttvNBluGkCqhE/wNJUV9YzqeVL/rNl6EolQciZO\u002BqTrncNEGukHa2QIDzs8iY1uf0/w72dC3KE7DOJioye6WNBTqJyZq/9kCbIPpukbS10YYG0rcz9vx0XFAnuHVaC4CdT8Uxl2aQF4comtQAM8PRbaXyfrHTQXeJ9M4RgsqYiWl/xLbRzsYOvEEQRI1oXQ\u002B\u002Bl6hWlpW9hY3xrkv2st/Ov6cfFSek9Ou7WR3TubZcZLC/MIdZWXKGy5z3ZlN67zLUZFO/HzHVMrcA6bZL6pM5b/56sWKZy19\u002B2ZNlY/GVWFkG3vDOrjR2LvTgmgUutejSR7amm4yJKQjKOg6xtGw4eYdfkrGnt7KF2xDmLy35Wr02Dyknd5tQNUlr9ZVREZMTPCLsVFCv/Ei1VW69i4IFuuIsJFsENKlQAh0pk1CEADZ/N/Hhe621k8T\u002Bp9/VQcsqA21u0Hd0Gz6cfV2osUE7WZdRzkNQ\u002BSpi2bFIsbztrMZTw8sYUebnQOC6/Jm\u002BRHXTo29Hq7RqdBd7V178L6t9VsOyPNzWR\u002BorqZFM2xXbYwkLLdPGgAaPAI2kK1Xeyjd/t3LmZC9AqX9r/cWuhtz9YMvG0C/hODseFRuIW0ii\u002B47O5CoESwEwmCzUNhRw70JZyowMznm/enAWWKgzgrt/nvsr9PRb3tBrK\u002BRImFDTmpovXOAHolqRfEPQtUKUvxSD/LimAhQP7A36dZOerT/cT7OcWyt/blpgObbbNbI2VNo1\u002Bs0LN7qZdl2s33Pw4IVXI\u002BsVEuj0Pad7j799h1m0tTBHbIgrCTAh/i2oTz\u002BOieQV4VxkB2MVGsBNXAEQ7OyI0kX0HRpgifkC3sUv8H3OR1rR3grQGq7za4pFOOnG6R/akjrdt/a0ElGCWRXtdT0LpsXLC/XC93pzG\u002BH7zwskmBDBIW1\u002BL/IdtyHmrIVeICzoyVcmpAU/L/h7dcvH/wW/Hk4KnL2FzCYdmJWE8AJzLd0dJYzd/eRA/OR9X9QAH/2APiPouodKRmAaaQuQkvjEITRu0fP3xPa5a8dUvGYVnw9irFVQEVhhyyUnBqsmgQ8Yt26roV2DufkfrF6RBBRDUVtv7XSTljQplsquwV\u002B0yEB/1oslyNvWB6o4qMSAZrECLstm4Abnogl1b6IWufT9YJ7MxrQB4\u002BevXELuS\u002B0c4RlvNnbk9bcaLtTsZpW6zSpcj5GapSt9Zvs0lrFJ\u002BhZUd/Sa5pHGlYSX5w\u002BJ4VUtv0tgZ6Paou/YHRdu1kBpYktUXAjMND9b74finQ7Xw\u002BKIsrFkutqBMPbKQBm2S60XaPEVk5Ik0ldNaniENjyzti7Pu4SRj5Xy/Oe7lL90p5m/c7fs7XJswAspe6Jn3meCNKgaJr2XXKYOf/5CrlKQICCM555X0EiuxkVUUXVKegDrQ1FsH7ypT\u002Bm2a3Mq6IOAatCJL9QtiMAEGzJ8ZIazCcoU\u002BZDdF2JSynfL671bfsu0Sv2bbCtZFM7bNJx2clln\u002Bw2YZTal7YXLnEUHuY4lSMqROjqd7FaqiDWi8MWnSoWSQN8k4sEsD9Qz39eGMHWgRWex6UA2M98Qu5d/EojT2Er3evyaVAXcFnL7hsf0ksb5CxdMDOheOlJddLe2ya47BCfLmNSbVSEOdd4QWdTAyySwDBLAgDjIYHUMLhu1tbzIVk0cPdsvryhUacoHV\u002BpcO80fG/WjFLBkEaE2Hf6mw40hdiFthxj//gNSyHykm1IVokG8/MEpsERRDlmCTs/M8zzmeEasD/wMrrS4sMKR7aGLfC4a5rwZEDoqFjwmnfi8LFT5Nu\u002BB368xOFDAvubrlcK6LPwa\u002BdSkbo2CcvM1AvcSz9aPqd1HYrbP3M\u002Bq4kFbOmZlD2EHb64Yvv6fUKZT7ngWwXyNmHEchpWe9rks1dnXblQ3UbjsPCb5p29aW\u002Bm8o9cYe5TSKqkkXXFUx7MMwZilSiFRN1BpWo5HWhAhtAqSb0Isj8dS1o5u1VLOiOuam23hRDK8W1leP/kiImiWWRov5D4klFo5kI2uDaQmsFYx24kp3fUapneI\u002BlaTbGDdbfo83NChKEeN6ZN\u002BnRL4equdMHcJJB3Ib3PBSxt3WTp0gOrA2QywNqL3qzIgV0A83zw7c8NmCV9v4nL1YGdeP6zos9NaKR1S2CxWvMuedGZqelJajab33EYRxQxsR/wDLMEAI7F2tr/EduMvlUKH2jv7NWRUCZamp7ZQzOefVvbiQMxMtJJvBDdVK3GxK/mVc\u002BMu5De5oj8yF7TlEcjDnm0jZVUG5XZVExHONNK96sHvEF0Poc2lB4lVLK5ktsGqgXYPbiqnh/RMMar6RWrWsSBsKeg7JVdUKLnhbLEgOsxtysWFFxXMah/ROF89AqsAcAdDyEC7kv5/jmHp11yI13bL1w72Fe7EPwQYRazzp7KOsWwy3RpJ7gXtUNHL26eSELsTnoKlb07gMfmqsn1LRjKpBmGDTziiMI2uPyX\u002BQnByx35ebr5sryiBcAKhYoGMEkkSIUQE6W7g\u002BoXr0f66GZQP9ilJLicWQd1OYIL0ry9DV6AlQCfk7nXxTBiGPLzO4j7wPQA61pcaU090CnjyDcILu3aN\u002BiWcSKM81Zjzxy2cRsrU862RigVCmCmh\u002BgouA3bjH/WeYG9l9kXXeVU66eL2fH6Hw5hLrHRpMIf9XaeMzXWnJ9DUuqPlNnqV9uZ8qXjPzoWS7Pi869hKGI/Zf9Cc\u002BJOmgxJqV411Wvkgp7RNdOyjCYJulcgT0ZPRKvzZK4lRWY7z4Ewdl3neRvZznfQc1nTe3\u002Ba\u002BWRfylk4A2Rc\u002BMx57rge84TzSOU\u002BUEpYWrLfdb3UPbPL/PuJ57n7fvAft4MfKYHwZMKhVYbdP4Y1/\u002BuP7\u002BvouHTD\u002BU8Wk\u002B93XcEufh9r0zu3GAZF2B8Io3RHOtN27AvHnzz3g2N2yXuF\u002BGfvw37w\u002Bp6/fv5eLn4fpqOfNfE6tRmdO69U58vlmVN9fK6f8/zZ8/yp6zeXHJhLJ33Ferc3vvdznq85z1dd/5nx6urAn/Ezbh6nwkhznXxsJs/jF8e/041/v/b5n/P8\u002BfN81fWf7tMHwki1TcL\u002BYPOft/x\u002B\u002Bp6emi587p5j/5zn687zFdevv\u002Beyr788EMaSc1lTmSiC5yKO/8hrO3ttz/x9em3ra5otr7oeJld/Ot7BXfyc58\u002Be5/DQ\u002B78/\u002B/rlM02g1WrYpRNPtuml8KP/jJ/x9ePHgfkZ32b8fyEm1OMovwknAAAAAElFTkSuQmCC"
+  },
+  "footholds": {
+    "84": {
+      "id": 84,
+      "next": 85,
+      "prev": 83,
+      "piece": 0,
+      "x1": 582,
+      "x2": 761,
+      "y1": 333,
+      "y2": 333,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "67": {
+      "id": 67,
+      "next": 68,
+      "prev": 66,
+      "piece": 0,
+      "x1": -689,
+      "x2": -510,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "24": {
+      "id": 24,
+      "next": 23,
+      "prev": 25,
+      "piece": 0,
+      "x1": 513,
+      "x2": 612,
+      "y1": 1012,
+      "y2": 1012,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "96": {
+      "id": 96,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -69,
+      "x2": -18,
+      "y1": 1107,
+      "y2": 1107,
+      "layerId": 3,
+      "groupId": 24
+    },
+    "54": {
+      "id": 54,
+      "next": 55,
+      "prev": 53,
+      "piece": 0,
+      "x1": -705,
+      "x2": -531,
+      "y1": 479,
+      "y2": 479,
+      "layerId": 3,
+      "groupId": 70
+    },
+    "89": {
+      "id": 89,
+      "next": 90,
+      "prev": 87,
+      "piece": 0,
+      "x1": 219,
+      "x2": 393,
+      "y1": 738,
+      "y2": 738,
+      "layerId": 3,
+      "groupId": 47
+    },
+    "11": {
+      "id": 11,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -447,
+      "x2": -253,
+      "y1": 1140,
+      "y2": 1140,
+      "layerId": 3,
+      "groupId": 21
+    },
+    "83": {
+      "id": 83,
+      "next": 84,
+      "prev": 82,
+      "piece": 0,
+      "x1": 490,
+      "x2": 582,
+      "y1": 333,
+      "y2": 333,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "29": {
+      "id": 29,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 838,
+      "x2": 889,
+      "y1": 60,
+      "y2": 60,
+      "layerId": 3,
+      "groupId": 102
+    },
+    "66": {
+      "id": 66,
+      "next": 67,
+      "prev": 65,
+      "piece": 0,
+      "x1": -746,
+      "x2": -689,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "41": {
+      "id": 41,
+      "next": 43,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1207,
+      "x2": -1089,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "86": {
+      "id": 86,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 822,
+      "x2": 908,
+      "y1": 358,
+      "y2": 358,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "59": {
+      "id": 59,
+      "next": 60,
+      "prev": 58,
+      "piece": 0,
+      "x1": -875,
+      "x2": -700,
+      "y1": 116,
+      "y2": 116,
+      "layerId": 3,
+      "groupId": 96
+    },
+    "26": {
+      "id": 26,
+      "next": 25,
+      "prev": 93,
+      "piece": 0,
+      "x1": 185,
+      "x2": 334,
+      "y1": 1012,
+      "y2": 1012,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "53": {
+      "id": 53,
+      "next": 54,
+      "prev": 52,
+      "piece": 0,
+      "x1": -880,
+      "x2": -705,
+      "y1": 479,
+      "y2": 479,
+      "layerId": 3,
+      "groupId": 70
+    },
+    "71": {
+      "id": 71,
+      "next": 72,
+      "prev": 69,
+      "piece": 0,
+      "x1": -228,
+      "x2": -54,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "88": {
+      "id": 88,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 55,
+      "x2": 141,
+      "y1": 763,
+      "y2": 763,
+      "layerId": 3,
+      "groupId": 47
+    },
+    "9": {
+      "id": 9,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1374,
+      "x2": -1086,
+      "y1": 1179,
+      "y2": 1179,
+      "layerId": 3,
+      "groupId": 18
+    },
+    "56": {
+      "id": 56,
+      "next": 58,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1167,
+      "x2": -1049,
+      "y1": 116,
+      "y2": 116,
+      "layerId": 3,
+      "groupId": 96
+    },
+    "13": {
+      "id": 13,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -447,
+      "x2": -253,
+      "y1": 96,
+      "y2": 96,
+      "layerId": 3,
+      "groupId": 101
+    },
+    "40": {
+      "id": 40,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -389,
+      "x2": -281,
+      "y1": 479,
+      "y2": 479,
+      "layerId": 3,
+      "groupId": 73
+    },
+    "3": {
+      "id": 3,
+      "next": 2,
+      "prev": 4,
+      "piece": 0,
+      "x1": -1413,
+      "x2": -997,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "85": {
+      "id": 85,
+      "next": 0,
+      "prev": 84,
+      "piece": 0,
+      "x1": 761,
+      "x2": 860,
+      "y1": 333,
+      "y2": 333,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "58": {
+      "id": 58,
+      "next": 59,
+      "prev": 56,
+      "piece": 0,
+      "x1": -1049,
+      "x2": -875,
+      "y1": 116,
+      "y2": 116,
+      "layerId": 3,
+      "groupId": 96
+    },
+    "25": {
+      "id": 25,
+      "next": 24,
+      "prev": 26,
+      "piece": 0,
+      "x1": 334,
+      "x2": 513,
+      "y1": 1012,
+      "y2": 1012,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "43": {
+      "id": 43,
+      "next": 44,
+      "prev": 41,
+      "piece": 0,
+      "x1": -1089,
+      "x2": -915,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "70": {
+      "id": 70,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -392,
+      "x2": -306,
+      "y1": -85,
+      "y2": -85,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "6": {
+      "id": 6,
+      "next": 7,
+      "prev": 5,
+      "piece": 0,
+      "x1": 282,
+      "x2": 698,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "8": {
+      "id": 8,
+      "next": 0,
+      "prev": 7,
+      "piece": 0,
+      "x1": 1050,
+      "x2": 1074,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "18": {
+      "id": 18,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -124,
+      "x2": 164,
+      "y1": 1179,
+      "y2": 1179,
+      "layerId": 3,
+      "groupId": 19
+    },
+    "55": {
+      "id": 55,
+      "next": 0,
+      "prev": 54,
+      "piece": 0,
+      "x1": -531,
+      "x2": -433,
+      "y1": 479,
+      "y2": 479,
+      "layerId": 3,
+      "groupId": 70
+    },
+    "73": {
+      "id": 73,
+      "next": 74,
+      "prev": 72,
+      "piece": 0,
+      "x1": 121,
+      "x2": 296,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "12": {
+      "id": 12,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -493,
+      "x2": -205,
+      "y1": 779,
+      "y2": 779,
+      "layerId": 3,
+      "groupId": 51
+    },
+    "30": {
+      "id": 30,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 840,
+      "x2": 891,
+      "y1": 24,
+      "y2": 24,
+      "layerId": 3,
+      "groupId": 102
+    },
+    "2": {
+      "id": 2,
+      "next": 1,
+      "prev": 3,
+      "piece": 0,
+      "x1": -997,
+      "x2": -581,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "48": {
+      "id": 48,
+      "next": 0,
+      "prev": 47,
+      "piece": 0,
+      "x1": -499,
+      "x2": -381,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 32
+    },
+    "15": {
+      "id": 15,
+      "next": 0,
+      "prev": 17,
+      "piece": 0,
+      "x1": -180,
+      "x2": -62,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 123
+    },
+    "60": {
+      "id": 60,
+      "next": 61,
+      "prev": 59,
+      "piece": 0,
+      "x1": -700,
+      "x2": -525,
+      "y1": 116,
+      "y2": 116,
+      "layerId": 3,
+      "groupId": 96
+    },
+    "42": {
+      "id": 42,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1253,
+      "x2": -1167,
+      "y1": 975,
+      "y2": 975,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "5": {
+      "id": 5,
+      "next": 6,
+      "prev": 1,
+      "piece": 0,
+      "x1": -134,
+      "x2": 282,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "87": {
+      "id": 87,
+      "next": 89,
+      "prev": 0,
+      "piece": 0,
+      "x1": 101,
+      "x2": 219,
+      "y1": 738,
+      "y2": 738,
+      "layerId": 3,
+      "groupId": 47
+    },
+    "78": {
+      "id": 78,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 801,
+      "x2": 887,
+      "y1": -85,
+      "y2": -85,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "27": {
+      "id": 27,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 757,
+      "x2": 1045,
+      "y1": 779,
+      "y2": 779,
+      "layerId": 3,
+      "groupId": 52
+    },
+    "45": {
+      "id": 45,
+      "next": 46,
+      "prev": 44,
+      "piece": 0,
+      "x1": -810,
+      "x2": -752,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "72": {
+      "id": 72,
+      "next": 73,
+      "prev": 71,
+      "piece": 0,
+      "x1": -54,
+      "x2": 121,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "57": {
+      "id": 57,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1213,
+      "x2": -1127,
+      "y1": 141,
+      "y2": 141,
+      "layerId": 3,
+      "groupId": 96
+    },
+    "75": {
+      "id": 75,
+      "next": 76,
+      "prev": 74,
+      "piece": 0,
+      "x1": 471,
+      "x2": 560,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "14": {
+      "id": 14,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -447,
+      "x2": -253,
+      "y1": -375,
+      "y2": -375,
+      "layerId": 3,
+      "groupId": 131
+    },
+    "32": {
+      "id": 32,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -290,
+      "x2": -182,
+      "y1": 975,
+      "y2": 975,
+      "layerId": 3,
+      "groupId": 38
+    },
+    "17": {
+      "id": 17,
+      "next": 15,
+      "prev": 68,
+      "piece": 0,
+      "x1": -336,
+      "x2": -180,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 123
+    },
+    "44": {
+      "id": 44,
+      "next": 45,
+      "prev": 43,
+      "piece": 0,
+      "x1": -915,
+      "x2": -810,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "62": {
+      "id": 62,
+      "next": 64,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1213,
+      "x2": -1095,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "91": {
+      "id": 91,
+      "next": 92,
+      "prev": 90,
+      "piece": 0,
+      "x1": 568,
+      "x2": 673,
+      "y1": 738,
+      "y2": 738,
+      "layerId": 3,
+      "groupId": 47
+    },
+    "47": {
+      "id": 47,
+      "next": 48,
+      "prev": 46,
+      "piece": 0,
+      "x1": -574,
+      "x2": -499,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "19": {
+      "id": 19,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -76,
+      "x2": -25,
+      "y1": 1143,
+      "y2": 1143,
+      "layerId": 3,
+      "groupId": 19
+    },
+    "74": {
+      "id": 74,
+      "next": 75,
+      "prev": 73,
+      "piece": 0,
+      "x1": 296,
+      "x2": 471,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "31": {
+      "id": 31,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 840,
+      "x2": 891,
+      "y1": -13,
+      "y2": -13,
+      "layerId": 3,
+      "groupId": 102
+    },
+    "49": {
+      "id": 49,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -419,
+      "x2": -333,
+      "y1": 975,
+      "y2": 975,
+      "layerId": 3,
+      "groupId": 32
+    },
+    "77": {
+      "id": 77,
+      "next": 0,
+      "prev": 76,
+      "piece": 0,
+      "x1": 739,
+      "x2": 839,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "34": {
+      "id": 34,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -93,
+      "x2": 15,
+      "y1": 406,
+      "y2": 406,
+      "layerId": 3,
+      "groupId": 80
+    },
+    "16": {
+      "id": 16,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -100,
+      "x2": -14,
+      "y1": -286,
+      "y2": -286,
+      "layerId": 3,
+      "groupId": 123
+    },
+    "61": {
+      "id": 61,
+      "next": 0,
+      "prev": 60,
+      "piece": 0,
+      "x1": -525,
+      "x2": -461,
+      "y1": 116,
+      "y2": 116,
+      "layerId": 3,
+      "groupId": 96
+    },
+    "79": {
+      "id": 79,
+      "next": 81,
+      "prev": 0,
+      "piece": 0,
+      "x1": 91,
+      "x2": 209,
+      "y1": 333,
+      "y2": 333,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "90": {
+      "id": 90,
+      "next": 91,
+      "prev": 89,
+      "piece": 0,
+      "x1": 393,
+      "x2": 568,
+      "y1": 738,
+      "y2": 738,
+      "layerId": 3,
+      "groupId": 47
+    },
+    "46": {
+      "id": 46,
+      "next": 47,
+      "prev": 45,
+      "piece": 0,
+      "x1": -752,
+      "x2": -574,
+      "y1": 950,
+      "y2": 950,
+      "layerId": 3,
+      "groupId": 31
+    },
+    "64": {
+      "id": 64,
+      "next": 65,
+      "prev": 62,
+      "piece": 0,
+      "x1": -1095,
+      "x2": -921,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "21": {
+      "id": 21,
+      "next": 0,
+      "prev": 23,
+      "piece": 0,
+      "x1": 784,
+      "x2": 902,
+      "y1": 1012,
+      "y2": 1012,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "93": {
+      "id": 93,
+      "next": 26,
+      "prev": 0,
+      "piece": 0,
+      "x1": 67,
+      "x2": 185,
+      "y1": 1012,
+      "y2": 1012,
+      "layerId": 3,
+      "groupId": 25
+    },
+    "39": {
+      "id": 39,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -70,
+      "x2": 38,
+      "y1": 737,
+      "y2": 737,
+      "layerId": 3,
+      "groupId": 55
+    },
+    "76": {
+      "id": 76,
+      "next": 77,
+      "prev": 75,
+      "piece": 0,
+      "x1": 560,
+      "x2": 739,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "33": {
+      "id": 33,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -238,
+      "x2": -130,
+      "y1": 453,
+      "y2": 453,
+      "layerId": 3,
+      "groupId": 75
+    },
+    "51": {
+      "id": 51,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1218,
+      "x2": -1132,
+      "y1": 504,
+      "y2": 504,
+      "layerId": 3,
+      "groupId": 70
+    },
+    "69": {
+      "id": 69,
+      "next": 71,
+      "prev": 0,
+      "piece": 0,
+      "x1": -346,
+      "x2": -228,
+      "y1": -110,
+      "y2": -110,
+      "layerId": 3,
+      "groupId": 114
+    },
+    "80": {
+      "id": 80,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 45,
+      "x2": 131,
+      "y1": 358,
+      "y2": 358,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "36": {
+      "id": 36,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 158,
+      "x2": 266,
+      "y1": -176,
+      "y2": -176,
+      "layerId": 3,
+      "groupId": 119
+    },
+    "63": {
+      "id": 63,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1259,
+      "x2": -1173,
+      "y1": -286,
+      "y2": -286,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "20": {
+      "id": 20,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 803,
+      "x2": 997,
+      "y1": 1140,
+      "y2": 1140,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "1": {
+      "id": 1,
+      "next": 5,
+      "prev": 2,
+      "piece": 0,
+      "x1": -581,
+      "x2": -134,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "92": {
+      "id": 92,
+      "next": 0,
+      "prev": 91,
+      "piece": 0,
+      "x1": 673,
+      "x2": 702,
+      "y1": 738,
+      "y2": 738,
+      "layerId": 3,
+      "groupId": 47
+    },
+    "38": {
+      "id": 38,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -186,
+      "x2": -78,
+      "y1": 717,
+      "y2": 717,
+      "layerId": 3,
+      "groupId": 57
+    },
+    "23": {
+      "id": 23,
+      "next": 21,
+      "prev": 24,
+      "piece": 0,
+      "x1": 612,
+      "x2": 784,
+      "y1": 1012,
+      "y2": 1012,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "50": {
+      "id": 50,
+      "next": 52,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1172,
+      "x2": -1054,
+      "y1": 479,
+      "y2": 479,
+      "layerId": 3,
+      "groupId": 70
+    },
+    "4": {
+      "id": 4,
+      "next": 3,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1433,
+      "x2": -1413,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "95": {
+      "id": 95,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -55,
+      "x2": -4,
+      "y1": 1072,
+      "y2": 1072,
+      "layerId": 3,
+      "groupId": 24
+    },
+    "68": {
+      "id": 68,
+      "next": 17,
+      "prev": 67,
+      "piece": 0,
+      "x1": -510,
+      "x2": -336,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "35": {
+      "id": 35,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 22,
+      "x2": 130,
+      "y1": -238,
+      "y2": -238,
+      "layerId": 3,
+      "groupId": 124
+    },
+    "7": {
+      "id": 7,
+      "next": 8,
+      "prev": 6,
+      "piece": 0,
+      "x1": 698,
+      "x2": 1050,
+      "y1": 1404,
+      "y2": 1404,
+      "layerId": 3,
+      "groupId": 0
+    },
+    "10": {
+      "id": 10,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -1374,
+      "x2": -1086,
+      "y1": -112,
+      "y2": -112,
+      "layerId": 3,
+      "groupId": 115
+    },
+    "82": {
+      "id": 82,
+      "next": 83,
+      "prev": 81,
+      "piece": 0,
+      "x1": 349,
+      "x2": 490,
+      "y1": 333,
+      "y2": 333,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "28": {
+      "id": 28,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 803,
+      "x2": 997,
+      "y1": 96,
+      "y2": 96,
+      "layerId": 3,
+      "groupId": 102
+    },
+    "65": {
+      "id": 65,
+      "next": 66,
+      "prev": 64,
+      "piece": 0,
+      "x1": -921,
+      "x2": -746,
+      "y1": -311,
+      "y2": -311,
+      "layerId": 3,
+      "groupId": 122
+    },
+    "22": {
+      "id": 22,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 864,
+      "x2": 950,
+      "y1": 1037,
+      "y2": 1037,
+      "layerId": 3,
+      "groupId": 22
+    },
+    "94": {
+      "id": 94,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": 21,
+      "x2": 107,
+      "y1": 1037,
+      "y2": 1037,
+      "layerId": 3,
+      "groupId": 25
+    },
+    "52": {
+      "id": 52,
+      "next": 53,
+      "prev": 50,
+      "piece": 0,
+      "x1": -1054,
+      "x2": -880,
+      "y1": 479,
+      "y2": 479,
+      "layerId": 3,
+      "groupId": 70
+    },
+    "81": {
+      "id": 81,
+      "next": 82,
+      "prev": 79,
+      "piece": 0,
+      "x1": 209,
+      "x2": 349,
+      "y1": 333,
+      "y2": 333,
+      "layerId": 3,
+      "groupId": 78
+    },
+    "37": {
+      "id": 37,
+      "next": 0,
+      "prev": 0,
+      "piece": 0,
+      "x1": -129,
+      "x2": -21,
+      "y1": 1005,
+      "y2": 1005,
+      "layerId": 3,
+      "groupId": 35
+    }
+  },
+  "minimumLevel": 15,
+  "vrBounds": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "location": {
+      "x": 0,
+      "y": 0,
+      "isEmpty": true
+    },
+    "size": {
+      "width": 0,
+      "height": 0,
+      "isEmpty": true
+    },
+    "isEmpty": true,
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "left": 0
+  },
+  "returnMapName": {
+    "name": "Ludibrium",
+    "streetName": "Ludibrium",
+    "id": 220000000
+  },
+  "ladderRopes": [
+    {
+      "x": -1107,
+      "y1": -110,
+      "y2": 111,
+      "isLadder": false
+    },
+    {
+      "x": -1235,
+      "y1": 1181,
+      "y2": 1400,
+      "isLadder": false
+    },
+    {
+      "x": -222,
+      "y1": 977,
+      "y2": 1390,
+      "isLadder": false
+    },
+    {
+      "x": -452,
+      "y1": 781,
+      "y2": 933,
+      "isLadder": false
+    },
+    {
+      "x": 755,
+      "y1": 1014,
+      "y2": 1364,
+      "isLadder": false
+    },
+    {
+      "x": 406,
+      "y1": 740,
+      "y2": 1006,
+      "isLadder": false
+    },
+    {
+      "x": 921,
+      "y1": 98,
+      "y2": 364,
+      "isLadder": false
+    },
+    {
+      "x": -1229,
+      "y1": -284,
+      "y2": -114,
+      "isLadder": false
+    },
+    {
+      "x": -440,
+      "y1": -309,
+      "y2": 82,
+      "isLadder": false
+    },
+    {
+      "x": 343,
+      "y1": -108,
+      "y2": 304,
+      "isLadder": false
+    },
+    {
+      "x": -791,
+      "y1": 118,
+      "y2": 468,
+      "isLadder": false
+    },
+    {
+      "x": 738,
+      "y1": 335,
+      "y2": 770,
+      "isLadder": false
+    },
+    {
+      "x": -336,
+      "y1": 481,
+      "y2": 747,
+      "isLadder": false
+    },
+    {
+      "x": -1044,
+      "y1": 481,
+      "y2": 915,
+      "isLadder": false
+    },
+    {
+      "x": -1113,
+      "y1": 952,
+      "y2": 1174,
+      "isLadder": false
+    }
+  ],
+  "name": "Forgotten Path of Time\u003C3\u003E",
+  "streetName": "Ludibrium",
+  "id": 220070200
+}

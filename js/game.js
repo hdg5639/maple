@@ -48,16 +48,22 @@ class Game {
     this.initInputs();
     this.initMonsters();
     this.loadProgress();
+    if (typeof StorageManager !== 'undefined' && localStorage.getItem(StorageManager.KEY) === null) {
+      this.saveProgress();
+    }
     const initial = this.map.resolvePosition(this.player.x, this.player.y);
     Object.assign(this.player, initial, {onGround:true, currentFoothold:this.map.findSpawnFoothold(initial.x, initial.y)});
     this.ui.updateQuickslotsForJob(this.player.job);
+    this.ui.addChat?.('system', '🔥 [하이퍼 익스프레스 ON] 상시 경험치 300% 획득 & 몬스터 1~2마리 처치 시 초고속 레벨업 모드가 가동 중입니다!');
 
     requestAnimationFrame((t) => this.loop(t));
     setInterval(() => this.saveProgress(), 15000);
 
     // Zero-Loss Crash Defense: beforeunload and pagehide
     const emergencyFlush = () => {
-      this.saveProgress(true);
+      if (typeof StorageManager !== 'undefined' && localStorage.getItem(StorageManager.KEY) !== null && !window.zakumProbe) {
+        this.saveProgress(true);
+      }
       if (this.network && typeof this.network.sendBeaconSave === 'function') {
         this.network.sendBeaconSave();
       }
@@ -347,16 +353,20 @@ class Game {
   }
 
   changePlayerJob(jobName) {
+    const prevJob = this.player.job;
     this.player.setJob(jobName);
     this.ui.updateQuickslotsForJob(jobName);
     this.ui.updateStatsWindow();
     this.ui.updateSkillsWindow();
-    this.spawnItemText(this.player.x, this.player.y - 45, `★ ${jobName} 전직 완료! ★`);
-    this.ui.addChatMessage('시스템', `축하합니다! ${jobName} 으로 1차 전직을 완료하였습니다.`, 'system');
+    this.ui.updateHUD();
+    window.audio?.playLevelUp?.();
+    this.spawnItemText(this.player.x, this.player.y - 45, `★ [직업 변경] ${jobName}! ★`);
+    this.ui.addChatMessage('시스템', `✨ [직업 변경] [${prevJob}]에서 [${jobName}](으)로 직업이 변경되었습니다! (전용 장비/스킬/퀵슬롯 자동 동기화)`, 'system');
   }
 
   // --- MULTI-MAP TRAVEL ENGINE ---
   changeMap(mapKey, spawnX = null, spawnY = null) {
+    window.audio?.playPortal?.();
     this.map.loadMap(mapKey);
     this.raidViewBounds = null;
     document.getElementById('game-container')?.classList.toggle('boss-map', this.map.isBossMap);
@@ -411,15 +421,18 @@ class Game {
       this.autoHunt.stuckTimer = 0;
     }
 
-    if (this.map.isBossMap || mapKey === 'zakum_altar') {
+    if (mapKey === 'zakum_altar' || this.map.boss === 'zakum') {
       this.spawnZakumBoss();
+    } else if (this.map.isBossMap) {
+      this.initMonsters();
     } else {
       const bBar = document.getElementById('boss-bar-container');
       if (bBar) bBar.style.display = 'none';
       this.initMonsters();
     }
 
-    // Warp sound & notification
+    // Warp sound, map-specific BGM & notification
+    window.audio?.playBgmForMap?.(mapKey);
     window.audio.playFlashJump();
     this.spawnItemText(this.player.x, this.player.y - 45, `★ ${this.map.name} 도착! ★`);
     this.ui.addChatMessage('시스템', `[맵 이동] ${this.map.name} 에 입장하였습니다.`, 'system');
@@ -428,8 +441,20 @@ class Game {
   }
 
   createMapMonster(site) {
-    const point = this.map.resolvePosition(site.x, site.y);
-    const fh = this.map.findSpawnFoothold(point.x, point.y);
+    let fh = null;
+    let point = null;
+    if (site.sourceFootholdId !== undefined && site.sourceFootholdId !== null) {
+      const authoredFh = this.map.footholds.find(f => String(f.id) === String(site.sourceFootholdId) && !f.isProp);
+      if (authoredFh && site.x >= authoredFh.x1 - 2 && site.x <= authoredFh.x2 + 2) {
+        const clampedX = Math.max(authoredFh.x1, Math.min(authoredFh.x2, site.x));
+        fh = authoredFh;
+        point = { x: clampedX, y: authoredFh.getYAtX(clampedX) };
+      }
+    }
+    if (!fh) {
+      point = this.map.resolvePosition(site.x, site.y);
+      fh = this.map.findSpawnFoothold(point.x, point.y);
+    }
     if (!fh || this.map.npcs.some(n => Math.hypot(n.x-point.x,n.y-point.y)<100) ||
         this.map.portals.some(p => Math.hypot(p.x-point.x,p.y-point.y)<100) ||
         Math.hypot(this.map.defaultSpawn.x-point.x,this.map.defaultSpawn.y-point.y)<100 ||
@@ -443,9 +468,47 @@ class Game {
   initMonsters() {
     this.monsters = [];
     this.maxMonsters = this.map.maxMonsters;
-    if (this.map.isBossMap) { this.spawnZakumBoss(); return; }
-    if (this.map.isTown) return;
+    if (this.map.isTown && !this.map.isBossMap) return;
+
+    // 1. 일반 필드 몬스터 스폰
     for (const site of this.map.mobSpawns) this.createMapMonster(site);
+
+    // 2. 필드 보스 자연 스폰 (isBossMap 여부 무관)
+    const bossType = this.map.boss || this.map.bossSpawn?.type;
+    if (bossType) {
+      if (bossType === 'zakum' || this.map.currentKey === 'zakum_altar') {
+        this.spawnZakumBoss();
+      } else {
+        const cd = this.fieldBossCooldowns?.[bossType] || 0;
+        if (cd <= 0) {
+          this.spawnBoss(bossType);
+        }
+      }
+    }
+  }
+
+  // 필드 보스 처치 후 주기적 자동 리스폰 타이머 엔진
+  onBossKilled(bossType) {
+    if (!this.fieldBossCooldowns) this.fieldBossCooldowns = {};
+    const isRaid = ['crimson_balrog', 'manon', 'papulatus', 'zakum', 'horntail', 'pianus', 'griffey'].includes(bossType);
+    this.fieldBossCooldowns[bossType] = isRaid ? 90 : 45;
+  }
+
+  updateFieldBossRespawns(dt) {
+    if (!this.fieldBossCooldowns) this.fieldBossCooldowns = {};
+    for (const bType of Object.keys(this.fieldBossCooldowns)) {
+      if (this.fieldBossCooldowns[bType] > 0) {
+        this.fieldBossCooldowns[bType] -= dt;
+        if (this.fieldBossCooldowns[bType] <= 0) {
+          delete this.fieldBossCooldowns[bType];
+          const mapBoss = this.map.boss || this.map.bossSpawn?.type;
+          if (mapBoss === bType && (!this.boss || !this.boss.isAlive())) {
+            this.spawnBoss(bType);
+            this.ui?.addChatMessage?.('시스템', `🔥 [BOSS RESPAWN] 필드 보스 ${bType}이(가) 필드에 다시 출현했습니다!`, 'system');
+          }
+        }
+      }
+    }
   }
 
   spawnMonster() {
@@ -455,26 +518,77 @@ class Game {
     for (const site of sites) if (this.createMapMonster(site)) break;
   }
 
-  spawnBoss() {
-    if (this.boss && (this.boss.isAlive() || this.boss.isDying())) {
-      this.spawnItemText(this.player.x, this.player.y - 45, '이미 머쉬맘이 소환되어 있습니다!');
+  warpToBossLair(type = 'mushmom') {
+    if (type === 'zakum') {
+      this.changeMap('zakum_altar');
+      return;
+    }
+    const catalog = window.BOSS_RAID_CATALOG || [];
+    const entry = catalog.find(b => b.type === type);
+    const targetMap = (entry && entry.lairMap && MAP_DATABASE[entry.lairMap])
+      ? entry.lairMap
+      : 'henesys_hhg';
+    if (this.map.currentKey !== targetMap) {
+      this.changeMap(targetMap);
+    }
+    this.spawnBoss(type);
+  }
+
+  spawnBoss(type = 'mushmom') {
+    if (type === 'zakum') {
+      if (this.map.currentKey !== 'zakum_altar') {
+        this.changeMap('zakum_altar');
+      } else {
+        this.spawnZakumBoss();
+      }
+      return;
+    }
+    if (this.map.currentKey === 'zakum_altar' || this.map.boss === 'zakum') {
+      this.spawnZakumBoss();
       return;
     }
 
-    const site = this.map.bossSpawn;
-    if (!site || site.type !== 'mushmom') return;
-    const point = this.map.resolvePosition(site.x, site.y);
-    window.audio.playBossRoar();
-    this.boss = new Monster('mushmom', point.x, point.y);
-    this.boss.onGround = true;
-    this.boss.currentFoothold = this.map.findSpawnFoothold(point.x, point.y);
-    this.monsters.push(this.boss);
-    this.spawnItemText(this.player.x, this.player.y - 45, '★ [BOSS] 거대 보스 머쉬맘 출현! ★');
+    const validBosses = [
+      'mano', 'stumpy', 'king_slime', 'faust', 'mushmom', 'dyle',
+      'zombie_mushmom', 'jr_balrog', 'crimson_balrog', 'manon',
+      'papulatus', 'horntail', 'pianus', 'alishar', 'griffey', 'timer'
+    ];
+    const chosenType = validBosses.includes(type) ? type : 'mushmom';
 
+    // Replace existing field boss if player summons a new boss
+    if (this.boss) {
+      this.monsters = this.monsters.filter(m => m !== this.boss);
+      this.boss = null;
+    }
+
+    // Position boss on map bossSpawn or a safe foothold near the player
+    const site = (this.map.bossSpawn && this.map.bossSpawn.type === chosenType) ? this.map.bossSpawn : null;
+    const rawX = site ? site.x : Math.max(80, Math.min(this.map.width - 80, this.player.x + (this.player.facing === 'right' ? 180 : -180)));
+    const rawY = site ? site.y : this.player.y;
+    const point = this.map.resolvePosition(rawX, rawY);
+    const fh = this.map.findSpawnFoothold(point.x, point.y) || this.player.currentFoothold || this.map.findGroundFootholdAt(point.x);
+    const spawnX = fh ? Math.max(fh.x1 + 10, Math.min(fh.x2 - 10, point.x)) : point.x;
+    const spawnY = fh ? fh.getYAtX(spawnX) : point.y;
+
+    if (window.audio && window.audio.playBossRoar) window.audio.playBossRoar();
+    if (chosenType === 'horntail' && typeof HorntailBoss !== 'undefined') {
+      this.boss = new HorntailBoss(spawnX, spawnY);
+    } else {
+      this.boss = new Monster(chosenType, spawnX, spawnY);
+    }
+    this.boss.onGround = Boolean(fh);
+    this.boss.currentFoothold = fh;
+    this.monsters.push(this.boss);
+
+    this.spawnItemText(this.player.x, this.player.y - 45, `★ [BOSS] ${this.boss.name} 출현! ★`);
+    if (this.ui?.addChatMessage) this.ui.addChatMessage('시스템', `🔥 [BOSS RAID] 거대 보스 ${this.boss.name}이(가) 필드에 나타났습니다!`, 'system');
+
+    document.getElementById('game-container')?.classList.add('boss-map');
     const bBar = document.getElementById('boss-bar-container');
     const pImg = document.getElementById('boss-portrait-img');
     if (bBar) bBar.style.display = 'block';
-    if (pImg) pImg.src = 'assets/monsters/mushmom/stand_0.png';
+    if (pImg) pImg.src = `assets/monsters/${chosenType}/stand_0.png`;
+    this.updateBossBar();
   }
 
   spawnZakumBoss() {
@@ -522,14 +636,29 @@ class Game {
         } else if (drop.type === 'blue_potion') {
           this.player.addItem('blue_potion', '파란 포션', drop.amount, this);
           this.ui.addLootLog(`아이템을 얻었습니다 (파란 포션 x${drop.amount})`, 'item');
-        } else if (drop.type === 'equip') {
+        } else if (drop.type === 'boss_coin') {
+          this.player.addItem('boss_coin', '보스 토벌 주화', drop.amount, this);
+          this.ui.addLootLog(`아이템을 획득했습니다 (보스 토벌 주화 x${drop.amount})`, 'item');
+        } else if (drop.type === 'power_elixir') {
+          this.player.addItem('power_elixir', '파워 엘릭서', drop.amount, this);
+          this.ui.addLootLog(`아이템을 획득했습니다 (파워 엘릭서 x${drop.amount})`, 'item');
+        } else if (drop.type === 'elixir') {
+          this.player.addItem('elixir', '엘릭서', drop.amount, this);
+          this.ui.addLootLog(`아이템을 획득했습니다 (엘릭서 x${drop.amount})`, 'item');
+        } else if (drop.type === 'equip' || drop.type === 'helm_zakum' || drop.type === 'shd_pan_lid' || drop.type === 'pan_lid') {
           if (this.player.inventory.equip.length >= 24) continue;
-          const zakum = drop.name.includes('자쿰');
-          this.player.inventory.equip.push({id:zakum ? 'zakum_helm' : 'pan_lid',
-            name:zakum ? '자쿰의 투구' : '냄비 뚜껑', type:zakum ? 'hat' : 'shield',
-            equipped:false, def:zakum ? 150 : 10, upgradeSlots:zakum ? 10 : 7,
-            str:zakum ? 15 : 0, dex:zakum ? 15 : 0, int:zakum ? 15 : 0, luk:zakum ? 15 : 0});
-          this.ui.addLootLog(`장비를 얻었습니다 (${drop.name})`, 'item');
+          const isZakum = drop.type === 'helm_zakum' || (drop.name && drop.name.includes('자쿰'));
+          this.player.inventory.equip.push({
+            item_uuid: 'eq_' + Math.random().toString(36).substring(2, 9),
+            id: isZakum ? 'helm_zakum' : 'shd_pan_lid',
+            name: isZakum ? '자쿰의 투구' : '냄비 뚜껑',
+            type: isZakum ? 'hat' : 'shield',
+            equipped: false,
+            def: isZakum ? 150 : 10,
+            upgradeSlots: isZakum ? 10 : 7,
+            str: isZakum ? 15 : 0, dex: isZakum ? 15 : 0, int: isZakum ? 15 : 0, luk: isZakum ? 15 : 0
+          });
+          this.ui.addLootLog(`장비를 얻었습니다 (${drop.name || (isZakum ? '자쿰의 투구' : '냄비 뚜껑')})`, 'item');
         } else {
           this.player.addItem(drop.type, drop.name, drop.amount, this);
           this.ui.addLootLog(`아이템을 얻었습니다 (${drop.name})`, 'item');
@@ -633,10 +762,13 @@ class Game {
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const p = this.projectiles[i];
       p.update(dt, this);
-      if (p.life <= 0 || p.hit) {
+      if (p.life <= 0 || (p.hit && (p.hitTimer || 0) >= 0.08)) {
         this.projectiles.splice(i, 1);
       }
     }
+
+    // Monster spawns & updates
+    this.updateFieldBossRespawns(dt);
 
     // Monster spawns & updates
     this.spawnTimer += dt;
@@ -655,6 +787,10 @@ class Game {
       } else if (m.isDying()) {
         m.update(dt, this.player, this.map, this);
         if (m.state === 'dead') {
+          if (m.isBoss || m === this.boss) {
+            this.onBossKilled(m.type);
+            if (m === this.boss) this.boss = null;
+          }
           this.monsters.splice(i, 1);
         }
       } else {
@@ -768,27 +904,43 @@ class Game {
   }
 
   updateBossBar() {
-    const bBar = document.getElementById('boss-bar-container');
-    const bFill = document.getElementById('boss-hp-fill');
-    const bText = document.getElementById('boss-hp-text');
-    const pImg = document.getElementById('boss-portrait-img');
-    const armsCont = document.getElementById('boss-arms-container');
-    const armsCount = document.getElementById('boss-arms-count');
-    const armsPips = document.getElementById('boss-arms-pips');
+    if (!this._bossBarCache) this._bossBarCache = {};
+    const c = this._bossBarCache;
 
     if (this.boss && this.boss.isAlive()) {
+      const liveArms = this.boss.arms?.filter(arm => arm.isAlive) || this.boss.parts?.filter(p => p.isAlive) || [];
+      const allParts = this.boss.arms || this.boss.parts || [];
+      const hasParts = allParts.length > 0;
+      const partPhase = liveArms.length > 0;
+      const currentHp = hasParts ? (partPhase ? allParts.reduce((sum, p) => sum + Math.max(0, p.hp), 0) : this.boss.hp) : this.boss.hp;
+      const maximumHp = hasParts ? (partPhase ? allParts.reduce((sum, p) => sum + p.maxHp, 0) : this.boss.maxHp) : this.boss.maxHp;
+      const armsState = this.boss.arms ? this.boss.arms.map(a => `${a.isAlive ? a.hp : 0}`).join(',') : '';
+      const stateKey = `${this.boss.type || 'zakum'}_${this.boss.name}_${currentHp}_${maximumHp}_${partPhase}_${armsState}`;
+
+      if (c.stateKey === stateKey && c.visible === true) return;
+      c.stateKey = stateKey;
+      c.visible = true;
+
+      const bBar = document.getElementById('boss-bar-container');
+      const bFill = document.getElementById('boss-hp-fill');
+      const bText = document.getElementById('boss-hp-text');
+      const pImg = document.getElementById('boss-portrait-img');
+      const armsCont = document.getElementById('boss-arms-container');
+      const armsCount = document.getElementById('boss-arms-count');
+      const armsPips = document.getElementById('boss-arms-pips');
+
       if (bBar) bBar.style.display = 'block';
-      const liveArms = this.boss.arms?.filter(arm => arm.isAlive) || [];
-      const armPhase = liveArms.length > 0;
-      const currentHp = armPhase ? this.boss.arms.reduce((sum,arm) => sum+Math.max(0,arm.hp),0) : this.boss.hp;
-      const maximumHp = armPhase ? this.boss.arms.reduce((sum,arm) => sum+arm.maxHp,0) : this.boss.maxHp;
       const pct = Math.max(0, currentHp / maximumHp * 100);
       if (bFill) bFill.style.width = `${pct}%`;
-      if (bText) bText.innerText = `${this.boss.arms ? (armPhase ? '자쿰 · 팔' : '자쿰 · 본체') : this.boss.name} ${currentHp.toLocaleString()}/${maximumHp.toLocaleString()}`;
+      if (bText) bText.innerText = `${this.boss.arms ? (partPhase ? '자쿰 · 팔' : '자쿰 · 본체') : (this.boss.parts ? (partPhase ? '혼테일 · 부위' : '혼테일 · 본체') : this.boss.name)} ${currentHp.toLocaleString()}/${maximumHp.toLocaleString()}`;
       if (pImg) {
-        pImg.src = (typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss)
+        const targetSrc = (typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss)
           ? 'assets/monsters/zakum/stand_0.png'
-          : 'assets/monsters/mushmom/stand_0.png';
+          : (this.boss.type ? `assets/monsters/${this.boss.type}/stand_0.png` : 'assets/monsters/mushmom/stand_0.png');
+        if (c.imgSrc !== targetSrc) {
+          c.imgSrc = targetSrc;
+          pImg.src = targetSrc;
+        }
       }
 
       if (this.boss.arms && armsCont && armsCount && armsPips) {
@@ -803,7 +955,10 @@ class Game {
       } else if (armsCont) {
         armsCont.style.display = 'none';
       }
-    } else {
+    } else if (c.visible !== false) {
+      c.visible = false;
+      c.stateKey = null;
+      const bBar = document.getElementById('boss-bar-container');
       if (bBar) bBar.style.display = 'none';
     }
   }
@@ -828,24 +983,40 @@ class Game {
       });
     }
 
-    // 3. Drops
-    this.drops.forEach(d => window.sprites.drawDrop(ctx, d));
+    // Viewport Frustum Bounds (with generous margin for large boss sprites & spell telegraphs)
+    const camLeft = this.camera.x - 240;
+    const camRight = this.camera.x + (this.camera.width || this.canvas.width) + 240;
+    const camTop = this.camera.y - 240;
+    const camBottom = this.camera.y + (this.camera.height || this.canvas.height) + 240;
 
-    // 4. Monsters & Zakum Boss
+    // 3. Drops (Frustum Culled)
+    for (let i = 0; i < this.drops.length; i++) {
+      const d = this.drops[i];
+      if (d.x >= camLeft && d.x <= camRight && d.y >= camTop && d.y <= camBottom) {
+        window.sprites.drawDrop(ctx, d);
+      }
+    }
+
+    // 4. Monsters & Raid Bosses (Frustum Culled for regular mobs, always draw active bosses/spells)
     if (this.boss && typeof ZakumBoss !== 'undefined' && this.boss instanceof ZakumBoss && (this.boss.isAlive() || this.boss.isDying())) {
       window.sprites.drawZakumBoss(ctx, this.boss);
+    } else if (this.boss && typeof HorntailBoss !== 'undefined' && this.boss instanceof HorntailBoss && (this.boss.isAlive() || this.boss.isDying())) {
+      window.sprites.drawHorntailBoss(ctx, this.boss);
     }
-    this.monsters.forEach(m => {
-      if (!(typeof ZakumBoss !== 'undefined' && m instanceof ZakumBoss)) {
-        window.sprites.drawMonster(ctx, m);
+    for (let i = 0; i < this.monsters.length; i++) {
+      const m = this.monsters[i];
+      if (!(typeof ZakumBoss !== 'undefined' && m instanceof ZakumBoss) && !(typeof HorntailBoss !== 'undefined' && m instanceof HorntailBoss)) {
+        if (m.isBoss || (m.x >= camLeft && m.x <= camRight && m.y >= camTop && m.y <= camBottom)) {
+          window.sprites.drawMonster(ctx, m);
+        }
       }
-    });
+    }
 
-    // 5. Projectiles (Arrows, Shurikens, Energy Bolts)
-    this.projectiles.forEach(p => window.sprites.drawProjectile(ctx, p));
-
-    // 6. Player
+    // 5. Player
     window.sprites.drawPlayer(ctx, this.player);
+
+    // 6. Projectiles (Arrows, Shurikens, Energy Bolts) - Layered OVER Player (INV-2)
+    this.projectiles.forEach(p => window.sprites.drawProjectile(ctx, p));
 
     // 6.5. Remote Peer Players (Multiplayer)
     if (this.network) {
@@ -1039,6 +1210,8 @@ class Game {
     const p = this.player;
     p.name = data.name ?? p.name;
     p.job = data.job ?? p.job;
+    p.jobTier = data.jobTier ?? p.jobTier ?? 0;
+    p.selectedMobility = data.selectedMobility ?? p.selectedMobility ?? 'flash_jump';
     p.level = Math.max(1, Math.min(Player.MAX_LEVEL, data.level ?? p.level));
     for (const field of ['exp','str','dex','int','luk','ap','sp','fame','meso']) {
       if (Number.isFinite(data[field]) && data[field] >= 0) p[field] = data[field];
@@ -1054,10 +1227,37 @@ class Game {
       };
       if (p.ensureItemUUIDs) p.ensureItemUUIDs();
     }
-    p.initSkillsForJob(p.job);
-    for (const [id, saved] of Object.entries(data.skills || {})) {
-      if (p.skills[id] && Number.isFinite(saved.level)) p.skills[id].level = Math.max(0, Math.min(p.skills[id].maxLevel, saved.level));
+    if (data.coordi && typeof data.coordi === 'object') {
+      p.coordi = { ...(p.coordi || {}), ...data.coordi };
     }
+    if (Array.isArray(data.coordiPresets) && data.coordiPresets.length) {
+      p.coordiPresets = data.coordiPresets.map(pr => ({ ...(p.coordi || {}), ...pr }));
+    }
+    if (Number.isInteger(data.activeCoordiPreset)) {
+      p.activeCoordiPreset = data.activeCoordiPreset;
+    }
+    if (Array.isArray(data.coordiCloset) && data.coordiCloset.length) {
+      p.coordiCloset = data.coordiCloset;
+    }
+    if (data.bossKills && typeof data.bossKills === 'object') {
+      p.bossKills = { ...data.bossKills };
+    }
+    p.initSkillsForJob(p.job);
+    // Deep restore skills without dropping evolved/unlocked skills
+    if (data.skills && typeof data.skills === 'object') {
+      for (const [id, saved] of Object.entries(data.skills)) {
+        if (!saved) continue;
+        if (p.skills[id]) {
+          if (Number.isFinite(saved.level)) {
+            p.skills[id].level = Math.max(0, Math.min(p.skills[id].maxLevel || 30, saved.level));
+          }
+        } else {
+          p.skills[id] = { ...saved };
+        }
+      }
+    }
+    // Reconcile SP automatically to guarantee zero loss
+    p.reconcileSP();
     p.syncSkillCosts();
     if (Array.isArray(data.quickslots) && data.quickslots.length) p.quickslotBindings = data.quickslots;
     const weapon = p.inventory.equip.find(eq => eq.equipped && eq.type === 'weapon');
@@ -1066,10 +1266,11 @@ class Game {
     p.hp = Math.max(0, Math.min(p.maxHp, data.hp ?? p.maxHp));
     p.mp = Math.max(0, Math.min(p.maxMp, data.mp ?? p.maxMp));
     if (data.currentMap && MAP_DATABASE[data.currentMap]) this.changeMap(data.currentMap, data.x ?? null, data.y ?? null);
-    // A saved death has no live timeout after reload; resume through the normal safe-town revival.
     if (p.hp === 0) p.revive(this);
-    this.ui.updateQuickslotsForJob(p.job);
+    this.ui.updateQuickslotsForJob(p.job, true);
     this.ui.updateHUD();
+    this.ui.updateSkillsWindow();
+    this.ui.updateStatsWindow();
   }
 
   loadProgress() {
