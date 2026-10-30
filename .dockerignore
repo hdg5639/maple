@@ -1,0 +1,10 @@
+.git
+.github
+.agents
+__pycache__/
+*.pyc
+openmaple.db
+reference_captures/
+*.png
+!assets/**/*.png
+qa_report.json
