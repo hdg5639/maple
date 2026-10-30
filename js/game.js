@@ -54,6 +54,16 @@ class Game {
 
     requestAnimationFrame((t) => this.loop(t));
     setInterval(() => this.saveProgress(), 15000);
+
+    // Zero-Loss Crash Defense: beforeunload and pagehide
+    const emergencyFlush = () => {
+      this.saveProgress(true);
+      if (this.network && typeof this.network.sendBeaconSave === 'function') {
+        this.network.sendBeaconSave();
+      }
+    };
+    window.addEventListener('beforeunload', emergencyFlush);
+    window.addEventListener('pagehide', emergencyFlush);
   }
 
   initCanvasSize() {
@@ -1012,7 +1022,7 @@ class Game {
     requestAnimationFrame((t) => this.loop(t));
   }
 
-  saveProgress() {
+  saveProgress(immediate = false) {
     try {
       if (typeof StorageManager !== 'undefined') {
         StorageManager.save(this.player, this.map.currentKey);
@@ -1034,7 +1044,16 @@ class Game {
       if (Number.isFinite(data[field]) && data[field] >= 0) p[field] = data[field];
     }
     p.maxExp = Player.expRequiredForLevel(p.level);
-    if (data.inventory?.equip && data.inventory?.use && data.inventory?.etc) p.inventory = data.inventory;
+    if (data.inventory) {
+      p.inventory = {
+        equip: data.inventory.equip || [],
+        use: data.inventory.use || [],
+        setup: data.inventory.setup || [],
+        etc: data.inventory.etc || [],
+        cash: data.inventory.cash || []
+      };
+      if (p.ensureItemUUIDs) p.ensureItemUUIDs();
+    }
     p.initSkillsForJob(p.job);
     for (const [id, saved] of Object.entries(data.skills || {})) {
       if (p.skills[id] && Number.isFinite(saved.level)) p.skills[id].level = Math.max(0, Math.min(p.skills[id].maxLevel, saved.level));

@@ -7,6 +7,8 @@ import asyncio
 import websockets
 import os
 import sys
+import socket
+import sqlite3
 
 if sys.platform == 'win32' and hasattr(sys.stdout, 'reconfigure'):
     try:
@@ -15,7 +17,24 @@ if sys.platform == 'win32' and hasattr(sys.stdout, 'reconfigure'):
     except Exception:
         pass
 
+def is_port_open(port):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.5)
+        return s.connect_ex(('127.0.0.1', port)) == 0
+
 async def main():
+    server_proc = None
+    if not is_port_open(8000):
+        print("[QA] Starting background server.py...")
+        server_proc = subprocess.Popen([sys.executable, 'server.py', '--no-browser'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(40):
+            if is_port_open(8000):
+                print("[QA] Server is ready on http://localhost:8000/")
+                break
+            await asyncio.sleep(0.2)
+        else:
+            raise RuntimeError("Failed to start server.py on port 8000!")
+
     chrome_path = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
     target_url = 'http://localhost:8000/'
     print(f"[QA] Launching Chrome against Multithreaded HTTP Server: {target_url}")
@@ -100,7 +119,6 @@ async def main():
                 p.facing = 'right';
                 p.attackTimer = 0;
 
-                // Spawn a snail directly overlapping the player body (x: 495, player x: 500)
                 const snail = new Monster('snail', 495, 1300);
                 const prevHp = snail.hp;
                 g.monsters = [snail];
@@ -126,19 +144,16 @@ async def main():
             proj_test = await eval_js("""(() => {
                 const g = window.game;
                 const p = g.player;
-                // Place target snail at x=600
                 const snail = new Monster('snail', 600, 1300);
                 g.monsters = [snail];
                 g.projectiles = [];
                 g.damageDigits = [];
 
-                // Launch projectile at high speed (vx = 540) starting at x=520
                 const proj = new Projectile(520, 1290, 540, 0, 'arrow', 35, true, p);
                 g.projectiles.push(proj);
 
-                // Simulate 2 physics steps
-                proj.update(0.1, g); // Advances from 520 to 574
-                proj.update(0.1, g); // Advances from 574 to 628 (sweeps right through snail at 600)
+                proj.update(0.1, g);
+                proj.update(0.1, g);
 
                 return {
                     projectileHit: proj.hit,
@@ -160,7 +175,6 @@ async def main():
                 print(f"  Job: {curr_job} -> Quickslot Bindings (8 slots): {bindings}")
                 assert len(bindings) == 8, f"Quickslot bindings count was not 8 for {job}!"
 
-                # Reset attackTimer & ensure MP for clean skill test
                 await eval_js("window.game.player.attackTimer = 0; window.game.player.mp = window.game.player.maxMp;")
                 cast1 = await eval_js("window.game.player.useSkill(window.game.getQuickslotSkill(0), window.game)")
                 print(f"    Slot 1 ({bindings[0]}) Cast: {cast1}")
@@ -177,7 +191,6 @@ async def main():
                 portals_count = await eval_js("window.game.map.portals.length")
                 player_y = await eval_js("window.game.player.y")
 
-                # Test ground foothold beneath spawn
                 safe_ground = await eval_js("Boolean(window.game.map.findGroundFootholdAt(window.game.player.x))")
                 print(f"  Map: {map_name} ({mkey}) | Footholds: {footholds_count} | NPCs: {npcs_count} | Portals: {portals_count} | Player Spawn Y: {player_y} | Ground Foothold Exists: {safe_ground}")
                 assert safe_ground, f"Player spawned without ground foothold in {mkey}!"
@@ -220,8 +233,61 @@ async def main():
             print(f"  Movement Stop Test: {physics_test}")
             assert physics_test['movingVx'] > 0 and physics_test['stoppedVx'] == 0, "Stop input test failed!"
 
-            # === TEST 8: Console Error Log Audit ===
-            print("\n--- [TEST 8] Console Runtime Error Audit ---")
+            # === TEST 8: 5-Tab Inventory & Item UUID Metadata ===
+            print("\n--- [TEST 8] 5-Tab Inventory Partitioning & Item UUID Metadata ---")
+            inven_audit = await eval_js("""(() => {
+                const p = window.game.player;
+                const inv = p.inventory;
+                const tabs = Object.keys(inv);
+                const equipItems = inv.equip || [];
+                const allHaveUUID = equipItems.length > 0 && equipItems.every(eq => Boolean(eq.item_uuid));
+                const allHaveUpgradeSlots = equipItems.every(eq => eq.upgradeSlots !== undefined);
+                return {
+                    tabs,
+                    equipCount: equipItems.length,
+                    useCount: (inv.use || []).length,
+                    setupCount: (inv.setup || []).length,
+                    etcCount: (inv.etc || []).length,
+                    cashCount: (inv.cash || []).length,
+                    allHaveUUID,
+                    allHaveUpgradeSlots
+                };
+            })()""")
+            print(f"  Inventory Audit: {inven_audit}")
+            assert 'equip' in inven_audit['tabs'] and 'use' in inven_audit['tabs'] and 'setup' in inven_audit['tabs'] and 'etc' in inven_audit['tabs'] and 'cash' in inven_audit['tabs'], "Missing 5-tab partitioning!"
+            assert inven_audit['allHaveUUID'], "All equipment items must maintain unique item_uuid metadata!"
+            assert inven_audit['allHaveUpgradeSlots'], "Equipment must maintain upgradeSlots metadata!"
+
+            # === TEST 9: 4/4 Classic Dice Stat Distribution & Lobby ===
+            print("\n--- [TEST 9] 4/4 Classic Dice Stat Distribution & Lobby System ---")
+            dice_audit = await eval_js("""(() => {
+                const ui = window.game.ui;
+                ui.rollDiceStats();
+                const d = ui.currentDiceStats;
+                const sum = d.str + d.dex + d.int + d.luk;
+                const validMin = d.str >= 4 && d.dex >= 4 && d.int >= 4 && d.luk >= 4;
+                return {
+                    str: d.str,
+                    dex: d.dex,
+                    int: d.int,
+                    luk: d.luk,
+                    sum,
+                    validMin
+                };
+            })()""")
+            print(f"  Dice Roll Result: {dice_audit}")
+            assert dice_audit['sum'] == 25 and dice_audit['validMin'], "4/4 Classic dice roll must total exactly 25 and have each stat >= 4!"
+
+            # === TEST 10: SQLite WAL Mode & Zero-Delay Persistence ===
+            print("\n--- [TEST 10] SQLite WAL Mode & Server Zero-Delay Persistence ---")
+            conn = sqlite3.connect("openmaple.db")
+            wal_mode = conn.execute("PRAGMA journal_mode;").fetchone()[0]
+            conn.close()
+            print(f"  SQLite Journal Mode: {wal_mode.upper()}")
+            assert wal_mode.upper() == 'WAL', f"Database journal mode must be WAL! Current: {wal_mode}"
+
+            # === TEST 11: Console Runtime Error Audit ===
+            print("\n--- [TEST 11] Console Runtime Error Audit ---")
             print(f"  Total Console Exceptions: {len(errors)}")
             if errors:
                 for err in errors:
@@ -229,11 +295,13 @@ async def main():
             assert len(errors) == 0, f"Detected {len(errors)} runtime exceptions!"
 
             print("\n========================================================")
-            print("  ALL 8 CLOSED-LOOP QA TESTS PASSED WITH 0 RUNTIME ERRORS!")
+            print("  ALL 11 INDUSTRIAL QA TESTS PASSED WITH 0 RUNTIME ERRORS!")
             print("========================================================\n")
 
     finally:
         proc.kill()
+        if server_proc:
+            server_proc.terminate()
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -58,6 +58,30 @@ class UIManager {
       window.audio.playButtonClick();
     });
 
+    // Character Selection Lobby & 4/4 Dice Roll listeners
+    document.getElementById('btn-char-lobby-close')?.addEventListener('click', () => {
+      document.getElementById('modal-char-lobby').style.display = 'none';
+    });
+    document.getElementById('btn-lobby-logout')?.addEventListener('click', () => {
+      document.getElementById('modal-char-lobby').style.display = 'none';
+      if (this.game.network) this.game.network.authenticated = false;
+      this.showLoginModal();
+    });
+    document.getElementById('btn-char-create-close')?.addEventListener('click', () => {
+      document.getElementById('modal-char-create').style.display = 'none';
+      document.getElementById('modal-char-lobby').style.display = 'flex';
+    });
+    document.getElementById('btn-create-char-cancel')?.addEventListener('click', () => {
+      document.getElementById('modal-char-create').style.display = 'none';
+      document.getElementById('modal-char-lobby').style.display = 'flex';
+    });
+    document.getElementById('btn-dice-roll')?.addEventListener('click', () => {
+      this.rollDiceStats();
+    });
+    document.getElementById('btn-create-char-submit')?.addEventListener('click', () => {
+      this.submitCharacterCreate();
+    });
+
     // Armory category tab listeners
     document.querySelectorAll('.armory-tab-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -150,7 +174,7 @@ class UIManager {
           this.game.player[stat]++;
           this.game.player.ap--;
           this.game.player.calcDerivedStats();
-          this.game.player.persistProgress(this.game);
+          this.game.player.persistProgress(this.game, true);
           window.audio.playButtonClick();
           this.updateStatsWindow();
         }
@@ -226,6 +250,206 @@ class UIManager {
     addQuickslotAction('quick-slot-potion-red', () => this.game.player.usePotion('red_potion'));
     addQuickslotAction('quick-slot-potion-blue', () => this.game.player.usePotion('blue_potion'));
     addQuickslotAction('quick-slot-autohunt', () => this.game.autoHunt.toggle());
+  }
+
+
+  showCharacterLobby(characters = [], username = '모험가') {
+    const loginModal = document.getElementById('modal-maple-login');
+    if (loginModal) loginModal.style.display = 'none';
+
+    const lobbyModal = document.getElementById('modal-char-lobby');
+    if (lobbyModal) {
+      lobbyModal.style.display = 'flex';
+      const nameEl = document.getElementById('lobby-account-name');
+      if (nameEl) nameEl.innerText = username;
+      this.renderCharacterSlots(characters);
+    }
+  }
+
+  renderCharacterSlots(characters = []) {
+    const grid = document.getElementById('char-slots-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    for (let i = 0; i < 4; i++) {
+      const charData = characters[i];
+      const slotEl = document.createElement('div');
+
+      if (charData) {
+        slotEl.className = 'char-slot-card';
+        let jobIcon = '🍁';
+        if (charData.job === '전사') jobIcon = '⚔️';
+        else if (charData.job === '마법사') jobIcon = '🔮';
+        else if (charData.job === '궁수') jobIcon = '🏹';
+        else if (charData.job === '도적') jobIcon = '🗡️';
+
+        let mapName = '헤네시스';
+        if (charData.currentMap === 'ant_tunnel') mapName = '개미굴';
+        else if (charData.currentMap === 'ellinia') mapName = '엘리니아';
+        else if (charData.currentMap === 'zakum_altar') mapName = '자쿰 제단';
+
+        slotEl.innerHTML = `
+          <div class="char-slot-avatar">${jobIcon}</div>
+          <div class="char-slot-name">${charData.name}</div>
+          <div class="char-slot-meta">Lv.${charData.level} ${charData.job}</div>
+          <div style="font-size: 10px; color: #854d0e; margin-bottom: 6px;">📍 ${mapName}</div>
+          <button class="btn-maple btn-select-char" style="width: 100%; padding: 6px 0; font-weight: bold; background: linear-gradient(to bottom, #10b981, #059669); color: #fff;">
+            선택 접속
+          </button>
+        `;
+
+        slotEl.querySelector('.btn-select-char')?.addEventListener('click', () => {
+          window.audio?.playButtonClick?.();
+          this.game.network?.selectCharacter(charData.charId);
+        });
+      } else {
+        slotEl.className = 'char-slot-card empty-slot';
+        slotEl.innerHTML = `
+          <div style="font-size: 32px; color: #9ca3af; margin-bottom: 4px;">➕</div>
+          <div style="font-size: 12px; font-weight: bold; color: #6b7280;">새 캐릭터 생성</div>
+        `;
+        slotEl.addEventListener('click', () => {
+          window.audio?.playButtonClick?.();
+          this.showCharacterCreateModal();
+        });
+      }
+
+      grid.appendChild(slotEl);
+    }
+  }
+
+  showCharacterCreateModal() {
+    const lobbyModal = document.getElementById('modal-char-lobby');
+    if (lobbyModal) lobbyModal.style.display = 'none';
+
+    const createModal = document.getElementById('modal-char-create');
+    if (createModal) {
+      createModal.style.display = 'flex';
+      const nameInput = document.getElementById('create-char-name');
+      if (nameInput) {
+        nameInput.value = '';
+        nameInput.focus();
+      }
+      this.rollDiceStats();
+    }
+  }
+
+  rollDiceStats() {
+    const diceBoard = document.getElementById('modal-char-create')?.querySelector('.maple-dialog-body');
+    if (diceBoard) {
+      diceBoard.classList.remove('dice-rolling');
+      void diceBoard.offsetWidth; // trigger reflow
+      diceBoard.classList.add('dice-rolling');
+    }
+    window.audio?.playButtonClick?.();
+
+    let rem = 9;
+    const cuts = [0, 0, 0];
+    for (let i = 0; i < 3; i++) cuts[i] = Math.floor(Math.random() * (rem + 1));
+    cuts.sort((a, b) => a - b);
+
+    const p0 = cuts[0];
+    const p1 = cuts[1] - cuts[0];
+    const p2 = cuts[2] - cuts[1];
+    const p3 = rem - cuts[2];
+
+    const stats = [4 + p0, 4 + p1, 4 + p2, 4 + p3];
+    for (let i = stats.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [stats[i], stats[j]] = [stats[j], stats[i]];
+    }
+
+    this.currentDiceStats = {
+      str: stats[0],
+      dex: stats[1],
+      int: stats[2],
+      luk: stats[3]
+    };
+
+    document.getElementById('dice-val-str').innerText = this.currentDiceStats.str;
+    document.getElementById('dice-val-dex').innerText = this.currentDiceStats.dex;
+    document.getElementById('dice-val-int').innerText = this.currentDiceStats.int;
+    document.getElementById('dice-val-luk').innerText = this.currentDiceStats.luk;
+
+    // Check 4/4 Recommendation
+    const badge = document.getElementById('dice-recommend-badge');
+    if (badge) {
+      const { str, dex, int: intStat, luk } = this.currentDiceStats;
+      if (intStat === 4 && luk === 4) {
+        badge.innerHTML = '⭐ <span style="color: #dc2626;">전사 / 궁수</span> 최적 세팅 (INT 4 / LUK 4) 달성!';
+      } else if (str === 4 && dex === 4) {
+        badge.innerHTML = '⭐ <span style="color: #2563eb;">마법사</span> 최적 세팅 (STR 4 / DEX 4) 달성!';
+      } else if (str === 4 && intStat === 4) {
+        badge.innerHTML = '⭐ <span style="color: #9333ea;">도적</span> 최적 세팅 (STR 4 / INT 4) 달성!';
+      } else {
+        badge.innerHTML = '주사위를 계속 굴려 비주력 스탯 4/4를 노려보세요!';
+      }
+    }
+  }
+
+  submitCharacterCreate() {
+    const nameInput = document.getElementById('create-char-name');
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name || name.length < 2 || name.length > 12) {
+      alert('캐릭터 이름은 2자 이상 12자 이하여야 합니다.');
+      nameInput?.focus();
+      return;
+    }
+
+    if (!this.currentDiceStats) {
+      this.rollDiceStats();
+    }
+
+    const { str, dex, int: intStat, luk } = this.currentDiceStats;
+    if ((str + dex + intStat + luk) !== 25) {
+      alert('스탯 총합이 25가 아닙니다. 주사위를 다시 굴려주세요.');
+      return;
+    }
+
+    window.audio?.playButtonClick?.();
+    if (this.game.network) {
+      this.game.network.createCharacter(name, str, dex, intStat, luk);
+    }
+  }
+
+  onCharacterCreated(success, message, characters = []) {
+    if (success) {
+      const createModal = document.getElementById('modal-char-create');
+      if (createModal) createModal.style.display = 'none';
+      this.showCharacterLobby(characters, this.game.network?.accountUsername || '모험가');
+      this.addChat('system', `🎉 [캐릭터 생성] ${message}`);
+    }
+  }
+
+  hideAllAuthScreens() {
+    const loginModal = document.getElementById('modal-maple-login');
+    if (loginModal) loginModal.style.display = 'none';
+
+    const lobbyModal = document.getElementById('modal-char-lobby');
+    if (lobbyModal) lobbyModal.style.display = 'none';
+
+    const createModal = document.getElementById('modal-char-create');
+    if (createModal) createModal.style.display = 'none';
+  }
+
+  onServerEnchantResult(success, message, data) {
+    if (data && data.inventory) {
+      this.game.player.inventory = data.inventory;
+      this.game.player.calcDerivedStats();
+    }
+    this.renderInventoryTab('equip');
+    this.updateStatsWindow();
+    this.updateHUD();
+
+    if (success) {
+      window.audio?.playScrollSuccess?.();
+      this.game.spawnItemText(this.game.player.x, this.game.player.y - 45, '★ 강화 성공! ★');
+    } else {
+      window.audio?.playScrollFail?.();
+      this.game.spawnItemText(this.game.player.x, this.game.player.y - 45, '💨 주문서 미끄러짐... 💨');
+    }
+
+    this.addChat('system', `[서버 강화] ${message}`);
   }
 
   toggleWindow(id) {
@@ -693,25 +917,27 @@ class UIManager {
 
         if (tabName === 'equip') {
           if (item.equipped) slot.classList.add('equipped');
-          slot.title = `${item.name} +${item.enhancements || 0} [${item.equipped ? '장착 중' : '미장착'}]\n공격력: +${item.atk || 0} / 방어력: +${item.def || 0}\n남은 업그레이드 가능 횟수: ${item.upgradeSlots || 0}회\n(클릭하여 장착/해제, 아래 패널에서 강화)`;
+          const succ = item.successCount || item.enhancements || 0;
+          slot.title = `${item.name} (+${succ}) [${item.equipped ? '장착 중' : '미장착'}]\nUUID: ${item.item_uuid || 'N/A'}\n공격력: +${item.atk || 0} / 방어력: +${item.def || 0}\n남은 업그레이드 가능 횟수: ${item.upgradeSlots ?? 7}회\n(클릭하여 장착/해제, 아래 패널에서 강화)`;
         } else if (tabName === 'use' && item.type === 'scroll') {
           slot.title = `${item.name} x${item.count}\n성공률: ${(item.rate * 100)}%\n성공 시 ${item.bonusDef !== undefined ? '방어력 +' + item.bonusDef : '공격력 +' + item.bonusAtk}\n(클릭하여 아래 강화 패널에서 선택)`;
         } else {
           slot.title = `${item.name}${item.count ? ' x' + item.count : ''}`;
         }
 
-        let icon = '📦';
+        let icon = item.icon || '📦';
         if (item.id === 'red_potion') icon = '🧪';
         else if (item.id === 'blue_potion') icon = '💙';
         else if (item.type === 'scroll') icon = '📜';
         else if (item.type === 'weapon') icon = '🗡️';
+        else if (item.type === 'chair') icon = '🪑';
+        else if (tabName === 'cash') icon = '✨';
         else if (item.id === 'zakum_helm') icon = '👑';
         else if (item.id === 'pan_lid') icon = '🍳';
         else if (item.type === 'hat') icon = '🧢';
         else if (item.id === 'snail_shell') icon = '🐚';
         else if (item.id === 'slime_liquid') icon = '💧';
         else if (item.id === 'mushroom_cap') icon = '🍄';
-
         slot.innerHTML = `<span class="slot-icon">${icon}</span><span class="slot-count">${item.count || ''}</span>`;
 
         slot.addEventListener('click', () => {

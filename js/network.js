@@ -179,17 +179,56 @@ class NetworkManager {
       this.updateOnlineCount(msg.onlineCount);
     } else if (type === 'auth_result') {
       alert(msg.message);
+    } else if (type === 'auth_lobby_info') {
+      this.accountId = msg.accountId;
+      this.accountUsername = msg.username;
+      this.characters = msg.characters || [];
+      this.updateOnlineCount(msg.onlineCount);
+      if (this.game.ui?.showCharacterLobby) {
+        this.game.ui.showCharacterLobby(this.characters, this.accountUsername);
+      }
+    } else if (type === 'character_create_result') {
+      if (msg.success) {
+        this.characters = msg.characters || [];
+        if (this.game.ui?.onCharacterCreated) {
+          this.game.ui.onCharacterCreated(true, msg.message, this.characters);
+        }
+      } else {
+        alert(msg.message || '캐릭터 생성 실패');
+        if (this.game.ui?.onCharacterCreated) {
+          this.game.ui.onCharacterCreated(false, msg.message);
+        }
+      }
+    } else if (type === 'server_enchant_result') {
+      if (this.game.ui?.onServerEnchantResult) {
+        this.game.ui.onServerEnchantResult(msg.success, msg.message, msg.data);
+      }
     } else if (type === 'auth_login_success') {
       this.authenticated = true;
       this.currentAccount = msg.character;
       this.applyCharacterData(msg.character);
       this.updateOnlineCount(msg.onlineCount);
+      
+      // Safety Respawn Guard: apply 3.0s invincible i-Frame
+      if (this.game.player) {
+        this.game.player.invincibleTimer = msg.invincibleDuration || 3.0;
+        if (msg.safeSpawn && this.game.map) {
+          const spawnPos = this.game.map.defaultSpawn || { x: 1050, y: 1320 };
+          this.game.player.x = spawnPos.x;
+          this.game.player.y = spawnPos.y;
+          this.game.player.onGround = true;
+        }
+      }
+
+      if (this.game.ui?.hideAllAuthScreens) {
+        this.game.ui.hideAllAuthScreens();
+      }
       const modal = document.getElementById('modal-maple-login');
       if (modal) modal.style.display = 'none';
       if (this.game.ui?.addChat) {
-        this.game.ui.addChat('system', `🎉 [로그인 완료] ${msg.character.name} 모험가님, 환영합니다! 서버 클라우드 저장이 활성화되었습니다.`);
+        this.game.ui.addChat('system', `🎉 [접속 완료] ${msg.character.name} 모험가님, 환영합니다! (3초간 안전 무적 보장)`);
       }
-      this.game.spawnItemText(this.game.player.x, this.game.player.y - 45, '★ 로그인 성공! ★');
+      this.game.spawnItemText(this.game.player.x, this.game.player.y - 45, '★ 게임 접속 완료! ★');
     } else if (type === 'room_players') {
       this.remotePlayers.clear();
       (msg.players || []).forEach(p => {
@@ -265,6 +304,80 @@ class NetworkManager {
   }
 
   // --- Client Outbound API ---
+  createCharacter(name, strVal, dexVal, intVal, lukVal) {
+    if (!this.connected) {
+      alert('서버에 연결되어 있지 않습니다.');
+      return;
+    }
+    this.send({
+      type: 'character_create',
+      accountId: this.accountId,
+      name: name,
+      str: strVal,
+      dex: dexVal,
+      int: intVal,
+      luk: lukVal
+    });
+  }
+
+  selectCharacter(charId) {
+    if (!this.connected) {
+      alert('서버에 연결되어 있지 않습니다.');
+      return;
+    }
+    this.send({
+      type: 'character_select',
+      charId: charId
+    });
+  }
+
+  requestServerEnchant(itemUuid, scrollId) {
+    if (!this.connected || !this.authenticated) return false;
+    this.send({
+      type: 'server_enchant',
+      charId: this.currentAccount?.charId,
+      item_uuid: itemUuid,
+      scroll_id: scrollId
+    });
+    return true;
+  }
+
+  sendBeaconSave() {
+    if (!this.authenticated || !this.currentAccount || !this.game.player) return;
+    const p = this.game.player;
+    const charData = {
+      charId: this.currentAccount.charId,
+      level: p.level,
+      exp: p.exp,
+      hp: p.hp,
+      maxHp: p.maxHp,
+      mp: p.mp,
+      maxMp: p.maxMp,
+      str: p.str,
+      dex: p.dex,
+      int: p.int,
+      luk: p.luk,
+      ap: p.ap,
+      sp: p.sp,
+      fame: p.fame || 0,
+      meso: p.meso,
+      currentMap: this.game.map.currentKey,
+      x: p.x,
+      y: p.y,
+      inventory: p.inventory,
+      skills: p.skills,
+      quickslots: p.quickslotBindings || []
+    };
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([JSON.stringify({ character: charData })], { type: 'application/json' });
+        navigator.sendBeacon('/api/save', blob);
+      }
+    } catch (e) {
+      console.warn('[BEACON FAILED]', e);
+    }
+  }
+
   register(username, password) {
     if (!this.connected) {
       alert('서버에 연결되어 있지 않습니다. 로컬 오프라인 모드로 실행됩니다.');

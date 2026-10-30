@@ -167,20 +167,20 @@ class Player {
     this.meso = 10000; // Starting adventurer bonus
     this.inventory = {
       equip: [
-        { id: 'wp_wood_sword', name: '초보자 목검', category: '전사 한손검', type: 'weapon', weaponType: 'sword', atk: 7, upgradeSlots: 7, equipped: true },
-        { id: 'wp_highlander', name: '하이랜더', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 30, atk: 50, str: 2, spd: 5, upgradeSlots: 7, equipped: false, icon: '⚔️', desc: '황금 코등이와 푸른 도신의 명품 양손검' },
-        { id: 'wp_gryunhill', name: '그륜힐', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 70, atk: 75, str: 4, def: 5, upgradeSlots: 7, equipped: false, icon: '🗡️', desc: '붉은 톱날 날이 돋아난 거대 전설 대검' },
-        { id: 'wp_dragon_claymore', name: '드래곤 클레이모어', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 110, atk: 95, str: 8, def: 12, upgradeSlots: 7, equipped: false, icon: '🐲', desc: '푸른 용의 날개와 영혼의 궁극 대검' },
-        { id: 'wp_taeguk_fan', name: '태극 부채', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 35, atk: 35, luk: 2, spd: 10, upgradeSlots: 7, equipped: false, icon: '🪭', desc: '태극 문양 부채. 매우 빠른 공격속도' },
-        { id: 'wp_kandine', name: '칸디네', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 70, atk: 70, luk: 5, dex: 2, spd: 6, upgradeSlots: 7, equipped: false, icon: '🐍', desc: '독사 모양 물결 날의 암살자 보검' },
-        { id: 'wp_meba', name: '메바', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 25, atk: 22, luk: 1, spd: 5, upgradeSlots: 7, equipped: false, icon: '🦅', desc: '빠른 연사 속도의 도적 국민 아대' },
-        { id: 'star_steely', starType: 'steely', name: '뇌전수리검', category: '도적 표창', type: 'star', reqLevel: 50, atk: 25, count: 1000, equipped: true, icon: '⚡', desc: '⚡ 푸른 번개와 스파크 방전 궤적의 번개 수리검' },
-        { id: 'star_ilbi', starType: 'ilbi', name: '일비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 800, equipped: false, icon: '🔮', desc: '⭐ 흑요석 3단 유선형 날과 붉은 루비 코어의 전설 표창' },
-        { id: 'star_tobi', starType: 'tobi', name: '토비표창', category: '도적 표창', type: 'star', reqLevel: 35, atk: 23, count: 1000, equipped: false, icon: '💫', desc: '코발트 블루 날개에 바람 소용돌이 표창' },
-        { id: 'star_hwabi', starType: 'hwabi', name: '화비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 1200, equipped: false, icon: '🔥', desc: '🔥 작열하는 붉은 화염의 불꽃 수리검' },
-        { id: 'wp_ryden', name: '라이덴', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 35, atk: 38, dex: 2, spd: 4, upgradeSlots: 7, equipped: false, icon: '⚡', desc: '번개의 탄성을 지닌 신속한 명품 활' },
-        { id: 'wp_evil_wings', name: '이블윙즈', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 65, atk: 65, int: 6, upgradeSlots: 7, equipped: false, icon: '🦇', desc: '박쥐 날개 모양 마력의 클래식 명품 완드' },
-        { id: 'eq_bandana', name: '빨간 띠', type: 'hat', def: 3, upgradeSlots: 7, equipped: true }
+        { item_uuid: 'eq_starter_wood_sword', id: 'wp_wood_sword', name: '초보자 목검', category: '전사 한손검', type: 'weapon', weaponType: 'sword', atk: 7, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: true },
+        { item_uuid: 'eq_starter_bandana', id: 'eq_bandana', name: '빨간 띠', type: 'hat', def: 3, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: true },
+        { item_uuid: 'eq_sample_highlander', id: 'wp_highlander', name: '하이랜더', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 30, atk: 50, str: 2, spd: 5, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '⚔️', desc: '황금 코등이와 푸른 도신의 명품 양손검' },
+        { item_uuid: 'eq_sample_gryunhill', id: 'wp_gryunhill', name: '그륜힐', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 70, atk: 75, str: 4, def: 5, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '🗡️', desc: '붉은 톱날 날이 돋아난 거대 전설 대검' },
+        { item_uuid: 'eq_sample_dragon_claymore', id: 'wp_dragon_claymore', name: '드래곤 클레이모어', category: '전사 양손검', type: 'weapon', weaponType: 'sword', reqLevel: 110, atk: 95, str: 8, def: 12, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '🐲', desc: '푸른 용의 날개와 영혼의 궁극 대검' },
+        { item_uuid: 'eq_sample_taeguk_fan', id: 'wp_taeguk_fan', name: '태극 부채', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 35, atk: 35, luk: 2, spd: 10, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '🪭', desc: '태극 문양 부채. 매우 빠른 공격속도' },
+        { item_uuid: 'eq_sample_kandine', id: 'wp_kandine', name: '칸디네', category: '도적 단검', type: 'weapon', weaponType: 'dagger', reqLevel: 70, atk: 70, luk: 5, dex: 2, spd: 6, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '🐍', desc: '독사 모양 물결 날의 암살자 보검' },
+        { item_uuid: 'eq_sample_meba', id: 'wp_meba', name: '메바', category: '도적 아대', type: 'weapon', weaponType: 'claw', reqLevel: 25, atk: 22, luk: 1, spd: 5, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '🦅', desc: '빠른 연사 속도의 도적 국민 아대' },
+        { item_uuid: 'eq_sample_steely', id: 'star_steely', starType: 'steely', name: '뇌전수리검', category: '도적 표창', type: 'star', reqLevel: 50, atk: 25, count: 1000, statVariation: 0, upgradeSlots: 0, successCount: 0, equipped: true, icon: '⚡', desc: '⚡ 푸른 번개와 스파크 방전 궤적의 번개 수리검' },
+        { item_uuid: 'eq_sample_ilbi', id: 'star_ilbi', starType: 'ilbi', name: '일비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 800, statVariation: 0, upgradeSlots: 0, successCount: 0, equipped: false, icon: '🔮', desc: '⭐ 흑요석 3단 유선형 날과 붉은 루비 코어의 전설 표창' },
+        { item_uuid: 'eq_sample_tobi', id: 'star_tobi', starType: 'tobi', name: '토비표창', category: '도적 표창', type: 'star', reqLevel: 35, atk: 23, count: 1000, statVariation: 0, upgradeSlots: 0, successCount: 0, equipped: false, icon: '💫', desc: '코발트 블루 날개에 바람 소용돌이 표창' },
+        { item_uuid: 'eq_sample_hwabi', id: 'star_hwabi', starType: 'hwabi', name: '화비표창', category: '도적 표창', type: 'star', reqLevel: 70, atk: 27, count: 1200, statVariation: 0, upgradeSlots: 0, successCount: 0, equipped: false, icon: '🔥', desc: '🔥 작열하는 붉은 화염의 불꽃 수리검' },
+        { item_uuid: 'eq_sample_ryden', id: 'wp_ryden', name: '라이덴', category: '궁수 활', type: 'weapon', weaponType: 'bow', reqLevel: 35, atk: 38, dex: 2, spd: 4, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '⚡', desc: '번개의 탄성을 지닌 신속한 명품 활' },
+        { item_uuid: 'eq_sample_evil_wings', id: 'wp_evil_wings', name: '이블윙즈', category: '마법사 완드', type: 'weapon', weaponType: 'staff', reqLevel: 65, atk: 65, int: 6, statVariation: 0, upgradeSlots: 7, successCount: 0, equipped: false, icon: '🦇', desc: '박쥐 날개 모양 마력의 클래식 명품 완드' }
       ],
       use: [
         { id: 'red_potion', name: '빨간 포션', count: 15, healHp: 50 },
@@ -190,12 +190,17 @@ class Player {
         { id: 'scroll_atk_100', name: '무기 공격력 주문서 100%', type: 'scroll', count: 3, rate: 1, bonusAtk: 1 },
         { id: 'scroll_def_100', name: '방어구 방어력 주문서 100%', type: 'scroll', count: 2, rate: 1, bonusDef: 2 }
       ],
+      setup: [
+        { id: 'chair_relax', name: '릴렉스 체어', type: 'chair', count: 1, desc: '휴식을 취하며 10초마다 HP를 50 회복합니다.' }
+      ],
       etc: [
         { id: 'snail_shell', name: '달팽이의 껍질', count: 0 },
         { id: 'slime_liquid', name: '물컹물컹한 액체', count: 0 },
         { id: 'mushroom_cap', name: '주황버섯의 갓', count: 0 }
-      ]
+      ],
+      cash: []
     };
+    this.ensureItemUUIDs();
 
     this.calcDerivedStats();
     this.hp = this.maxHp;
@@ -464,8 +469,8 @@ class Player {
     if (Number.isFinite(this.mp)) this.mp = Math.min(this.mp, this.maxMp);
   }
 
-  persistProgress(game = window.game) {
-    if (game?.saveProgress) return game.saveProgress();
+  persistProgress(game = window.game, immediate = false) {
+    if (game?.saveProgress) return game.saveProgress(immediate);
     if (typeof StorageManager !== 'undefined') return StorageManager.save(this, game?.map?.currentKey);
     return false;
   }
@@ -535,16 +540,42 @@ class Player {
     return null;
   }
 
+  ensureItemUUIDs() {
+    if (!this.inventory) this.inventory = {};
+    if (!this.inventory.equip) this.inventory.equip = [];
+    if (!this.inventory.use) this.inventory.use = [];
+    if (!this.inventory.setup) this.inventory.setup = [];
+    if (!this.inventory.etc) this.inventory.etc = [];
+    if (!this.inventory.cash) this.inventory.cash = [];
+    this.inventory.equip.forEach(eq => {
+      if (!eq.item_uuid) {
+        eq.item_uuid = 'eq_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+      }
+      if (eq.upgradeSlots === undefined) eq.upgradeSlots = 7;
+      if (eq.successCount === undefined) eq.successCount = 0;
+      if (eq.statVariation === undefined) eq.statVariation = 0;
+    });
+  }
+
   toggleEquip(item) {
-    if (!item) return;
+    if (!item) return false;
     if (item.equipped) {
+      const MAX_EQUIP_SLOTS = 24;
+      const unequippedCount = this.inventory.equip.filter(eq => !eq.equipped).length;
+      if (unequippedCount >= MAX_EQUIP_SLOTS) {
+        if (window.game?.ui?.addChat) {
+          window.game.ui.addChat('system', '❌ 장비 인벤토리 공간이 부족하여 장착을 해제할 수 없습니다.');
+        }
+        return false;
+      }
       item.equipped = false;
     } else {
       this.equipItem(item);
-      return;
+      return true;
     }
     this.calcDerivedStats();
-    this.persistProgress();
+    this.persistProgress(window.game, true);
+    return true;
   }
 
   getEnhancementFee(item) {

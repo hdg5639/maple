@@ -245,9 +245,11 @@
     </div>
     <div class="maple-window-body" style="max-height: calc(100vh - 230px); overflow-y: auto;">
       <div class="inven-tabs">
-        <button class="inven-tab active" data-tab="use">소비</button>
-        <button class="inven-tab" data-tab="equip">장비</button>
+        <button class="inven-tab active" data-tab="equip">장비</button>
+        <button class="inven-tab" data-tab="use">소비</button>
+        <button class="inven-tab" data-tab="setup">설치</button>
         <button class="inven-tab" data-tab="etc">기타</button>
+        <button class="inven-tab" data-tab="cash">캐시</button>
       </div>
       <div id="inven-grid" class="inven-grid">
         <!-- Generated Dynamically -->
@@ -437,6 +439,96 @@
         </div>
         <div style="text-align: center; margin-top: 10px;">
           <button id="btn-login-guest" style="background: none; border: none; color: #6b7280; text-decoration: underline; cursor: pointer; font-size: 11px;">단독 오프라인(게스트) 모드로 계속하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- MAPLE CHARACTER SELECTION LOBBY MODAL (Classic Multi-Slot) -->
+  <div id="modal-char-lobby" class="maple-dialog-modal" style="display: none;">
+    <div class="maple-dialog-box" style="width: 640px; max-width: 95vw;">
+      <div class="maple-dialog-header">
+        <span class="dialog-title">🍁 빅토리아 아일랜드 모험가 로비 (캐릭터 선택)</span>
+        <button id="btn-char-lobby-close" class="btn-dialog-close btn-window-close">✕</button>
+      </div>
+      <div class="maple-dialog-body" style="padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #d1c4a9; padding-bottom: 8px;">
+          <div style="font-size: 13px; font-weight: bold; color: #1e3a8a;">
+            계정: <span id="lobby-account-name" style="color: #b45309;">모험가</span>
+          </div>
+          <button id="btn-lobby-logout" class="btn-maple" style="padding: 4px 10px; font-size: 11px;">로그아웃</button>
+        </div>
+
+        <div id="char-slots-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px;">
+          <!-- Dynamically populated 4 character slots -->
+        </div>
+
+        <div style="text-align: center; font-size: 11px; color: #64748b;">
+          💡 원하는 캐릭터 슬롯의 [선택 접속] 버튼을 누르면 해당 캐릭터로 메이플 월드에 스폰됩니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTHENTIC 4/4 DICE CHARACTER CREATION MODAL -->
+  <div id="modal-char-create" class="maple-dialog-modal" style="display: none;">
+    <div class="maple-dialog-box" style="width: 420px; max-width: 95vw;">
+      <div class="maple-dialog-header">
+        <span class="dialog-title">🎲 캐릭터 생성 (4/4 주사위 스탯 분배)</span>
+        <button id="btn-char-create-close" class="btn-dialog-close btn-window-close">✕</button>
+      </div>
+      <div class="maple-dialog-body" style="padding: 16px;">
+        <div style="text-align: center; margin-bottom: 12px;">
+          <div style="font-size: 32px;">🎲</div>
+          <div style="font-weight: 800; color: #b45309; font-size: 14px;">정통 주사위 스탯 롤링 (총합 25)</div>
+          <div style="font-size: 11px; color: #6b7280; margin-top: 2px;">클래식 메이플의 진정한 묘미! 비주력 스탯 4/4를 노려보세요!</div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-weight: 700; margin-bottom: 4px; font-size: 12px;">캐릭터 이름 (2~12자)</label>
+          <input type="text" id="create-char-name" class="maple-input" placeholder="새 모험가 이름 입력" maxlength="12" style="width: 100%; box-sizing: border-box; padding: 7px; border: 1px solid #d1c4a9; border-radius: 4px;">
+        </div>
+
+        <!-- Dice Board -->
+        <div style="background: #fffbeb; border: 2px solid #fde68a; border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-weight: bold; font-size: 13px;">
+            <div style="background: #fff; padding: 6px 10px; border-radius: 4px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+              <span style="color: #dc2626;">STR (힘):</span>
+              <span id="dice-val-str" style="font-size: 15px;">12</span>
+            </div>
+            <div style="background: #fff; padding: 6px 10px; border-radius: 4px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+              <span style="color: #16a34a;">DEX (민첩):</span>
+              <span id="dice-val-dex" style="font-size: 15px;">5</span>
+            </div>
+            <div style="background: #fff; padding: 6px 10px; border-radius: 4px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+              <span style="color: #2563eb;">INT (지력):</span>
+              <span id="dice-val-int" style="font-size: 15px;">4</span>
+            </div>
+            <div style="background: #fff; padding: 6px 10px; border-radius: 4px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+              <span style="color: #9333ea;">LUK (행운):</span>
+              <span id="dice-val-luk" style="font-size: 15px;">4</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 10px; text-align: center;">
+            <button id="btn-dice-roll" class="btn-maple" style="padding: 8px 18px; font-size: 13px; font-weight: bold; background: linear-gradient(to bottom, #f59e0b, #d97706); color: #fff;">
+              🎲 주사위 굴리기 (Roll)
+            </button>
+          </div>
+
+          <div id="dice-recommend-badge" style="margin-top: 8px; text-align: center; font-size: 11px; font-weight: bold; color: #16a34a; min-height: 18px;">
+            ⭐ 전사/궁수 최적 세팅 (INT 4 / LUK 4) 달성!
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-create-char-submit" class="btn-maple" style="flex: 1; padding: 9px; font-weight: 800; background: linear-gradient(to bottom, #10b981, #059669); color: #fff;">
+            ✨ 캐릭터 생성 완료
+          </button>
+          <button id="btn-create-char-cancel" class="btn-maple" style="padding: 9px 14px;">
+            취소
+          </button>
         </div>
       </div>
     </div>

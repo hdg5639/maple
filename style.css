@@ -1557,3 +1557,59 @@ body, html {
   .npc-portrait-wrapper { width: 70px; flex-shrink: 0; }
   #npc-dialog-portrait { max-width: 65px; }
 }
+
+/* Classic Character Lobby & 4/4 Dice Roll Styles */
+.char-slot-card {
+  background: #fdf6e2;
+  border: 2px solid #bfa878;
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 140px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.06);
+}
+
+.char-slot-card.empty-slot {
+  border: 2px dashed #d1c4a9;
+  background: #fbf7ee;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.char-slot-card.empty-slot:hover {
+  background: #fef08a;
+  border-color: #d97706;
+}
+
+.char-slot-avatar {
+  font-size: 36px;
+  margin-bottom: 4px;
+}
+
+.char-slot-name {
+  font-weight: 800;
+  font-size: 13px;
+  color: #1e3a8a;
+}
+
+.char-slot-meta {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.dice-rolling {
+  animation: diceRollAnim 0.35s ease-in-out;
+}
+
+@keyframes diceRollAnim {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-30deg) scale(1.2); }
+  50% { transform: rotate(45deg) scale(1.25); }
+  75% { transform: rotate(-15deg) scale(1.1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
