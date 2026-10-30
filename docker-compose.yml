@@ -1,0 +1,15 @@
+services:
+  maple:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: maple
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - maple-data:/data
+
+volumes:
+  maple-data:

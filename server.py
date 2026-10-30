@@ -25,7 +25,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 HTTP_PORT = 8000
 WS_PORT = 8001
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(DIRECTORY, "openmaple.db")
+DB_PATH = os.environ.get("OPENMAPLE_DB", os.path.join(DIRECTORY, "openmaple.db"))
 
 # Global server instance for graceful shutdown
 _GLOBAL_SERVER_INSTANCE = None
